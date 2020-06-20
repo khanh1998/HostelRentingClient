@@ -1,68 +1,85 @@
 <template>
-  <v-app id="inspire">
-    <v-app-bar
-      :clipped-left="$vuetify.breakpoint.lgAndUp"
-      app
-      color="blue darken-3"
-      dark
-    >
-      <v-toolbar-title
-        style="width: 300px"
-        class="ml-0 pl-4"
-      >
-        <v-avatar
-          size="32px"
-          item
-        >
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
-            alt="Vuetify"
-          ></v-img>
-        </v-avatar>
-      </v-toolbar-title>
+  <v-app>
+    <v-app-bar app color="#fff" dark
+      class="">
+        <v-img
+          alt="Hostel Renting"
+          class="shrink mr-2"
+          contain
+          src="@/assets/logo.png"
+          transition="scale-transition"
+          width="64"
+        />
+        <v-text-field
+          color="#E5E5E5"
+          flat
+          solo-inverted
+          light
+          hide-details
+          label="Search by address..."
+          class="hidden-sm-and-down"
+        ></v-text-field>
 
-      <v-text-field
-        flat
-        solo-inverted
-        hide-details
-        prepend-inner-icon="mdi-magnify"
-        label="Search"
-        class="hidden-sm-and-down"
-      ></v-text-field>
+        <v-btn
+          color="#98B7D7"
+          height="48"
+          depressed
+          class="ma-2">
+          <v-icon dark>mdi-magnify</v-icon>
+        </v-btn>
 
-      <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
 
-      <v-btn
-        icon
-        large
-      >
-        <v-avatar
-          size="32px"
-          item
-        >
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
-            alt="Vuetify"
-          ></v-img>
-        </v-avatar>
-      </v-btn>
+        <v-btn
+          color="#2C92D5"
+          dark
+          depressed
+          outlined
+          rounded
+          class="ma-2">
+          <i class="fas fa-paper-plane"></i> Room alert
+        </v-btn>
+
+        <v-btn
+          color="#6C98C6"
+          depressed
+          class="ma-2">Your Booking</v-btn>
+        <v-btn
+          icon
+          large
+          class="ma-2">
+          <v-avatar size="32px" item>
+            <v-img src="@/assets/suzy-avatar.jpg" alt="My Suzy"></v-img>
+          </v-avatar>
+        </v-btn>
     </v-app-bar>
+
     <v-main>
-      <v-container
-        class="fill-height"
-        fluid
-      >
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <router-view/>
-        </v-row>
-      </v-container>
+      <v-content>
+        <v-container>
+          <router-view></router-view>
+        </v-container>
+      </v-content>
     </v-main>
+
+    <v-footer app>
+    <!-- -->
+  </v-footer>
   </v-app>
+
 </template>
 
-<style>
+<script>
+export default {
+  name: 'App',
 
+  components: {},
+
+  data: () => ({}),
+};
+</script>
+<style>
+.v-btn {
+  text-transform:none !important;
+}
 </style>
