@@ -1,0 +1,33 @@
+{
+    "image": [""],
+    "name": "Lalahome",
+    "price": 350000,
+    "vote": 4.5,
+    "unit": "room/month",
+    "address": "Vo Van Ngan street, Thu Duc distric, Ho Chi Minh city",
+    "description": "Luxury, full facility, 100% brandnew",
+    "details": {
+        "area": 30,
+        "capacity": 4,
+        "toilet": 1,
+        "cooking": true,
+        "electricity": {
+            "price": 5,
+            "unit": "kWh"
+        },
+        "water": {
+            "price": 50,
+            "unit": "per person"
+        },
+        "wifi": {
+            "price": 50,
+            "unit": "per room"
+        },
+        "garbage": {
+            "price": 20,
+            "unit": "per room"
+        },
+        "facility": ["Air conditioner", "refrigerator", "Television", "Table"],
+        "service": ["Window", "Parking lot", "Guard", "Surveillance camera"]
+    }
+}
