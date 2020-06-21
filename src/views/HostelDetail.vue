@@ -116,6 +116,86 @@
         </div>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col cols="2">
+        <v-chip
+          color="primary"
+          outlined
+          label
+        >
+          <v-icon left>fas fa-info-circle</v-icon>
+          Details
+        </v-chip>
+      </v-col>
+      <v-col cols="6">
+        <v-divider class="mb-6"/>
+        <div class="d-flex flex-column">
+          <div class="above d-flex justify-space-around">
+            <div>
+              <p class="font-weight-medium grey--text">Area</p>
+              <p class="font-weight-bold">{{info.details.area}} m2</p>
+            </div>
+            <div>
+              <p class="font-weight-medium grey--text">Capacity</p>
+              <p class="font-weight-bold">{{info.details.capacity}} person</p>
+            </div>
+            <div>
+              <p class="font-weight-medium grey--text">Toilet</p>
+              <p class="font-weight-bold">{{info.details.toilet}}</p>
+            </div>
+            <div>
+              <p class="font-weight-medium grey--text" >Cooking</p>
+              <p class="font-weight-bold" v-if="info.details.cooking">Yes</p>
+              <p class="font-weight-bold" v-if="!info.details.cooking">No</p>
+            </div>
+          </div>
+          <div class="above d-flex justify-space-around">
+            <div>
+              <p class="font-weight-medium grey--text">Electricity</p>
+              <p class="font-weight-bold">
+                {{info.details.electricity.price}}
+                {{info.details.electricity.unit}}
+              </p>
+            </div>
+            <div>
+              <p class="font-weight-medium grey--text">Water</p>
+              <p class="font-weight-bold">
+                {{info.details.water.price}}
+                {{info.details.water.unit}}
+              </p>
+            </div>
+            <div>
+              <p class="font-weight-medium grey--text">Wifi</p>
+              <p class="font-weight-bold">
+                {{info.details.wifi.price}}
+                {{info.details.wifi.unit}}
+              </p>
+            </div>
+            <div>
+              <p class="font-weight-medium grey--text">Garbage</p>
+              <p class="font-weight-bold">
+                {{info.details.garbage.price}}
+                {{info.details.garbage.unit}}
+              </p>
+            </div>
+          </div>
+          <div class="above d-flex flex-column">
+            <div class="d-flex">
+              <p class="font-weight-bold blue--text mx-8">Facility</p>
+              <p class="font-weight-thin">
+                {{info.details.facility.join(', ')}}
+              </p>
+            </div>
+            <div class="d-flex">
+              <p class="font-weight-bold blue--text mx-8">Service</p>
+              <p class="font-weight-thin">
+                {{info.details.service.join(', ')}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -178,6 +258,11 @@ export default {
   },
   async created() {
     this.info = json;
+  },
+  computed: {
+    detailsKey: {
+      get() { return Object.keys(this.info.details); },
+    },
   },
 };
 </script>

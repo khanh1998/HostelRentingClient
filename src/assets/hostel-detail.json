@@ -22,19 +22,19 @@
         "cooking": true,
         "electricity": {
             "price": 5,
-            "unit": "kWh"
+            "unit": "k/kWh"
         },
         "water": {
             "price": 50,
-            "unit": "per person"
+            "unit": "k/person"
         },
         "wifi": {
             "price": 50,
-            "unit": "per room"
+            "unit": "k/room"
         },
         "garbage": {
             "price": 20,
-            "unit": "per room"
+            "unit": "k/room"
         },
         "facility": ["Air conditioner", "refrigerator", "Television", "Table"],
         "service": ["Window", "Parking lot", "Guard", "Surveillance camera"]
