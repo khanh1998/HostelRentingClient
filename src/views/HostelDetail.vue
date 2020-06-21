@@ -2,11 +2,17 @@
   <v-container>
     <v-overlay :value="pickDate">
       <v-date-picker v-model="date"></v-date-picker>
-      <v-btn @click="pick('date')"><v-icon>mdi-close</v-icon></v-btn>
+      <v-btn color="success" @click="pick('date')">
+        <v-icon>fas fa-calendar-check</v-icon>
+          Done
+      </v-btn>
     </v-overlay>
     <v-overlay :value="pickTime">
       <v-time-picker v-model="time" format="24hr"></v-time-picker>
-      <v-btn @click="pick('time')"><v-icon>mdi-close</v-icon></v-btn>
+      <v-btn color="success" @click="pick('time')">
+        <v-icon>fas fa-calendar-check</v-icon>
+          Done
+      </v-btn>
     </v-overlay>
     <v-row>
       <v-col cols="8">
@@ -39,10 +45,10 @@
               <p class="text-h5 text-center ma-2">{{info.name}} Hostel</p>
             </v-chip>
             <v-rating
-              v-model="info.rating"
+              v-model="info.rating.average"
               color="yellow"
               half-increments
-              hover></v-rating>
+              hover></v-rating> ({{info.rating.total}})
             <v-btn
               class="ma-2"
               tile outlined color="success"
@@ -58,12 +64,55 @@
               <v-icon left>fas fa-clock</v-icon> Pick time
             </v-btn>
           </div>
+          <v-spacer/>
           <div class="below d-flex justify-center align-center">
-            <v-btn class="ma-6">
-              <v-icon left>fas fa-paper-plane</v-icon>
-              Book now!
-            </v-btn>
+            <v-dialog v-model="dialog.booking" persistent max-width="290">
+              <template v-slot:activator>
+                <v-btn color="red" outlined width="80%" class="ma-6" @click="book">
+                  <v-icon left>fas fa-paper-plane</v-icon>
+                  Book now!
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="headline">Booking comfirmation</v-card-title>
+                <v-card-text>
+                  Do you want to make a booking at {{time}} {{date}} with {{info.name}}
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="dialog.booking = false">No</v-btn>
+                  <v-btn color="green darken-1" text @click="sendBooking">Yes</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-snackbar
+              v-model="snackbar.display"
+              :bottom="snackbar.bottom"
+              :color="snackbar.color"
+              >
+              {{snackbar.message}}
+            </v-snackbar>
           </div>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="2">
+        <p class="text-h5 blue--text">{{info.price}} vnd</p>
+        <p class="text-h6 blue--text">{{info.unit}}</p>
+      </v-col>
+      <v-col cols="4">
+        <p class="font-weight-bold">{{info.address}}</p>
+        <p class="font-weight-medium grey--text">{{info.description}}</p>
+      </v-col>
+      <v-col cols="2">
+        <div class="d-flex justify-end align-start" style="width: 100%; height: 100%">
+          <v-btn
+            color="orange"
+            outlined
+            >
+            <v-icon class="mr-6">fas fa-comment-dots</v-icon> Chat now
+          </v-btn>
         </div>
       </v-col>
     </v-row>
@@ -82,6 +131,15 @@ export default {
     pickTime: false,
     date: null,
     time: null,
+    dialog: {
+      booking: false,
+    },
+    snackbar: {
+      display: false,
+      message: '',
+      color: 'red',
+      bottom: true,
+    },
   }),
   methods: {
     pick(name) {
@@ -92,6 +150,31 @@ export default {
         this.pickTime = !this.pickTime;
       }
     },
+    showSnackbar(color, message) {
+      this.snackbar.message = message;
+      this.snackbar.color = color;
+      this.snackbar.display = true;
+    },
+    isPickDateAndTime() {
+      if (this.date === null) {
+        this.showSnackbar('red', 'Please pick a date');
+        return false;
+      }
+      if (this.time === null) {
+        this.showSnackbar('red', 'Please pick a time');
+        return false;
+      }
+      return true;
+    },
+    book() {
+      if (this.isPickDateAndTime()) {
+        this.dialog.booking = true;
+      }
+    },
+    sendBooking() {
+      this.dialog.booking = false;
+      this.showSnackbar('success', 'Booking is created successfully!!!');
+    },
   },
   async created() {
     this.info = json;
@@ -101,6 +184,7 @@ export default {
 <style>
 .info-card {
   width: 100%;
+  height: 100%;
   border: 2.5px solid #EDEFEE;
   box-sizing: border-box;
   border-radius: 10px;
