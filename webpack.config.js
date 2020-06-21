@@ -1,7 +1,7 @@
 // webpack.config.js
 {
-  module: {
-    rules: [
+  {
+    [
       // ... other rules omitted
       {
         test: /\.css$/,
@@ -13,11 +13,11 @@
               // enable CSS Modules
               modules: true,
               // customize generated class names
-              localIdentName: '[local]_[hash:base64:8]'
-            }
-          }
-        ]
-      }
-    ]
+              localIdentName: '[local]_[hash:base64:8]',
+            },
+          },
+        ],
+      },
+    ];
   }
 }

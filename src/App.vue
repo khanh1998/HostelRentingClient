@@ -55,11 +55,7 @@
     </v-app-bar>
 
     <v-main>
-      <v-content>
-        <v-container>
-          <router-view></router-view>
-        </v-container>
-      </v-content>
+      <router-view></router-view>
     </v-main>
 
     <v-footer app>
@@ -72,9 +68,7 @@
 <script>
 export default {
   name: 'App',
-
   components: {},
-
   data: () => ({}),
 };
 </script>
