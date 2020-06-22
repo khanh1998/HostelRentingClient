@@ -1,18 +1,37 @@
 <template>
   <v-container>
     <v-overlay :value="pickDate">
-      <v-date-picker v-model="date"></v-date-picker>
-      <v-btn color="success" @click="pick('date')">
-        <v-icon>fas fa-calendar-check</v-icon>
-          Done
-      </v-btn>
+      <v-date-picker
+        v-model="date"
+        reactive
+        :min="today">
+        <template slot:default>
+          <v-btn color="red" @click="pick('date')">
+            <v-icon class="ma-2">far fa-calendar-times</v-icon>
+            Cancel
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn right color="success" @click="pick('date')">
+            <v-icon class="ma-2">fas fa-calendar-check</v-icon>
+            OK
+          </v-btn>
+        </template>
+      </v-date-picker>
     </v-overlay>
     <v-overlay :value="pickTime">
-      <v-time-picker v-model="time" format="24hr"></v-time-picker>
-      <v-btn color="success" @click="pick('time')">
-        <v-icon>fas fa-calendar-check</v-icon>
-          Done
-      </v-btn>
+      <v-time-picker v-model="time" format="24hr">
+        <template slot:default>
+          <v-btn color="red" @click="pick('time')">
+            <v-icon class="ma-2">far fa-calendar-times</v-icon>
+            Cancel
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn right color="success" @click="pick('time')">
+            <v-icon class="ma-2">fas fa-calendar-check</v-icon>
+            OK
+          </v-btn>
+        </template>
+      </v-time-picker>
     </v-overlay>
     <v-row>
       <v-col cols="8">
@@ -91,6 +110,16 @@
               :color="snackbar.color"
               >
               {{snackbar.message}}
+
+              <template v-slot:action="{ attrs }">
+                <v-btn
+                  text
+                  v-bind="attrs"
+                  @click="snackbar.display = false"
+                >
+                  Close
+                </v-btn>
+              </template>
             </v-snackbar>
           </div>
         </div>
@@ -195,6 +224,48 @@
           </div>
         </div>
       </v-col>
+      <v-col cols="4">
+        <div>
+            <div class="primary d-flex justify-space-between">
+              <v-card-title class="white--text headline">
+                Infrastructure
+              </v-card-title>
+              <v-card-actions>
+                <v-btn color="success" class="ma-1">
+                  <v-icon>fas fa-map-signs</v-icon> View on map
+                </v-btn>
+              </v-card-actions>
+            </div>
+            <v-treeview
+              v-model="treeview.tree"
+              :open="treeview.open"
+              :items="treeview.items"
+              activatable
+              item-key="name"
+              dense
+              hoverable
+              rounded
+              filter
+            >
+              <template v-slot:prepend="{ item, open }">
+                <v-icon v-if="!item.icon">
+                  {{ open ? 'mdi-folder-open' : 'fas fa-map-marker-alt' }}
+                </v-icon>
+                <v-icon v-else>
+                  {{ treeview.icons[item.icon] }}
+                </v-icon>
+              </template>
+              <template v-slot:append="{item, leaf}">
+                <div class="blue--text font-weight-bold" v-if="leaf">
+                  {{item.distance}}
+                </div>
+                <div v-else class="green--text font-weight-bold">
+                  ({{item.children.length}})
+                </div>
+              </template>
+            </v-treeview>
+        </div>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -206,7 +277,11 @@ export default {
   name: 'HostelDetail',
   components: {},
   data: () => ({
-    info: null,
+    info: null, // infomation of the hostel that being display
+    datePicker: {
+      pickDate: false,
+      date: null,
+    },
     pickDate: false,
     pickTime: false,
     date: null,
@@ -219,6 +294,85 @@ export default {
       message: '',
       color: 'red',
       bottom: true,
+    },
+    treeview: {
+      open: [],
+      icons: {
+        market: 'fas fa-shopping-cart',
+        school: 'fas fa-graduation-cap',
+        bus: 'fas fa-bus',
+        hospital: 'fas fa-hospital',
+        bank: 'fas fa-hand-holding-usd',
+      },
+      tree: [],
+      items: [
+        {
+          name: 'School',
+          icon: 'school',
+          children: [
+            {
+              name: 'Fpt University',
+              distance: '5km',
+            },
+            {
+              name: 'University of Finance and Marketing',
+              distance: '3km',
+            },
+          ],
+        },
+        {
+          name: 'Market',
+          icon: 'market',
+          children: [
+            {
+              name: 'Bach Hoa Xanh',
+              distance: '0.5km',
+            },
+            {
+              name: 'Cicle K',
+              distance: '1km',
+            },
+          ],
+        },
+        {
+          name: 'Bus station',
+          icon: 'bus',
+          children: [
+            {
+              name: '123 Tran Thanh Tong',
+              distance: '0.1km',
+            },
+            {
+              name: '424 Tran Dai Nghia',
+              distance: '0.5km',
+            },
+          ],
+        },
+        {
+          name: 'Hospital',
+          icon: 'hospital',
+          children: [
+            {
+              name: 'Benh vien Quan 9',
+              distance: '2km',
+            },
+          ],
+        },
+        {
+          name: 'Bank',
+          icon: 'bank',
+          children: [
+            {
+              name: 'TP bank',
+              distance: '1km',
+            },
+            {
+              name: 'VP bank',
+              distance: '4km',
+            },
+          ],
+        },
+      ],
     },
   }),
   methods: {
@@ -255,6 +409,7 @@ export default {
       this.dialog.booking = false;
       this.showSnackbar('success', 'Booking is created successfully!!!');
     },
+    allowedDates: () => true,
   },
   async created() {
     this.info = json;
@@ -262,6 +417,13 @@ export default {
   computed: {
     detailsKey: {
       get() { return Object.keys(this.info.details); },
+    },
+    today: {
+      get() {
+        const d = new Date();
+        const str = `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth() + 1}-${d.getDate()}`;
+        return str;
+      },
     },
   },
 };
