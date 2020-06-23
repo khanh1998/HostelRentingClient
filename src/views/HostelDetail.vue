@@ -1,10 +1,11 @@
 <template>
   <v-container>
-    <v-overlay :value="pickDate">
+    <v-overlay :value="datePicker.isOpenPicker">
       <v-date-picker
-        v-model="date"
+        v-model="datePicker.date"
         reactive
-        :min="today">
+        :min="today"
+        light>
         <template slot:default>
           <v-btn color="red" @click="pick('date')">
             <v-icon class="ma-2">far fa-calendar-times</v-icon>
@@ -18,8 +19,8 @@
         </template>
       </v-date-picker>
     </v-overlay>
-    <v-overlay :value="pickTime">
-      <v-time-picker v-model="time" format="24hr">
+    <v-overlay :value="timePicker.isOpenPicker">
+      <v-time-picker v-model="timePicker.time" format="24hr" light>
         <template slot:default>
           <v-btn color="red" @click="pick('time')">
             <v-icon class="ma-2">far fa-calendar-times</v-icon>
@@ -279,13 +280,13 @@ export default {
   data: () => ({
     info: null, // infomation of the hostel that being display
     datePicker: {
-      pickDate: false,
+      isOpenPicker: false,
       date: null,
     },
-    pickDate: false,
-    pickTime: false,
-    date: null,
-    time: null,
+    timePicker: {
+      isOpenPicker: false,
+      time: null,
+    },
     dialog: {
       booking: false,
     },
@@ -378,10 +379,10 @@ export default {
   methods: {
     pick(name) {
       if (name === 'date') {
-        this.pickDate = !this.pickDate;
+        this.datePicker.isOpenPicker = !this.datePicker.isOpenPicker;
       }
       if (name === 'time') {
-        this.pickTime = !this.pickTime;
+        this.timePicker.isOpenPicker = !this.timePicker.isOpenPicker;
       }
     },
     showSnackbar(color, message) {
