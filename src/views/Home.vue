@@ -110,17 +110,17 @@
                 >
                   <v-chip
                     class="ma-2"
-                    color="white"
-                    text-color="white"
+                    color="blue"
+                    text-color="blue"
                     outlined
                   >
                     <v-icon left>fas fa-coins</v-icon>
                     500.000vnd
                   </v-chip>
+                  <v-card-title class="blue--text">
+                    Ký túc xá đại học quốc gia {{i}}
+                  </v-card-title>
                 </v-img>
-                <v-card-title class="blue--text">
-                  Ký túc xá đại học quốc gia {{i}}
-                </v-card-title>
                 <v-divider class="mx-4"/>
                   <div class="d-flex align-center justify-space-between">
                     <span class="mx-2 mt-4">
@@ -158,9 +158,24 @@
                     </span>
                   </div>
                   <div class="d-flex align-center justify-space-between mt-4">
-                    <v-icon class="mx-4" small>mdi-weather-windy</v-icon>
-                    <v-icon class="mx-4" small>mdi-fridge</v-icon>
-                    <v-icon class="mx-4" small>fas fa-motorcycle</v-icon>
+                    <v-chip-group class="mx-2">
+                      <v-chip>
+                        <v-icon class="mx-4" small>mdi-weather-windy</v-icon>
+                        May Lanh
+                      </v-chip>
+                      <v-chip>
+                        <v-icon class="mx-4" small>mdi-fridge</v-icon>
+                        Tu Lanh
+                      </v-chip>
+                      <v-chip>
+                        <v-icon class="mx-4" small>fas fa-motorcycle</v-icon>
+                        Cho dau xe
+                      </v-chip>
+                      <v-chip>
+                        <v-icon class="mx-4" small>mdi-washing-machine</v-icon>
+                        May giat
+                      </v-chip>
+                    </v-chip-group>
                   </div>
                 <v-card-actions>
                   <v-btn
