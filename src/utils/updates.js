@@ -1,1 +1,1 @@
-export default function checkForUpdates(){};
+export default function checkForUpdates() {}

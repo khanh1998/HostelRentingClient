@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import HostelTypeModule from './mudules/hosteltype';
+import HostelTypeModule from './modules/hosteltype';
 
 Vue.use(Vuex);
 

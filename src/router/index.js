@@ -2,12 +2,14 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/HostelDetail.vue';
 import userRoute from './routes/user';
+import homeRoute from './routes/home';
 
 Vue.use(VueRouter);
 
 const routes = [
+  homeRoute,
   {
-    path: '/',
+    path: '/detail',
     name: 'HostelDetail',
     component: Home,
   },
