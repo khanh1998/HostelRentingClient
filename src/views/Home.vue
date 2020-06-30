@@ -82,11 +82,10 @@
           autoplay
           :arrows-outside="false"
           :visible-slides="3"
-          :gap="1"
+          :gap="5"
           :slide-ratio="1 / 4"
           :dragging-distance="70"
-          :link="'#'"
-          3d>
+          :link="'#'">
           <template v-slot:arrow-left>
             <v-btn icon light large fab>
               <v-icon light>fas fa-chevron-left</v-icon>
@@ -102,22 +101,22 @@
             v-for="i in 9"
             :key="i">
             <template v-slot:content>
-              <v-card class="mx-auto">
+              <v-card class="mx-auto" >
                 <v-img
                   class="white--text align-end"
                   height="200px"
+                  light
                   :src="images[i%3]"
                 >
-                  <v-chip
+                    <v-chip
                     class="ma-2"
-                    color="blue"
+                    color="white"
                     text-color="blue"
-                    outlined
-                  >
-                    <v-icon left>fas fa-coins</v-icon>
-                    500.000vnd
-                  </v-chip>
-                  <v-card-title class="blue--text">
+                    >
+                      <v-icon left>fas fa-coins</v-icon>
+                      500.000vnd
+                    </v-chip>
+                  <v-card-title class="white--text">
                     Ký túc xá đại học quốc gia {{i}}
                   </v-card-title>
                 </v-img>
@@ -192,10 +191,31 @@
         </vueper-slides>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col cols="12">
+        <div class="d-flex flex-column justify-center align-center">
+          <div class="line-blue"></div>
+          <p class="blue--text text-h6 font-weight-medium">Các Phòng Được Đề Xuất Tốt Nhất</p>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="8">
+        <v-sheet light>
+
+        </v-sheet>
+      </v-col>
+      <v-col cols="4">
+
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <style>
 @import url('https://cdn.jsdelivr.net/npm/animate.css@3.5.1');
+body {
+  background-color: #F3F4F9;
+}
 .banner-right {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url("https://img.homedy.com/store/images/2019/06/19/can-ho-mini-gia-re-1-636965585916507395.jpg");

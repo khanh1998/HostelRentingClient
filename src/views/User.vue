@@ -1,10 +1,38 @@
 <template>
-  <div>nothing here</div>
+  <div class="app-wrapper">
+    <div class="header">
+      <div class="icon"></div>
+    </div>
+  </div>
 </template>
 <script>
 export default {
   name: 'User',
 };
 </script>
-<style>
+<style lang="scss" scoped>
+
+$main-bg-color: #919890;
+.app-wrapper {
+    width: 1024px;
+    height: 768px;
+    background: $main-bg-color;
+}
+.header {
+    height: 8%;
+    background: #323232;
+    width: 100%;
+    border-bottom: 2px solid #919890;
+    .icon {
+        background-image: url(../assets/logo.png);
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 25%;
+        float: left;
+        height: 40%;
+        top: 30%;
+        position: relative;
+        left: 2%;
+    }
+}
 </style>
