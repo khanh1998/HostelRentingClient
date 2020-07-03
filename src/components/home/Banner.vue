@@ -26,27 +26,28 @@
         >HỖ TRỢ TÌM KIẾM ĐỂ ĐỀ XUẤT PHÒNG TRỌ PHÙ HỢP NHẤT</p>
         <div class="d-flex justify-center align-center pa-6" :style="{width: '100%'}">
           <p></p>
-          <v-combobox
+          <v-select
             v-model="banner.left.select"
             :items="banner.left.items"
-            allow-overflow="false"
             color="success"
             label="Bạn là"
             autofocus
             outlined
             dense
             dark
-            clearable
-          ></v-combobox>
+          ></v-select>
         </div>
         <v-btn color="amber">TÌM KIẾM</v-btn>
       </div>
     </transition>
-    <div class="banner-right d-flex flex-column justify-center align-center">
+    <div
+      class="banner-right d-flex flex-column justify-center align-center"
+      :style="banner.right.style"
+    >
       <div class="line"></div>
       <p class="white--text text-h2 font-weight-medium">TD HOSTEL</p>
       <p
-        class="white--text font-weight-medium"
+        class="white--text font-weight-medium px-2"
       >HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT</p>
       <v-btn color="warning" light @click="openLeftBanner">TÌM KIẾM NÂNG CAO</v-btn>
     </div>
@@ -60,7 +61,7 @@
   background-position: center;
   background-size: cover;
   height: 500px;
-  width: 100%;
+  overflow: hidden;
 }
 .banner-left {
   background-color: #282828;
@@ -83,7 +84,11 @@ export default {
         items: ['Sinh viên', 'Công nhân', 'Nhân viên'],
         style: {},
       },
-      right: {},
+      right: {
+        style: {
+          width: '100%',
+        },
+      },
     },
     slides: [
       {
@@ -96,9 +101,23 @@ export default {
   methods: {
     closeLeftBanner() {
       this.banner.left.show = false;
+      if (this.$vuetify.breakpoint.name === 'xs') {
+        this.banner.right.style.width = '100%';
+      }
     },
     openLeftBanner() {
       this.banner.left.show = true;
+      if (this.$vuetify.breakpoint.name === 'xs') {
+        this.banner.right.style.width = 0;
+      }
+    },
+  },
+  computed: {
+    responsive() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'sm': return {};
+        default: return {};
+      }
     },
   },
 };

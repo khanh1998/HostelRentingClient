@@ -26,12 +26,12 @@
         </div>
       </v-col>
     </v-row>
-    <v-row >
-      <v-col cols="8">
+    <v-row class="d-flex">
+      <v-col cols="12" lg="8" md="7">
         <v-row>
-          <v-col cols="12">
+          <v-col cols="6">
             <v-sheet light class="px-6 pt-6">
-              <v-combobox
+              <v-select
                 v-model="roomType.select"
                 :items="roomType.items"
                 light
@@ -40,7 +40,24 @@
                 label="Loại phòng"
                 class=""
                 :style="'width: 300px'">
-              </v-combobox>
+              </v-select>
+            </v-sheet>
+          </v-col>
+          <v-col cols="6">
+            <v-sheet light class="px-6 pt-6" style="height: 100%">
+              <v-bottom-sheet v-model="bottomSheet.show" persistent>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    color="green"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    Open Persistent
+                  </v-btn>
+                </template>
+                <HostelFilter/>
+              </v-bottom-sheet>
             </v-sheet>
           </v-col>
           <v-col cols="12">
@@ -48,7 +65,7 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="4">
+      <v-col cols="12" lg="4" md="5" class="hidden-xs-only">
         <v-row>
           <v-col cols="12">
             <HostelFilter/>
@@ -64,7 +81,7 @@
 import Banner from '../components/home/Banner.vue';
 import TopCarousel from '../components/home/TopCarousel.vue';
 import ArticleList from '../components/home/ArticleList.vue';
-import HostelFilter from '../components/home/Filter.vue';
+import HostelFilter from '../components/home/HostelFilter.vue';
 
 export default {
   name: 'Home',
@@ -78,6 +95,9 @@ export default {
     roomType: {
       select: ['Phòng trọ'],
       items: ['Phòng trọ', 'Ký túc xá', 'Nhà nguyên căn'],
+    },
+    bottomSheet: {
+      show: false,
     },
   }),
   methods: {},

@@ -1,7 +1,7 @@
 <template>
   <v-sheet class="pa-6">
     <p class="text-h6">BỘ LỌC CỦA BẠN</p>
-    <v-combobox
+    <v-select
       v-model="filter.around.selects"
       :items="filter.around.items"
       light
@@ -11,9 +11,8 @@
       label="Tiện nghi xung quanh "
       deletable-chips
       clearable
-      class
-    ></v-combobox>
-    <v-combobox
+    ></v-select>
+    <v-select
       v-model="filter.facility.selects"
       :items="filter.facility.items"
       light
@@ -23,8 +22,7 @@
       label="Tiện ích "
       deletable-chips
       clearable
-      class
-    ></v-combobox>
+    ></v-select>
     <v-subheader>Chọn khoảng giá tiền</v-subheader>
     <v-range-slider
       v-model="filter.slider.range"
@@ -165,7 +163,7 @@
 </style>
 <script>
 export default {
-  name: 'Filter',
+  name: 'HostelFilter',
   data: () => ({
     filter: {
       around: {
