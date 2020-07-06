@@ -6,19 +6,21 @@
     </v-main>
 
     <v-footer app>
-    <!-- -->
-  </v-footer>
+    </v-footer>
+    <backToTopButton/>
   </v-app>
 
 </template>
 
 <script>
 import myAppBar from './components/core_layout/navigationBar.vue';
+import backToTopButton from './components/core_layout/backToTopButton.vue';
 
 export default {
   name: 'App',
   components: {
     myAppBar,
+    backToTopButton,
   },
   data: () => ({}),
 };

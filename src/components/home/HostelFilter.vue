@@ -1,16 +1,17 @@
 <template>
-  <v-sheet class="pa-6">
-    <p class="text-h6">BỘ LỌC CỦA BẠN</p>
+  <v-sheet
+    class="pl-2 pr-2 pb-2 pt-2 pl-md-6 pr-md-6 pb-md-6 pt-md-6"
+  >
     <v-select
       v-model="filter.around.selects"
       :items="filter.around.items"
       light
       outlined
       multiple
-      chips
-      label="Tiện nghi xung quanh "
-      deletable-chips
+      single-line
+      label="Tiện nghi xung quanh"
       clearable
+      dense
     ></v-select>
     <v-select
       v-model="filter.facility.selects"
@@ -18,89 +19,28 @@
       light
       outlined
       multiple
-      chips
       label="Tiện ích "
-      deletable-chips
       clearable
+      dense
     ></v-select>
-    <v-subheader>Chọn khoảng giá tiền</v-subheader>
-    <v-range-slider
-      v-model="filter.slider.range"
-      class="mt-6"
-      :min="filter.slider.min"
-      :max="filter.slider.max"
-      append-icon="fas fa-plus-circle"
-      prepend-icon="fas fa-minus-circle"
-      label
+    <v-select
+      v-model="filter.price.selects"
+      :items="filter.price.items"
       light
-      hint="Chọn khoảng giá tiền bạn mong muốn"
-      thumb-label="always"
-      thumb-size="32"
-      step="0.1"
-      :rules="filter.slider.rules"
-      @click:append="plusMoney"
-      @click:prepend="minusMoney"
-    >
-      <template v-slot:prepend>
-        <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" @click="minusMoney">
-              <v-icon>fas fa-minus-circle</v-icon>
-            </v-btn>
-          </template>
-          Giảm
-        </v-tooltip>
-      </template>
-      <template v-slot:append>
-        <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" @click="plusMoney">
-              <v-icon>fas fa-plus-circle</v-icon>
-            </v-btn>
-          </template>
-          Tăng
-        </v-tooltip>
-      </template>
-    </v-range-slider>
-    <div class="d-flex">
-      <v-text-field
-        v-model="filter.slider.range[0]"
-        class="mr-1"
-        hide-details
-        single-line
-        type="number"
-        suffix="triệu vnđ"
-        prefix="Từ"
-        outlined
-        readonly
-        dense
-        @change="$set(range, 0, $event)"
-      ></v-text-field>
-      <v-icon>mdi-arrow-left-right</v-icon>
-      <v-text-field
-        outlined
-        readonly
-        dense
-        v-model="filter.slider.range[1]"
-        prefix="Đến"
-        class="ml-1"
-        hide-details
-        single-line
-        type="number"
-        suffix="triệu vnđ"
-        @change="$set(range, 0.1, $event)"
-      ></v-text-field>
-    </div>
+      outlined
+      label="Chọn khoảng giá tiền"
+      clearable
+      dense
+    ></v-select>
     <!-- area -->
-    <v-subheader>Chọn khoảng diện tích</v-subheader>
     <v-range-slider
       v-model="filter.sliderArea.range"
-      class="mt-6"
+      class="mt-3"
       :min="filter.sliderArea.min"
       :max="filter.sliderArea.max"
       label
       light
-      hint="Chọn khoảng giá tiền bạn mong muốn"
+      messages="Chọn khoảng diện tích"
       thumb-label="always"
       thumb-size="32"
       step="0.1"
@@ -127,7 +67,7 @@
         </v-tooltip>
       </template>
     </v-range-slider>
-    <div class="d-flex">
+    <div class="d-flex flex-row mt-1">
       <v-text-field
         v-model="filter.sliderArea.range[0]"
         class="mr-1"
@@ -140,7 +80,7 @@
         readonly
         dense
       ></v-text-field>
-      <v-icon>mdi-arrow-left-right</v-icon>
+      <v-icon small>mdi-arrow-left-right</v-icon>
       <v-text-field
         outlined
         readonly
@@ -183,6 +123,14 @@ export default {
           'Tủ lạnh',
           'Bình nóng lạnh',
           'Chỗ đậu xe',
+        ],
+      },
+      price: {
+        selects: [],
+        items: [
+          '500k - 1000k',
+          '1000k - 2000k',
+          '2000k - 3000k',
         ],
       },
       slider: {

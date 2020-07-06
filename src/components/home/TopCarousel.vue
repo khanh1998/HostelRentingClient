@@ -4,7 +4,6 @@
     fractions
     bulletsOutside
     transition-speed="250"
-    prevent-y-scroll
     infinite
     pauseOnHover
     autoplay
@@ -52,32 +51,32 @@ export default {
     ],
     breakpoints: {
       1904: {
-        arrowsOutside: false,
+        arrowsOutside: true,
         visibleSlides: 3,
         gap: 5,
         draggingDistance: 70,
-        fixedHeight: '490px',
+        fixedHeight: '440px',
       },
       1264: {
-        arrowsOutside: false,
+        arrowsOutside: true,
         visibleSlides: 2,
         gap: 5,
         draggingDistance: 70,
-        fixedHeight: '490px',
+        fixedHeight: '440px',
       },
       960: {
         arrowsOutside: false,
         visibleSlides: 1,
         gap: 5,
         draggingDistance: 70,
-        fixedHeight: '490px',
+        fixedHeight: '440px',
       },
       600: {
         arrowsOutside: false,
         visibleSlides: 1,
         gap: 5,
         draggingDistance: 70,
-        fixedHeight: '490px',
+        fixedHeight: '440px',
       },
     },
   }),
