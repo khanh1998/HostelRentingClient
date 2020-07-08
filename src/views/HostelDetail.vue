@@ -1,38 +1,10 @@
 <template>
   <v-container>
-    <v-overlay :value="datePicker.isOpenPicker">
-      <v-date-picker
-        v-model="datePicker.date"
-        reactive
-        :min="today"
-        light>
-        <template slot:default>
-          <v-btn color="red" @click="pick('date')">
-            <v-icon class="ma-2">far fa-calendar-times</v-icon>
-            Cancel
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn right color="success" @click="pick('date')">
-            <v-icon class="ma-2">fas fa-calendar-check</v-icon>
-            OK
-          </v-btn>
-        </template>
-      </v-date-picker>
-    </v-overlay>
-    <v-overlay :value="timePicker.isOpenPicker">
-      <v-time-picker v-model="timePicker.time" format="24hr" light>
-        <template slot:default>
-          <v-btn color="red" @click="pick('time')">
-            <v-icon class="ma-2">far fa-calendar-times</v-icon>
-            Cancel
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn right color="success" @click="pick('time')">
-            <v-icon class="ma-2">fas fa-calendar-check</v-icon>
-            OK
-          </v-btn>
-        </template>
-      </v-time-picker>
+    <v-overlay :value="dateTimePicker.isOpenPicker">
+      <dateTimePicker
+        v-on:cancel="dateTimePicker.isOpenPicker = false"
+        v-on:ok="receivedDateTime"
+      />
     </v-overlay>
     <v-row>
       <v-col cols="8">
@@ -62,7 +34,7 @@
               <v-avatar height="64" width="64" left>
                 <v-img max-height="64" max-width="64" src="../assets/logo.png"/>
               </v-avatar>
-              <p class="text-h5 text-center ma-2">{{info.name}} Hostel</p>
+              <p class="text-h5 text-center ma-2">Nhà trọ {{info.name}}</p>
             </v-chip>
             <v-rating
               v-model="info.rating.average"
@@ -73,35 +45,51 @@
               class="ma-2"
               tile outlined color="success"
               @click="pick('date')">
-              <v-icon left>fas fa-calendar-plus</v-icon> Pick date
+              <v-icon left>fas fa-calendar-plus</v-icon> Chọn ngày giờ
             </v-btn>
-
-            <v-btn
-              class="ma-2"
-              tile outlined color="success"
-              @click="pick('time')"
-              >
-              <v-icon left>fas fa-clock</v-icon> Pick time
-            </v-btn>
+          </div>
+          <div
+            v-if="dateTimePicker.date != null && dateTimePicker.time != null"
+            class="d-flex flex-column align-center justify-center"
+          >
+            <p>{{dateTimePicker.date.getDate()}}/
+              {{dateTimePicker.date.getMonth()}}/
+              {{dateTimePicker.date.getFullYear()}}
+            </p>
+            <p>{{dateTimePicker.time}}</p>
           </div>
           <v-spacer/>
           <div class="below d-flex justify-center align-center">
             <v-dialog v-model="dialog.booking" persistent max-width="290">
-              <template v-slot:activator>
-                <v-btn color="red" outlined width="80%" class="ma-6" @click="book">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-on="on"
+                  v-bind="attrs"
+                  color="red"
+                  outlined width="80%"
+                  class="ma-6" @click="book"
+                >
                   <v-icon left>fas fa-paper-plane</v-icon>
-                  Book now!
+                  Đặt ngay!
                 </v-btn>
               </template>
               <v-card>
-                <v-card-title class="headline">Booking comfirmation</v-card-title>
-                <v-card-text>
-                  Do you want to make a booking at {{time}} {{date}} with {{info.name}}
+                <v-card-title class="headline">Xác nhận đặt lịch</v-card-title>
+                <v-card-text
+                  v-if="dateTimePicker.date != null && dateTimePicker.time != null"
+                >
+                  Bạn muốn đặt lịch vào ngày
+                  <span> {{dateTimePicker.date.getDate()}}/
+                  {{dateTimePicker.date.getMonth()}}/
+                  {{dateTimePicker.date.getFullYear()}},
+                  </span>
+                   vào lúc {{dateTimePicker.time}}
+                   tại nhà trọ {{info.name}}
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="dialog.booking = false">No</v-btn>
-                  <v-btn color="green darken-1" text @click="sendBooking">Yes</v-btn>
+                  <v-btn color="green darken-1" text @click="dialog.booking = false">Không</v-btn>
+                  <v-btn color="green darken-1" text @click="sendBooking">Có</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -118,7 +106,7 @@
                   v-bind="attrs"
                   @click="snackbar.display = false"
                 >
-                  Close
+                  Đóng
                 </v-btn>
               </template>
             </v-snackbar>
@@ -128,8 +116,8 @@
     </v-row>
     <v-row>
       <v-col cols="2">
-        <p class="text-h5 blue--text">{{info.price}} vnd</p>
-        <p class="text-h6 blue--text">{{info.unit}}</p>
+        <p class="text-h5 blue--text">{{info.price}} đ</p>
+        <p class="text-caption">114 lượt xem</p>
       </v-col>
       <v-col cols="4">
         <p class="font-weight-bold">{{info.address}}</p>
@@ -141,7 +129,7 @@
             color="orange"
             outlined
             >
-            <v-icon class="mr-6">fas fa-comment-dots</v-icon> Chat now
+            <v-icon class="mr-6">fas fa-comment-dots</v-icon> Nhắn tin ngay!
           </v-btn>
         </div>
       </v-col>
@@ -154,55 +142,55 @@
           label
         >
           <v-icon left>fas fa-info-circle</v-icon>
-          Details
+          Thông tin phòng
         </v-chip>
       </v-col>
       <v-col cols="6">
         <v-divider class="mb-6"/>
         <div class="d-flex flex-column">
           <div class="above d-flex justify-space-around">
-            <div>
-              <p class="font-weight-medium grey--text">Area</p>
+            <div style="width: 140px">
+              <p class="font-weight-medium grey--text">Diện tích</p>
               <p class="font-weight-bold">{{info.details.area}} m2</p>
             </div>
-            <div>
-              <p class="font-weight-medium grey--text">Capacity</p>
-              <p class="font-weight-bold">{{info.details.capacity}} person</p>
+            <div style="width: 140px">
+              <p class="font-weight-medium grey--text">Sức chứa</p>
+              <p class="font-weight-bold">{{info.details.capacity}} người</p>
             </div>
-            <div>
+            <div style="width: 140px">
               <p class="font-weight-medium grey--text">Toilet</p>
               <p class="font-weight-bold">{{info.details.toilet}}</p>
             </div>
-            <div>
-              <p class="font-weight-medium grey--text" >Cooking</p>
-              <p class="font-weight-bold" v-if="info.details.cooking">Yes</p>
-              <p class="font-weight-bold" v-if="!info.details.cooking">No</p>
+            <div style="width: 140px">
+              <p class="font-weight-medium grey--text" >Nấu ăn</p>
+              <p class="font-weight-bold" v-if="info.details.cooking">Có</p>
+              <p class="font-weight-bold" v-if="!info.details.cooking">Không</p>
             </div>
           </div>
           <div class="above d-flex justify-space-around">
-            <div>
-              <p class="font-weight-medium grey--text">Electricity</p>
+            <div style="width: 140px">
+              <p class="font-weight-medium grey--text">Điện</p>
               <p class="font-weight-bold">
                 {{info.details.electricity.price}}
                 {{info.details.electricity.unit}}
               </p>
             </div>
-            <div>
-              <p class="font-weight-medium grey--text">Water</p>
+            <div style="width: 140px">
+              <p class="font-weight-medium grey--text">Nước</p>
               <p class="font-weight-bold">
                 {{info.details.water.price}}
                 {{info.details.water.unit}}
               </p>
             </div>
-            <div>
+            <div style="width: 140px">
               <p class="font-weight-medium grey--text">Wifi</p>
               <p class="font-weight-bold">
                 {{info.details.wifi.price}}
                 {{info.details.wifi.unit}}
               </p>
             </div>
-            <div>
-              <p class="font-weight-medium grey--text">Garbage</p>
+            <div style="width: 140px">
+              <p class="font-weight-medium grey--text">Rác</p>
               <p class="font-weight-bold">
                 {{info.details.garbage.price}}
                 {{info.details.garbage.unit}}
@@ -211,13 +199,13 @@
           </div>
           <div class="above d-flex flex-column">
             <div class="d-flex">
-              <p class="font-weight-bold blue--text mx-8">Facility</p>
+              <p class="font-weight-bold blue--text mr-8">Tiện nghi</p>
               <p class="font-weight-thin">
                 {{info.details.facility.join(', ')}}
               </p>
             </div>
             <div class="d-flex">
-              <p class="font-weight-bold blue--text mx-8">Service</p>
+              <p class="font-weight-bold blue--text mr-8">Dịch vụ</p>
               <p class="font-weight-thin">
                 {{info.details.service.join(', ')}}
               </p>
@@ -228,12 +216,12 @@
       <v-col cols="4">
         <div>
             <div class="primary d-flex justify-space-between">
-              <v-card-title class="white--text headline">
-                Infrastructure
+              <v-card-title class="white--text text-h6">
+                Tiện nghi xung quanh
               </v-card-title>
               <v-card-actions>
                 <v-btn color="success" class="ma-1">
-                  <v-icon>fas fa-map-signs</v-icon> View on map
+                  <v-icon>fas fa-map-signs</v-icon> Bản đồ
                 </v-btn>
               </v-card-actions>
             </div>
@@ -246,7 +234,6 @@
               dense
               hoverable
               rounded
-              filter
             >
               <template v-slot:prepend="{ item, open }">
                 <v-icon v-if="!item.icon">
@@ -273,18 +260,16 @@
 
 <script>
 import json from '../assets/hostel-detail.json';
+import dateTimePicker from '../components/hostel_type/dateTimePicker.vue';
 
 export default {
   name: 'HostelDetail',
-  components: {},
+  components: { dateTimePicker },
   data: () => ({
     info: null, // infomation of the hostel that being display
-    datePicker: {
+    dateTimePicker: {
       isOpenPicker: false,
       date: null,
-    },
-    timePicker: {
-      isOpenPicker: false,
       time: null,
     },
     dialog: {
@@ -379,7 +364,7 @@ export default {
   methods: {
     pick(name) {
       if (name === 'date') {
-        this.datePicker.isOpenPicker = !this.datePicker.isOpenPicker;
+        this.dateTimePicker.isOpenPicker = !this.dateTimePicker.isOpenPicker;
       }
       if (name === 'time') {
         this.timePicker.isOpenPicker = !this.timePicker.isOpenPicker;
@@ -408,9 +393,15 @@ export default {
     },
     sendBooking() {
       this.dialog.booking = false;
-      this.showSnackbar('success', 'Booking is created successfully!!!');
+      this.showSnackbar('success', 'Bạn đã đặt lịch hẹn xem phòng thành công!!!');
     },
     allowedDates: () => true,
+    receivedDateTime(event) {
+      this.dateTimePicker.isOpenPicker = false;
+      console.log(event);
+      this.dateTimePicker.date = event.date;
+      this.dateTimePicker.time = event.time;
+    },
   },
   async created() {
     this.info = json;

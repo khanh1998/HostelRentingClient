@@ -1,6 +1,9 @@
 const state = () => ({
   hostelType: null,
   loading: false,
+  dateTimePicker: {
+    show: false,
+  },
 });
 
 const getters = {};

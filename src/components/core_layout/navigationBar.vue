@@ -13,7 +13,7 @@
         light
         hide-details
         autofocus
-        placeholder="Search by address..."
+        placeholder="Tìm theo địa chỉ..."
         full-width
       >
         <template v-slot:append>
@@ -42,7 +42,7 @@
         solo-inverted
         light
         hide-details
-        label="Search by address..."
+        label="Tìm theo địa chỉ..."
         class="hidden-sm-and-down"
       >
         <template v-slot:append>
@@ -66,10 +66,12 @@
       <v-spacer></v-spacer>
 
       <v-btn color="#2C92D5" light depressed outlined rounded class="ma-1 hidden-xs-only">
-        <v-icon light>fas fa-paper-plane</v-icon> Room alert
+        <v-icon light>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
       </v-btn>
 
-      <v-btn color="#6C98C6" depressed dark class="ma-1 hidden-xs-only">Your Booking</v-btn>
+      <v-btn color="#6C98C6" depressed dark class="ma-1 hidden-xs-only">
+        Lịch hẹn của bạn
+      </v-btn>
       <v-menu>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
@@ -111,7 +113,7 @@ export default {
   }),
   methods: {
     search() {
-      alert('search');
+      console.log('search');
     },
   },
 };

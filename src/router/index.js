@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/HostelDetail.vue';
+import HostelDetail from '../views/HostelDetail.vue';
 import userRoute from './routes/user';
 import homeRoute from './routes/home';
 
@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/detail',
     name: 'HostelDetail',
-    component: Home,
+    component: HostelDetail,
   },
   {
     path: '/about',

@@ -15,7 +15,7 @@
 </template>
 <script>
 export default {
-  name: 'Back To Top Button',
+  name: 'BackToTopButton',
   data: () => ({
     fab: false,
   }),
