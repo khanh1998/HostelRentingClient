@@ -28,7 +28,7 @@
       v-if="timesForDate != null"
       class="below d-flex flex-column align-center pa-1 flex-wrap"
     >
-      <p class="h6-text">CHỌN THỜI GIAN</p>
+      <p class="h6-text">CHỌN GIỜ</p>
       <v-chip-group mandatory dark  v-model="pickedTime">
         <v-chip
           light
