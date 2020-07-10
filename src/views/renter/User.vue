@@ -24,7 +24,7 @@ $main-bg-color: #919890;
     width: 100%;
     border-bottom: 2px solid #919890;
     .icon {
-        background-image: url(../assets/logo.png);
+        background-image: url(../../assets/logo.png);
         background-repeat: no-repeat;
         background-size: contain;
         width: 25%;

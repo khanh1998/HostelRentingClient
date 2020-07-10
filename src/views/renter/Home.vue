@@ -96,10 +96,10 @@
 <style>
 </style>
 <script>
-import Banner from '../components/home/Banner.vue';
-import TopCarousel from '../components/home/TopCarousel.vue';
-import ArticleList from '../components/home/ArticleList.vue';
-import HostelFilter from '../components/home/HostelFilter.vue';
+import Banner from '@/components/home/Banner.vue';
+import TopCarousel from '@/components/home/TopCarousel.vue';
+import ArticleList from '@/components/home/ArticleList.vue';
+import HostelFilter from '@/components/home/HostelFilter.vue';
 
 export default {
   name: 'Home',

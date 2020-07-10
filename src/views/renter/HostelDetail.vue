@@ -62,10 +62,10 @@
 </template>
 
 <script>
-import json from '../assets/hostel-detail.json';
-import dateTimePickerBox from '../components/hostel_type/dateTimePickerBox.vue';
-import mainInfo from '../components/hostel_type/mainInfo.vue';
-import treeView from '../components/hostel_type/treeView.vue';
+import json from '@/assets/hostel-detail.json';
+import dateTimePickerBox from '@/components/hostel_type/dateTimePickerBox.vue';
+import mainInfo from '@/components/hostel_type/mainInfo.vue';
+import treeView from '@/components/hostel_type/treeView.vue';
 
 export default {
   name: 'HostelDetail',

@@ -30,9 +30,9 @@
 </template>
 
 <script>
-import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
-import chatInfoList from '../components/ventor/ChatInfoList.vue';
-import hostelInfo from '../components/ventor/HostelInfo.vue';
+import sideMenuBar from '@/components/core_layout/sideMenuBar.vue';
+import chatInfoList from '@/components/vendor/ChatInfoList.vue';
+import hostelInfo from '@/components/vendor/HostelInfo.vue';
 
 export default {
   name: 'ChatDetail',
