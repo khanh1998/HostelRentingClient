@@ -1,18 +1,15 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import HostelDetail from '../views/HostelDetail.vue';
 import userRoute from './routes/user';
 import homeRoute from './routes/home';
+import viewCartRoute from './routes/viewcart';
+import HostelDetailRoute from './routes/details';
 
 Vue.use(VueRouter);
 
 const routes = [
   homeRoute,
-  {
-    path: '/detail',
-    name: 'HostelDetail',
-    component: HostelDetail,
-  },
+  HostelDetailRoute,
   {
     path: '/about',
     name: 'About',
@@ -22,6 +19,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/HostelDetail.vue'),
   },
   userRoute,
+  viewCartRoute,
 ];
 
 const router = new VueRouter({

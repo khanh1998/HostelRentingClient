@@ -64,7 +64,7 @@
             </v-sheet>
           </v-col>
           <v-col cols="12">
-            <ArticleList/>
+            <ArticleList :list="hostelTypes"/>
           </v-col>
         </v-row>
       </v-col>
@@ -96,6 +96,8 @@
 <style>
 </style>
 <script>
+import { mapActions } from 'vuex';
+// import actionName from '../store/modules/home.action_name';
 import Banner from '../components/home/Banner.vue';
 import TopCarousel from '../components/home/TopCarousel.vue';
 import ArticleList from '../components/home/ArticleList.vue';
@@ -121,6 +123,26 @@ export default {
       page: 1,
     },
   }),
-  methods: {},
+  methods: {
+    ...mapActions({
+      getHostelTypes: 'Home/getHostelTypes',
+    }),
+  },
+  async mounted() {
+    // this.$store.dispatch(`Home/${actionName.getHostelTypes}`);
+    await this.getHostelTypes();
+  },
+  computed: {
+    hostelTypes: {
+      get() {
+        return this.$store.state.Home.hostelTypes.data;
+      },
+    },
+    isLoading: {
+      get() {
+        return this.$store.state.Home.hostelTypes.isLoading;
+      },
+    },
+  },
 };
 </script>
