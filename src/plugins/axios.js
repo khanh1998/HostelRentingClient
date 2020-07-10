@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import axios from 'axios';
-import { checkIfTokenNeedsRefresh } from '../utils/utils';
-import { checkForUpdates } from '../utils/updates';
+import checkIfTokenNeedsRefresh from '../utils/utils';
+import checkForUpdates from '../utils/updates';
 import constant from '../config/constant';
 
 axios.defaults.baseURL = process.env.VUE_APP_API_URL || constant.VUE_APP_API_URL;
@@ -9,6 +9,7 @@ axios.defaults.headers.common['Accept-Language'] = JSON.parse(localStorage.getIt
 
 axios.interceptors.request.use(
   (config) => {
+    const myConfig = config;
     // Do something before request is sent
     // If request is different than any of the URLS in urlsExcludedForBearerHeader
     // then send Authorization header with token from localstorage
@@ -19,16 +20,17 @@ axios.interceptors.request.use(
       '/reset',
       `${window.location.origin}/version.json`,
     ];
-    if (urlsExcludedForBearerHeader.indexOf(config.url) === -1) {
-      config.headers.Authorization = `Bearer ${JSON.parse(
-        localStorage.getItem('token'),
-      )}`;
+    if (urlsExcludedForBearerHeader.indexOf(myConfig.url) === -1) {
+      // myConfig.headers.Authorization = `Bearer ${JSON.parse(
+      // localStorage.getItem('token'),
+      // )}`;
     }
-    return config;
+    return myConfig;
   },
-  (error) =>
+  (error) => {
     // Do something with request error
-    Promise.reject(error),
+    Promise.reject(error);
+  },
 );
 
 // Add a response interceptor
@@ -45,27 +47,31 @@ axios.interceptors.response.use(
     }
     return response;
   },
-  (error) =>
+  (error) => {
     // Do something with response error
-    Promise.reject(error),
+    Promise.reject(error);
+  },
 );
 
-// eslint-disable-next-line no-shadow
-Plugin.install = (Vue) => {
-  Vue.axios = axios;
-  window.axios = axios;
-  Object.defineProperties(Vue.prototype, {
-    axios: {
-      get() {
-        return axios;
+const Plugin = {
+  install: (VueObject) => {
+    // const myVue = { ...Vue };
+    // eslint-disable-next-line no-param-reassign
+    VueObject.axios = axios;
+    window.axios = axios;
+    Object.defineProperties(VueObject.prototype, {
+      axios: {
+        get() {
+          return axios;
+        },
       },
-    },
-    $axios: {
-      get() {
-        return axios;
+      $axios: {
+        get() {
+          return axios;
+        },
       },
-    },
-  });
+    });
+  },
 };
 
 Vue.use(Plugin);

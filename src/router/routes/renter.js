@@ -2,6 +2,7 @@ import RenterView from '../../main-view/Renter.vue';
 import HostelDetail from '../../views/renter/HostelDetail.vue';
 import Home from '../../views/renter/Home.vue';
 import User from '../../views/renter/User.vue';
+import ViewCart from '../../views/renter/ViewCart.vue';
 
 const routes = [
   {
@@ -23,6 +24,11 @@ const routes = [
         path: '/user',
         name: 'User',
         component: User,
+      },
+      {
+        path: '/cart',
+        name: 'ViewCard',
+        component: ViewCart,
       },
     ],
   },

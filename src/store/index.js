@@ -1,11 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import HostelTypeModule from './modules/hosteltype';
+import AdminStore from './modules/admin';
+import RenterStore from './modules/rentor';
+import VendorStore from './modules/vendor';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    HostelTypeModule,
+    admin: AdminStore,
+    renter: RenterStore,
+    vendor: VendorStore,
   },
 });

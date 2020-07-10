@@ -81,7 +81,7 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item to="/user">
+          <v-list-item to="/cart">
             <v-list-item-icon><v-icon>far fa-user-circle</v-icon></v-list-item-icon>
             <v-list-item-title>Your profile</v-list-item-title>
           </v-list-item>

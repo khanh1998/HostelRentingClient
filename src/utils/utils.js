@@ -1,1 +1,3 @@
-export default checkIfTokenNeedsRefresh = () => {};
+export default function checkIfTokenNeedsRefresh() {
+  return false;
+}

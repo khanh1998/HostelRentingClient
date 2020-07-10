@@ -15,6 +15,7 @@
         </v-img>
       <div class="right d-flex flex-column">
         <v-card-title>Nhà trọ Lalahome</v-card-title>
+        {{data.typeName}}
         <v-card-subtitle class="amber--text font-weight-medium">
           <v-icon>mdi-currency-usd-circle-outline</v-icon>3.500.000 vnd
         </v-card-subtitle>
@@ -93,6 +94,7 @@ export default {
   name: 'Article',
   props: {
     index: Number,
+    data: Object,
   },
   data: () => ({
     numberIcons: [
