@@ -1,17 +1,16 @@
 <template>
-  <v-app id="sandbox">
-    <v-navigation-drawer
-      v-model="primaryDrawer.model"
-      :clipped="primaryDrawer.clipped"
-      :permanent="primaryDrawer.type === 'permanent'"
-      app
-      overflow
-      v-bind:width="300"
-    >
-      <sideMenuBar />
-    </v-navigation-drawer>
-
-    <v-main class="mt-10">
+  <div id="sandbox">
+    <v-container class="mt-10" fill-height>
+      <v-navigation-drawer
+          v-model="primaryDrawer.model"
+          :clipped="primaryDrawer.clipped"
+          :permanent="primaryDrawer.type === 'permanent'"
+          app
+          overflow
+          v-bind:width="300"
+        >
+          <sideMenuBar />
+        </v-navigation-drawer>
         <v-row no-gutters style="flex-wrap: nowrap;">
           <v-col cols="3" class="scroll-container mx-3">
               <chatInfoList/>
@@ -24,9 +23,9 @@
             <hostel-info/>
           </v-col>
         </v-row>
-    </v-main>
+    </v-container>
 
-  </v-app>
+  </div>
 </template>
 
 <script>

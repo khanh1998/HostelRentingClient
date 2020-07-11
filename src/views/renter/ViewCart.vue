@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="4"></v-col>
-      <v-col cols="8">
+    <v-row justify="center">
+      <v-col cols="0" md="4"></v-col>
+      <v-col cols="10" md="8">
         <v-btn-toggle
           mandatory
           tile
@@ -20,14 +20,14 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="4">
-        <v-date-picker
-          v-model="date"
-          :event-color="date => date[9] % 2 ? 'red' : 'yellow'"
-          :events="arrayEvents"
-        ></v-date-picker>
+      <v-col cols="12" md="4" class="d-flex justify-center">
+          <v-date-picker
+            v-model="date"
+            :event-color="date => date[9] % 2 ? 'red' : 'yellow'"
+            :events="arrayEvents"
+          ></v-date-picker>
       </v-col>
-      <v-col cols="8">
+      <v-col cols="12" md="8">
         <bookingItem/>
       </v-col>
     </v-row>

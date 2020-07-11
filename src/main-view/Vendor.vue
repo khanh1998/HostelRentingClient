@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="mt-0" style="height: 100%">
     <chatDetail/>
   </v-app>
 </template>

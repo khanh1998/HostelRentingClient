@@ -14,16 +14,15 @@
           </div>
         </v-img>
       <div class="right d-flex flex-column">
-        <v-card-title>Nhà trọ Lalahome</v-card-title>
-        {{data.typeName}}
+        <v-card-title>{{group.groupName}} - {{type.typeName}}</v-card-title>
         <v-card-subtitle class="amber--text font-weight-medium">
-          <v-icon>mdi-currency-usd-circle-outline</v-icon>3.500.000 vnd
+          <v-icon>mdi-currency-usd-circle-outline</v-icon>{{type.price}} vnd
         </v-card-subtitle>
         <div class="ml-4" style="border: 1px solid #6C98C6; width: 200px"></div>
         <div class="d-flex align-center justify-space-between">
           <span class="mx-2 mt-4">
             <p>
-              <v-icon class="mx-2" x-small>fas fa-map-marker-alt</v-icon>Linh Trung, Thủ Đức, TP.HCM
+              <v-icon class="mx-2" x-small>fas fa-map-marker-alt</v-icon>{{group.detailedAddress}}
             </p>
           </span>
         </div>
@@ -44,7 +43,7 @@
             <v-icon class="mx-2" x-small>fas fa-ruler-combined</v-icon>20m2
           </span>
           <span class="mx-2">
-            <v-icon class="mx-2" x-small>fas fa-users</v-icon>3 người
+            <v-icon class="mx-2" x-small>fas fa-users</v-icon>{{type.capacity}} người
           </span>
           <span class="mx-2">
             <v-icon class="mx-2" x-small>mdi-toilet</v-icon>Dùng riêng
@@ -94,7 +93,7 @@ export default {
   name: 'Article',
   props: {
     index: Number,
-    data: Object,
+    type: Object,
   },
   data: () => ({
     numberIcons: [
@@ -138,6 +137,13 @@ export default {
             },
           };
         }
+      },
+    },
+    group: {
+      get() {
+        const id = this.type.groupId;
+        console.log(this.$store.getters);
+        return this.$store.getters['renter/home/getHostelGroupById'](id);
       },
     },
   },
