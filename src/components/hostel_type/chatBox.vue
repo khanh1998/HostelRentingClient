@@ -64,10 +64,11 @@
                   v-if="item.renter"
                   class="d-flex justify-end"
                 >
+                  <v-icon v-if="item.book || item.bargain">info</v-icon>
                   <span
                     v-ripple
-                    style="width: 250px"
-                    class="blue lighten-5 pa-2 rounded max-w-3/4"
+                    style="width: 75%"
+                    class="blue lighten-5 pa-2 rounded"
                   >
                     {{item.message}}
                   </span>
@@ -77,8 +78,9 @@
                   class="d-flex justify-start"
                 >
                   <span
+                    style="width: 75%"
                     v-ripple
-                    class="green lighten-5 pa-2 rounded max-w-3/4"
+                    class="green lighten-5 pa-2 rounded"
                   >
                     {{item.message}}
                   </span>
