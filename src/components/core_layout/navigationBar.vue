@@ -85,6 +85,10 @@
             <v-list-item-icon><v-icon>far fa-user-circle</v-icon></v-list-item-icon>
             <v-list-item-title>Your profile</v-list-item-title>
           </v-list-item>
+          <v-list-item to="/qr">
+            <v-list-item-icon><v-icon>fas fa-qrcode</v-icon></v-list-item-icon>
+            <v-list-item-title>QR Scanner</v-list-item-title>
+          </v-list-item>
           <v-list-item to="#" class="hidden-sm-and-up">
             <v-list-item-icon><v-icon>fas fa-paper-plane</v-icon></v-list-item-icon>
             <v-list-item-title>Room alert</v-list-item-title>

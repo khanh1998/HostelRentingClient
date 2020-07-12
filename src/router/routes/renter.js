@@ -3,6 +3,7 @@ import HostelDetail from '../../views/renter/HostelDetail.vue';
 import Home from '../../views/renter/Home.vue';
 import User from '../../views/renter/User.vue';
 import ViewCart from '../../views/renter/ViewCart.vue';
+import QrReader from '../../views/renter/QrReader.vue';
 
 const routes = [
   {
@@ -29,6 +30,11 @@ const routes = [
         path: '/cart',
         name: 'ViewCard',
         component: ViewCart,
+      },
+      {
+        path: '/qr',
+        name: 'QrReader',
+        component: QrReader,
       },
     ],
   },
