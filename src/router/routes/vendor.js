@@ -8,7 +8,7 @@ const routes = [
     component: VendorView,
     children: [
       {
-        path: '/chat',
+        path: '',
         name: 'ChatDetail',
         component: ChatDetail,
       },

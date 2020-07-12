@@ -1,34 +1,42 @@
 <template>
   <div>
-    <v-form>
-      <v-row>
-        <v-col cols="12" sm="6" md="7">
-          <v-text-field label="Tìm kiếm" solo></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" md="5">
-          <v-select :items="chooses" solo></v-select>
-        </v-col>
-      </v-row>
-    </v-form>
-    <v-card class="mx-auto rounded" max-width="400" tile>
-      <v-list :dense="dense" :two-line="twoLine" :nav="nav" :avatar="avatar">
-        <v-list-item-group v-model="item" color="primary">
-          <v-list-item v-for="(item, i) in items" :key="i">
-            <v-list-item-avatar v-if="avatar">
-              <v-img :src="item.avatar"></v-img>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title class="text-subtitle-1">{{item.title}}</v-list-item-title>
-              <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
-            </v-list-item-content>
-            <div class="text-center">
-              <span v-html="item.price"></span><br/>
-              <span v-html="item.preprice"></span>
-            </div>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-card>
+    <v-row>
+      <v-col
+        cols="12"
+        sm="6"
+        md="7"
+      >
+        <v-text-field
+          label="Tìm kiếm"
+          solo
+        ></v-text-field>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="5"
+      >
+        <v-select
+          :items="combobox.chooses"
+          v-model="combobox.select"
+          solo
+        ></v-select>
+      </v-col>
+    </v-row>
+    <div class="vuebar-element" v-bar> <!-- el1 -->
+    <div> <!-- el2 -->
+      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      Sed, molestiae expedita voluptate a autem impedit, consequuntur
+       dolore rem at et nam dolorum commodi soluta eum adipisci quaerat blanditiis! Ipsa, pariatur.
+       Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      Sed, molestiae expedita voluptate a autem impedit, consequuntur
+       dolore rem at et nam dolorum commodi soluta eum adipisci quaerat blanditiis! Ipsa, pariatur.
+       Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      Sed, molestiae expedita voluptate a autem impedit, consequuntur
+       dolore rem at et nam dolorum commodi soluta eum adipisci quaerat blanditiis! Ipsa, pariatur.
+    </div>
+    <!-- dragger will be automatically added here -->
+  </div>
   </div>
 </template>
 <script>
@@ -118,11 +126,14 @@ export default {
             "<span class='green--text'>Phòng gác lửng, không máy lạnh</span> <br/> Phòng trọ nuôi chó được không ạ?",
         },
       ],
-      chooses: ['Tất cả', 'Trả giá', 'Đặt lịch'],
       dense: true,
       twoLine: true,
       nav: true,
       avatar: true,
+      combobox: {
+        chooses: ['Tất cả', 'Trả giá', 'Đặt lịch'],
+        select: ['Tất cả'],
+      },
     };
   },
   mounted() {
@@ -130,3 +141,57 @@ export default {
   },
 };
 </script>
+<style>
+.vuebar-element {
+  height: 250px;
+  width: 100%;
+  max-width: 500px;
+  background: #ffffff;
+}
+
+.vb > .vb-dragger {
+    z-index: 5;
+    width: 12px;
+    right: 0;
+}
+
+.vb > .vb-dragger > .vb-dragger-styler {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: rotate3d(0,0,0,0);
+    transform: rotate3d(0,0,0,0);
+    -webkit-transition:
+        background-color 100ms ease-out,
+        margin 100ms ease-out,
+        height 100ms ease-out;
+    transition:
+        background-color 100ms ease-out,
+        margin 100ms ease-out,
+        height 100ms ease-out;
+    background-color: rgba(48, 121, 244,.1);
+    margin: 5px 5px 5px 0;
+    border-radius: 20px;
+    height: calc(100% - 10px);
+    display: block;
+}
+
+.vb.vb-scrolling-phantom > .vb-dragger > .vb-dragger-styler {
+    background-color: rgba(48, 121, 244,.3);
+}
+
+.vb > .vb-dragger:hover > .vb-dragger-styler {
+    background-color: rgba(48, 121, 244,.5);
+    margin: 0px;
+    height: 100%;
+}
+
+.vb.vb-dragging > .vb-dragger > .vb-dragger-styler {
+    background-color: rgba(48, 121, 244,.5);
+    margin: 0px;
+    height: 100%;
+}
+
+.vb.vb-dragging-phantom > .vb-dragger > .vb-dragger-styler {
+    background-color: rgba(48, 121, 244,.5);
+}
+</style>
