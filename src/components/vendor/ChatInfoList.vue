@@ -23,20 +23,51 @@
         ></v-select>
       </v-col>
     </v-row>
-    <div class="vuebar-element" v-bar> <!-- el1 -->
-    <div> <!-- el2 -->
-      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      Sed, molestiae expedita voluptate a autem impedit, consequuntur
-       dolore rem at et nam dolorum commodi soluta eum adipisci quaerat blanditiis! Ipsa, pariatur.
-       Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      Sed, molestiae expedita voluptate a autem impedit, consequuntur
-       dolore rem at et nam dolorum commodi soluta eum adipisci quaerat blanditiis! Ipsa, pariatur.
-       Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      Sed, molestiae expedita voluptate a autem impedit, consequuntur
-       dolore rem at et nam dolorum commodi soluta eum adipisci quaerat blanditiis! Ipsa, pariatur.
-    </div>
-    <!-- dragger will be automatically added here -->
-  </div>
+    <v-row>
+      <v-col cols="12">
+        <v-list
+          :dense="dense"
+          :two-line="twoLine"
+          :nav="nav"
+          :avatar="avatar"
+        >
+          <v-container
+            id="scroll-target"
+            style="max-height: 700px"
+            class="overflow-y-auto"
+          >
+            <v-row
+              v-scroll:#scroll-target="onScroll"
+              align="center"
+              justify="center"
+              style="height: 670px rounded-l"
+            >
+              <v-list-item-group
+                v-model="item"
+                color="primary"
+              >
+                <v-list-item
+                  v-for="(item, i) in items"
+                  :key="i"
+                >
+                  <v-list-item-avatar v-if="avatar">
+                    <v-img :src="item.avatar"></v-img>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title class="text-subtitle-1">{{item.title}}</v-list-item-title>
+                    <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+                  </v-list-item-content>
+                  <div class="text-center">
+                    <span v-html="item.price"></span><br />
+                    <span v-html="item.preprice"></span>
+                  </div>
+                </v-list-item>
+              </v-list-item-group>
+            </v-row>
+          </v-container>
+        </v-list>
+      </v-col>
+    </v-row>
   </div>
 </template>
 <script>
