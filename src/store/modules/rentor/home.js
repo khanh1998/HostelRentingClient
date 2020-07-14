@@ -7,12 +7,27 @@ const myState = () => ({
     data: [],
     isLoading: false,
   },
+  facilities: {
+    data: [],
+    isLoading: false,
+  },
+  services: {
+    data: [],
+    isLoading: false,
+  },
 });
 const getters = {
   getHostelGroupById: (state) => (id) => {
-    console.log('getter called');
     const result = state.hostelGroups.data.filter((group) => group.groupId === id);
     if (result.length > 0) {
+      return result[0];
+    }
+    return null;
+  },
+  getHostelTypeById: (state) => (id) => {
+    const result = state.hostelTypes.data.filter((type) => type.typeId === Number(id));
+    if (result.length > 0) {
+      console.log('finded');
       return result[0];
     }
     return null;

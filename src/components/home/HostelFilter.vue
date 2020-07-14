@@ -24,7 +24,7 @@
       dense
     ></v-select>
     <v-select
-      v-model="filter.price.selects"
+      v-model="filter.price.select"
       :items="filter.price.items"
       light
       outlined
@@ -95,58 +95,22 @@
       ></v-text-field>
     </div>
     <div class="d-flex justify-center align-center">
-      <v-btn tile min-width="100%" dark depressed class="mt-6" color="amber">TÌM KIẾM</v-btn>
+      <v-btn tile min-width="100%" dark depressed class="mt-6" color="amber"
+        @click="submit()"
+      >
+        TÌM KIẾM
+      </v-btn>
     </div>
   </v-sheet>
 </template>
 <style scoped>
 </style>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'HostelFilter',
-  data: () => ({
-    filter: {
-      around: {
-        selects: [],
-        items: [
-          'Chợ, siêu thị, cửa hàng tiện lợi',
-          'Trạm xe buýt',
-          'Bệnh viện, trạm y tế',
-          'Ngân hàng',
-        ],
-      },
-      facility: {
-        selects: [],
-        items: [
-          'Máy lạnh',
-          'Máy giặt',
-          'Tủ lạnh',
-          'Bình nóng lạnh',
-          'Chỗ đậu xe',
-        ],
-      },
-      price: {
-        selects: [],
-        items: [
-          '500k - 1000k',
-          '1000k - 2000k',
-          '2000k - 3000k',
-        ],
-      },
-      slider: {
-        range: [1, 3],
-        min: 0,
-        max: 10,
-        rules: [
-        ],
-      },
-      sliderArea: {
-        range: [15, 30],
-        min: 0,
-        max: 100,
-      },
-    },
-  }),
+  data: () => ({}),
   methods: {
     plusMoney() {
       const [min, max] = this.filter.slider.range;
@@ -163,6 +127,18 @@ export default {
     minusArea() {
       const [min, max] = this.filter.sliderArea.range;
       this.filter.sliderArea.range = [min - 0.1, max];
+    },
+    ...mapActions({
+      setFilterValue: 'renter/filterResult/setFilterValue',
+    }),
+    submit() {
+      this.setFilterValue(this.filter);
+      this.$emit('submitFilter');
+    },
+  },
+  computed: {
+    filter() {
+      return this.$store.state.renter.filterResult.filter;
     },
   },
 };

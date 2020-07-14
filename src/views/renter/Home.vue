@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-overlay :value="isLoading">
+    <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container fluid v-if="!isLoading">
@@ -62,7 +62,7 @@
                     </v-btn>
                   </template>
                   <v-sheet light class="pt-6">
-                    <HostelFilter/>
+                    <HostelFilter v-on:submitFilter="onFilterSubmit($event)"/>
                   </v-sheet>
                 </v-bottom-sheet>
               </v-sheet>
@@ -77,7 +77,7 @@
             <v-col cols="12">
               <v-sheet>
                 <p class="text-h6 pt-2 ml-6">Bộ lọc</p>
-                <HostelFilter/>
+                <HostelFilter v-on:submitFilter="onFilterSubmit($event)"/>
               </v-sheet>
             </v-col>
           </v-row>
@@ -117,7 +117,7 @@ export default {
   },
   data: () => ({
     roomType: {
-      select: ['Phòng trọ'],
+      select: 'Phòng trọ',
       items: ['Phòng trọ', 'Ký túc xá', 'Nhà nguyên căn'],
     },
     bottomSheet: {
@@ -126,11 +126,27 @@ export default {
     paging: {
       page: 1,
     },
+    filterCriteria: null,
   }),
   methods: {
     ...mapActions({
       getHostelTypes: 'renter/home/getHostelTypes',
     }),
+    ...mapActions({
+      getFilterResult: 'renter/filterResult/getFilterResult',
+    }),
+    onFilterSubmit(data) {
+      this.getFilterResult({ page: 1, size: 10 });
+      this.$router.push({
+        path: '/filter',
+        query: {
+          ...data,
+        },
+        params: {
+          criteria: 'criteria',
+        },
+      });
+    },
   },
   computed: {
     hostelTypes: {
@@ -145,7 +161,9 @@ export default {
     },
   },
   created() {
-    this.getHostelTypes();
+    if (this.hostelTypes.length === 0) {
+      this.getHostelTypes();
+    }
   },
 };
 </script>

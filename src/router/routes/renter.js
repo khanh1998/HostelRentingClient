@@ -4,6 +4,7 @@ import Home from '../../views/renter/Home.vue';
 import User from '../../views/renter/User.vue';
 import ViewCart from '../../views/renter/ViewCart.vue';
 import QrReader from '../../views/renter/QrReader.vue';
+import FilterResult from '../../views/renter/FilterResult.vue';
 
 const routes = [
   {
@@ -17,7 +18,7 @@ const routes = [
         component: Home,
       },
       {
-        path: '/detail',
+        path: '/detail/:typeId',
         name: 'HostelDetail',
         component: HostelDetail,
       },
@@ -35,6 +36,12 @@ const routes = [
         path: '/qr',
         name: 'QrReader',
         component: QrReader,
+      },
+      {
+        path: '/filter',
+        name: 'FilterResult',
+        component: FilterResult,
+        props: true,
       },
     ],
   },

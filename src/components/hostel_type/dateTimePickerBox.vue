@@ -4,6 +4,7 @@
       <dateTimePicker
         v-on:cancel="dateTimePicker.isOpenPicker = false"
         v-on:ok="receivedDateTime"
+        :groupId="groupId"
       />
     </v-overlay>
     <div
@@ -18,16 +19,16 @@
         <v-avatar height="64" width="64" left>
           <v-img max-height="64" max-width="64" src="../../assets/logo.png" />
         </v-avatar>
-        <p class="text-h5 text-center ma-2">Nhà trọ {{info.name}}</p>
+        <p class="text-h5 text-center ma-2">{{name}}</p>
       </v-sheet>
       <div class="d-flex flex-wrap align-center">
         <v-rating
-          v-model="info.rating.average"
+          v-model="rating.average"
           color="yellow"
           readonly
         >
         </v-rating>
-        ({{info.rating.total}})
+        ({{rating.total}})
       </div>
       <v-btn class="ma-2" tile outlined color="success" @click="pick('date')">
         <v-icon left>fas fa-calendar-plus</v-icon>Chọn ngày giờ
@@ -66,7 +67,7 @@
               {{dateTimePicker.date.getFullYear()}},
             </span>
             vào lúc {{dateTimePicker.time}}
-            tại nhà trọ {{info.name}}
+            tại nhà trọ {{name}}
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -85,14 +86,17 @@
   </div>
 </template>
 <script>
-import json from '../../assets/hostel-detail.json';
 import dateTimePicker from './dateTimePicker.vue';
 
 export default {
   name: 'DateTimePickerBox',
   components: { dateTimePicker },
+  props: {
+    name: String,
+    rating: Object,
+    groupId: Number,
+  },
   data: () => ({
-    info: null, // infomation of the hostel that being display
     dateTimePicker: {
       isOpenPicker: false,
       date: null,
@@ -146,9 +150,6 @@ export default {
       this.dateTimePicker.date = event.date;
       this.dateTimePicker.time = event.time;
     },
-  },
-  async created() {
-    this.info = json;
   },
 
 };

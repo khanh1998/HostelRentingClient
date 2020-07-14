@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="main d-flex flex-column pa-1 flex-wrap" light :width="width">
+  <v-sheet v-if="!isLoading" class="main d-flex flex-column pa-1 flex-wrap" light :width="width">
     <div class="above d-flex justify-center flex-column pa-1 flex-wrap">
       <p class="h6-text text-center">CHỌN NGÀY</p>
       <v-chip-group
@@ -77,6 +77,8 @@
 
 </style>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'DateTimePicker',
   props: {
@@ -85,18 +87,10 @@ export default {
       required: false,
       default: undefined,
     },
+    groupId: Number,
   },
   data: () => ({
-    times: [
-      ['0', '8h - 12h', '13h - 18h', '19h - 20h'],
-      ['1', '8h - 12h', '13h - 18h', '19h - 20h'],
-      ['2', '8h - 12h', '13h - 18h', '19h - 20h'],
-      ['3', '8h - 12h', '13h - 18h', '19h - 20h'],
-      ['4', '8h - 12h', '13h - 18h', '19h - 20h'],
-      ['5', '8h - 12h', '13h - 18h', '19h - 20h'],
-      ['6', '8h - 12h', '13h - 18h', '19h - 20h'],
-    ],
-    // daysOfWeek: ['monday', 'tuesday', 'wednesday', 'friday', 'friday', 'saturday', 'sunday'],
+    daysOfWeekEn: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     daysOfWeek: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
     dates: [],
     timesForDate: null,
@@ -104,6 +98,9 @@ export default {
     pickedTime: null,
   }),
   methods: {
+    ...mapActions({
+      getSchedules: 'renter/hostelType/getSchedules',
+    }),
     getNextDate(date) {
       const nextDate = new Date(date);
       nextDate.setDate(nextDate.getDate() + 1);
@@ -133,9 +130,27 @@ export default {
     },
   },
   created() {
+    this.getSchedules(this.groupId);
     this.dates = this.getListOf7Dates();
     [this.timesForDate] = this.times;
     console.log(this.timesForDate);
+  },
+  computed: {
+    rawSchedule() {
+      return this.$store.state.renter.hostelType.schedules.data;
+    },
+    isLoading() {
+      return this.$store.state.renter.hostelType.schedules.isLoading;
+    },
+    times() {
+      const arr = [];
+      this.daysOfWeekEn.forEach((day) => {
+        let result = this.rawSchedule.filter((item) => item.dayOfWeek === day);
+        result = result.map((item) => `${item.startTime} - ${item.endTime}`);
+        arr.push(result);
+      });
+      return arr;
+    },
   },
 };
 </script>

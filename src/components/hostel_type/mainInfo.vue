@@ -3,60 +3,64 @@
     <div class="above d-flex justify-space-around">
       <div style="width: 140px">
         <p class="font-weight-medium grey--text">Diện tích</p>
-        <p class="font-weight-bold">{{info.details.area}} m2</p>
+        <p class="font-weight-bold">{{info.superficiality}} m2</p>
       </div>
       <div style="width: 140px">
         <p class="font-weight-medium grey--text">Sức chứa</p>
-        <p class="font-weight-bold">{{info.details.capacity}} người</p>
+        <p class="font-weight-bold">{{info.capacity}} người</p>
       </div>
       <div style="width: 140px">
         <p class="font-weight-medium grey--text">Toilet</p>
-        <p class="font-weight-bold">{{info.details.toilet}}</p>
+        <p class="font-weight-bold">{{ true }}</p>
       </div>
       <div style="width: 140px">
         <p class="font-weight-medium grey--text">Nấu ăn</p>
-        <p class="font-weight-bold" v-if="info.details.cooking">Có</p>
-        <p class="font-weight-bold" v-if="!info.details.cooking">Không</p>
+        <p class="font-weight-bold" v-if="true">Có</p>
+        <p class="font-weight-bold" v-if="false">Không</p>
       </div>
     </div>
     <div class="above d-flex justify-space-around">
       <div style="width: 140px">
         <p class="font-weight-medium grey--text">Điện</p>
         <p class="font-weight-bold">
-          {{info.details.electricity.price}}
-          {{info.details.electricity.unit}}
+          {{12}}
+          {{'unit'}}
         </p>
       </div>
       <div style="width: 140px">
         <p class="font-weight-medium grey--text">Nước</p>
         <p class="font-weight-bold">
-          {{info.details.water.price}}
-          {{info.details.water.unit}}
+          {{13}}
+          {{'unit'}}
         </p>
       </div>
       <div style="width: 140px">
         <p class="font-weight-medium grey--text">Wifi</p>
         <p class="font-weight-bold">
-          {{info.details.wifi.price}}
-          {{info.details.wifi.unit}}
+          {{12}}
+          {{'unit'}}
         </p>
       </div>
       <div style="width: 140px">
         <p class="font-weight-medium grey--text">Rác</p>
         <p class="font-weight-bold">
-          {{info.details.garbage.price}}
-          {{info.details.garbage.unit}}
+          {{12}}
+          {{'unit'}}
         </p>
       </div>
     </div>
     <div class="above d-flex flex-column">
       <div class="d-flex">
         <p class="font-weight-bold blue--text mr-8">Tiện nghi</p>
-        <p class="font-weight-thin">{{info.details.facility.join(', ')}}</p>
+        <p class="font-weight-thin">
+          {{info.facilities.map(item => item.facilityName).join(', ')}}
+        </p>
       </div>
       <div class="d-flex">
         <p class="font-weight-bold blue--text mr-8">Dịch vụ</p>
-        <p class="font-weight-thin">{{info.details.service.join(', ')}}</p>
+        <p class="font-weight-thin">
+          {{group.services.map(item => item.serviceName).join(', ')}}
+        </p>
       </div>
     </div>
   </div>
@@ -75,6 +79,7 @@ export default {
   name: 'mainInfo',
   props: {
     info: Object,
+    group: Object,
   },
 };
 </script>

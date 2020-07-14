@@ -15,9 +15,11 @@
         autofocus
         placeholder="Tìm theo địa chỉ..."
         full-width
+        v-model="searchValue"
+        clearable
       >
         <template v-slot:append>
-          <v-btn @click="overlay.show = false">Search</v-btn>
+          <v-btn @click="overlay.show = false; search();">Search</v-btn>
         </template>
       </v-text-field>
     </v-overlay>
@@ -44,6 +46,8 @@
         hide-details
         label="Tìm theo địa chỉ..."
         class="hidden-sm-and-down"
+        v-model="searchValue"
+        clearable
       >
         <template v-slot:append>
           <v-btn icon @click="search">
@@ -108,6 +112,8 @@
 }
 </style>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'MyAppBar',
   data: () => ({
@@ -117,7 +123,23 @@ export default {
   }),
   methods: {
     search() {
-      console.log('search');
+      this.setSearchValue(this.searchValue);
+      this.searchByAddress();
+      this.$router.push('/filter');
+    },
+    ...mapActions({
+      setSearchValue: 'renter/filterResult/setSearchValue',
+      searchByAddress: 'renter/filterResult/searchByAddress',
+    }),
+  },
+  computed: {
+    searchValue: {
+      get() {
+        return this.$store.state.renter.filterResult.search.value;
+      },
+      set(value) {
+        this.setSearchValue(value);
+      },
     },
   },
 };

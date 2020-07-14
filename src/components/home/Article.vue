@@ -4,7 +4,7 @@
         <v-img
           :max-height="responsive.image.height"
           :max-width="responsive.image.width"
-          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+          :lazy-src="type.typeImages[0].resourceUrl || '#'"
         >
           <div class="d-flex align-start justify-end">
             <v-chip class="ma-6" color="red lighten-1" light text-color="white">
@@ -14,7 +14,10 @@
           </div>
         </v-img>
       <div class="right d-flex flex-column">
-        <v-card-title>{{group.groupName}} - {{type.typeName}}</v-card-title>
+        <div class="d-flex justify-space-center align-center">
+          <v-card-title>{{group.groupName}} - {{type.typeName}}</v-card-title>
+          <v-btn outlined :to="'/detail/' + type.typeId">Chi tiết</v-btn>
+        </div>
         <v-card-subtitle class="amber--text font-weight-medium">
           <v-icon>mdi-currency-usd-circle-outline</v-icon>{{type.price}} vnd
         </v-card-subtitle>
@@ -111,7 +114,6 @@ export default {
     },
     responsive: {
       get() {
-        console.log(this.$vuetify.breakpoint.name);
         const breakpoint = this.$vuetify.breakpoint.name;
         switch (breakpoint) {
           case 'xs':
@@ -142,8 +144,11 @@ export default {
     group: {
       get() {
         const id = this.type.groupId;
-        console.log(this.$store.getters);
-        return this.$store.getters['renter/home/getHostelGroupById'](id);
+        let data = this.$store.getters['renter/home/getHostelGroupById'](id);
+        if (!data) {
+          data = this.$store.getters['renter/filterResult/getHostelGroupById'](id);
+        }
+        return data;
       },
     },
   },
