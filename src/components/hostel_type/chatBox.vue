@@ -58,7 +58,7 @@
           align="center"
           justify="center"
         >
-            <v-list-item v-for="item in items" v-bind:key="item.id">
+            <v-list-item v-for="item in items" v-bind:key="item.createdAt">
               <v-list-item-content>
                 <div
                   v-if="item.renter"
@@ -131,30 +131,10 @@
     </v-card>
 </template>
 <script>
-import firebase from 'firebase';
 import dateTimePicker from './dateTimePicker.vue';
-// Required for side-effects
-require('firebase/firestore');
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyCWNT4MhALulebmekYoHKbwyAx-htB76tA',
-  authDomain: 'td-vue-firestore-chat.firebaseapp.com',
-  databaseURL: 'https://td-vue-firestore-chat.firebaseio.com',
-  projectId: 'td-vue-firestore-chat',
-  storageBucket: 'td-vue-firestore-chat.appspot.com',
-  messagingSenderId: '223687361307',
-  appId: '1:223687361307:web:ed8fd5232accfb095f09be',
-  measurementId: 'G-0K8CSPWJ17',
-};
-firebase.initializeApp(firebaseConfig);
+import firebase from '../../config/firebase';
 
-// initialize cloud firestore through firebase
-const db = firebase.firestore();
-window.db = db;
-// disable deprecated features
-db.settings({
-  timestampsInSnapshots: true,
-});
 export default {
   name: 'ChatBox',
   components: { dateTimePicker },
@@ -166,7 +146,7 @@ export default {
       newContent.bargain = true;
       newContent.message = `Bạn đã trả giá ${this.bargainOverlay.price}`;
       // this.items.push(newContent);
-      db.collection('chat').add(content);
+      firebase.firestore().collection('chat').add(content);
     },
     book(content) {
       this.bargainOverlay.show = false;
@@ -178,20 +158,19 @@ export default {
         ${this.getSimpleFormatDate(date)}
         ${this.dateTimeOverlay.time}`;
       // this.items.push(newContent);
-      db.collection('chat').add(content);
+      firebase.firestore().collection('chat').add(content);
     },
     sendMessage(type = null) {
-      this.index += 1;
       const content = {
-        id: this.index,
         renter: true,
         bargain: false,
         book: false,
         message: this.inputChat.text,
+        createdAt: new Date(),
       };
       if (type === null) {
         // this.items.push(content);
-        db.collection('chat').add(content);
+        firebase.firestore().collection('chat').add(content);
       } else if (type === 'book') {
         this.book(content);
       } else if (type === 'bargain') {
@@ -201,7 +180,7 @@ export default {
       this.inputChat.text = '';
     },
     fetchMessages() {
-      db.collection('chat').orderBy('createdAt').onSnapshot((querySnapshot) => {
+      firebase.firestore().collection('chat').orderBy('createdAt').onSnapshot((querySnapshot) => {
         const allMessages = [];
         querySnapshot.forEach((doc) => {
           allMessages.push(doc.data());
@@ -229,7 +208,7 @@ export default {
     this.$nextTick(() => this.scrollToBottom());
   },
   data: () => ({
-    index: 7,
+
     dateTimeOverlay: {
       show: false,
       width: 350,
@@ -243,64 +222,7 @@ export default {
     inputChat: {
       text: '',
     },
-    items: [
-      {
-        id: 0,
-        renter: true,
-        message: 'cái idea quay video lần trc chứ gì :)))',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 1,
-        renter: false,
-        message: 'Cám ơn bạn Minh Hà đã ghé thăm fanpage và chia sẻ thông tin nhé.',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 2,
-        renter: true,
-        message: 'chất như xôi gấc haha',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 3,
-        renter: false,
-        message: 'Chất như YoMost chứ sao ',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 4,
-        renter: true,
-        message: 'Khá mặn đến từ yomost',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 5,
-        renter: false,
-        message: 'Nếu thích đừng ngại share post của YoMost nha bạn Bình Dương ơi <3',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 6,
-        renter: true,
-        message: 'Cảm ơn bạn Trần Duy Khang đã tin dùng sản phẩm của YoMost nha <3',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 7,
-        renter: false,
-        message: 'Bạn Phua Sung ơi, nhanh chân đi đến cửa hàng gần nhất để "tậu" cho mình 1 hộp YoMost ngay nào. Đừng quên rủ thêm hội bạn để cùng nhau bùng nổ "Năng lượng YO!" nha bạn Phua Sung ơi <3',
-        bargain: false,
-        booking: false,
-      },
-    ],
+    items: [],
   }),
   created() {
     this.fetchMessages();

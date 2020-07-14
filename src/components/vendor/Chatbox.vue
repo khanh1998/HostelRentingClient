@@ -134,33 +134,11 @@
 </template>
 
 <script>
-import firebase from 'firebase';
-// Required for side-effects
-require('firebase/firestore');
+import firebase from '../../config/firebase';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyCWNT4MhALulebmekYoHKbwyAx-htB76tA',
-  authDomain: 'td-vue-firestore-chat.firebaseapp.com',
-  databaseURL: 'https://td-vue-firestore-chat.firebaseio.com',
-  projectId: 'td-vue-firestore-chat',
-  storageBucket: 'td-vue-firestore-chat.appspot.com',
-  messagingSenderId: '223687361307',
-  appId: '1:223687361307:web:ed8fd5232accfb095f09be',
-  measurementId: 'G-0K8CSPWJ17',
-};
-firebase.initializeApp(firebaseConfig);
-
-// initialize cloud firestore through firebase
-const db = firebase.firestore();
-window.db = db;
-// disable deprecated features
-db.settings({
-  timestampsInSnapshots: true,
-});
 export default {
   name: 'ChatBox',
   data: () => ({
-    index: 0,
     items: [],
     inputChat: {
       autoGrow: true,
@@ -179,17 +157,8 @@ export default {
   }),
   methods: {
     sendMessage() {
-      // if (this.inputChat.model.length > 0) {
-      //   this.items.push({
-      //     renter: false,
-      //     message: this.inputChat.model,
-      //   });
-      //   this.inputChat.model = '';
-      // }
-      this.index += 1;
       if (this.inputChat.model.length > 0) {
-        db.collection('chat').add({
-          id: this.index,
+        firebase.firestore().collection('chat').add({
           renter: false,
           message: this.inputChat.model,
           bargain: false,
@@ -201,7 +170,7 @@ export default {
     },
 
     fetchMessages() {
-      db.collection('chat').orderBy('createdAt').onSnapshot((querySnapshot) => {
+      firebase.firestore().collection('chat').orderBy('createdAt').onSnapshot((querySnapshot) => {
         const allMessages = [];
         querySnapshot.forEach((doc) => {
           allMessages.push(doc.data());
