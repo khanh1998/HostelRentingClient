@@ -32,121 +32,130 @@
               v-if="item.renter"
               class="d-flex justify-start"
             >
-              <div v-if="item.bargain">
-                <div class="border-deal">
-                  <v-row>
-                    <v-col cols="6">
-                      <v-img
-                        src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-                        height="100"
-                        width="150"
-                        class="mx-2"
-                      ></v-img>
-                    </v-col>
-                    <v-col
-                      cols="6"
-                      class="d-flex justify-left align-center"
-                    >
-                      <div style="fontSize:18px">
-                        <span style="color:#98B7D7">Giá gốc:</span> <br />
-                        <span><s>3500000 Đ</s></span><br />
-                        <span style="color:#98B7D7">Trả giá:</span> <br />
-                        <span>{{ item.message}} Đ</span><br />
-                      </div>
-                    </v-col>
-                  </v-row>
-                  <v-col cols="12">
-                    <span
+              <div
+                v-if="item.bargain"
+                class="border-deal"
+              >
+                <v-row>
+                  <v-col cols="6">
+                    <v-img
+                      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+                      height="100"
+                      width="150"
                       class="mx-2"
-                      style="color: #6C98C6; fontSize:20px"
-                    >
-                      Nhà trọ Lalahome</span>
+                    ></v-img>
                   </v-col>
                   <v-col
-                    cols="12"
-                    class="d-flex justify-center"
+                    cols="6"
+                    class="d-flex justify-left align-center"
                   >
-                    <v-chip-group>
-                      <v-chip
-                        color="red"
-                        @click="denyMessage"
-                        style="width: 90px"
-                        class="d-flex justify-center mr-5"
-                      >
-                        Từ chối
-                      </v-chip>
-                      <v-chip
-                        color="green"
-                        @click="acceptMessage"
-                      >
-                        Chấp nhận
-                      </v-chip>
-                    </v-chip-group>
+                    <div style="fontSize:18px">
+                      <span style="color:#98B7D7">Giá gốc:</span> <br />
+                      <span><s>3500000 Đ</s></span><br />
+                      <span style="color:#98B7D7">Trả giá:</span> <br />
+                      <span>{{ item.message}} Đ</span><br />
+                    </div>
                   </v-col>
-                </div>
-              </div>
-              <div v-if="item.book">
-                <div class="border-deal">
-                  <v-row>
-                    <v-col cols="6">
-                      <v-img
-                        src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-                        height="100"
-                        width="150"
-                        class="mx-2"
-                      ></v-img>
-                    </v-col>
-                    <v-col
-                      cols="6"
-                      class="d-flex justify-left align-center"
-                    >
-                      <div style="fontSize:18px">
-                        <span style="color:#98B7D7">Ngày hẹn:</span> <br />
-                        <span>{{item.message.split("từ")[0]}}</span><br />
-                        <span style="color:#98B7D7">Giờ hẹn:</span> <br />
-                        <span>{{ item.message.split("từ")[1]}}</span><br />
-                      </div>
-                    </v-col>
-                  </v-row>
-                  <v-col cols="12">
-                    <span
-                      class="mx-2"
-                      style="color: #6C98C6; fontSize:20px"
-                    >
-                      Nhà trọ Lalahome</span>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    class="d-flex justify-center"
+                </v-row>
+                <v-col cols="12">
+                  <span
+                    class="mx-2"
+                    style="color: #6C98C6; fontSize:20px"
                   >
-                    <v-chip-group>
-                      <v-chip
-                        color="red"
-                        @click="denyBookMessage"
-                        style="width: 90px"
-                        class="d-flex justify-center mr-5"
-                      >
-                        Từ chối
-                      </v-chip>
-                      <v-chip
-                        color="green"
-                        @click="acceptBookMessage"
-                      >
-                        Chấp nhận
-                      </v-chip>
-                    </v-chip-group>
-                  </v-col>
-                </div>
-              </div>
-              <div v-if="!item.book && !item.bargain">
-                <span
-                  v-ripple
-                  style="width: auto; max-width: 75%; "
-                  class="blue lighten-5 pa-2 rounded"
+                    Nhà trọ Lalahome</span>
+                </v-col>
+                <v-col
+                  cols="12"
+                  class="d-flex justify-center"
                 >
-                  {{item.message}}
-                </span>
+                <v-row class="d-flex justify-center" v-if="visible">
+                  <v-chip-group>
+                    <v-chip
+                      color="red"
+                      @click="denyMessage"
+                      style="width: 90px"
+                      class="d-flex justify-center mr-5"
+                    >
+                      Từ chối
+                    </v-chip>
+                    <v-chip
+                      color="green"
+                      @click="acceptMessage"
+                    >
+                      Chấp nhận
+                    </v-chip>
+                  </v-chip-group>
+                </v-row>
+                </v-col>
               </div>
+
+              <div
+                v-if="item.book"
+                class="border-deal"
+              >
+                <v-row>
+                  <v-col cols="6">
+                    <v-img
+                      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+                      height="100"
+                      width="150"
+                      class="mx-2"
+                    ></v-img>
+                  </v-col>
+                  <v-col
+                    cols="6"
+                    class="d-flex justify-left align-center"
+                  >
+                    <div style="fontSize:18px">
+                      <span style="color:#98B7D7">Ngày hẹn:</span> <br />
+                      <span>{{item.message.split("từ")[0]}}</span><br />
+                      <span style="color:#98B7D7">Giờ hẹn:</span> <br />
+                      <span>{{ item.message.split("từ")[1]}}</span><br />
+                    </div>
+                  </v-col>
+                </v-row>
+                <v-col cols="12">
+                  <span
+                    class="mx-2"
+                    style="color: #6C98C6; fontSize:20px"
+                  >
+                    Nhà trọ Lalahome</span>
+                </v-col>
+                <v-col
+                  cols="12"
+                  class="d-flex justify-center"
+                >
+                  <!-- <v-row class="d-flex justify-center" v-if="visible"> -->
+                  <v-row class="d-flex justify-center">
+
+                    <v-btn
+                      color="red"
+                      @click="denyBookMessage"
+                      style="width: 90px"
+                      class="d-flex justify-center mr-5"
+                    >
+                      Từ chối
+                    </v-btn>
+                    <v-btn
+                      color="green"
+                      @click="acceptBookMessage"
+                    >
+                      Chấp nhận
+                    </v-btn>
+
+                  </v-row>
+
+                </v-col>
+              </div>
+
+              <span
+                v-if="!item.book && !item.bargain"
+                v-ripple
+                style="width: 75%; "
+                class="blue lighten-5 pa-2 rounded"
+              >
+                {{item.message}}
+              </span>
               <v-icon v-if="item.book || item.bargain">info</v-icon>
             </div>
             <div
@@ -216,6 +225,7 @@ export default {
       singleLine: true,
       solo: true,
     },
+    // visibles: {},
   }),
   methods: {
     myOnScroll() { },
@@ -234,6 +244,7 @@ export default {
     },
 
     acceptMessage() {
+      // this.visible = true;
       firebase.firestore().collection('chat').add({
         renter: false,
         message: 'Chấp nhận trả giá của bạn',
@@ -242,9 +253,11 @@ export default {
         createdAt: new Date(),
       });
       this.$nextTick(() => this.scrollToBottom());
+      // this.visible = false;
     },
 
     denyMessage() {
+      // this.visible = true;
       firebase.firestore().collection('chat').add({
         renter: false,
         message: 'Từ chối trả giá của bạn',
@@ -253,9 +266,11 @@ export default {
         createdAt: new Date(),
       });
       this.$nextTick(() => this.scrollToBottom());
+      // this.visible = false;
     },
 
     acceptBookMessage() {
+      // this.visible = true;
       firebase.firestore().collection('chat').add({
         renter: false,
         message: 'Chấp nhận lịch hẹn của bạn',
@@ -264,9 +279,11 @@ export default {
         createdAt: new Date(),
       });
       this.$nextTick(() => this.scrollToBottom());
+      // this.visible = false;
     },
 
     denyBookMessage() {
+      // this.visible = true;
       firebase.firestore().collection('chat').add({
         renter: false,
         message: 'Từ chối lịch hẹn của bạn',
@@ -275,6 +292,7 @@ export default {
         createdAt: new Date(),
       });
       this.$nextTick(() => this.scrollToBottom());
+      // this.visible = false;
     },
 
     fetchMessages() {
@@ -284,6 +302,7 @@ export default {
           allMessages.push(doc.data());
         });
         this.items = allMessages;
+        this.$nextTick(() => this.scrollToBottom());
       });
     },
     scrollToBottom() {
@@ -304,7 +323,7 @@ export default {
 .text-color-deal {
   color: #9c0621;
 }
-.border-deal{
+.border-deal {
   border: 1px solid black;
   border-radius: 5px;
 }

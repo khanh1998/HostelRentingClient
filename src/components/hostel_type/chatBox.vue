@@ -12,7 +12,7 @@
       </v-card-title>
       <v-divider/>
       <div
-        style="max-height: 300px;"
+        style="max-height: 300px; min-height:300px"
         class="overflow-y-auto"
         id="chatbox"
       >
@@ -65,33 +65,34 @@
                   class="d-flex justify-end"
                 >
                   <v-icon v-if="item.book || item.bargain">info</v-icon>
-                  <div v-if="item.bargain">
+
                     <span
+                    v-if="item.bargain"
                     v-ripple
                     style="width: 75%"
-                    class="blue lighten-5 pa-2 rounded max-w-3/4"
+                    class="blue lighten-5 pa-2 rounded"
                   >
                     Bạn đã trả giá : {{item.message}} Đ
                   </span>
-                  </div>
-                  <div v-else-if="item.book">
+
                     <span
+                    v-else-if="item.book"
                     v-ripple
                     style="width: 75%"
                     class="blue lighten-5 pa-2 rounded max-w-3/4"
                   >
                     Bạn đã đặt lịch vào: {{item.message}}
                   </span>
-                  </div>
-                  <div v-else>
+
                     <span
+                    v-else
                     v-ripple
                     style="width: 75%"
                     class="blue lighten-5 pa-2 rounded max-w-3/4"
                   >
                     {{item.message}}
                   </span>
-                  </div>
+
                 </div>
                 <div
                   v-if="!item.renter"
@@ -108,6 +109,7 @@
               </v-list-item-content>
             </v-list-item>
         </v-list>
+
       </div>
       <v-divider/>
       <div class="input">
@@ -207,6 +209,7 @@ export default {
           allMessages.push(doc.data());
         });
         this.items = allMessages;
+        this.$nextTick(() => this.scrollToBottom());
       });
     },
     scrollToBottom() {
@@ -229,7 +232,6 @@ export default {
     this.$nextTick(() => this.scrollToBottom());
   },
   data: () => ({
-
     dateTimeOverlay: {
       show: false,
       width: 350,
