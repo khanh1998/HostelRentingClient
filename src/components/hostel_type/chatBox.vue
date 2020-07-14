@@ -12,7 +12,7 @@
       </v-card-title>
       <v-divider/>
       <div
-        style="max-height: 200px"
+        style="max-height: 300px;"
         class="overflow-y-auto"
         id="chatbox"
       >
@@ -65,13 +65,33 @@
                   class="d-flex justify-end"
                 >
                   <v-icon v-if="item.book || item.bargain">info</v-icon>
-                  <span
+                  <div v-if="item.bargain">
+                    <span
                     v-ripple
                     style="width: 75%"
-                    class="blue lighten-5 pa-2 rounded"
+                    class="blue lighten-5 pa-2 rounded max-w-3/4"
+                  >
+                    Bạn đã trả giá : {{item.message}} Đ
+                  </span>
+                  </div>
+                  <div v-else-if="item.book">
+                    <span
+                    v-ripple
+                    style="width: 75%"
+                    class="blue lighten-5 pa-2 rounded max-w-3/4"
+                  >
+                    Bạn đã đặt lịch vào: {{item.message}}
+                  </span>
+                  </div>
+                  <div v-else>
+                    <span
+                    v-ripple
+                    style="width: 75%"
+                    class="blue lighten-5 pa-2 rounded max-w-3/4"
                   >
                     {{item.message}}
                   </span>
+                  </div>
                 </div>
                 <div
                   v-if="!item.renter"
@@ -80,7 +100,7 @@
                   <span
                     style="width: 75%"
                     v-ripple
-                    class="green lighten-5 pa-2 rounded"
+                    class="green lighten-5 pa-2 rounded max-w-3/4"
                   >
                     {{item.message}}
                   </span>
@@ -144,21 +164,22 @@ export default {
       this.bargainOverlay.show = false;
       const newContent = content;
       newContent.bargain = true;
-      newContent.message = `Bạn đã trả giá ${this.bargainOverlay.price}`;
+      newContent.message = this.bargainOverlay.price;
       // this.items.push(newContent);
-      firebase.firestore().collection('chat').add(content);
+      firebase.firestore().collection('chat').add(newContent);
     },
     book(content) {
       this.bargainOverlay.show = false;
       const newContent = content;
       newContent.book = true;
-      const prefix = 'Bạn đặt lịch vào';
       const { date } = this.dateTimeOverlay;
-      newContent.message = `${prefix}
-        ${this.getSimpleFormatDate(date)}
+      newContent.message = `${this.getSimpleFormatDate(date)} từ
         ${this.dateTimeOverlay.time}`;
+      // newContent.message = date;
       // this.items.push(newContent);
-      firebase.firestore().collection('chat').add(content);
+      firebase.firestore().collection('chat').add(newContent);
+      // const dateInfo = this.getSimpleFormatDate(date);
+      // const timeInfo = this.dateTimeOverlay.time;
     },
     sendMessage(type = null) {
       const content = {
