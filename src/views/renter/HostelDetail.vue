@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-dialog width="350" v-model="chatBox.show">
+      <chatBox v-on:close="chatBox.show=false"/>
+    </v-dialog>
     <v-row>
       <v-col cols="12" sm="8" md="8" lg="8">
         <v-carousel
@@ -33,6 +36,7 @@
           <v-btn
             color="orange"
             outlined
+            @click="chatBox.show=true"
             >
             <v-icon class="mr-6">fas fa-comment-dots</v-icon> Nhắn tin ngay!
           </v-btn>
@@ -66,12 +70,21 @@ import json from '@/assets/hostel-detail.json';
 import dateTimePickerBox from '@/components/hostel_type/dateTimePickerBox.vue';
 import mainInfo from '@/components/hostel_type/mainInfo.vue';
 import treeView from '@/components/hostel_type/treeView.vue';
+import chatBox from '@/components/hostel_type/chatBox.vue';
 
 export default {
   name: 'HostelDetail',
-  components: { dateTimePickerBox, mainInfo, treeView },
+  components: {
+    dateTimePickerBox,
+    mainInfo,
+    treeView,
+    chatBox,
+  },
   data: () => ({
     info: null, // infomation of the hostel that being display
+    chatBox: {
+      show: false,
+    },
   }),
   methods: {},
   async created() {

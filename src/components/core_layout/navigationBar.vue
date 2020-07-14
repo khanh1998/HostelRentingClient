@@ -69,7 +69,7 @@
         <v-icon light>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
       </v-btn>
 
-      <v-btn color="#6C98C6" depressed dark class="ma-1 hidden-xs-only">
+      <v-btn color="#6C98C6" to="/cart" depressed dark class="ma-1 hidden-xs-only">
         Lịch hẹn của bạn
       </v-btn>
       <v-menu>

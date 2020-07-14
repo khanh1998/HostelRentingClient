@@ -1,8 +1,14 @@
 <template>
-  <v-sheet class="main d-flex flex-column pa-1 flex-wrap" light>
-    <div class="above d-flex flex-column pa-1 flex-wrap">
-      <p class="h6-text">CHỌN NGÀY</p>
-      <v-chip-group mandatory dark v-model="pickedDate">
+  <v-sheet class="main d-flex flex-column pa-1 flex-wrap" light :width="width">
+    <div class="above d-flex justify-center flex-column pa-1 flex-wrap">
+      <p class="h6-text text-center">CHỌN NGÀY</p>
+      <v-chip-group
+        mandatory
+        light
+        v-model="pickedDate"
+        center-active
+        show-arrows
+      >
         <v-chip
           light
           v-for="i in 7" v-bind:key="i"
@@ -18,8 +24,8 @@
             class="d-flex flex-column justify-center align-center ma-1 pa-1 flex-wrap"
             light
           >
-            <p class="ma-0">{{daysOfWeek[dates[i].getDay()]}}</p>
-            <p class="ma-0 text-h5 font-weight-bold">{{dates[i].getDate()-1}}</p>
+            <p class="ma-0">{{daysOfWeek[dates[i-1].getDay()]}}</p>
+            <p class="ma-0 text-h5 font-weight-bold">{{dates[i-1].getDate()}}</p>
           </v-sheet>
         </v-chip>
       </v-chip-group>
@@ -29,11 +35,17 @@
       class="below d-flex flex-column align-center pa-1 flex-wrap"
     >
       <p class="h6-text">CHỌN GIỜ</p>
-      <v-chip-group mandatory dark  v-model="pickedTime">
+      <v-chip-group
+        mandatory
+        light
+        v-model="pickedTime"
+        center-active
+        show-arrows
+      >
         <v-chip
           light
           v-for="j in timesForDate.length" v-bind:key="j"
-          x-large
+          large
           label
           class="mr-1"
           outlined
@@ -67,6 +79,13 @@
 <script>
 export default {
   name: 'DateTimePicker',
+  props: {
+    width: {
+      type: Number,
+      required: false,
+      default: undefined,
+    },
+  },
   data: () => ({
     times: [
       ['0', '8h - 12h', '13h - 18h', '19h - 20h'],

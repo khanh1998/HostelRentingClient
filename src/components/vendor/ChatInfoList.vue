@@ -48,19 +48,25 @@
               >
                 <v-list-item
                   v-for="(item, i) in items"
-                  :key="i"
+                  :key="i" class="mb-2 pt-2"
                 >
-                  <v-list-item-avatar v-if="avatar">
-                    <v-img :src="item.avatar"></v-img>
-                  </v-list-item-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title class="text-subtitle-1">{{item.title}}</v-list-item-title>
-                    <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
-                  </v-list-item-content>
-                  <div class="text-center">
-                    <span v-html="item.price"></span><br />
-                    <span v-html="item.preprice"></span>
-                  </div>
+                  <!-- <div class="d-flex mb-2 pt-2"> -->
+                    <v-list-item-avatar>
+                      <v-img :src="item.avatar"></v-img>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title
+                        style="fontSize:16px"
+                        class="py-1"
+                      >
+                        {{item.title}}</v-list-item-title>
+                      <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+                    </v-list-item-content>
+                    <div class="mt-3">
+                      <span v-html="item.price"></span><br />
+                      <span v-html="item.preprice"></span>
+                    </div>
+                  <!-- </div> -->
                 </v-list-item>
               </v-list-item-group>
             </v-row>
@@ -181,48 +187,44 @@ export default {
 }
 
 .vb > .vb-dragger {
-    z-index: 5;
-    width: 12px;
-    right: 0;
+  z-index: 5;
+  width: 12px;
+  right: 0;
 }
 
 .vb > .vb-dragger > .vb-dragger-styler {
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-transform: rotate3d(0,0,0,0);
-    transform: rotate3d(0,0,0,0);
-    -webkit-transition:
-        background-color 100ms ease-out,
-        margin 100ms ease-out,
-        height 100ms ease-out;
-    transition:
-        background-color 100ms ease-out,
-        margin 100ms ease-out,
-        height 100ms ease-out;
-    background-color: rgba(48, 121, 244,.1);
-    margin: 5px 5px 5px 0;
-    border-radius: 20px;
-    height: calc(100% - 10px);
-    display: block;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: rotate3d(0, 0, 0, 0);
+  transform: rotate3d(0, 0, 0, 0);
+  -webkit-transition: background-color 100ms ease-out, margin 100ms ease-out,
+    height 100ms ease-out;
+  transition: background-color 100ms ease-out, margin 100ms ease-out,
+    height 100ms ease-out;
+  background-color: rgba(48, 121, 244, 0.1);
+  margin: 5px 5px 5px 0;
+  border-radius: 20px;
+  height: calc(100% - 10px);
+  display: block;
 }
 
 .vb.vb-scrolling-phantom > .vb-dragger > .vb-dragger-styler {
-    background-color: rgba(48, 121, 244,.3);
+  background-color: rgba(48, 121, 244, 0.3);
 }
 
 .vb > .vb-dragger:hover > .vb-dragger-styler {
-    background-color: rgba(48, 121, 244,.5);
-    margin: 0px;
-    height: 100%;
+  background-color: rgba(48, 121, 244, 0.5);
+  margin: 0px;
+  height: 100%;
 }
 
 .vb.vb-dragging > .vb-dragger > .vb-dragger-styler {
-    background-color: rgba(48, 121, 244,.5);
-    margin: 0px;
-    height: 100%;
+  background-color: rgba(48, 121, 244, 0.5);
+  margin: 0px;
+  height: 100%;
 }
 
 .vb.vb-dragging-phantom > .vb-dragger > .vb-dragger-styler {
-    background-color: rgba(48, 121, 244,.5);
+  background-color: rgba(48, 121, 244, 0.5);
 }
 </style>
