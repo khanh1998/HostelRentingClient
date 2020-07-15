@@ -1,12 +1,12 @@
 <template>
   <div class="info-card d-flex flex-column">
-    <v-overlay :value="dateTimePicker.isOpenPicker">
+    <v-dialog :value="dateTimePicker.isOpenPicker">
       <dateTimePicker
         v-on:cancel="dateTimePicker.isOpenPicker = false"
         v-on:ok="receivedDateTime"
         :groupId="groupId"
       />
-    </v-overlay>
+    </v-dialog>
     <div
       class="above d-flex flex-column justify-center align-center"
       style="background-color: #fff; height: 100%"

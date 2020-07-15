@@ -1,6 +1,9 @@
 <template>
-  <v-sheet v-if="!isLoading" class="main d-flex flex-column pa-1 flex-wrap" light :width="width">
-    <div class="above d-flex justify-center flex-column pa-1 flex-wrap">
+  <v-sheet class="main d-flex flex-column pa-1 flex-wrap" light :width="width">
+    <v-overlay :value="isLoading" absolute>
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+    <div v-if="!isLoading" class="above d-flex justify-center flex-column pa-1 flex-wrap">
       <p class="h6-text text-center">CHỌN NGÀY</p>
       <v-chip-group
         mandatory

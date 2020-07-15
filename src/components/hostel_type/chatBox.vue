@@ -16,7 +16,7 @@
         class="overflow-y-auto"
         id="chatbox"
       >
-        <v-overlay :value="dateTimeOverlay.show" absolute dark>
+        <v-overlay :value="dateTimeOverlay.show" absolute>
           <date-time-picker
             :width="dateTimeOverlay.width"
             v-on:ok="receiveDateTime"

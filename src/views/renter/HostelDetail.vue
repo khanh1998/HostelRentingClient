@@ -45,7 +45,10 @@
           <p class="font-weight-medium grey--text">{{'description'}}</p>
         </v-col>
         <v-col cols="12" lg="2" md="4" sm="4">
-          <div class="d-flex justify-center align-center" style="width: 100%; height: 100%">
+          <div
+            class="d-flex justify-md-center justify-start align-center"
+            style="width: 100%; height: 100%"
+          >
             <v-btn color="orange" outlined @click="chatBox.show=true">
               <v-icon class="mr-6">fas fa-comment-dots</v-icon>Nhắn tin ngay!
             </v-btn>
