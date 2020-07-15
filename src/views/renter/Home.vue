@@ -92,6 +92,7 @@
             :total-visible="5"
             prev-icon="mdi-menu-left"
             next-icon="mdi-menu-right"
+            v-on:input="onUpdatePaging"
           ></v-pagination>
         </v-col>
       </v-row>
@@ -147,6 +148,9 @@ export default {
         },
       });
     },
+    onUpdatePaging(pageNumber) {
+      this.getHostelTypes({ page: pageNumber, size: 5 });
+    },
   },
   computed: {
     hostelTypes: {
@@ -162,7 +166,7 @@ export default {
   },
   created() {
     if (this.hostelTypes.length === 0) {
-      this.getHostelTypes();
+      this.getHostelTypes({ page: 1, size: 5 });
     }
   },
 };

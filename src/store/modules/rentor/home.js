@@ -55,9 +55,10 @@ const mutations = {
   },
 };
 const actions = {
-  async getHostelTypes({ commit }) {
+  async getHostelTypes({ commit }, params) {
+    // params = { page, size }
     commit(mutationTypes.GET_HOSTEL_TYPES_REQUEST);
-    const response = await window.axios.get('/api/v1/types');
+    const response = await window.axios.get(`/api/v1/types?page=${params.page}&size=${params.size}`);
     if (response.status === 200) {
       commit(mutationTypes.GET_HOSTEL_TYPES_SUCCESS, response.data.data);
     } else {

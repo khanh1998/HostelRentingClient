@@ -16,7 +16,7 @@
         <v-col cols="4">
           <HostelFilter v-on:submitFilter="onFilterSubmit($event)"/>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="8">
           <v-pagination
             light
             v-model="paging.page"
@@ -24,6 +24,7 @@
             :total-visible="5"
             prev-icon="mdi-menu-left"
             next-icon="mdi-menu-right"
+            v-on:input="onUpdatePaging"
           ></v-pagination>
         </v-col>
       </v-row>
@@ -51,6 +52,9 @@ export default {
     ...mapActions({
       getFilterResult: 'renter/filterResult/getFilterResult',
     }),
+    onUpdatePaging(pageNumber) {
+      this.getFilterResult({ page: pageNumber, size: 10 });
+    },
   },
   computed: {
     isLoading() {
