@@ -5,7 +5,7 @@
     </v-overlay>
     <v-container v-if="!isLoading">
       <v-dialog width="350" v-model="chatBox.show">
-        <chatBox v-on:close="chatBox.show=false"/>
+        <chatBox v-on:close="chatBox.show=false" />
       </v-dialog>
       <v-row>
         <v-col cols="12" sm="8" md="8" lg="8">
@@ -16,10 +16,15 @@
             height="400"
             delimiter-icon="mdi-circle-medium"
             next-icon="mdi-arrow-right-bold"
-            prev-icon="mdi-arrow-left-bold">
-            <v-carousel-item v-for="(image, i) in images" :key="i">
-              <v-img max-height="400" v-bind:src="images[i]"/>
-            </v-carousel-item>
+            prev-icon="mdi-arrow-left-bold"
+          >
+            <v-carousel-item
+              v-for="(image, i) in images"
+              :key="i"
+              :src="images[i]"
+              reverse-transition="fade-transition"
+              transition="fade-transition"
+            ></v-carousel-item>
           </v-carousel>
         </v-col>
         <v-col cols="12" sm="4" md="4" lg="4">
@@ -41,33 +46,24 @@
         </v-col>
         <v-col cols="12" lg="2" md="4" sm="4">
           <div class="d-flex justify-center align-center" style="width: 100%; height: 100%">
-            <v-btn
-              color="orange"
-              outlined
-              @click="chatBox.show=true"
-              >
-              <v-icon class="mr-6">fas fa-comment-dots</v-icon> Nhắn tin ngay!
+            <v-btn color="orange" outlined @click="chatBox.show=true">
+              <v-icon class="mr-6">fas fa-comment-dots</v-icon>Nhắn tin ngay!
             </v-btn>
           </div>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" md="2">
-          <v-chip
-            color="primary"
-            outlined
-            label
-          >
-            <v-icon left>fas fa-info-circle</v-icon>
-            Thông tin phòng
+          <v-chip color="primary" outlined label>
+            <v-icon left>fas fa-info-circle</v-icon>Thông tin phòng
           </v-chip>
         </v-col>
         <v-col cols="12" sm="8" md="6">
-          <v-divider class="mb-6"/>
-          <mainInfo v-bind:info="info" :group="group"/>
+          <v-divider class="mb-6" />
+          <mainInfo v-bind:info="info" :group="group" />
         </v-col>
         <v-col cols="12" sm="4" md="4">
-          <treeView/>
+          <treeView />
         </v-col>
       </v-row>
     </v-container>
@@ -126,7 +122,9 @@ export default {
       return type || group;
     },
     info() {
-      let data = this.$store.getters['renter/home/getHostelTypeById'](this.typeId);
+      let data = this.$store.getters['renter/home/getHostelTypeById'](
+        this.typeId,
+      );
       if (data === null) {
         data = this.$store.state.renter.hostelType.hostelType.data;
       }
@@ -153,7 +151,7 @@ export default {
 .info-card {
   width: 100%;
   height: 100%;
-  border: 2.5px solid #EDEFEE;
+  border: 2.5px solid #edefee;
   box-sizing: border-box;
   border-radius: 10px;
 }
@@ -162,6 +160,6 @@ export default {
 }
 .below {
   width: 100%;
-  background: #F3F5F5;
+  background: #f3f5f5;
 }
 </style>
