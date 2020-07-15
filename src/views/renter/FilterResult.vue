@@ -13,7 +13,7 @@
             <v-card-actions class="hidden-md-and-up">
               <v-bottom-sheet v-model="bottomSheet.show" scrollable>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn color="green" dark v-bind="attrs" v-on="on" class="mt-6 ml-6">
+                  <v-btn color="green" dark v-bind="attrs" v-on="on">
                     Bộ lọc
                   </v-btn>
                 </template>
@@ -26,13 +26,20 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" md="8">
+        <v-col cols="12" md="8" v-if="list.length != 0">
           <ArticleList :list="list" />
+        </v-col>
+        <v-col cols="12" md="8" v-if="list.length === 0">
+          <v-card>
+            <v-card-text>
+              Không tìm thấy kết quả nào
+            </v-card-text>
+          </v-card>
         </v-col>
         <v-col cols="0" md="4" class="hidden-sm-and-down">
           <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
         </v-col>
-        <v-col cols="12" md="8">
+        <v-col cols="12" md="8" v-if="list.length != 0">
           <v-pagination
             light
             v-model="paging.page"
@@ -66,14 +73,14 @@ export default {
   }),
   methods: {
     onFilterSubmit() {
-      this.getFilterResult({ page: 1, size: 10 });
+      this.getFilterResult({ page: 1, size: 5 });
       this.bottomSheet.show = false;
     },
     ...mapActions({
       getFilterResult: 'renter/filterResult/getFilterResult',
     }),
     onUpdatePaging(pageNumber) {
-      this.getFilterResult({ page: pageNumber, size: 10 });
+      this.getFilterResult({ page: pageNumber, size: 5 });
     },
   },
   computed: {

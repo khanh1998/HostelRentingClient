@@ -2,8 +2,8 @@
   <vueper-slides
     class="no-shadow"
     fractions
-    bulletsOutside
-    transition-speed="250"
+    :bullets="false"
+    transition-speed="500"
     infinite
     pauseOnHover
     autoplay
@@ -82,3 +82,8 @@ export default {
   }),
 };
 </script>
+<style scoped>
+.vueperslides--fixed-height.vueperslides--bullets-outside {
+  margin-bottom: 0 !important;
+}
+</style>
