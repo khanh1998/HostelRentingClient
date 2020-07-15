@@ -5,18 +5,34 @@
     </v-overlay>
     <v-container v-if="!isLoading">
       <v-row>
-        <v-col>
-          <p>Kết quả tìm kiếm</p>
+        <v-col cols="12" md="8">
+          <v-card class="d-flex flex-column align-center justify-center">
+            <v-card-title>
+              Kết quả tìm kiếm
+            </v-card-title>
+            <v-card-actions class="hidden-md-and-up">
+              <v-bottom-sheet v-model="bottomSheet.show" scrollable>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn color="green" dark v-bind="attrs" v-on="on" class="mt-6 ml-6">
+                    Bộ lọc
+                  </v-btn>
+                </template>
+                <v-sheet light class="pt-6">
+                  <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
+                </v-sheet>
+              </v-bottom-sheet>
+            </v-card-actions>
+          </v-card>
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="8">
-          <ArticleList :list="list"/>
+        <v-col cols="12" md="8">
+          <ArticleList :list="list" />
         </v-col>
-        <v-col cols="4">
-          <HostelFilter v-on:submitFilter="onFilterSubmit($event)"/>
+        <v-col cols="0" md="4" class="hidden-sm-and-down">
+          <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
         </v-col>
-        <v-col cols="8">
+        <v-col cols="12" md="8">
           <v-pagination
             light
             v-model="paging.page"
@@ -44,10 +60,14 @@ export default {
     paging: {
       page: 1,
     },
+    bottomSheet: {
+      show: false,
+    },
   }),
   methods: {
     onFilterSubmit() {
       this.getFilterResult({ page: 1, size: 10 });
+      this.bottomSheet.show = false;
     },
     ...mapActions({
       getFilterResult: 'renter/filterResult/getFilterResult',
