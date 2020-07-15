@@ -1,12 +1,10 @@
 <template>
   <div>
     <div class="primary d-flex justify-space-between">
-      <v-card-title class="white--text text-h6">
-        Tiện nghi xung quanh
-      </v-card-title>
+      <v-card-title class="white--text text-h6">Tiện nghi xung quanh</v-card-title>
       <v-card-actions>
         <v-btn color="success" class="ma-1">
-          <v-icon>fas fa-map-signs</v-icon> Bản đồ
+          <v-icon>fas fa-map-signs</v-icon>Bản đồ
         </v-btn>
       </v-card-actions>
     </div>
@@ -21,23 +19,15 @@
       rounded
     >
       <template v-slot:prepend="{ item, open }">
-        <v-icon v-if="!item.icon">
-          {{ open ? 'mdi-folder-open' : 'fas fa-map-marker-alt' }}
-        </v-icon>
-        <v-icon v-else>
-          {{ treeview.icons[item.icon] }}
-        </v-icon>
+        <v-icon v-if="!item.icon">{{ open ? 'mdi-folder-open' : 'fas fa-map-marker-alt' }}</v-icon>
+        <v-icon v-else>{{ treeview.icons[item.icon] }}</v-icon>
       </template>
       <template v-slot:append="{item, leaf}">
-        <div class="blue--text font-weight-bold" v-if="leaf">
-          {{item.distance}}
-        </div>
-        <div v-else class="green--text font-weight-bold">
-          ({{item.children.length}})
-        </div>
+        <div class="blue--text font-weight-bold" v-if="leaf">{{item.distance}}</div>
+        <div v-else class="green--text font-weight-bold">({{item.children.length}})</div>
       </template>
     </v-treeview>
-</div>
+  </div>
 </template>
 <style scoped>
 </style>
