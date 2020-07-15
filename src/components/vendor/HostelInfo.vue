@@ -1,34 +1,25 @@
 <template>
-  <v-row class="mx-3 mt-2 d-flex align-baseline">
-    <v-card height="8%" width="100%">
-      <v-form>
-        <v-row>
-          <v-col cols="3" sm="2" md="2" class="ml-15 mt-3">
-            <notification-bell
-              count="70"
-              counterStyle="round"
-              counterPadding="2px"
-              :icon="require('@/assets/notification.svg')"
-            />
-          </v-col>
-          <v-col cols="12" sm="6" md="7">
-            <v-row>
-              <v-list-item link>
-                <v-list-item-avatar>
-                  <v-img src="@/assets/suzy-avatar.jpg"></v-img>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title class="text-h6 font-weight-regular">
-                      Bae Suzy</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-row>
-          </v-col>
-        </v-row>
-      </v-form>
+  <div class="d-flex flex-column justify-center align-start">
+    <v-card
+      width="100%"
+      class="d-flex flex-row justify-center align-center pa-2"
+    >
+
+      <v-badge color="red" content="6" bordered overlap class="mr-6">
+          <v-img :src="require('@/assets/notification.svg')" height="30" width="30"></v-img>
+      </v-badge>
+      <div class="d-flex flex-nowrap align-center">
+        <v-avatar>
+          <v-img src="@/assets/suzy-avatar.jpg"></v-img>
+        </v-avatar>
+        <p class="font-weight-medium mb-0 ml-2">Bae Suzy</p>
+      </div>
     </v-card>
-    <v-card class="mx-auto">
-      <v-img height="250" src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
+    <v-card class="mt-3">
+      <v-img
+        height="250"
+        src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+      ></v-img>
       <v-card-title class="text-color">Phòng trọ lalahome</v-card-title>
 
       <v-card-text>
@@ -41,34 +32,47 @@
         <div class="my-4 subtitle-1">Giá</div>
         <div class="text-color my-4">1.900.000 Đ</div>
       </v-card-text>
-      <v-col cols="12" sm="6" md="10" class="ml-6">
-          <v-select :items="chooses" solo></v-select>
-        </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="10"
+        class="ml-6"
+      >
+        <v-select
+          :items="chooses"
+          placeholder="Phòng còn trống"
+          solo
+        ></v-select>
+      </v-col>
       <v-card-actions>
-        <v-btn color="deep-purple lighten-2" text @click="reserve">Chi tiết</v-btn>
+        <v-btn
+          color="deep-purple lighten-2"
+          text
+          @click="reserve"
+        >Chi tiết</v-btn>
       </v-card-actions>
     </v-card>
-  </v-row>
+  </div>
 </template>
 
 <script>
-import NotificationBell from 'vue-notification-bell';
+// import NotificationBell from 'vue-notification-bell';
 
 export default {
   name: 'HostelInfo',
   data() {
     return {
-      chooses: ['Phòng còn trống', 'Phòng sắp trống'],
+      chooses: ['B1', 'D1', 'C2', 'C3'],
     };
   },
-  components: {
-    NotificationBell,
-  },
+  // components: {
+  //   NotificationBell,
+  // },
 };
 </script>
 <style>
-.text-color{
-    color: #0022D5;
-    font-size: 18px;
+.text-color {
+  color: #0022d5;
+  font-size: 18px;
 }
 </style>

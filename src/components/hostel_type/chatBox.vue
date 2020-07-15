@@ -12,7 +12,7 @@
       </v-card-title>
       <v-divider/>
       <div
-        style="max-height: 200px"
+        style="max-height: 300px; min-height:300px"
         class="overflow-y-auto"
         id="chatbox"
       >
@@ -58,20 +58,41 @@
           align="center"
           justify="center"
         >
-            <v-list-item v-for="item in items" v-bind:key="item.id">
+            <v-list-item v-for="item in items" v-bind:key="item.createdAt">
               <v-list-item-content>
                 <div
                   v-if="item.renter"
                   class="d-flex justify-end"
                 >
                   <v-icon v-if="item.book || item.bargain">info</v-icon>
-                  <span
+
+                    <span
+                    v-if="item.bargain"
                     v-ripple
                     style="width: 75%"
                     class="blue lighten-5 pa-2 rounded"
                   >
+                    Bạn đã trả giá : {{item.message}} Đ
+                  </span>
+
+                    <span
+                    v-else-if="item.book"
+                    v-ripple
+                    style="width: 75%"
+                    class="blue lighten-5 pa-2 rounded max-w-3/4"
+                  >
+                    Bạn đã đặt lịch vào: {{item.message}}
+                  </span>
+
+                    <span
+                    v-else
+                    v-ripple
+                    style="width: 75%"
+                    class="blue lighten-5 pa-2 rounded max-w-3/4"
+                  >
                     {{item.message}}
                   </span>
+
                 </div>
                 <div
                   v-if="!item.renter"
@@ -80,7 +101,7 @@
                   <span
                     style="width: 75%"
                     v-ripple
-                    class="green lighten-5 pa-2 rounded"
+                    class="green lighten-5 pa-2 rounded max-w-3/4"
                   >
                     {{item.message}}
                   </span>
@@ -88,6 +109,7 @@
               </v-list-item-content>
             </v-list-item>
         </v-list>
+
       </div>
       <v-divider/>
       <div class="input">
@@ -133,6 +155,8 @@
 <script>
 import dateTimePicker from './dateTimePicker.vue';
 
+import firebase from '../../config/firebase';
+
 export default {
   name: 'ChatBox',
   components: { dateTimePicker },
@@ -142,31 +166,34 @@ export default {
       this.bargainOverlay.show = false;
       const newContent = content;
       newContent.bargain = true;
-      newContent.message = `Bạn đã trả giá ${this.bargainOverlay.price}`;
-      this.items.push(newContent);
+      newContent.message = this.bargainOverlay.price;
+      // this.items.push(newContent);
+      firebase.firestore().collection('chat').add(newContent);
     },
     book(content) {
       this.bargainOverlay.show = false;
       const newContent = content;
       newContent.book = true;
-      const prefix = 'Bạn đặt lịch vào';
       const { date } = this.dateTimeOverlay;
-      newContent.message = `${prefix}
-        ${this.getSimpleFormatDate(date)}
+      newContent.message = `${this.getSimpleFormatDate(date)} từ
         ${this.dateTimeOverlay.time}`;
-      this.items.push(newContent);
+      // newContent.message = date;
+      // this.items.push(newContent);
+      firebase.firestore().collection('chat').add(newContent);
+      // const dateInfo = this.getSimpleFormatDate(date);
+      // const timeInfo = this.dateTimeOverlay.time;
     },
     sendMessage(type = null) {
-      this.index += 1;
       const content = {
-        id: this.index,
         renter: true,
         bargain: false,
         book: false,
         message: this.inputChat.text,
+        createdAt: new Date(),
       };
       if (type === null) {
-        this.items.push(content);
+        // this.items.push(content);
+        firebase.firestore().collection('chat').add(content);
       } else if (type === 'book') {
         this.book(content);
       } else if (type === 'bargain') {
@@ -174,6 +201,16 @@ export default {
       }
       this.$nextTick(() => this.scrollToBottom());
       this.inputChat.text = '';
+    },
+    fetchMessages() {
+      firebase.firestore().collection('chat').orderBy('createdAt').onSnapshot((querySnapshot) => {
+        const allMessages = [];
+        querySnapshot.forEach((doc) => {
+          allMessages.push(doc.data());
+        });
+        this.items = allMessages;
+        this.$nextTick(() => this.scrollToBottom());
+      });
     },
     scrollToBottom() {
       const chatbox = this.$el.querySelector('#chatbox');
@@ -195,7 +232,6 @@ export default {
     this.$nextTick(() => this.scrollToBottom());
   },
   data: () => ({
-    index: 7,
     dateTimeOverlay: {
       show: false,
       width: 350,
@@ -209,64 +245,10 @@ export default {
     inputChat: {
       text: '',
     },
-    items: [
-      {
-        id: 0,
-        renter: true,
-        message: 'cái idea quay video lần trc chứ gì :)))',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 1,
-        renter: false,
-        message: 'Cám ơn bạn Minh Hà đã ghé thăm fanpage và chia sẻ thông tin nhé.',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 2,
-        renter: true,
-        message: 'chất như xôi gấc haha',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 3,
-        renter: false,
-        message: 'Chất như YoMost chứ sao ',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 4,
-        renter: true,
-        message: 'Khá mặn đến từ yomost',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 5,
-        renter: false,
-        message: 'Nếu thích đừng ngại share post của YoMost nha bạn Bình Dương ơi <3',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 6,
-        renter: true,
-        message: 'Cảm ơn bạn Trần Duy Khang đã tin dùng sản phẩm của YoMost nha <3',
-        bargain: false,
-        booking: false,
-      },
-      {
-        id: 7,
-        renter: false,
-        message: 'Bạn Phua Sung ơi, nhanh chân đi đến cửa hàng gần nhất để "tậu" cho mình 1 hộp YoMost ngay nào. Đừng quên rủ thêm hội bạn để cùng nhau bùng nổ "Năng lượng YO!" nha bạn Phua Sung ơi <3',
-        bargain: false,
-        booking: false,
-      },
-    ],
+    items: [],
   }),
+  created() {
+    this.fetchMessages();
+  },
 };
 </script>
