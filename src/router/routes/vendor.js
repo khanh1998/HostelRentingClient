@@ -1,6 +1,6 @@
 import VendorView from '../../main-view/Vendor.vue';
-import ChatDetail from '../../views/vendor/ChatDetail.vue';
-// import Login from '../../components/vendor/Login.vue';
+// import ChatDetail from '../../views/vendor/ChatDetail.vue';
+import Overview from '../../views/vendor/Overview.vue';
 
 const routes = [
   {
@@ -8,18 +8,18 @@ const routes = [
     name: 'VendorMainView',
     component: VendorView,
     children: [
+      // {
+      //   path: '',
+      //   name: 'ChatDetail',
+      //   component: ChatDetail,
+      // },
       {
         path: '',
-        name: 'ChatDetail',
-        component: ChatDetail,
+        name: 'Overview',
+        component: Overview,
       },
     ],
   },
-  // {
-  //   path: '/login',
-  //   name: 'login',
-  //   component: Login,
-  // },
 ];
 
 export default routes;
