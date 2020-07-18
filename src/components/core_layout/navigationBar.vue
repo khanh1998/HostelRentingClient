@@ -1,10 +1,6 @@
 <template>
   <div>
-    <v-overlay
-      :value="overlay.show"
-      light
-      opacity="0.6"
-    >
+    <v-overlay :value="overlay.show" light opacity="0.6">
       <v-text-field
         color="#E5E5E5"
         background-color="#E5E5E5"
@@ -35,14 +31,9 @@
           max-height="64"
         />
       </router-link>
-      <v-toolbar-title ml-0 pl-4><span>TD Hostel</span></v-toolbar-title>
-      <v-spacer class="hidden-sm-and-down"/>
       <v-text-field
-        color="#E5E5E5"
-        background-color="#E5E5E5"
         flat
         solo-inverted
-        light
         hide-details
         label="Tìm theo địa chỉ..."
         class="hidden-sm-and-down"
@@ -50,8 +41,8 @@
         clearable
       >
         <template v-slot:append>
-          <v-btn icon @click="search">
-            <v-icon light>mdi-magnify</v-icon>
+          <v-btn fab small light @click="search" depressed>
+            <v-icon color="#98B7D7" light>mdi-magnify</v-icon>
           </v-btn>
         </template>
       </v-text-field>
@@ -79,26 +70,34 @@
       <v-menu>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
-              <v-avatar size="32px" item>
-                <v-img src="@/assets/suzy-avatar.jpg" alt="My Suzy"></v-img>
-              </v-avatar>
+            <v-avatar size="32px" item>
+              <v-img src="@/assets/suzy-avatar.jpg" alt="My Suzy"></v-img>
+            </v-avatar>
           </v-btn>
         </template>
         <v-list>
           <v-list-item to="/cart">
-            <v-list-item-icon><v-icon>far fa-user-circle</v-icon></v-list-item-icon>
+            <v-list-item-icon>
+              <v-icon>far fa-user-circle</v-icon>
+            </v-list-item-icon>
             <v-list-item-title>Your profile</v-list-item-title>
           </v-list-item>
           <v-list-item to="/qr">
-            <v-list-item-icon><v-icon>fas fa-qrcode</v-icon></v-list-item-icon>
+            <v-list-item-icon>
+              <v-icon>fas fa-qrcode</v-icon>
+            </v-list-item-icon>
             <v-list-item-title>QR Scanner</v-list-item-title>
           </v-list-item>
           <v-list-item to="#" class="hidden-sm-and-up">
-            <v-list-item-icon><v-icon>fas fa-paper-plane</v-icon></v-list-item-icon>
+            <v-list-item-icon>
+              <v-icon>fas fa-paper-plane</v-icon>
+            </v-list-item-icon>
             <v-list-item-title>Room alert</v-list-item-title>
           </v-list-item>
           <v-list-item to="#" class="hidden-sm-and-up">
-            <v-list-item-icon><v-icon>far fa-bookmark</v-icon></v-list-item-icon>
+            <v-list-item-icon>
+              <v-icon>far fa-bookmark</v-icon>
+            </v-list-item-icon>
             <v-list-item-title>Your Booking</v-list-item-title>
           </v-list-item>
         </v-list>

@@ -1,13 +1,5 @@
 <template>
   <div>
-    <div class="primary d-flex justify-space-between">
-      <v-card-title class="white--text text-h6">Tiện nghi xung quanh</v-card-title>
-      <v-card-actions>
-        <v-btn color="success" class="ma-1">
-          <v-icon>fas fa-map-signs</v-icon>Bản đồ
-        </v-btn>
-      </v-card-actions>
-    </div>
     <v-treeview
       v-model="treeview.tree"
       :open="treeview.open"
@@ -47,25 +39,25 @@ export default {
       tree: [],
       items: [
         {
-          name: 'School',
+          name: 'Trường học',
           icon: 'school',
           children: [
             {
-              name: 'Fpt University',
+              name: 'Đại học Fpt',
               distance: '5km',
             },
             {
-              name: 'University of Finance and Marketing',
+              name: 'Đại học Tài Chính - Marketing',
               distance: '3km',
             },
           ],
         },
         {
-          name: 'Market',
+          name: 'Chợ',
           icon: 'market',
           children: [
             {
-              name: 'Bach Hoa Xanh',
+              name: 'Bách Hoá Xanh',
               distance: '0.5km',
             },
             {
@@ -75,31 +67,31 @@ export default {
           ],
         },
         {
-          name: 'Bus station',
+          name: 'Bến xe',
           icon: 'bus',
           children: [
             {
-              name: '123 Tran Thanh Tong',
+              name: '123 Trần Thánh Tông',
               distance: '0.1km',
             },
             {
-              name: '424 Tran Dai Nghia',
+              name: '424 Trần Đại Nghĩa',
               distance: '0.5km',
             },
           ],
         },
         {
-          name: 'Hospital',
+          name: 'Bệnh Viện',
           icon: 'hospital',
           children: [
             {
-              name: 'Benh vien Quan 9',
+              name: 'Bệnh Viện Quận 9',
               distance: '2km',
             },
           ],
         },
         {
-          name: 'Bank',
+          name: 'Ngân hàng',
           icon: 'bank',
           children: [
             {

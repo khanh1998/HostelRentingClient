@@ -1,39 +1,43 @@
 <template>
   <div class="info-card d-flex flex-column">
-    <v-dialog :value="dateTimePicker.isOpenPicker">
+    <v-overlay :value="dateTimePicker.isOpenPicker">
       <dateTimePicker
         v-on:cancel="dateTimePicker.isOpenPicker = false"
         v-on:ok="receivedDateTime"
         :groupId="groupId"
       />
-    </v-dialog>
+    </v-overlay>
     <div
-      class="above d-flex flex-column justify-center align-center"
-      style="background-color: #fff; height: 100%"
+      class="above d-flex flex-column justify-center align-center rounded-lg"
+      style="background-color: #fff;"
     >
       <v-sheet
-        class="ma-6 pa-2 d-flex align-center justify-center"
+        class="ma-6 pa-2 d-flex align-center justify-center rounded-pill"
         color="#F6F7F9"
         rounded
       >
         <v-avatar height="64" width="64" left>
           <v-img max-height="64" max-width="64" src="../../assets/logo.png" />
         </v-avatar>
-        <p class="text-h5 text-center ma-2">{{name}}</p>
+        <p class="text-h6 font-weight-thin text-center ma-2">{{name}}</p>
       </v-sheet>
       <div class="d-flex flex-wrap align-center">
-        <v-rating
-          v-model="rating.average"
-          color="yellow"
-          readonly
-        >
-        </v-rating>
-        ({{rating.total}})
+        <v-icon color="yellow" x-small>fas fa-star</v-icon>
+        <span class="white--text">{{'_'}}</span>
+        <p class="grey--text mb-0">{{` ${rating.average}/5 `}}</p>
+        <span class="white--text">{{'_'}}</span>
+        <p class="mb-0">({{rating.total}})</p>
       </div>
-      <v-btn class="ma-2" tile outlined color="success" @click="pick('date')">
-        <v-icon left>fas fa-calendar-plus</v-icon>Chọn ngày giờ
-      </v-btn>
-      <v-spacer />
+      <div class="d-flex">
+        <v-btn
+          color="orange"
+          outlined
+          @click="$emit('openMessage')"
+          class="my-2 mx-1 rounded-tr-xl rounded-br-xl"
+        >
+          <v-icon>fas fa-comment-dots</v-icon>Nhắn tin ngay!
+        </v-btn>
+      </div>
       <div
         v-if="dateTimePicker.date != null && dateTimePicker.time != null"
         class="d-flex flex-column align-center justify-center"
@@ -53,8 +57,15 @@
     <div class="below d-flex justify-center align-center">
       <v-dialog v-model="dialog.booking" persistent max-width="290">
         <template v-slot:activator="{ attrs }">
-          <v-btn v-bind="attrs" color="red" outlined width="80%" class="ma-6" @click="book">
-            <v-icon left>fas fa-paper-plane</v-icon>Đặt ngay!
+          <v-btn
+            v-bind="attrs"
+            color="primary"
+            outlined
+            width="80%"
+            class="ma-6"
+            @click="pick('date')"
+          >
+            <v-icon left>fas fa-paper-plane</v-icon>ĐẶT LỊCH XEM PHÒNG
           </v-btn>
         </template>
         <v-card>
@@ -142,7 +153,10 @@ export default {
     },
     sendBooking() {
       this.dialog.booking = false;
-      this.showSnackbar('success', 'Bạn đã đặt lịch hẹn xem phòng thành công!!!');
+      this.showSnackbar(
+        'success',
+        'Bạn đã đặt lịch hẹn xem phòng thành công!!!',
+      );
     },
     receivedDateTime(event) {
       this.dateTimePicker.isOpenPicker = false;
@@ -151,7 +165,6 @@ export default {
       this.dateTimePicker.time = event.time;
     },
   },
-
 };
 </script>
 <style lang="scss" scoped>
