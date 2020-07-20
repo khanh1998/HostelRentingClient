@@ -8,7 +8,6 @@
       item-key="name"
       dense
       hoverable
-      rounded
     >
       <template v-slot:prepend="{ item, open }">
         <v-icon v-if="!item.icon">{{ open ? 'mdi-folder-open' : 'fas fa-map-marker-alt' }}</v-icon>

@@ -1,7 +1,7 @@
 <template>
     <v-card>
       <v-card-title class="blue--text py-0 px-2">
-          <v-icon color="blue">message</v-icon> Nhà trọ Lalahome
+          <v-icon color="blue">message</v-icon>{{group.groupName}}
           <v-spacer/>
           <v-btn icon color="success">
             <v-icon>remove</v-icon>
@@ -16,35 +16,38 @@
         class="overflow-y-auto"
         id="chatbox"
       >
-        <v-overlay :value="dateTimeOverlay.show" absolute>
-          <date-time-picker
+        <v-overlay :value="dateTimeOverlay.show" absolute opacity="0.8">
+          <dateTimePickerStepper
             :width="dateTimeOverlay.width"
             v-on:ok="receiveDateTime"
             v-on:cancel="dateTimeOverlay.show = false"
           />
         </v-overlay>
-        <v-overlay :value="bargainOverlay.show" absolute color="white">
-          <v-card class="d-flex flex-column justify-center align-center pa-1">
-            <v-card-text>
+        <v-overlay :value="bargainOverlay.show" absolute opacity="0.8">
+          <v-card color="white" class="d-flex flex-column justify-center align-center pa-1">
+            <v-card-text class="black--text">
               <div class="d-flex justify-space-between">
-              <p class="font-weight-medium">Giá gốc: <span>3.500.000 đ/tháng</span></p>
+              <p class="font-weight-medium">Giá gốc:
+                <span>{{info.price}} {{info.priceUnit}}/tháng</span>
+              </p>
             </div>
               <v-text-field
                 type="number"
                 outlined
                 dense
+                light
                 hide-details
                 v-model="bargainOverlay.price"
                 label="Nhập giá"
               />
             <p>phòng/tháng</p>
             <div class="d-flex align-center justify-space-around pb-1">
-              <v-btn color="green" class="mr-1" depressed outlined
+              <v-btn color="green" class="mr-1" depressed
                 @click="sendMessage('bargain')"
               >
                 Trả giá
               </v-btn>
-              <v-btn color="red" class="ml-1" depressed outlined
+              <v-btn color="red" class="ml-1" depressed
                 @click="bargainOverlay.show = false"
               >
                 Hủy
@@ -72,7 +75,7 @@
                     style="width: 75%"
                     class="blue lighten-5 pa-2 rounded"
                   >
-                    Bạn đã trả giá : {{item.message}} Đ
+                    Bạn đã trả giá : {{item.message}} {{info.priceUnit}}
                   </span>
 
                     <span
@@ -153,13 +156,14 @@
     </v-card>
 </template>
 <script>
-import dateTimePicker from './dateTimePicker.vue';
+import dateTimePickerStepper from './dateTimePickerStepper.vue';
 
 import firebase from '../../config/firebase';
 
 export default {
   name: 'ChatBox',
-  components: { dateTimePicker },
+  components: { dateTimePickerStepper },
+  props: ['info', 'group'],
   methods: {
     myOnScroll() {},
     bargain(content) {
@@ -240,7 +244,7 @@ export default {
     },
     bargainOverlay: {
       show: false,
-      price: 3500000,
+      price: 0,
     },
     inputChat: {
       text: '',
@@ -249,6 +253,7 @@ export default {
   }),
   created() {
     this.fetchMessages();
+    this.bargainOverlay.price = this.info.price;
   },
 };
 </script>

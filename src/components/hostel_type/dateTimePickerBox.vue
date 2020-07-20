@@ -1,7 +1,7 @@
 <template>
   <div class="info-card d-flex flex-column">
     <v-overlay :value="dateTimePicker.isOpenPicker">
-      <dateTimePicker
+      <dateTimePickerStepper
         v-on:cancel="dateTimePicker.isOpenPicker = false"
         v-on:ok="receivedDateTime"
         :groupId="groupId"
@@ -29,29 +29,9 @@
         <p class="mb-0">({{rating.total}})</p>
       </div>
       <div class="d-flex">
-        <v-btn
-          color="orange"
-          outlined
-          @click="$emit('openMessage')"
-          class="my-2 mx-1 rounded-tr-xl rounded-br-xl"
-        >
+        <v-btn color="orange" outlined @click="$emit('openMessage')" rounded class="my-2 mx-1">
           <v-icon>fas fa-comment-dots</v-icon>Nhắn tin ngay!
         </v-btn>
-      </div>
-      <div
-        v-if="dateTimePicker.date != null && dateTimePicker.time != null"
-        class="d-flex flex-column align-center justify-center"
-      >
-        <v-sheet class="mb-2" outlined tile shaped>
-          <p class="ma-1">Lịch hẹn của bạn</p>
-          <p class="ma-1">
-            Ngày:
-            {{dateTimePicker.date.getDate()}}/
-            {{dateTimePicker.date.getMonth()}}/
-            {{dateTimePicker.date.getFullYear()}}
-          </p>
-          <p class="ma-1">Giờ: {{dateTimePicker.time}}</p>
-        </v-sheet>
       </div>
     </div>
     <div class="below d-flex justify-center align-center">
@@ -60,9 +40,9 @@
           <v-btn
             v-bind="attrs"
             color="primary"
-            outlined
             width="80%"
             class="ma-6"
+            depressed
             @click="pick('date')"
           >
             <v-icon left>fas fa-paper-plane</v-icon>ĐẶT LỊCH XEM PHÒNG
@@ -97,11 +77,11 @@
   </div>
 </template>
 <script>
-import dateTimePicker from './dateTimePicker.vue';
+import dateTimePickerStepper from './dateTimePickerStepper.vue';
 
 export default {
   name: 'DateTimePickerBox',
-  components: { dateTimePicker },
+  components: { dateTimePickerStepper },
   props: {
     name: String,
     rating: Object,
@@ -163,6 +143,7 @@ export default {
       console.log(event);
       this.dateTimePicker.date = event.date;
       this.dateTimePicker.time = event.time;
+      this.sendBooking();
     },
   },
 };

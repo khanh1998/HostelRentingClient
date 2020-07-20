@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-list-item-group>
-      <v-list-item v-for="item in services" v-bind:key="item.serviceId">
+      <v-list-item dense v-for="item in services" v-bind:key="item.serviceId">
         <v-list-item-title>{{item.serviceName}}</v-list-item-title>
         <v-list-item-subtitle>
           {{item.servicePrice}} {{item.priceUnit}}/{{item.userUnit}}/{{item.timeUnit}}

@@ -3,9 +3,9 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-container v-if="!isLoading">
+    <v-container v-if="!isLoading" style="background-color: #fff">
       <v-dialog width="350" v-model="chatBox.show">
-        <chatBox v-on:close="chatBox.show=false" />
+        <chatBox v-on:close="chatBox.show=false" :info="info" :group="group"/>
       </v-dialog>
       <v-row no-gutters class="pt-2">
         <v-col cols="8">
@@ -79,7 +79,7 @@
         <v-col cols="12" md="4">
           <div class="d-flex justify-space-between">
             <p class="text-h5">Tiện nghi xung quanh</p>
-            <v-btn color="success" class="ml-1">
+            <v-btn color="success" class="ml-1" depressed tile>
               <v-icon small>fas fa-map-signs</v-icon>Bản đồ
             </v-btn>
           </div>
