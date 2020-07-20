@@ -12,29 +12,22 @@
   >
     <template v-slot:arrow-left>
       <v-btn icon light large fab>
-        <v-icon light>fas fa-chevron-left</v-icon>
+        <v-icon color="#FFB607">fas fa-chevron-left</v-icon>
       </v-btn>
     </template>
 
-    <template v-slot:arrow-right>
-      <v-btn icon light large fab>
-        <v-icon light>fas fa-chevron-right</v-icon>
+    <template v-slot:arrow-right >
+      <v-btn icon light large fab class="next-slide">
+        <v-icon color="#FFB607">fas fa-chevron-right</v-icon>
       </v-btn>
     </template>
-    <vueper-slide v-for="i in 9" :key="i">
+    <vueper-slide v-for="i in 10" :key="i" class="item">
       <template v-slot:content>
-        <TopCarouselItem :imgUrl="images[i%3]" :i="i" />
+        <TopCarouselItem :imgUrl="images[i%2]" :i="i" />
       </template>
     </vueper-slide>
   </vueper-slides>
 </template>
-<style scoped>
-.line-blue {
-  width: 150px;
-  border: 2px solid #6c98c6;
-  margin-bottom: 30px;
-}
-</style>
 <script>
 import 'vueperslides/dist/vueperslides.css';
 import { VueperSlides, VueperSlide } from 'vueperslides';
@@ -82,8 +75,34 @@ export default {
   }),
 };
 </script>
+<style>
+  .vueperslides__fractions {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    display: block;
+    width: auto;
+    max-width: 70%;
+    padding: 5px 10px;
+    background: rgba(132, 132, 132, 0.66);
+    font-weight: 400;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 5px;
+  }
+</style>
 <style scoped>
 .vueperslides--fixed-height.vueperslides--bullets-outside {
   margin-bottom: 0 !important;
 }
+.item {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+.line-blue {
+  width: 150px;
+  border: 2px solid #6c98c6;
+  margin-bottom: 30px;
+}
+
 </style>
