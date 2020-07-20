@@ -4,7 +4,7 @@
         <v-img
           :max-height="responsive.image.height"
           :max-width="responsive.image.width"
-          :lazy-src="type.typeImages[0].resourceUrl || '#'"
+          :src="'https://tiendoduan.org/wp-content/uploads/2020/04/can-ho-mini-25m2.jpg'"
         >
           <div class="d-flex align-start justify-end">
             <v-chip class="ma-6" color="red lighten-1" light text-color="white">
@@ -19,13 +19,13 @@
           <v-btn outlined :to="'/detail/' + type.typeId">Chi tiết</v-btn>
         </div>
         <v-card-subtitle class="amber--text font-weight-medium">
-          <v-icon>mdi-currency-usd-circle-outline</v-icon>{{type.price}} vnd
+          <v-icon>mdi-currency-usd-circle-outline</v-icon>{{type.price}} {{type.priceUnit}}
         </v-card-subtitle>
         <div class="ml-4" style="border: 1px solid #6C98C6; width: 200px"></div>
         <div class="d-flex align-center justify-space-between">
           <span class="mx-2 mt-4">
             <p>
-              <v-icon class="mx-2" x-small>fas fa-map-marker-alt</v-icon>{{group.detailedAddress}}
+              <v-icon class="mx-2" x-small>fas fa-map-marker-alt</v-icon>{{group.street}}
             </p>
           </span>
         </div>
