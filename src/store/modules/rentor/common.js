@@ -9,16 +9,16 @@ const myState = () => ({
   wards: {
     data: [],
   },
-  facilities: {
-    data: [],
-    isLoading: false,
-  },
-  services: {
+  categories: {
     data: [],
     isLoading: false,
   },
 });
 const getters = {
+  getCategoryId: (state) => (id) => {
+    const result = state.categories.data.find((category) => category.categoryId === Number(id));
+    return result;
+  },
   getWardById: (state) => (id) => state.wards.data.find((ward) => ward.wardId === Number(id)),
   // eslint-disable-next-line arrow-body-style
   getDistrictByWardId: (state) => (id) => {
@@ -39,8 +39,21 @@ const mutationTypes = {
   GET_PROVINCES_REQUEST: 'GET_PROVINCES_REQUEST',
   GET_PROVINCES_SUCCESS: 'GET_PROVINCES_SUCCESS',
   GET_PROVINCES_FAILURE: 'GET_PROVINCES_FAILURE',
+  GET_CATEGORIES_REQUEST: 'GET_CATEGORIES_REQUEST',
+  GET_CATEGORIES_SUCCESS: 'GET_CATEGORIES_SUCCESS',
+  GET_CATEGORIES_FAILURE: 'GET_CATEGORIES_FAILURE',
 };
 const mutations = {
+  GET_CATEGORIES_REQUEST(state) {
+    state.categories.isLoading = true;
+  },
+  GET_CATEGORIES_SUCCESS(state, categories) {
+    state.categories.data = categories;
+    state.categories.isLoading = false;
+  },
+  GET_CATEGORIES_FAILURE(state) {
+    state.categories.isLoading = false;
+  },
   GET_PROVINCES_REQUEST(state) {
     state.provinces.isLoading = true;
   },
@@ -62,6 +75,17 @@ const mutations = {
   },
 };
 const actions = {
+  async getCategories({ commit, state }) {
+    if (state.categories.data.length === 0) {
+      commit(mutationTypes.GET_CATEGORIES_REQUEST);
+      const res = await window.axios.get('/api/v1/categories');
+      if (res.status === 200) {
+        commit(mutationTypes.GET_CATEGORIES_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.GET_PROVINCES_FAILURE);
+      }
+    }
+  },
   async getProvinces({ commit, state }) {
     if (state.provinces.data.length === 0) {
       commit(mutationTypes.GET_PROVINCES_REQUEST);

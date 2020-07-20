@@ -1,31 +1,36 @@
 <template>
   <v-card class="mx-auto mb-4" light :width="responsive.article.width">
     <div class="d-flex flex-xl-row flex-lg-row flex-md-column flex-sm-column flex-column">
-        <v-img
-          :max-height="responsive.image.height"
-          :max-width="responsive.image.width"
-          :lazy-src="type.typeImages[0].resourceUrl || '#'"
-        >
-          <div class="d-flex align-start justify-end">
-            <v-chip class="ma-6" color="red lighten-1" light text-color="white">
-              Top
-              <v-icon right>{{numberIcons[index-1]}}</v-icon>
-            </v-chip>
-          </div>
-        </v-img>
+      <v-img
+        :max-height="responsive.image.height"
+        :max-width="responsive.image.width"
+        :src="'https://tiendoduan.org/wp-content/uploads/2020/04/can-ho-mini-25m2.jpg'"
+      >
+        <div class="d-flex align-start justify-end">
+          <v-chip class="ma-6" color="red lighten-1" light text-color="white">
+            Top
+            <v-icon right>{{numberIcons[index-1]}}</v-icon>
+          </v-chip>
+        </div>
+      </v-img>
       <div class="right d-flex flex-column">
         <div class="d-flex justify-space-center align-center">
           <v-card-title>{{group.groupName}} - {{type.typeName}}</v-card-title>
           <v-btn outlined :to="'/detail/' + type.typeId">Chi tiết</v-btn>
         </div>
         <v-card-subtitle class="amber--text font-weight-medium">
-          <v-icon>mdi-currency-usd-circle-outline</v-icon>{{type.price}} vnd
+          <v-icon>mdi-currency-usd-circle-outline</v-icon>
+          {{type.price}} {{type.priceUnit}}/tháng
         </v-card-subtitle>
         <div class="ml-4" style="border: 1px solid #6C98C6; width: 200px"></div>
         <div class="d-flex align-center justify-space-between">
           <span class="mx-2 mt-4">
-            <p>
-              <v-icon class="mx-2" x-small>fas fa-map-marker-alt</v-icon>{{group.detailedAddress}}
+            <p v-if="!isLoadingProvinces">
+              <v-icon class="mx-2" x-small>fas fa-map-marker-alt</v-icon>
+              {{group.street}},
+              {{ward.wardName}},
+              {{district.districtName}},
+              {{province.provinceName}}
             </p>
           </span>
         </div>
@@ -46,7 +51,8 @@
             <v-icon class="mx-2" x-small>fas fa-ruler-combined</v-icon>20m2
           </span>
           <span class="mx-2">
-            <v-icon class="mx-2" x-small>fas fa-users</v-icon>{{type.capacity}} người
+            <v-icon class="mx-2" x-small>fas fa-users</v-icon>
+            {{type.capacity}} người
           </span>
           <span class="mx-2">
             <v-icon class="mx-2" x-small>mdi-toilet</v-icon>Dùng riêng
@@ -64,13 +70,7 @@
           </span>
         </div>
         <div class="d-flex align-center justify-space-between mt-2 ml-2">
-          <v-chip-group
-            class=""
-            center-active
-            light
-            show-arrows
-            mandatory
-          >
+          <v-chip-group class center-active light show-arrows mandatory>
             <v-chip outlined>
               <v-icon class="mr-2" x-small>mdi-weather-windy</v-icon>May Lanh
             </v-chip>
@@ -92,6 +92,8 @@
 <style scoped>
 </style>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'Article',
   props: {
@@ -107,8 +109,18 @@ export default {
       'mdi-numeric-5-circle-outline',
     ],
   }),
-  created() {},
+  created() {
+    this.getProvinces();
+  },
+  methods: {
+    ...mapActions({
+      getProvinces: 'renter/common/getProvinces',
+    }),
+  },
   computed: {
+    isLoadingProvinces() {
+      return this.$store.state.renter.common.provinces.isLoading;
+    },
     res() {
       return this.$vuetify.breakpoint.name;
     },
@@ -118,26 +130,28 @@ export default {
         switch (breakpoint) {
           case 'xs':
           case 'sm':
-          case 'md': return {
-            image: {
-              height: 300,
-              width: '100%',
-            },
-            article: {
-              width: 390,
-            },
-          };
+          case 'md':
+            return {
+              image: {
+                height: 300,
+                width: '100%',
+              },
+              article: {
+                width: 390,
+              },
+            };
           // case 'lg': return {};
           // case 'xl': return {};
-          default: return {
-            image: {
-              height: 300,
-              width: 300,
-            },
-            article: {
-              width: '100%',
-            },
-          };
+          default:
+            return {
+              image: {
+                height: 300,
+                width: 300,
+              },
+              article: {
+                width: '100%',
+              },
+            };
         }
       },
     },
@@ -146,10 +160,26 @@ export default {
         const id = this.type.groupId;
         let data = this.$store.getters['renter/home/getHostelGroupById'](id);
         if (!data) {
-          data = this.$store.getters['renter/filterResult/getHostelGroupById'](id);
+          data = this.$store.getters['renter/filterResult/getHostelGroupById'](
+            id,
+          );
         }
         return data;
       },
+    },
+    ward() {
+      const { wardId } = this.group;
+      return this.$store.getters['renter/common/getWardById'](wardId);
+    },
+    district() {
+      const { wardId } = this.group;
+      return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
+    },
+    province() {
+      const { districtId } = this.district;
+      return this.$store.getters['renter/common/getProvinceByDistrictId'](
+        districtId,
+      );
     },
   },
 };
