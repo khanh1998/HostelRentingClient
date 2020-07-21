@@ -25,13 +25,15 @@ const mutations = {
 };
 
 const actions = {
-  async getUser({ commit }, id = 1) {
-    commit(mutationTypes.GET_USER_REQUEST);
-    const res = window.axios.get(`/api/v1/renters/${id}`);
-    if (res.status === 200) {
-      commit(mutationTypes.GET_USER_SUCCESS, res.data.data);
-    } else {
-      commit(mutationTypes.GET_USER_FAILURE);
+  async getUser({ commit, state }, id = 1) {
+    if (state.user.data === null) {
+      commit(mutationTypes.GET_USER_REQUEST);
+      const res = window.axios.get(`/api/v1/renters/${id}`);
+      if (res.status === 200) {
+        commit(mutationTypes.GET_USER_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.GET_USER_FAILURE);
+      }
     }
   },
 };

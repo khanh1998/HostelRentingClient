@@ -7,15 +7,11 @@
       <v-row>
         <v-col cols="12" md="8">
           <v-card class="d-flex flex-column align-center justify-center">
-            <v-card-title>
-              Kết quả tìm kiếm
-            </v-card-title>
+            <v-card-title>Kết quả tìm kiếm</v-card-title>
             <v-card-actions class="hidden-md-and-up">
               <v-bottom-sheet v-model="bottomSheet.show" scrollable>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn color="green" dark v-bind="attrs" v-on="on">
-                    Bộ lọc
-                  </v-btn>
+                  <v-btn color="green" dark v-bind="attrs" v-on="on">Bộ lọc</v-btn>
                 </template>
                 <v-sheet light class="pt-6">
                   <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
@@ -31,13 +27,14 @@
         </v-col>
         <v-col cols="12" md="8" v-if="list.length === 0">
           <v-card>
-            <v-card-text>
-              Không tìm thấy kết quả nào
-            </v-card-text>
+            <v-card-text>Không tìm thấy kết quả nào</v-card-text>
           </v-card>
         </v-col>
         <v-col cols="0" md="4" class="hidden-sm-and-down">
-          <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
+          <v-sheet>
+            <p class="text-h6 ml-5 pt-3">Bộ lọc kết quả</p>
+            <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
+          </v-sheet>
         </v-col>
         <v-col cols="12" md="8" v-if="list.length != 0">
           <v-pagination

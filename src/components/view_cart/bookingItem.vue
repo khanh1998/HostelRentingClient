@@ -1,17 +1,17 @@
 <template>
-  <v-sheet>
+  <v-sheet class="mb-2">
     <v-row no-gutters>
       <v-col cols="5" md="3" class="d-flex justify-space-between">
         <div class="d-flex flex-column align-center justify-center pt-2 pl-4 pb-2">
           <v-avatar size="100">
-            <v-img src="../../assets/suzy-avatar.jpg"></v-img>
+            <v-img :src="booking.vendor.avatar"></v-img>
           </v-avatar>
-          <p class="font-weight-medium">Nhà trọ Lalahome</p>
+          <p class="font-weight-medium">{{booking.group.groupName}}</p>
           <div class="d-flex align-center">
             <v-icon color="yellow" small>fas fa-star</v-icon>
             <p class="mb-0">4.5/5 (30)</p>
           </div>
-          <p class="blue--text">0378.034.064</p>
+          <p class="blue--text">{{booking.vendor.phone}}</p>
           <v-btn rounded outlined dark color="red">BÁO CÁO</v-btn>
         </div>
         <v-divider vertical class="mr-4"/>
@@ -19,15 +19,18 @@
       <v-col cols="7" md="6">
         <div class="pa-1">
           <p class="indigo--text font-weight-medium text-h6">
-            Phòng trọ mới xây 100%, full nội thất
+            {{booking.type.title}}
           </p>
           <p>
             <span class="grey--text">Giá thuê</span>
-            <span class="blue--text">3.000.000 đ</span>
-            <span class="font-italic">(đã trả giá)</span>
+            <span class="blue--text"> {{booking.type.price}} {{booking.type.priceUnit}}</span>
+            <span class="font-italic"> (đã trả giá)</span>
           </p>
           <p class="grey--text font-italic">
-            1426/39 Nguyễn Duy Trinh, Long Trường, Bình Thạnh, HCM
+            {{booking.group.street}},
+            {{ward.wardName}},
+            {{district.districtName}},
+            {{province.provinceName}}
           </p>
           <v-btn color="success" outlined>
             <v-icon class="mr-1">near_me</v-icon>Bản đồ
@@ -39,16 +42,20 @@
         <v-sheet color="blue">
           <v-row no-gutters justify="center">
             <v-col cols="3" md="7">
-              <p class="font-weight-bold text-h1 white--text mb-0">26</p>
+              <p class="font-weight-bold text-h1 white--text mb-0">
+                {{timestamp.getDate()}}
+              </p>
             </v-col>
             <v-col cols="2" md="5" class="d-flex align-center justify-center">
               <div>
-                <p class="white--text font-weight-bold">tháng 7</p>
-                <p class="white--text font-weight-bold">2020</p>
+                <p class="white--text font-weight-bold">
+                  tháng {{timestamp.getMonth()}}
+                </p>
+                <p class="white--text font-weight-bold">{{timestamp.getFullYear()}}</p>
               </div>
             </v-col>
             <v-col cols="2" md="12" class="d-flex align-center justify-center">
-              <p class="font-weight-bold">13h - 14h</p>
+              <p class="font-weight-bold">{{timestamp.getHours()}}:{{timestamp.getMinutes()}}</p>
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -67,7 +74,35 @@
 <style scoped>
 </style>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'BookingItem',
+  props: ['booking'],
+  computed: {
+    timestamp() {
+      return new Date(Number(this.booking.startTime));
+    },
+    ward() {
+      const { wardId } = this.booking.group;
+      return this.$store.getters['renter/common/getWardById'](wardId);
+    },
+    district() {
+      const { wardId } = this.booking.group;
+      return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
+    },
+    province() {
+      const { districtId } = this.district;
+      return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
+    },
+  },
+  methods: {
+    ...mapActions({
+      getProvinces: 'renter/common/getProvinces',
+    }),
+  },
+  created() {
+    this.getProvinces();
+  },
 };
 </script>

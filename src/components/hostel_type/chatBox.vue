@@ -38,6 +38,7 @@
               hide-details
               v-model="bargainOverlay.price"
               label="Nhập giá"
+              suffix="Triệu"
             />
             <p>phòng/tháng</p>
             <div class="d-flex align-center justify-space-around pb-1">

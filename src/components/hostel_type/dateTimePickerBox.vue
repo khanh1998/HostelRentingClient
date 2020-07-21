@@ -43,7 +43,7 @@
             width="80%"
             class="ma-6"
             depressed
-            @click="pick('date')"
+            @click="dateTimePicker.isOpenPicker = true"
           >
             <v-icon left>fas fa-paper-plane</v-icon>ĐẶT LỊCH XEM PHÒNG
           </v-btn>
@@ -78,6 +78,7 @@
 </template>
 <script>
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
+import sendBookingRequest from '../../utils/booking';
 
 export default {
   name: 'DateTimePickerBox',
@@ -86,6 +87,7 @@ export default {
     name: String,
     rating: Object,
     groupId: Number,
+    typeId: Number,
   },
   data: () => ({
     dateTimePicker: {
@@ -104,46 +106,42 @@ export default {
     },
   }),
   methods: {
-    pick(name) {
-      if (name === 'date') {
-        this.dateTimePicker.isOpenPicker = !this.dateTimePicker.isOpenPicker;
-      }
-      if (name === 'time') {
-        this.timePicker.isOpenPicker = !this.timePicker.isOpenPicker;
-      }
-    },
     showSnackbar(color, message) {
       this.snackbar.message = message;
       this.snackbar.color = color;
       this.snackbar.display = true;
     },
-    isPickDateAndTime() {
-      const pickedTime = this.dateTimePicker.time;
-      const pickedDate = this.dateTimePicker.date;
-      if (pickedTime === null || pickedDate === null) {
-        this.showSnackbar('red', 'Hãy chọn thời gian trước khi đặt lịch!');
-        return false;
-      }
-      return true;
-    },
-    book() {
-      if (this.isPickDateAndTime()) {
-        this.dialog.booking = true;
-      }
-    },
-    sendBooking() {
+    async sendBooking() {
       this.dialog.booking = false;
-      this.showSnackbar(
-        'success',
-        'Bạn đã đặt lịch hẹn xem phòng thành công!!!',
-      );
+      this.showSnackbar('yellow', 'Booking của bạn đang được tạo');
+      const [hours, minutes] = this.dateTimePicker.time.split(':');
+      this.dateTimePicker.date.setHours(hours);
+      this.dateTimePicker.date.setMinutes(minutes);
+      this.dateTimePicker.date.setSeconds(0);
+      const bookingObj = {
+        renterId: 1,
+        vendorId: 1,
+        typeId: this.typeId,
+        statusId: 1,
+        dealId: 1,
+        startTime: this.dateTimePicker.date.getTime(),
+      };
+      const success = await sendBookingRequest(bookingObj);
+      if (success) {
+        this.showSnackbar(
+          'success',
+          'Bạn đã đặt lịch hẹn xem phòng thành công!!!',
+        );
+      } else {
+        this.showSnackbar('red', 'Đặt lịch xem phòng thất bại');
+      }
     },
-    receivedDateTime(event) {
+    async receivedDateTime(event) {
       this.dateTimePicker.isOpenPicker = false;
       console.log(event);
       this.dateTimePicker.date = event.date;
       this.dateTimePicker.time = event.time;
-      this.sendBooking();
+      await this.sendBooking();
     },
   },
 };
