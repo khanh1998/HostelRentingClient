@@ -8,7 +8,7 @@
               style="height: auto; width: 100%"
               class="px-2"
             >
-                <SlideBooking/>
+              <SlideBooking />
             </div>
           </v-col>
 
@@ -19,27 +19,39 @@
               style="height: 500px; width: 100%"
               class="ml-2"
             >
-            <SuggestContract/>
+              <SuggestContract />
             </div>
           </v-col>
           <v-col cols="8">
-            <div style="background-color: coral; height: 500px; width: 100%">
+            <div
+              style="height: 500px; width: 100%"
+              class="pr-2"
+            >
+              <ChartOverview />
             </div>
           </v-col>
         </v-row>
       </v-col>
       <v-col cols="4">
         <div style="width: 95%">
-            <ChatList/>
+          <ChatList/>
         </div>
       </v-col>
     </v-row>
+    <v-card
+      style="position: absolute; right: 20px; bottom: 10px;
+    height:auto; width:350px">
+      <Chatbox />
+    </v-card>
   </div>
 </template>
 <script>
 import ChatList from '@/components/vendor/ChatList.vue';
 import SlideBooking from '@/components/vendor/SlideBooking.vue';
 import SuggestContract from '@/components/vendor/SuggestContract.vue';
+import ChartOverview from '@/components/vendor/ChartOverview.vue';
+import Chatbox from '@/components/vendor/Chatbox.vue';
+// import ChatboxBottom from '@/components/vendor/ChatboxBottom.vue';
 
 export default {
   name: 'Overview',
@@ -47,9 +59,11 @@ export default {
     ChatList,
     SlideBooking,
     SuggestContract,
+    ChartOverview,
+    Chatbox,
+    // ChatboxBottom,
   },
   data: () => ({
-
   }),
 };
 </script>
