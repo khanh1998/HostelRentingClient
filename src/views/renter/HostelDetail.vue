@@ -3,9 +3,9 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-container v-if="!isLoading" style="background-color: #fff">
+    <v-container v-if="!isLoading">
       <v-dialog width="350" v-model="chatBox.show">
-        <chatBox v-on:close="chatBox.show=false" :info="info" :group="group"/>
+        <chatBox v-on:close="chatBox.show=false" :info="info" :group="group" />
       </v-dialog>
       <v-row no-gutters class="pt-2">
         <v-col cols="8">
@@ -68,24 +68,36 @@
       </v-row>
       <v-row>
         <v-col cols="12" md="4">
-          <p class="text-h5">Tiện nghi</p>
-          <v-divider />
-          <facilitiesBox :facilities="info.facilities"/>
+          <v-card class="pa-3">
+            <v-card-title>
+              <v-icon class="mr-2">weekend</v-icon>
+              Tiện nghi
+            </v-card-title>
+            <v-divider />
+            <facilitiesBox :facilities="info.facilities" />
+          </v-card>
         </v-col>
         <v-col cols="12" md="4">
-          <p class="text-h5">Dịch vụ</p>
-          <v-divider />
-          <servicesBox :services="info.services"/>
+          <v-card class="pa-3">
+            <v-card-title>
+              <v-icon class="mr-2">cleaning_services</v-icon>
+              Dịch vụ
+            </v-card-title>
+            <v-divider />
+            <servicesBox :services="info.services" />
+          </v-card>
         </v-col>
         <v-col cols="12" md="4">
-          <div class="d-flex justify-space-between">
-            <p class="text-h5">Tiện nghi xung quanh</p>
-            <v-btn color="success" class="ml-1" depressed tile>
-              <v-icon small>fas fa-map-signs</v-icon>Bản đồ
-            </v-btn>
-          </div>
-          <v-divider />
-          <treeView />
+          <v-card  class="pa-3">
+            <div class="d-flex justify-space-between">
+              <v-card-title>Tiện nghi xung quanh</v-card-title>
+              <v-btn color="success" class="ml-1" depressed tile>
+                <v-icon small>fas fa-map-signs</v-icon>Bản đồ
+              </v-btn>
+            </div>
+            <v-divider />
+            <treeView />
+          </v-card>
         </v-col>
       </v-row>
     </v-container>
@@ -134,7 +146,9 @@ export default {
     },
     province() {
       const { districtId } = this.district;
-      return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
+      return this.$store.getters['renter/common/getProvinceByDistrictId'](
+        districtId,
+      );
     },
     images: {
       get() {

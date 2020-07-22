@@ -27,19 +27,21 @@
     </div>
     <div v-if="timesForDate != null" class="below d-flex flex-column align-center pa-1 flex-wrap">
       <p class="h6-text">CHỌN GIỜ</p>
-      <v-chip-group mandatory light v-model="pickedTime" center-active show-arrows>
-        <v-chip
-          light
-          v-for="j in timesForDate.length"
-          v-bind:key="j"
-          large
-          label
-          class="mr-1"
-          outlined
-          active-class="amber--text amber"
-          link
-        >{{timesForDate[j-1]}}</v-chip>
-      </v-chip-group>
+      <div class="pa-2">
+        <v-chip-group mandatory light v-model="pickedTime" center-active show-arrows>
+          <v-chip
+            light
+            v-for="j in timesForDate.length"
+            v-bind:key="j"
+            large
+            label
+            class="mr-1"
+            outlined
+            active-class="amber--text amber"
+            link
+          >{{timesForDate[j-1]}}</v-chip>
+        </v-chip-group>
+      </div>
     </div>
     <div class="d-flex justify-space-around mt-1">
       <v-btn color="warning" @click="$emit('cancel')">HỦY</v-btn>
