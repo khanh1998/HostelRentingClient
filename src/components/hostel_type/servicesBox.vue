@@ -4,7 +4,13 @@
       <v-list-item dense v-for="item in services" v-bind:key="item.serviceId">
         <v-list-item-title>{{item.serviceName}}</v-list-item-title>
         <v-list-item-subtitle>
-          {{item.servicePrice}} {{item.priceUnit}}/{{item.userUnit}}/{{item.timeUnit}}
+          <div v-if="item.servicePrice > 0">
+            <span class="primary--text font-weight-bold">{{item.servicePrice}}</span>
+            {{item.priceUnit}}/{{item.userUnit}}
+          </div>
+          <div v-else>
+            <span class="primary--text font-weight-bold">Miễn phí</span>
+          </div>
         </v-list-item-subtitle>
       </v-list-item>
     </v-list-item-group>

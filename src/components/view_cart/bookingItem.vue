@@ -55,7 +55,9 @@
               </div>
             </v-col>
             <v-col cols="2" md="12" class="d-flex align-center justify-center">
-              <p class="font-weight-bold">{{timestamp.getHours()}}:{{timestamp.getMinutes()}}</p>
+              <p class="font-weight-bold">
+              {{timestamp.getHours()}}:{{padZero(timestamp.getMinutes())}}{{timestamp.getMinutes()}}
+              </p>
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -100,6 +102,9 @@ export default {
     ...mapActions({
       getProvinces: 'renter/common/getProvinces',
     }),
+    padZero(int) {
+      return int < 10 ? '0' : '';
+    },
   },
   created() {
     this.getProvinces();

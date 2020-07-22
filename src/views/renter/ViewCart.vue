@@ -26,9 +26,12 @@
       <v-row>
         <v-col cols="12" md="4" class="d-flex justify-center">
           <v-date-picker
+            no-title
             v-model="date"
-            :event-color="date => date[9] % 2 ? 'red' : 'yellow'"
+            :event-color="'red'"
             :events="arrayEvents"
+            locale="vi-vn"
+            first-day-of-week="1"
           ></v-date-picker>
         </v-col>
         <v-col cols="12" md="8">
