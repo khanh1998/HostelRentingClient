@@ -14,93 +14,52 @@
         <div class="type-name">
           <p class="font-weight-bold mb-0">Ký túc xá đại học quốc gia</p>
         </div>
-        <div class="mt-3">
-          <span class="item-text">
-            <!-- <v-img
-              class="shrink mr-2"
-              contain
-              src="@/assets/home-topview/distance.png"
-              transition="scale-transition"
-              max-width="30"
-              max-height="30"
-            /> -->
-            <!-- <img
-              src="https://image.flaticon.com/icons/svg/3081/3081172.svg"
-              alt="Distance"
-              class="replaced-svg"
-            /> -->
-            <p>
-              <!-- <v-icon small color="#656565" class="w-25" left>
-                place
-              </v-icon>-->
-              Linh Trung, Thủ Đức, TP.HCM
-            </p>
-          </span>
-          <!-- <img src="https://image.flaticon.com/icons/svg/3081/3081172.svg" alt="Distance" class="replaced-svg"> -->
+        <div class="mt-3 d-flex align-center">
+          <v-img
+            class="shrink mr-3"
+            src="@/assets/home/address.png"
+            transition="scale-transition"
+            max-width="20"
+            max-height="20"
+          />
+          <span class="item-text">Linh Trung, Thủ Đức, TP.HCM</span>
         </div>
+        <div class="mt-3 d-flex align-center">
+          <v-img
+            class="shrink mr-2"
+            src="@/assets/home/distance.png"
+            transition="scale-transition"
+            max-width="25"
+            max-height="25"
+          />
+          <span class="item-text blue--text">BigC:</span>
+          <span class="item-text item-text-detail ml-auto">300 m</span>
+        </div>
+        <div class="mt-3 d-flex align-center">
+          <v-img
+            class="shrink mr-5"
+            src="@/assets/home/superficies.svg"
+            transition="scale-transition"
+            max-width="15"
+            max-height="15"
+          />
+          <span class="item-text">20m2</span>
+          <div class="ml-auto d-flex">
+            <v-img
+              class="shrink mr-4 ml-auto"
+              src="@/assets/home/people.png"
+              transition="scale-transition"
+              max-width="15"
+              max-height="15"
+            />
+            <span class="item-text">3 người</span>
+          </div>
+        </div>
+        <v-card-actions class="pl-0 mt-3">
+          <v-btn color="#484848" class="btnDetail pl-3 pr-3">Chi tiết</v-btn>
+        </v-card-actions>
       </v-col>
     </v-row>
-    <!-- <div class="d-flex align-center justify-space-between red property-item">
-      <span class="mx-2 mt-4">
-          Ký túc xá đại học quốc gia
-      </span>
-    </div>
-    <div class="d-flex align-center justify-space-between">
-      <span class="mx-2 mt-4">
-        <p>
-          <v-icon class="mx-2" small>fas fa-map-marker-alt</v-icon>Linh Trung, Thủ Đức, TP.HCM
-        </p>
-      </span>
-    </div>
-    <div class="d-flex align-center justify-space-between">
-      <span class="mx-2">
-        <p class="success--text">
-          <v-icon class="mx-2" small>fas fa-store</v-icon>Chợ Hoàng Hoa Thám
-        </p>
-      </span>
-      <span class="mx-2">
-        <p>
-          <v-icon class="mx-2" small>fas fa-ruler</v-icon>0.2 Km
-        </p>
-      </span>
-    </div>
-    <div class="d-flex align-center justify-space-between">
-      <span class="mx-2">
-        <v-icon class="mx-2" small>fas fa-ruler-combined</v-icon>20m2
-      </span>
-      <span class="mx-2">
-        <v-icon class="mx-2" small>fas fa-users</v-icon>3 người
-      </span>
-      <span class="mx-2">
-        <v-icon class="mx-2" small>mdi-toilet</v-icon>Dùng riêng
-      </span>
-    </div>
-    <div class="d-flex align-center justify-space-between mt-4">
-      <v-chip-group
-        center-active
-        light
-        show-arrows
-        mandatory class=""
-      >
-        <v-chip>
-          <v-icon class="mx-4" small>mdi-weather-windy</v-icon>May Lanh
-        </v-chip>
-        <v-chip>
-          <v-icon class="mx-4" small>mdi-fridge</v-icon>Tu Lanh
-        </v-chip>
-        <v-chip>
-          <v-icon class="mx-4" small>fas fa-motorcycle</v-icon>Cho dau xe
-        </v-chip>
-        <v-chip>
-          <v-icon class="mx-4" small>mdi-washing-machine</v-icon>May giat
-        </v-chip>
-      </v-chip-group>
-    </div>-->
-    <v-card-actions>
-      <v-btn color="amber" dark>
-        <v-icon class="ma-2">fas fa-info-circle</v-icon>Chi tiết
-      </v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 <script>
@@ -130,7 +89,8 @@ export default {
   box-sizing: border-box;
 }
 .arrow-price {
-  background-image: linear-gradient(to right, rgba(216, 36, 96, 0.6), #d82460);
+  /* background-image: linear-gradient(to right, rgba(216, 36, 96, 0.6), #d82460); */
+  background-image: linear-gradient(to right, rgba(52, 203, 247, 0.71) , #1c63b8);
   color: #fff;
   padding: 4px 10px;
   position: absolute;
@@ -146,7 +106,7 @@ export default {
   content: '';
   left: -12px;
   border-top: 15px solid transparent;
-  border-right: 12px solid rgba(216, 36, 96, 0.6);
+  border-right: 12px solid rgba(52, 203, 247, 0.71);
   border-bottom: 15px solid transparent;
   width: 0;
 }
@@ -161,5 +121,17 @@ export default {
   font-size: 13px;
   font-weight: normal;
   font-family: 'Lato';
+}
+.item-text-detail {
+  color: #3357b4 !important;
+}
+.btnDetail {
+  font-size: 13px;
+  color: #fff;
+  padding: 0 0 20px 25px;
+  font-family: 'Nunito';
+}
+.v-btn:hover {
+  background-color: #6C98C6 !important;
 }
 </style>

@@ -23,77 +23,29 @@
       clearable
       dense
     ></v-select>
+    <!-- area -->
     <v-select
-      v-model="filter.price.select"
-      :items="filter.price.items"
+      _v-model="filter.around.selects"
+      _:items="filter.around.items"
       light
       outlined
-      label="Chọn khoảng giá tiền"
+      multiple
+      single-line
+      label="Diện tích tối thiểu"
       clearable
       dense
     ></v-select>
-    <!-- area -->
-    <v-range-slider
-      v-model="filter.sliderArea.range"
-      class="mt-3"
-      :min="filter.sliderArea.min"
-      :max="filter.sliderArea.max"
-      label
+    <v-select
+      _v-model="filter.around.selects"
+      _:items="filter.around.items"
       light
-      messages="Chọn khoảng diện tích"
-      thumb-label="always"
-      thumb-size="32"
-      step="0.1"
-      :rules="filter.sliderArea.rules"
-    >
-      <template v-slot:prepend>
-        <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" @click="minusArea">
-              <v-icon>fas fa-minus-circle</v-icon>
-            </v-btn>
-          </template>
-          Giảm
-        </v-tooltip>
-      </template>
-      <template v-slot:append>
-        <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" @click="plusArea">
-              <v-icon>fas fa-plus-circle</v-icon>
-            </v-btn>
-          </template>
-          Tăng
-        </v-tooltip>
-      </template>
-    </v-range-slider>
-    <div class="d-flex flex-row mt-1">
-      <v-text-field
-        v-model="filter.sliderArea.range[0]"
-        class="mr-1"
-        hide-details
-        single-line
-        type="number"
-        suffix="m2"
-        prefix="Từ"
-        outlined
-        readonly
-        dense
-      ></v-text-field>
-      <v-icon small>mdi-arrow-left-right</v-icon>
-      <v-text-field
-        outlined
-        readonly
-        dense
-        v-model="filter.sliderArea.range[1]"
-        prefix="Đến"
-        class="ml-1"
-        hide-details
-        single-line
-        type="number"
-        suffix="m2"
-      ></v-text-field>
-    </div>
+      outlined
+      multiple
+      single-line
+      label="Giá thuê tối đa"
+      clearable
+      dense
+    ></v-select>
     <div class="d-flex justify-center align-center">
       <v-btn tile min-width="100%" dark depressed class="mt-6" color="amber"
         @click="submit()"

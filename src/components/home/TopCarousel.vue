@@ -96,13 +96,12 @@ export default {
   margin-bottom: 0 !important;
 }
 .item {
-  padding-right: 10px;
-  padding-left: 10px;
+  padding-right: 20px;
+  padding-left: 20px;
 }
 .line-blue {
   width: 150px;
   border: 2px solid #6c98c6;
   margin-bottom: 30px;
 }
-
 </style>
