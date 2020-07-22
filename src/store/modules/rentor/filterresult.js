@@ -23,24 +23,26 @@ const myState = {
       ],
     },
     price: {
-      select: '500000 - 1000000',
+      select: '1 triệu',
       items: [
-        '500000 - 1000000',
-        '1000000 - 2000000',
-        '2000000 - 3000000',
+        '1 triệu',
+        '2 triệu',
+        '3 triệu',
+        '4 triệu',
+        '5 triệu',
+        '6 triệu',
       ],
     },
-    slider: {
-      range: [1, 3],
-      min: 0,
-      max: 10,
-      rules: [
+    area: {
+      select: '20 m2',
+      items: [
+        '10 m2',
+        '15 m2',
+        '20 m2',
+        '25 m2',
+        '30 m2',
+        '40 m2',
       ],
-    },
-    sliderArea: {
-      range: [15, 30],
-      min: 0,
-      max: 100,
     },
   },
   results: {
@@ -106,13 +108,13 @@ const actions = {
       around: state.filter.around.selects,
       facility: state.filter.around.selects,
       price: state.filter.price.select,
-      area: state.filter.sliderArea.range,
+      area: state.filter.area.select,
     };
     const convert = {
-      minPrice: Number(data.price.split('-')[0]),
-      maxPrice: Number(data.price.split('-')[1]),
-      minSuperficiality: data.area[0],
-      maxSuperficiality: data.area[1],
+      // minPrice: Number(data.price.split('-')[0]),
+      maxPrice: Number(data.price.split(' ')[0]) * 1000000,
+      minSuperficiality: data.area.split(' ')[0],
+      // maxSuperficiality: data.area[1],
       minCapacity: 0,
       maxCapacity: 10,
       address: state.search.value,

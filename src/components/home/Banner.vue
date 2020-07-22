@@ -45,11 +45,13 @@
       :style="banner.right.style"
     >
       <div class="line"></div>
-      <p class="white--text text-h2 font-weight-medium">TD HOSTEL</p>
+      <p class="white--text text-h2">TD HOSTEL</p>
       <p
-        class="white--text font-weight-medium px-2"
+        class="white--text px-2 font-weight-bold"
       >HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT</p>
-      <v-btn color="warning" light @click="openLeftBanner">TÌM KIẾM NÂNG CAO</v-btn>
+      <v-btn color="#F9B707" light @click="openLeftBanner" id="search-optional">
+        TÌM KIẾM NÂNG CAO
+      </v-btn>
     </div>
   </div>
 </template>
@@ -62,6 +64,7 @@
   background-size: cover;
   height: 500px;
   overflow: hidden;
+  background-color: red;
 }
 .banner-left {
   background-color: #282828;
@@ -69,8 +72,27 @@
 }
 .line {
   width: 150px;
-  border: 2px solid #f5b507;
-  margin-bottom: 30px;
+  border: 1px solid #f5b507;
+  margin-bottom: 50px;
+}
+.v-application .text-h2 {
+    font-size: 60px !important;
+    font-weight: bold;
+    letter-spacing: 0.1em !important;
+    font-family: "Montserrat" !important;
+}
+.px-2 {
+  font-size: 20px !important;
+  font-family: Montserrat;
+  letter-spacing: 0.1em !important;
+}
+.v-application p {
+  margin-bottom: 36px;
+}
+#search-optional {
+  height: 60px;
+    width: 300px;
+    color: white;
 }
 </style>
 <script>

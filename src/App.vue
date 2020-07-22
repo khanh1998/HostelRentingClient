@@ -2,6 +2,7 @@
   <router-view></router-view>
 </template>
 <script>
+import './assets/css/style.css';
 
 export default {
   name: 'App',
@@ -9,5 +10,3 @@ export default {
   data: () => ({}),
 };
 </script>
-<style>
-</style>

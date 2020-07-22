@@ -5,6 +5,7 @@
       :key="i"
       :index="i"
       :type="list[i-1]"
+      class="mb-10 mt-10"
     />
   </div>
 </template>

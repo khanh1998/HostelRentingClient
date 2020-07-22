@@ -9,43 +9,69 @@
         light
         hide-details
         autofocus
-        placeholder="Tìm theo địa chỉ..."
-        full-width
+        placeholder="Tìm theo địa chỉ, địa điểm..."
         v-model="searchValue"
         clearable
+        class="flex-fill"
+        height="30px"
       >
         <template v-slot:append>
           <v-btn @click="overlay.show = false; search();">Search</v-btn>
         </template>
       </v-text-field>
     </v-overlay>
-    <v-app-bar app color="#fff" light class height="64">
+    <v-app-bar app color="#fff" light height="70" id="top-bar">
       <router-link to="/">
         <v-img
           alt="Hostel Renting"
           class="shrink mr-2"
           contain
-          src="@/assets/logo.png"
+          src="@/assets/logo1.png"
           transition="scale-transition"
-          max-width="64"
-          max-height="64"
+          max-width="100"
+          max-height="80"
         />
       </router-link>
-      <v-text-field
-        flat
-        solo-inverted
-        hide-details
-        label="Tìm theo địa chỉ..."
-        class="hidden-sm-and-down"
-        v-model="searchValue"
-        clearable
-      >
-        <template v-slot:append>
-          <v-btn fab small light @click="search" depressed>
-            <v-icon color="#98B7D7" light>mdi-magnify</v-icon>
-          </v-btn>
-        </template>
-      </v-text-field>
+      <!-- <v-toolbar-title ml-0 pl-4><span>TD Hostel</span></v-toolbar-title> -->
+      <!-- <v-spacer class="hidden-sm-and-down"/> -->
+      <!-- <div id="search-bar" class="d-flex">
+        <v-text-field
+          background-color="white"
+          outlined
+          flat
+          solo-inverted
+          hide-details
+          label="Tìm theo địa chỉ, địa điểm..."
+          id="search_input"
+          class="hidden-sm-and-down"
+          v-model="searchValue"
+          clearable
+          style="color: #444444!important"
+          dense
+          height="30px"
+          loader-height="1"
+        >
+          <template v-slot:append>
+            <v-btn depressed @click="search" color="primary" height="100%">
+              <v-icon light>search</v-icon>
+            </v-btn>
+          </template>
+        </v-text-field>
+      </div> -->
+        <v-text-field
+          outlined
+          dense
+          hide-details
+          placeholder="Tìm theo địa chỉ, địa điểm..."
+          class="hidden-sm-and-down"
+          clearable
+        >
+          <template v-slot:append>
+            <v-btn depressed @click="search" color="primary" height="40">
+              <v-icon>search</v-icon>
+            </v-btn>
+          </template>
+        </v-text-field>
       <v-btn
         color="primary"
         height="48"
@@ -60,8 +86,9 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn color="#2C92D5" light depressed outlined rounded class="ma-1 hidden-xs-only">
-        <v-icon light>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
+      <v-btn color="#2C92D5"
+        light depressed outlined rounded class="ma-1 hidden-xs-only font-weight-regular">
+        <v-icon left>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
       </v-btn>
 
       <v-btn color="#6C98C6" to="/cart" depressed dark class="ma-1 hidden-xs-only">
@@ -108,6 +135,22 @@
 <style>
 .v-btn {
   text-transform: none !important;
+}
+/* #search-bar #search_input:focus{
+  color: #444;
+}
+#search-bar .v-input__control .v-input__slot {
+  padding-right: 0 !important;
+}
+#search-bar .v-input__control .v-input__slot .v-input__append-inner{
+  height: 100% !important;
+} */
+#top-bar .v-input__control > .v-input__slot {
+  padding-right: 0;
+}
+#top-bar .v-input__control > .v-input__slot div:nth-child(4) {
+  margin-top: 0;
+  height: 100%;
 }
 </style>
 <script>

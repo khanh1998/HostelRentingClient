@@ -24,15 +24,15 @@ $main-bg-color: #919890;
     width: 100%;
     border-bottom: 2px solid #919890;
     .icon {
-        background-image: url(../../assets/logo.png);
+        background-image: url(../../assets/logo1.png);
         background-repeat: no-repeat;
         background-size: contain;
-        width: 25%;
+        width: 30%;
         float: left;
-        height: 40%;
+        height: 90%;
         top: 30%;
         position: relative;
-        left: 2%;
+        margin-left: 10%;
     }
 }
 </style>
