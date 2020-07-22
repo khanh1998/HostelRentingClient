@@ -8,7 +8,6 @@
       light
       outlined
       multiple
-      single-line
       label="Tiện nghi xung quanh"
       clearable
       dense
@@ -25,23 +24,19 @@
     ></v-select>
     <!-- area -->
     <v-select
-      v-model="filter.area.selects"
+      v-model="filter.area.select"
       :items="filter.area.items"
       light
       outlined
-      multiple
-      single-line
       label="Diện tích tối thiểu"
       clearable
       dense
     ></v-select>
     <v-select
-      v-model="filter.price.selects"
+      v-model="filter.price.select"
       :items="filter.price.items"
       light
       outlined
-      multiple
-      single-line
       label="Giá thuê tối đa"
       clearable
       dense

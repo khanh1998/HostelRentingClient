@@ -21,7 +21,11 @@
         />
       </v-overlay>
       <v-overlay :value="bargainOverlay.show" absolute opacity="0.8">
-        <v-card color="white" class="d-flex flex-column justify-center align-center pa-1">
+        <v-card
+          color="white"
+          class="d-flex flex-column justify-center align-center pa-1"
+          v-if="bargainOverlay.step === 1"
+        >
           <v-card-text class="black--text">
             <div class="d-flex flex-column justify-space-between">
               <p>{{info.title}}</p>
@@ -37,17 +41,52 @@
               light
               hide-details
               v-model="bargainOverlay.price"
-              label="Nhập giá"
+              label="Nhập giá bạn đưa ra"
               suffix="Triệu"
             />
             <p>phòng/tháng</p>
             <div class="d-flex align-center justify-space-around pb-1">
-              <v-btn color="green" class="mr-1" depressed @click="sendMessage('bargain')">
-                Trả giá</v-btn>
-              <v-btn color="red" class="ml-1" depressed @click="bargainOverlay.show = false">
-                Hủy</v-btn>
+              <v-btn
+                color="green"
+                class="mr-1"
+                depressed
+                @click="bargainOverlay.step += 1"
+              >Tiếp tục</v-btn>
+              <v-btn
+                color="red"
+                class="ml-1"
+                depressed
+                @click="bargainOverlay.show = false; bargainOverlay.step = 1"
+              >Hủy</v-btn>
             </div>
           </v-card-text>
+        </v-card>
+        <v-card
+          v-if="bargainOverlay.step === 2"
+          color="white"
+          class="d-flex flex-column justify-center align-center pa-1"
+        >
+          <v-card-text class="black--text">
+            Bạn đồng ý trả giá
+            <span class="font-weight-bold">{{bargainOverlay.price}}</span>
+            triệu đồng?
+          </v-card-text>
+          <v-card-actions>
+            <div class="d-flex align-center justify-space-around pb-1">
+              <v-btn
+                color="green"
+                class="mr-1"
+                depressed
+                @click="sendMessage('bargain')"
+              >Có</v-btn>
+              <v-btn
+                color="red"
+                class="ml-1"
+                depressed
+                @click="bargainOverlay.show = false; bargainOverlay.step = 1"
+              >Hủy</v-btn>
+            </div>
+          </v-card-actions>
         </v-card>
       </v-overlay>
       <v-list v-scroll.self="myOnScroll" align="center" justify="center">
@@ -176,6 +215,7 @@ export default {
         this.book(content);
       } else if (type === 'bargain') {
         this.bargain(content);
+        this.bargainOverlay.step = 1;
       }
       this.$nextTick(() => this.scrollToBottom());
       this.inputChat.text = '';
@@ -223,6 +263,7 @@ export default {
     bargainOverlay: {
       show: false,
       price: 0,
+      step: 1,
     },
     inputChat: {
       text: '',

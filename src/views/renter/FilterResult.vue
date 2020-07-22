@@ -7,7 +7,7 @@
       <v-row>
         <v-col cols="12" md="8">
           <v-card class="d-flex flex-column align-center justify-center">
-            <v-card-title>Kết quả tìm kiếm</v-card-title>
+            <v-card-title>Kết quả tìm kiếm ({{list.length}})</v-card-title>
             <v-card-actions class="hidden-md-and-up">
               <v-bottom-sheet v-model="bottomSheet.show" scrollable>
                 <template v-slot:activator="{ on, attrs }">

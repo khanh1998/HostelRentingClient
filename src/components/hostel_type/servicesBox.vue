@@ -2,7 +2,7 @@
   <div>
     <v-list-item-group>
       <v-list-item dense v-for="item in services" v-bind:key="item.serviceId">
-        <v-list-item-title>{{item.serviceName}}</v-list-item-title>
+        <v-list-item-title class="font-weight-bold">{{item.serviceName}}</v-list-item-title>
         <v-list-item-subtitle>
           <div v-if="item.servicePrice > 0">
             <span class="primary--text font-weight-bold">{{item.servicePrice}}</span>

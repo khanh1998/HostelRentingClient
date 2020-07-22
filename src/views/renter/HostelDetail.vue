@@ -89,7 +89,7 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-card  class="pa-3">
-            <div class="d-flex justify-space-between">
+            <div class="d-flex justify-space-between align-center">
               <v-card-title>Tiện nghi xung quanh</v-card-title>
               <v-btn color="success" class="ml-1" depressed tile>
                 <v-icon small>fas fa-map-signs</v-icon>Bản đồ
