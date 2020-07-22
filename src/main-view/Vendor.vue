@@ -1,20 +1,33 @@
 <template>
-  <v-app>
-    <v-main>
-      <v-container>
-        <v-row>
-          <v-navigation-drawer
-            v-model="primaryDrawer.model"
-            :clipped="primaryDrawer.clipped"
-            :permanent="primaryDrawer.type === 'permanent'"
-            app
-            overflow
-            v-bind:width="300"
-          >
-            <sideMenuBar />
-          </v-navigation-drawer>
-          <v-col cols="12">
-            <router-view/>
+  <v-app id="sandbox">
+    <v-navigation-drawer
+      v-model="primaryDrawer.model"
+      :temporary="primaryDrawer.type === 'temporary'"
+      app
+      overflow
+      width="15%"
+    >
+    <side-menu-bar/>
+    </v-navigation-drawer>
+
+    <v-app-bar
+      :clipped-left="primaryDrawer.clipped"
+      app
+    >
+      <v-app-bar-nav-icon
+        @click.stop="primaryDrawer.model = !primaryDrawer.model"
+      ></v-app-bar-nav-icon>
+      <v-toolbar-title>TD Hostel</v-toolbar-title>
+    </v-app-bar>
+
+      <v-main>
+        <v-container fluid>
+        <v-row
+          align="center"
+          justify="center"
+        >
+          <v-col cols="11">
+              <router-view />
           </v-col>
         </v-row>
       </v-container>
@@ -33,8 +46,7 @@ export default {
   data: () => ({
     primaryDrawer: {
       model: null,
-      type: 'permanent',
-      clipped: true,
+      type: 'temporary',
     },
   }),
 };

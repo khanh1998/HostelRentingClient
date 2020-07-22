@@ -1,8 +1,8 @@
 <template>
-  <div class="mt-2">
+  <div v-if="chatShow">
     <v-card
       width="100%"
-      class="d-flex flex-row justify-start align-center pa-2"
+      class="d-flex flex-row justify-space-between align-center pa-2"
     >
       <div class="d-flex flex-nowrap align-center">
         <v-avatar>
@@ -10,10 +10,17 @@
         </v-avatar>
         <p class="font-weight-medium mb-0 ml-2">HyunA</p>
       </div>
+      <v-btn
+        icon
+        color="red"
+        @click="closeChat()"
+      >
+        <v-icon>clear</v-icon>
+      </v-btn>
     </v-card>
     <div
-      class="mt-3 rounded-l overflow-y-auto"
-      style="max-height: 670px;"
+      class="rounded-l overflow-y-auto"
+      style="max-height: 350px;"
       id="chatbox"
     >
       <v-list
@@ -21,7 +28,7 @@
         align="center"
         justify="center"
         max-height="auto"
-        min-height="670px"
+        min-height="350px"
       >
         <v-list-item
           v-for="item in items"
@@ -68,24 +75,27 @@
                   cols="12"
                   class="d-flex justify-center"
                 >
-                <v-row class="d-flex justify-center" v-if="visible">
-                  <v-chip-group>
-                    <v-chip
-                      color="red"
-                      @click="denyMessage"
-                      style="width: 90px"
-                      class="d-flex justify-center mr-5"
-                    >
-                      Từ chối
-                    </v-chip>
-                    <v-chip
-                      color="green"
-                      @click="acceptMessage"
-                    >
-                      Chấp nhận
-                    </v-chip>
-                  </v-chip-group>
-                </v-row>
+                  <v-row
+                    class="d-flex justify-center"
+                    v-if="visible"
+                  >
+                    <v-chip-group>
+                      <v-chip
+                        color="red"
+                        @click="denyMessage"
+                        style="width: 90px"
+                        class="d-flex justify-center mr-5"
+                      >
+                        Từ chối
+                      </v-chip>
+                      <v-chip
+                        color="green"
+                        @click="acceptMessage"
+                      >
+                        Chấp nhận
+                      </v-chip>
+                    </v-chip-group>
+                  </v-row>
                 </v-col>
               </div>
 
@@ -174,34 +184,33 @@
         </v-list-item>
       </v-list>
     </div>
-    <div class="mt-3 d-flex">
-      <v-textarea
+    <div class="d-flex flex-no-wrap">
+      <v-text-field
+        autofocus
+        clearable
+        dense
+        flat
+        outlined
+        placeholder="Nội dung tin nhắn..."
         v-model="inputChat.model"
-        :auto-grow="inputChat.autoGrow"
-        :clearable="inputChat.clearable"
-        :filled="inputChat.filled"
-        :loading="inputChat.loading"
-        :no-resize="inputChat.noResize"
-        :outlined="inputChat.outlined"
-        :row-height="inputChat.rowHeight"
-        :rows="inputChat.rows"
-        :single-line="inputChat.singleLine"
-        :solo="inputChat.solo"
-        class="mr-3"
+        class="ma-1"
+        hide-details
         v-on:keyup.enter="sendMessage"
-      ></v-textarea>
-      <!-- <div class="mt-12 text-center">
-          Value: {{ inputChat.model }}
-        </div> -->
+      >
+      </v-text-field>
       <v-btn
         color="#7794F8"
-        x-large
+        class="ma-1"
+        depressed
         @click="sendMessage"
       >
-        <v-icon color="#FFFFFF">fa fa-paper-plane</v-icon>
+        <v-icon color="white">
+          far fa-paper-plane
+        </v-icon>
       </v-btn>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -212,19 +221,9 @@ export default {
   data: () => ({
     items: [],
     inputChat: {
-      autoGrow: true,
-      autofocus: true,
-      clearable: true,
-      filled: true,
-      loading: false,
       model: '',
-      noResize: true,
-      outlined: true,
-      rowHeight: 24,
-      rows: 1,
-      singleLine: true,
-      solo: true,
     },
+    chatShow: true,
     // visibles: {},
   }),
   methods: {
@@ -308,6 +307,9 @@ export default {
     scrollToBottom() {
       const chatbox = this.$el.querySelector('#chatbox');
       chatbox.scrollTop = chatbox.scrollHeight;
+    },
+    closeChat() {
+      this.chatShow = false;
     },
   },
   created() {

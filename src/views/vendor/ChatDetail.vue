@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-11">
+  <div>
     <v-row no-gutters style="flex-wrap: nowrap;">
       <v-col cols="3" class="mx-3">
           <chatInfoList/>
