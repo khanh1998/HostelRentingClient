@@ -18,15 +18,60 @@
         <template v-slot:extension>
           <v-tabs
             v-model="tabs.tabName"
-            centered
+            left
           >
             <v-tab
               v-for="item in tabs"
               :key="item"
             >
-              {{item.tabName}}
+              <v-badge
+                color="red"
+                content="3"
+                v-bind="attrs"
+                v-on="on"
+              >
+                {{item.tabName}}
+              </v-badge>
             </v-tab>
           </v-tabs>
+          <v-menu
+            left
+            :offset-y=true
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                dark
+                icon
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon>mdi-filter</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list
+              :nav="nav"
+              class="rounded-l"
+            >
+              <v-list-item-group
+                v-model="item"
+                color="primary"
+              >
+                <v-list-item
+                  v-for="(item, i) in filter"
+                  :key="i"
+                  class=""
+                >
+                  <span
+                    style="fontSize:16px"
+                    class="py-1"
+                  >
+                    {{item.filterName}}
+                  </span>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-menu>
         </template>
       </v-toolbar>
 
@@ -63,7 +108,7 @@
                   v-on:click="getItemSelected(item)"
                 > -->
                     <v-list-item
-                      v-for="(item, i) in listAllChange"
+                      v-for="(item, i) in listMessageChange"
                       :key="i"
                       class="mb-2 pt-2"
                       style="backgroundColor: #F2F2F2"
@@ -80,131 +125,113 @@
                           {{item.title}}
                         </v-list-item-title>
                         <div v-if="item.bargain">
-                          <v-row>
-                            <v-col cols="4">
-                              <v-img
-                                src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-                                height="100"
-                                width="150"
-                                class="mx-2 rounded-l"
-                              ></v-img>
-                            </v-col>
-                            <v-col
-                              cols="4"
-                              class="d-flex justify-left align-center"
-                            >
-                              <div style="fontSize:18px">
-                                <span style="color:#98B7D7">Giá gốc:</span> <br />
-                                <span class="red--text"><s>3.000.000 Đ</s></span><br />
-                                <span style="color:#98B7D7">Trả giá:</span> <br />
-                                <span>{{ item.message}} Đ</span><br />
-                              </div>
-                            </v-col>
-                            <v-col cols="4">
-                              <v-list-item-action>
-                                <v-row>
-                                  <v-dialog
-                                    v-model="dialogAccept"
-                                    width="350"
+                          <v-list-item-subtitle>Đã trả giá
+                            <span style="color: #EF7239">Nhà trọ Lalahome</span>
+                            với giá {{ item.message}} đồng</v-list-item-subtitle>
+                          <v-list-item-action>
+                            <v-row>
+                              <v-dialog
+                                v-model="dialogAccept"
+                                width="350"
+                              >
+                                <template v-slot:activator="{ on, attrs }">
+                                  <v-btn
+                                    color="green lighten-2"
+                                    dark
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    style="width:80px; height:20px"
+                                    class="mx-1"
                                   >
-                                    <template v-slot:activator="{ on, attrs }">
-                                      <v-btn
-                                        color="green lighten-2"
-                                        dark
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        style="width:100px"
-                                        class="ma-1"
-                                      >
-                                        Chấp nhận
-                                      </v-btn>
-                                    </template>
+                                    Chấp nhận
+                                  </v-btn>
+                                </template>
 
-                                    <v-card>
-                                      <v-card-title style="backgroundColor: #98B7D7; color: white">
-                                        Xác nhận
-                                      </v-card-title>
+                                <v-card>
+                                  <v-card-title style="backgroundColor: #98B7D7; color: white">
+                                    Xác nhận
+                                  </v-card-title>
 
-                                      <v-card-text class="text-center mt-3" style="fontSize:20px;">
-                                        Bạn sẽ chấp nhận trả giá này ?
-                                      </v-card-text>
-
-                                      <v-divider></v-divider>
-
-                                      <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn
-                                          color="primary"
-                                          text
-                                          @click="acceptMessage"
-                                        >
-                                          Đồng ý
-                                        </v-btn>
-                                        <v-btn
-                                          color="primary"
-                                          text
-                                          @click="dialogAccept = false"
-                                        >
-                                          Từ chối
-                                        </v-btn>
-                                      </v-card-actions>
-                                    </v-card>
-                                  </v-dialog>
-                                  <v-dialog
-                                    v-model="dialogDeny"
-                                    width="350"
+                                  <v-card-text
+                                    class="text-center mt-3"
+                                    style="fontSize:20px;"
                                   >
-                                    <template v-slot:activator="{ on, attrs }">
-                                      <v-btn
-                                        color="red lighten-2"
-                                        dark
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        style="width:100px"
-                                        class="ma-1"
-                                      >
-                                        Từ chối
-                                      </v-btn>
-                                    </template>
+                                    Bạn sẽ chấp nhận trả giá này ?
+                                  </v-card-text>
 
-                                    <v-card>
-                                      <v-card-title style="backgroundColor: #98B7D7; color: white">
-                                        Xác nhận
-                                      </v-card-title>
+                                  <v-divider></v-divider>
 
-                                      <v-card-text class="text-center mt-3" style="fontSize:20px;">
-                                        Bạn sẽ từ chối trả giá này ?
-                                      </v-card-text>
+                                  <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                      color="primary"
+                                      text
+                                      @click="acceptMessage"
+                                    >
+                                      Đồng ý
+                                    </v-btn>
+                                    <v-btn
+                                      color="primary"
+                                      text
+                                      @click="dialogAccept = false"
+                                    >
+                                      Từ chối
+                                    </v-btn>
+                                  </v-card-actions>
+                                </v-card>
+                              </v-dialog>
+                              <v-dialog
+                                v-model="dialogDeny"
+                                width="350"
+                              >
+                                <template v-slot:activator="{ on, attrs }">
+                                  <v-btn
+                                    color="red lighten-2"
+                                    dark
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    style="width:80px; height:20px"
+                                    class="mx-1"
+                                  >
+                                    Từ chối
+                                  </v-btn>
+                                </template>
 
-                                      <v-divider></v-divider>
+                                <v-card>
+                                  <v-card-title style="backgroundColor: #98B7D7; color: white">
+                                    Xác nhận
+                                  </v-card-title>
 
-                                      <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn
-                                          color="primary"
-                                          text
-                                          @click="denyMessage"
-                                        >
-                                          Đồng ý
-                                        </v-btn>
-                                        <v-btn
-                                          color="primary"
-                                          text
-                                          @click="dialogDeny = false"
-                                        >
-                                          Từ chối
-                                        </v-btn>
-                                      </v-card-actions>
-                                    </v-card>
-                                  </v-dialog>
-                                </v-row>
-                              </v-list-item-action>
-                            </v-col>
-                          </v-row>
-                          <v-col cols="12">
-                            <span style="color: #6C98C6; fontSize:18px">
-                              Nhà trọ Lalahome</span>
-                          </v-col>
+                                  <v-card-text
+                                    class="text-center mt-3"
+                                    style="fontSize:20px;"
+                                  >
+                                    Bạn sẽ từ chối trả giá này ?
+                                  </v-card-text>
+
+                                  <v-divider></v-divider>
+
+                                  <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                      color="primary"
+                                      text
+                                      @click="denyMessage"
+                                    >
+                                      Đồng ý
+                                    </v-btn>
+                                    <v-btn
+                                      color="primary"
+                                      text
+                                      @click="dialogDeny = false"
+                                    >
+                                      Từ chối
+                                    </v-btn>
+                                  </v-card-actions>
+                                </v-card>
+                              </v-dialog>
+                            </v-row>
+                          </v-list-item-action>
                         </div>
                         <div v-if="!item.bargain && !item.book">
                           <v-list-item-subtitle>{{item.message}}</v-list-item-subtitle>
@@ -266,57 +293,113 @@
                           {{item.title}}
                         </v-list-item-title>
                         <div v-if="item.bargain">
-                          <v-row>
-                            <v-col cols="4">
-                              <v-img
-                                src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-                                height="100"
-                                width="150"
-                                class="mx-2 rounded-l"
-                              ></v-img>
-                            </v-col>
-                            <v-col
-                              cols="4"
-                              class="d-flex justify-left align-center"
-                            >
-                              <div style="fontSize:18px">
-                                <span style="color:#98B7D7">Giá gốc:</span> <br />
-                                <span class="red--text"><s>3.000.000 Đ</s></span><br />
-                                <span style="color:#98B7D7">Trả giá:</span> <br />
-                                <span>{{ item.message}} Đ</span><br />
-                              </div>
-                            </v-col>
-                            <v-col cols="4">
-                              <v-list-item-action>
-                                <v-row>
-                                  <v-chip
-                                    color="green"
-                                    @click="acceptMessage"
-                                    style="margin:10px"
+                          <v-list-item-subtitle>Đã trả giá
+                            <span style="color: #EF7239">Nhà trọ Lalahome</span>
+                            với giá {{ item.message}} đồng</v-list-item-subtitle>
+                          <v-list-item-action>
+                            <v-row>
+                              <v-dialog
+                                v-model="dialogAccept"
+                                width="350"
+                              >
+                                <template v-slot:activator="{ on, attrs }">
+                                  <v-btn
+                                    color="green lighten-2"
+                                    dark
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    style="width:80px; height:20px"
+                                    class="mx-1"
                                   >
                                     Chấp nhận
-                                  </v-chip>
-                                  <v-chip
-                                    color="red"
-                                    @click="denyMessage"
-                                    style="width: 90px; margin:10px"
-                                    class="d-flex justify-center mr-5"
+                                  </v-btn>
+                                </template>
+
+                                <v-card>
+                                  <v-card-title style="backgroundColor: #98B7D7; color: white">
+                                    Xác nhận
+                                  </v-card-title>
+
+                                  <v-card-text
+                                    class="text-center mt-3"
+                                    style="fontSize:20px;"
+                                  >
+                                    Bạn sẽ chấp nhận trả giá này ?
+                                  </v-card-text>
+
+                                  <v-divider></v-divider>
+
+                                  <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                      color="primary"
+                                      text
+                                      @click="acceptMessage"
+                                    >
+                                      Đồng ý
+                                    </v-btn>
+                                    <v-btn
+                                      color="primary"
+                                      text
+                                      @click="dialogAccept = false"
+                                    >
+                                      Từ chối
+                                    </v-btn>
+                                  </v-card-actions>
+                                </v-card>
+                              </v-dialog>
+                              <v-dialog
+                                v-model="dialogDeny"
+                                width="350"
+                              >
+                                <template v-slot:activator="{ on, attrs }">
+                                  <v-btn
+                                    color="red lighten-2"
+                                    dark
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    style="width:80px; height:20px"
+                                    class="mx-1"
                                   >
                                     Từ chối
-                                  </v-chip>
-                                  <!-- <v-list-item-action>
-                                  <v-btn icon>
-                                    <v-icon color="grey lighten-1">mdi-information</v-icon>
                                   </v-btn>
-                                </v-list-item-action> -->
-                                </v-row>
-                              </v-list-item-action>
-                            </v-col>
-                          </v-row>
-                          <v-col cols="12">
-                            <span style="color: #6C98C6; fontSize:18px">
-                              Nhà trọ Lalahome</span>
-                          </v-col>
+                                </template>
+
+                                <v-card>
+                                  <v-card-title style="backgroundColor: #98B7D7; color: white">
+                                    Xác nhận
+                                  </v-card-title>
+
+                                  <v-card-text
+                                    class="text-center mt-3"
+                                    style="fontSize:20px;"
+                                  >
+                                    Bạn sẽ từ chối trả giá này ?
+                                  </v-card-text>
+
+                                  <v-divider></v-divider>
+
+                                  <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                      color="primary"
+                                      text
+                                      @click="denyMessage"
+                                    >
+                                      Đồng ý
+                                    </v-btn>
+                                    <v-btn
+                                      color="primary"
+                                      text
+                                      @click="dialogDeny = false"
+                                    >
+                                      Từ chối
+                                    </v-btn>
+                                  </v-card-actions>
+                                </v-card>
+                              </v-dialog>
+                            </v-row>
+                          </v-list-item-action>
                         </div>
                       </v-list-item-content>
                     </v-list-item>
@@ -343,8 +426,12 @@ export default {
   data() {
     return {
       tabs: [
-        { tabName: 'Tất cả' },
+        { tabName: 'Tin nhắn' },
         { tabName: 'Trả giá' },
+      ],
+      filter: [
+        { filterName: 'Giá' },
+        { filterName: 'Thời gian' },
       ],
       items: [
         {
@@ -352,6 +439,14 @@ export default {
           title: 'Bùi Quốc Khánh',
           message:
             '2.500.000',
+          bargain: true,
+          book: false,
+        },
+        {
+          avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
+          title: 'Bùi Quốc Khánh',
+          message:
+            '2.100.000',
           bargain: true,
           book: false,
         },
@@ -406,9 +501,9 @@ export default {
         return false;
       });
     },
-    listAllChange() {
+    listMessageChange() {
       return this.items.filter((items) => {
-        if (items.bargain || (!items.bargain && !items.book)) {
+        if (!items.bargain && !items.book) {
           return true;
         }
         return false;

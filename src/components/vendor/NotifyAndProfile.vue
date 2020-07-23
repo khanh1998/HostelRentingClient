@@ -36,39 +36,72 @@
         class="rounded-l"
         style="height: 405px; width: 300px"
       >
-            <v-list-item-group
-              v-model="item"
-              color="primary"
-            >
-              <v-list-item
-                v-for="(item, i) in listBookChange"
-                :key="i"
-                class="mb-2 pt-2"
-                style="backgroundColor: #F2F2F2"
-                @click="$emit('clickedItem', getItemSelected(item))"
+        <v-list-item-group
+          v-model="item"
+          color="primary"
+        >
+          <v-list-item
+            v-for="(item, i) in listBookChange"
+            :key="i"
+            class="mb-2 pt-2"
+            style="backgroundColor: #F2F2F2"
+            @click="$emit('clickedItem', getItemSelected(item))"
+          >
+            <v-list-item-avatar>
+              <v-img :src="item.avatar"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title
+                style="fontSize:16px"
+                class="py-1"
               >
-                <v-list-item-avatar>
-                  <v-img :src="item.avatar"></v-img>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title
-                    style="fontSize:16px"
-                    class="py-1"
-                  >
-                    {{item.title}}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>Đã đặt lịch hẹn ngày {{item.message}}</v-list-item-subtitle>
-
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
+                {{item.title}}
+              </v-list-item-title>
+              <v-list-item-subtitle>Đã đặt lịch hẹn ngày {{item.message}}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
       </v-list>
     </v-menu>
     <div class="d-flex flex-nowrap align-center ml-3">
-      <v-avatar>
-        <v-img src="@/assets/suzy-avatar.jpg"></v-img>
-      </v-avatar>
-      <p class="font-weight-medium mb-0 ml-2">Bae Suzy</p>
+      <v-menu
+        left
+        :offset-y=true
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-bind="attrs"
+            v-on="on"
+            text
+          >
+            <v-avatar>
+              <v-img src="@/assets/suzy-avatar.jpg"></v-img>
+            </v-avatar>
+            <p class="font-weight-medium mb-0 ml-2">Bae Suzy</p>
+          </v-btn>
+        </template>
+
+        <v-list two-line>
+          <template v-for="(item, index) in infoMenu">
+            <v-divider
+              v-if="item.divider"
+              :key="index"
+              :inset="item.inset"
+            ></v-divider>
+
+              <v-list-item
+                v-else
+                :key="item.title"
+                @click="chonhannutclick"
+              >
+                <v-list-item-content>
+                  <v-list-item-title style="color:#1F17FF; fontSize:18px">
+                    {{ item.title }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+          </template>
+        </v-list>
+      </v-menu>
     </div>
   </div>
 </template>
@@ -169,6 +202,15 @@ export default {
         book: false,
       },
 
+    ],
+    infoMenu: [
+      {
+        title: 'Thông tin',
+      },
+      { divider: true, inset: false },
+      {
+        title: 'Đổi mật khẩu',
+      },
     ],
   }),
 };
