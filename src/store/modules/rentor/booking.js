@@ -34,6 +34,15 @@ const actions = {
       commit(mutationTypes.GET_BOOKINGS_FAILURE);
     }
   },
+  async getBookingsVendor({ commit }, vendorId) {
+    commit(mutationTypes.GET_BOOKINGS_REQUEST);
+    const res = await window.axios.get(`/api/v1/vendors/${vendorId}/bookings`);
+    if (res.status === 200) {
+      commit(mutationTypes.GET_BOOKINGS_SUCCESS, res.data.data);
+    } else {
+      commit(mutationTypes.GET_BOOKINGS_FAILURE);
+    }
+  },
 };
 
 export default {

@@ -61,7 +61,7 @@ export default {
   }),
   methods: {
     ...mapActions({
-      getBookings: 'renter/booking/getBookings',
+      getBookings: 'user/booking/getBookings',
     }),
   },
   mounted() {
@@ -77,7 +77,7 @@ export default {
   },
   computed: {
     bookings() {
-      const list = this.$store.state.renter.booking.bookings.data;
+      const list = this.$store.state.user.bookings.data;
       const result = list.filter((booking) => {
         const { statusId } = booking.status;
         const selectedId = this.buttonGroup.selectedBookingStatus + 1;
@@ -86,7 +86,7 @@ export default {
       return result;
     },
     isLoadingBooking() {
-      return this.$store.state.renter.booking.bookings.isLoading;
+      return this.$store.state.user.bookings.isLoading;
     },
     counter() {
       let incomming = 0;

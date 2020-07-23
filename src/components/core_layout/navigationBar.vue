@@ -57,21 +57,21 @@
             </v-btn>
           </template>
         </v-text-field>
-      </div> -->
-        <v-text-field
-          outlined
-          dense
-          hide-details
-          placeholder="Tìm theo địa chỉ, địa điểm..."
-          class="hidden-sm-and-down"
-          clearable
-        >
-          <template v-slot:append>
-            <v-btn depressed @click="search" color="primary" height="40">
-              <v-icon>search</v-icon>
-            </v-btn>
-          </template>
-        </v-text-field>
+      </div>-->
+      <v-text-field
+        outlined
+        dense
+        hide-details
+        placeholder="Tìm theo địa chỉ, địa điểm..."
+        class="hidden-sm-and-down"
+        clearable
+      >
+        <template v-slot:append>
+          <v-btn depressed @click="search" color="primary" height="40">
+            <v-icon>search</v-icon>
+          </v-btn>
+        </template>
+      </v-text-field>
       <v-btn
         color="primary"
         height="48"
@@ -86,8 +86,14 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn color="#2C92D5"
-        light depressed outlined rounded class="ma-1 hidden-xs-only font-weight-regular">
+      <v-btn
+        color="#2C92D5"
+        light
+        depressed
+        outlined
+        rounded
+        class="ma-1 hidden-xs-only font-weight-regular"
+      >
         <v-icon left>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
       </v-btn>
 
@@ -97,35 +103,52 @@
       <v-menu>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
-            <v-avatar size="32px" item>
+            <v-avatar size="32px" item v-if="isLoggedIn">
               <v-img src="@/assets/suzy-avatar.jpg" alt="My Suzy"></v-img>
+            </v-avatar>
+            <v-avatar size="32px" item>
+              <v-icon>face</v-icon>
             </v-avatar>
           </v-btn>
         </template>
         <v-list>
+          <v-list-item to="/login">
+            <v-list-item-icon>
+              <v-icon>login</v-icon>
+              <v-list-item-title>Đăng nhập</v-list-item-title>
+            </v-list-item-icon>
+          </v-list-item>
+          <v-list-item to="/register">
+            <v-list-item-icon>
+              <v-icon>person_add</v-icon>
+              <v-list-item-title>Đăng ký</v-list-item-title>
+            </v-list-item-icon>
+          </v-list-item>
+        </v-list>
+        <v-list v-if="isLoggedIn">
           <v-list-item to="/cart">
             <v-list-item-icon>
               <v-icon>far fa-user-circle</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Your profile</v-list-item-title>
+            <v-list-item-title>Hồ sơ</v-list-item-title>
           </v-list-item>
           <v-list-item to="/qr">
             <v-list-item-icon>
               <v-icon>fas fa-qrcode</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>QR Scanner</v-list-item-title>
+            <v-list-item-title>Quét mã QR</v-list-item-title>
           </v-list-item>
           <v-list-item to="#" class="hidden-sm-and-up">
             <v-list-item-icon>
               <v-icon>fas fa-paper-plane</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Room alert</v-list-item-title>
+            <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
           </v-list-item>
           <v-list-item to="#" class="hidden-sm-and-up">
             <v-list-item-icon>
               <v-icon>far fa-bookmark</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Your Booking</v-list-item-title>
+            <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -182,6 +205,9 @@ export default {
       set(value) {
         this.setSearchValue(value);
       },
+    },
+    isLoggedIn() {
+      return this.$store.state.user.user.data;
     },
   },
 };
