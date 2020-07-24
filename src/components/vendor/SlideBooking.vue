@@ -13,17 +13,14 @@
         Lịch hẹn xem phòng
       </div>
       <div>
-        <v-chip class="ma-2">
-          Hôm nay
-        </v-chip>
-
-        <v-chip class="ma-2">
-          Tuần này
-        </v-chip>
-
-        <v-chip class="ma-2">
-          Tháng này
-        </v-chip>
+        <v-chip-group
+          mandatory
+          active-class="primary--text"
+        >
+          <v-chip v-for="tag in chipItems" :key="tag">
+            {{ tag }}
+          </v-chip>
+        </v-chip-group>
       </div>
     </div>
     <v-slide-group
@@ -88,7 +85,7 @@ export default {
 
   },
   data: () => ({
-
+    chipItems: ['Hôm nay', 'Tuần này', 'Tháng này'],
   }),
 };
 </script>
