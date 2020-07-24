@@ -6,6 +6,10 @@ const routes = [
     name: 'AdminMainView',
     component: AdminView,
     children: [],
+    meta: {
+      requiresAuth: true,
+      is_admin: true,
+    },
   },
 ];
 

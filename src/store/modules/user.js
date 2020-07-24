@@ -2,6 +2,7 @@ const myState = () => ({
   user: {
     data: null,
     isLoading: false,
+    success: false,
   },
   contracts: {
     data: null,
@@ -32,6 +33,7 @@ const mutationTypes = {
   GET_USER_REQUEST: 'GET_USER_REQUEST',
   GET_USER_SUCCESS: 'GET_USER_SUCCESS',
   GET_USER_FAILURE: 'GET_USER_FAILURE',
+  CLEAR_USER_DATA: 'CLEAR_USER_DATA',
   GET_CONTRACTS_REQUEST: 'GET_CONTRACTS_REQUEST',
   GET_CONTRACTS_SUCCESS: 'GET_CONTRACTS_SUCCESS',
   GET_CONTRACTS_FAILURE: 'GET_CONTRACTS_FAILURE',
@@ -40,15 +42,22 @@ const mutationTypes = {
   GET_BOOKINGS_FAILURE: 'GET_BOOKINGS_FAILURE',
 };
 const mutations = {
+  CLEAR_USER_DATA(state) {
+    state.user.data = null;
+    state.user.isLoading = false;
+    state.user.success = false;
+  },
   GET_USER_REQUEST(state) {
-    state.user.loading = true;
+    state.user.isLoading = true;
   },
   GET_USER_SUCCESS(state, user) {
     state.user.data = user;
-    state.user.loading = false;
+    state.user.isLoading = false;
+    state.user.success = true;
   },
   GET_USER_FAILURE(state) {
-    state.user.loading = false;
+    state.user.isLoading = false;
+    state.user.success = false;
   },
   GET_CONTRACTS_REQUEST(state) {
     state.contracts.isLoading = true;
@@ -73,29 +82,43 @@ const mutations = {
 };
 
 const actions = {
-  async getUser({ commit }, params) {
-    // params {role, id}
+  async login({ commit }, params) {
+    // params {phone, password}
     commit(mutationTypes.GET_USER_REQUEST);
-    const res = await window.axios.get(`/api/v1/${params.role}/${params.id}`);
-    if (res.status === 200) {
-      commit(mutationTypes.GET_USER_SUCCESS, res.data.data);
-    } else {
+    let res = null;
+    try {
+      res = await window.axios.post('/api/v1/login', params);
+      if (res.status === 200) {
+        commit(mutationTypes.GET_USER_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.GET_USER_FAILURE);
+      }
+    } catch (error) {
       commit(mutationTypes.GET_USER_FAILURE);
     }
   },
-  async getBookings({ commit, state, getters }) {
-    const user = state.user.data;
-    if (user != null) {
-      const role = getters.getUserRole;
-      commit(mutationTypes.GET_BOOKINGS_REQUEST);
-      let res = null;
-      if (role === 'vendors') {
-        res = await window.axios.get(`/api/v1/vendors/${user.vendorId}/bookings`);
-      } else if (role === 'renters') {
-        res = await window.axios.get(`/api/v1/renters/${user.renterId}/bookings`);
+  async clearUserData({ commit }) {
+    commit(mutationTypes.CLEAR_USER_DATA);
+  },
+  async getUser({ commit, state }) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role && state.user.data === null) {
+      commit(mutationTypes.GET_USER_REQUEST);
+      const res = await window.axios.get(`/api/v1/${role}/${userId}`);
+      if (res.status === 200) {
+        commit(mutationTypes.GET_USER_SUCCESS, res.data.data);
       } else {
-        throw new Error(`Cannot get booking of role ${role}`);
+        commit(mutationTypes.GET_USER_FAILURE);
       }
+    }
+  },
+  async getBookings({ commit }) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role) {
+      commit(mutationTypes.GET_BOOKINGS_REQUEST);
+      const res = await window.axios.get(`/api/v1/${role}/${userId}/bookings`);
       if (res.status === 200) {
         commit(mutationTypes.GET_BOOKINGS_SUCCESS, res.data.data);
       } else {
@@ -103,6 +126,21 @@ const actions = {
       }
     } else {
       throw new Error('You have to login before get bookings');
+    }
+  },
+  async getContracts({ commit }) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role) {
+      commit(mutationTypes.GET_CONTRACTS_REQUEST);
+      const res = await window.axios.get(`/api/v1/${role}/${userId}/contracts`);
+      if (res.status === 200) {
+        commit(mutationTypes.GET_CONTRACTS_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.GET_CONTRACTS_FAILURE);
+      }
+    } else {
+      throw new Error('You have to login before get contracts');
     }
   },
 };

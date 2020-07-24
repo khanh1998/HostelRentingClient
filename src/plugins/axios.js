@@ -9,7 +9,7 @@ axios.defaults.headers.common['Accept-Language'] = JSON.parse(localStorage.getIt
 
 axios.interceptors.request.use(
   (config) => {
-    const myConfig = config;
+    const myConfig = { ...config };
     // Do something before request is sent
     // If request is different than any of the URLS in urlsExcludedForBearerHeader
     // then send Authorization header with token from localstorage
@@ -21,9 +21,7 @@ axios.interceptors.request.use(
       `${window.location.origin}/version.json`,
     ];
     if (urlsExcludedForBearerHeader.indexOf(myConfig.url) === -1) {
-      // myConfig.headers.Authorization = `Bearer ${JSON.parse(
-      // localStorage.getItem('token'),
-      // )}`;
+      myConfig.headers.Authorization = `Bearer ${window.$cookies.get('jwt')}`;
     }
     return myConfig;
   },

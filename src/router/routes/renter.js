@@ -16,26 +16,31 @@ const routes = [
         path: '',
         name: 'Home',
         component: Home,
+        meta: { guest: true },
       },
       {
         path: '/detail/:typeId',
         name: 'HostelDetail',
         component: HostelDetail,
+        meta: { guest: true },
       },
       {
         path: '/user',
         name: 'User',
         component: User,
+        meta: { requiresAuth: true },
       },
       {
         path: '/cart',
         name: 'ViewCard',
         component: ViewCart,
+        meta: { requiresAuth: true },
       },
       {
         path: '/qr',
         name: 'QrReader',
         component: QrReader,
+        meta: { requiresAuth: true },
       },
       {
         path: '/filter',

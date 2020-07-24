@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card v-if="!isLoadingContracts">
     <div
       style="font-size:20px; fontWeight:bold"
       class="pt-3 pl-2 pb-6"
@@ -52,10 +52,27 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 
 export default {
   name: 'SuggestContract',
   components: {
+  },
+  methods: {
+    ...mapActions({
+      getContracts: 'user/getContracts',
+    }),
+  },
+  computed: {
+    contracts() {
+      return this.$store.state.user.contracts.data;
+    },
+    isLoadingContracts() {
+      return this.$store.state.user.contracts.isLoading;
+    },
+  },
+  created() {
+    this.getContracts();
   },
   data: () => ({
     items: [

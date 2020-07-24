@@ -103,15 +103,15 @@
       <v-menu>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
-            <v-avatar size="32px" item v-if="isLoggedIn">
-              <v-img src="@/assets/suzy-avatar.jpg" alt="My Suzy"></v-img>
+            <v-avatar size="32px" item v-if="isLoggedIn && !isLoadingUser">
+              <v-img :src="user.avatar" :alt="user.username"></v-img>
             </v-avatar>
-            <v-avatar size="32px" item>
+            <v-avatar size="32px" item v-if="!isLoggedIn">
               <v-icon>face</v-icon>
             </v-avatar>
           </v-btn>
         </template>
-        <v-list>
+        <v-list v-if="!isLoggedIn">
           <v-list-item to="/login">
             <v-list-item-icon>
               <v-icon>login</v-icon>
@@ -149,6 +149,12 @@
               <v-icon>far fa-bookmark</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="logout">
+            <v-list-item-icon>
+              <v-icon>fas fa-sign-out-alt</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Đăng xuất</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -195,7 +201,16 @@ export default {
     ...mapActions({
       setSearchValue: 'renter/filterResult/setSearchValue',
       searchByAddress: 'renter/filterResult/searchByAddress',
+      getUser: 'user/getUser',
+      clearUserData: 'user/clearUserData',
     }),
+    logout() {
+      this.$cookies.remove('role');
+      this.$cookies.remove('userId');
+      this.$cookies.remove('jwt');
+      this.clearUserData();
+      this.$router.push('/');
+    },
   },
   computed: {
     searchValue: {
@@ -207,8 +222,17 @@ export default {
       },
     },
     isLoggedIn() {
+      return this.$cookies.get('jwt') != null;
+    },
+    user() {
       return this.$store.state.user.user.data;
     },
+    isLoadingUser() {
+      return this.$store.state.user.user.isLoading;
+    },
+  },
+  created() {
+    this.getUser();
   },
 };
 </script>

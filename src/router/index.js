@@ -19,4 +19,21 @@ const router = new VueRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (window.$cookies.get('jwt') === null) {
+      next({
+        path: '/login',
+        params: { nextUrl: to.fullPath },
+      });
+    } else {
+      next();
+    }
+  } else if (to.matched.some((record) => record.meta.guest)) {
+    next();
+  } else {
+    next();
+  }
+});
+
 export default router;

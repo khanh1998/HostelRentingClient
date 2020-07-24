@@ -12,11 +12,13 @@ const routes = [
         path: 'chat',
         name: 'ChatDetail',
         component: ChatDetail,
+        meta: { requiresAuth: true },
       },
       {
         path: '',
         name: 'Overview',
         component: Overview,
+        meta: { requiresAuth: true },
       },
     ],
   },

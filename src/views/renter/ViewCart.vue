@@ -61,7 +61,7 @@ export default {
   }),
   methods: {
     ...mapActions({
-      getBookings: 'user/booking/getBookings',
+      getBookings: 'user/getBookings',
     }),
   },
   mounted() {
@@ -73,7 +73,7 @@ export default {
     });
   },
   created() {
-    this.getBookings(1);
+    this.getBookings();
   },
   computed: {
     bookings() {
