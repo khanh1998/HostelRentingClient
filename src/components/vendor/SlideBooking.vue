@@ -42,7 +42,7 @@
         >
           <v-col
             cols="12"
-            style="background-color: #B0CDFA; height: 28%; width: 100%"
+            style="background-color: #98B7D7; height: 28%; width: 100%"
             class="d-flex justify-end"
           >
             <v-text style="fontWeight:bold; color:white">

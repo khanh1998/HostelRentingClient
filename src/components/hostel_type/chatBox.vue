@@ -4,23 +4,42 @@
       <v-icon color="blue">message</v-icon>
       {{group.groupName}}
       <v-spacer />
-      <v-btn icon color="success">
+      <v-btn
+        icon
+        color="success"
+      >
         <v-icon>remove</v-icon>
       </v-btn>
-      <v-btn icon color="red" @click="$emit('close')">
+      <v-btn
+        icon
+        color="red"
+        @click="$emit('close')"
+      >
         <v-icon>clear</v-icon>
       </v-btn>
     </v-card-title>
     <v-divider />
-    <div style="max-height: 300px; min-height:300px" class="overflow-y-auto" id="chatbox">
-      <v-overlay :value="dateTimeOverlay.show" absolute opacity="0.8">
+    <div
+      style="max-height: 300px; min-height:300px"
+      class="overflow-y-auto"
+      id="chatbox"
+    >
+      <v-overlay
+        :value="dateTimeOverlay.show"
+        absolute
+        opacity="0.8"
+      >
         <dateTimePickerStepper
           :width="dateTimeOverlay.width"
           v-on:ok="receiveDateTime"
           v-on:cancel="dateTimeOverlay.show = false"
         />
       </v-overlay>
-      <v-overlay :value="bargainOverlay.show" absolute opacity="0.8">
+      <v-overlay
+        :value="bargainOverlay.show"
+        absolute
+        opacity="0.8"
+      >
         <v-card
           color="white"
           class="d-flex flex-column justify-center align-center pa-1"
@@ -89,10 +108,20 @@
           </v-card-actions>
         </v-card>
       </v-overlay>
-      <v-list v-scroll.self="myOnScroll" align="center" justify="center">
-        <v-list-item v-for="item in items" v-bind:key="item.createdAt">
+      <v-list
+        v-scroll.self="myOnScroll"
+        align="center"
+        justify="center"
+      >
+        <v-list-item
+          v-for="item in items"
+          v-bind:key="item.createdAt"
+        >
           <v-list-item-content>
-            <div v-if="item.renter" class="d-flex justify-end">
+            <div
+              v-if="item.renter"
+              class="d-flex justify-end"
+            >
               <v-icon v-if="item.book || item.bargain">info</v-icon>
 
               <span
@@ -116,7 +145,10 @@
                 class="blue lighten-5 pa-2 rounded max-w-3/4"
               >{{item.message}}</span>
             </div>
-            <div v-if="!item.renter" class="d-flex justify-start">
+            <div
+              v-if="!item.renter"
+              class="d-flex justify-start"
+            >
               <span
                 style="width: 75%"
                 v-ripple
@@ -142,17 +174,34 @@
           hide-details
           v-on:keyup.enter="sendMessage()"
         ></v-text-field>
-        <v-btn color="blue" class="ma-1" depressed @click="sendMessage()">
+        <v-btn
+          color="blue"
+          class="ma-1"
+          depressed
+          @click="sendMessage()"
+        >
           <v-icon color="white">far fa-paper-plane</v-icon>
         </v-btn>
       </div>
       <div class="d-flex flex-no-wrap pl-1">
         <v-chip-group>
-          <v-chip color="amber" @click="bargainOverlay.show = true">
-            <v-icon color="white" class="mr-1">monetization_on</v-icon>Trả giá
+          <v-chip
+            color="amber"
+            @click="bargainOverlay.show = true"
+          >
+            <v-icon
+              color="white"
+              class="mr-1"
+            >monetization_on</v-icon>Trả giá
           </v-chip>
-          <v-chip color="green" @click="dateTimeOverlay.show = true">
-            <v-icon color="white" class="mr-1">schedule</v-icon>Đặt lịch
+          <v-chip
+            color="green"
+            @click="dateTimeOverlay.show = true"
+          >
+            <v-icon
+              color="white"
+              class="mr-1"
+            >schedule</v-icon>Đặt lịch
           </v-chip>
         </v-chip-group>
       </div>
@@ -169,7 +218,7 @@ export default {
   components: { dateTimePickerStepper },
   props: ['info', 'group'],
   methods: {
-    myOnScroll() {},
+    myOnScroll() { },
     bargain(content) {
       this.bargainOverlay.show = false;
       const newContent = content;
