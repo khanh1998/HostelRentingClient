@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- <google-map/> -->
     <v-overlay :value="overlay.show" light opacity="0.6">
       <v-text-field
         color="#E5E5E5"
@@ -32,46 +33,28 @@
           max-height="80"
         />
       </router-link>
-      <!-- <v-toolbar-title ml-0 pl-4><span>TD Hostel</span></v-toolbar-title> -->
-      <!-- <v-spacer class="hidden-sm-and-down"/> -->
-      <!-- <div id="search-bar" class="d-flex">
-        <v-text-field
-          background-color="white"
-          outlined
-          flat
-          solo-inverted
-          hide-details
-          label="Tìm theo địa chỉ, địa điểm..."
-          id="search_input"
-          class="hidden-sm-and-down"
-          v-model="searchValue"
-          clearable
-          style="color: #444444!important"
-          dense
-          height="30px"
-          loader-height="1"
-        >
-          <template v-slot:append>
-            <v-btn depressed @click="search" color="primary" height="100%">
-              <v-icon light>search</v-icon>
-            </v-btn>
-          </template>
-        </v-text-field>
-      </div> -->
-        <v-text-field
-          outlined
-          dense
-          hide-details
-          placeholder="Tìm theo địa chỉ, địa điểm..."
-          class="hidden-sm-and-down"
-          clearable
-        >
-          <template v-slot:append>
-            <v-btn depressed @click="search" color="primary" height="40">
-              <v-icon>search</v-icon>
-            </v-btn>
-          </template>
-        </v-text-field>
+      <gmap-autocomplete
+        placeholder="Tìm theo địa chỉ, địa điểm..."
+        class="searchBar"
+        @place_changed="setPlace">
+      </gmap-autocomplete>
+      <v-btn depressed @click="addMarker" color="primary" height="40">
+        <v-icon>search</v-icon>
+      </v-btn>
+      <!-- <v-text-field
+        outlined
+        dense
+        hide-details
+        placeholder="Tìm theo địa chỉ, địa điểm..."
+        class="hidden-sm-and-down"
+        clearable
+      >
+        <template v-slot:append>
+          <v-btn depressed @click="addMarker" color="primary" height="40">
+            <v-icon>search</v-icon>
+          </v-btn>
+        </template>
+      </v-text-field> -->
       <v-btn
         color="primary"
         height="48"
@@ -86,14 +69,19 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn color="#2C92D5"
-        light depressed outlined rounded class="ma-1 hidden-xs-only font-weight-regular">
+      <v-btn
+        color="#2C92D5"
+        light
+        depressed
+        outlined
+        rounded
+        class="ma-1 hidden-xs-only font-weight-regular"
+      >
         <v-icon left>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
       </v-btn>
 
       <v-btn color="#6C98C6" to="/cart" depressed dark class="ma-1 hidden-xs-only">
-        Lịch hẹn của bạn
-      </v-btn>
+      Lịch hẹn của bạn</v-btn>
       <v-menu>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
@@ -136,15 +124,6 @@
 .v-btn {
   text-transform: none !important;
 }
-/* #search-bar #search_input:focus{
-  color: #444;
-}
-#search-bar .v-input__control .v-input__slot {
-  padding-right: 0 !important;
-}
-#search-bar .v-input__control .v-input__slot .v-input__append-inner{
-  height: 100% !important;
-} */
 #top-bar .v-input__control > .v-input__slot {
   padding-right: 0;
 }
@@ -152,18 +131,47 @@
   margin-top: 0;
   height: 100%;
 }
+.searchBar {
+  height: 40px;
+  border: 1px solid #E4E7EA;
+  width: 300px;
+}
 </style>
 <script>
 import { mapActions } from 'vuex';
+// import googleMap from './googleMap.vue';
 
 export default {
   name: 'MyAppBar',
+  components: {
+    // googleMap,
+  },
   data: () => ({
     overlay: {
       show: false,
     },
+    center: { lat: 45.508, lng: -73.587 },
+    markers: [],
+    places: [],
+    currentPlace: null,
   }),
   methods: {
+    setPlace(place) {
+      this.currentPlace = place;
+    },
+    addMarker() {
+      if (this.currentPlace) {
+        alert('lat:' + this.currentPlace.geometry.location.lat() + ',lng:' + this.currentPlace.geometry.location.lng());
+        const marker = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng(),
+        };
+        this.markers.push({ position: marker });
+        this.places.push(this.currentPlace);
+        this.center = marker;
+        this.currentPlace = null;
+      }
+    },
     search() {
       this.setSearchValue(this.searchValue);
       this.searchByAddress();
