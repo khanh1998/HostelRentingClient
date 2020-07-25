@@ -1,9 +1,6 @@
 <template>
   <div>
     <v-sheet class="mx-auto rounded-l" elevation="1" max-width="100%">
-      <v-overlay :value="isLoadingBooking" absolute>
-        <v-progress-circular indeterminate size="64"></v-progress-circular>
-      </v-overlay>
       <div class="d-flex justify-space-between text-center">
         <div style="font-size:20px; fontWeight:bold" class="pt-3 pl-2">Lịch hẹn xem phòng</div>
         <div>

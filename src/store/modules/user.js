@@ -15,19 +15,6 @@ const myState = () => ({
 });
 
 const myGetters = {
-  getUserRole: (state) => {
-    const user = state.user.data;
-    if (user) {
-      let role = 'admin';
-      if (user.renterId) {
-        role = 'renters';
-      } else if (user.vendorId) {
-        role = 'vendors';
-      }
-      return role;
-    }
-    return null;
-  },
 };
 const mutationTypes = {
   GET_USER_REQUEST: 'GET_USER_REQUEST',
