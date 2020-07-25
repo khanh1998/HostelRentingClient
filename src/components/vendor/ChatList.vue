@@ -21,14 +21,12 @@
             left
           >
             <v-tab
-              v-for="item in tabs"
-              :key="item"
+              v-for="(item, i) in tabs"
+              :key="i"
             >
               <v-badge
                 color="red"
                 content="3"
-                v-bind="attrs"
-                v-on="on"
               >
                 {{item.tabName}}
               </v-badge>
@@ -36,7 +34,7 @@
           </v-tabs>
           <v-menu
             left
-            :offset-y=true
+            :offset-y="true"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -50,7 +48,7 @@
             </template>
 
             <v-list
-              :nav="nav"
+              nav
               class="rounded-l"
             >
               <v-list-item-group
@@ -145,8 +143,8 @@
               style="height:705px; max-height:705px; overflow-y:auto; position: initial"
             >
               <v-expansion-panel
-                v-for="item in listDealChange"
-                :key="item"
+                v-for="(item, i) in listDealChange"
+                :key="i"
               >
                 <v-expansion-panel-header>
                   <v-list-item-group color="primary">
@@ -325,6 +323,7 @@ export default {
         { filterName: 'Giá' },
         { filterName: 'Thời gian' },
       ],
+      item: null,
       items: [
         {
           avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',

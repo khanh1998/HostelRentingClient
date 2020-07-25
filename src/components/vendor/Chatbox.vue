@@ -31,8 +31,8 @@
         min-height="350px"
       >
         <v-list-item
-          v-for="item in items"
-          v-bind:key="item.createdAt"
+          v-for="(item, i) in items"
+          v-bind:key="i"
         >
           <v-list-item-content>
             <div
@@ -207,7 +207,6 @@
     </div>
     <div class="d-flex flex-no-wrap">
       <v-text-field
-        autofocus
         clearable
         dense
         flat

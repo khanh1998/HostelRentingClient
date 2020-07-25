@@ -7,7 +7,7 @@
       Các phòng sắp hết hạn hợp đồng
     </div>
     <v-list two-line>
-      <template v-for="(item, index) in items">
+      <template v-for="(item, index) in contracts">
         <v-divider
           v-if="item.divider"
           :key="index"
@@ -16,20 +16,12 @@
         <v-list-item
           v-else
           :key="item.title"
-          @click="chonhannutclick"
         >
-          <!-- <v-list-item-avatar>
-            <img :src="item.avatar">
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title v-html="item.title"></v-list-item-title>
-            <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
-          </v-list-item-content> -->
           <v-list-item-content>
             <v-list-item-title style="color:#1F17FF; fontSize:18px">
-              {{ item.title }}</v-list-item-title>
+              {{ item.group.groupName }}</v-list-item-title>
             <v-list-item-subtitle
-              v-html="item.subtitle"
+              v-html="item.group.street"
               class="pb-1"
             ></v-list-item-subtitle>
             <div

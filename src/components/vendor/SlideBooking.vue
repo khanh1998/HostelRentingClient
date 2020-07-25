@@ -21,13 +21,13 @@
               style="background-color: #98B7D7; height: 28%; width: 100%"
               class="d-flex justify-end"
             >
-              <v-text
+              <p
                 style="fontWeight:bold; color:white"
-              >{{getDateString(Number(booking.startTime))}}</v-text>
+              >{{getDateString(Number(booking.startTime))}}</p>
               <v-divider vertical class="mx-3"></v-divider>
-              <v-text
+              <p
                 style="fontWeight:bold; color:white"
-              >{{getTimeString(Number(booking.startTime))}}</v-text>
+              >{{getTimeString(Number(booking.startTime))}}</p>
             </v-col>
             <v-list-item class="mb-2 pt-2">
               <v-list-item-avatar>
@@ -67,7 +67,7 @@ export default {
     }),
     getDateString(milisecond) {
       const d = new Date(milisecond);
-      return `${d.getDay()}/${d.getMonth()}/${d.getFullYear()}`;
+      return `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}`;
     },
     getTimeString(milisecond) {
       const d = new Date(milisecond);
