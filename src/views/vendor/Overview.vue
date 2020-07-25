@@ -3,7 +3,7 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-row v-if="isLoading">
+    <v-row v-if="!isLoading">
       <v-col cols="8">
         <v-row no-gutters>
           <v-col cols="12">

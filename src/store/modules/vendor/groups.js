@@ -58,14 +58,17 @@ const mutations = {
   },
   GET_GROUPS_SUCCESS(state, groups) {
     state.groups.data = groups;
+    state.groups.isLoading = false;
     state.groups.success = true;
   },
   GET_TYPES_SUCCESS(state, types) {
     state.types.data = types;
+    state.types.isLoading = false;
     state.types.success = true;
   },
   GET_ROOMS_SUCCESS(state, rooms) {
     state.rooms.data = rooms;
+    state.rooms.isLoading = false;
     state.rooms.success = true;
   },
   GET_GROUPS_FAILURE(state, error) {

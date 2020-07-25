@@ -4,11 +4,9 @@
       <div class="d-flex justify-space-between text-center">
         <div style="font-size:20px; fontWeight:bold" class="pt-3 pl-2">Lịch hẹn xem phòng</div>
         <div>
-          <v-chip class="ma-2">Hôm nay</v-chip>
-
-          <v-chip class="ma-2">Tuần này</v-chip>
-
-          <v-chip class="ma-2">Tháng này</v-chip>
+          <v-chip-group mandatory active-class="primary--text">
+            <v-chip v-for="tag in chipItems" :key="tag">{{ tag }}</v-chip>
+          </v-chip-group>
         </div>
       </div>
       <v-slide-group>
@@ -41,8 +39,7 @@
                   class="py-1"
                 >{{booking.renter.username}}</v-list-item-title>
                 <v-list-item-subtitle style="color: coral; fontSize:18px">
-                  {{booking.renter.phone}}
-                </v-list-item-subtitle>
+                  {{booking.renter.phone}}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <div>
@@ -64,7 +61,6 @@ import { mapActions } from 'vuex';
 export default {
   name: 'SlideBooking',
   components: {},
-  data: () => ({}),
   methods: {
     ...mapActions({
       getBookings: 'user/getBookings',
@@ -91,5 +87,8 @@ export default {
   created() {
     this.getBookings();
   },
+  data: () => ({
+    chipItems: ['Hôm nay', 'Tuần này', 'Tháng này'],
+  }),
 };
 </script>
