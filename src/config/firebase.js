@@ -1,6 +1,6 @@
-import firebase from 'firebase';
-// Required for side-effects
-require('firebase/firestore');
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCWNT4MhALulebmekYoHKbwyAx-htB76tA',
@@ -21,5 +21,10 @@ firebase.initializeApp(firebaseConfig);
 // db.settings({
 //   timestampsInSnapshots: true,
 // });
-firebase.firestore();
-export default firebase;
+const store = firebase.firestore();
+const messaging = firebase.messaging();
+
+export default {
+  store,
+  messaging,
+};

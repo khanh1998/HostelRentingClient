@@ -236,6 +236,8 @@
 <script>
 import firebase from '../../config/firebase';
 
+const { store } = firebase;
+
 export default {
   name: 'ChatBox',
   data: () => ({
@@ -251,7 +253,7 @@ export default {
     myOnScroll() { },
     sendMessage() {
       if (this.inputChat.model.length > 0) {
-        firebase.firestore().collection('chat').add({
+        store.collection('chat').add({
           renter: false,
           message: this.inputChat.model,
           bargain: false,
@@ -265,7 +267,7 @@ export default {
 
     acceptMessage() {
       // this.visible = true;
-      firebase.firestore().collection('chat').add({
+      store.collection('chat').add({
         renter: false,
         message: 'Chấp nhận trả giá của bạn',
         bargain: true,
@@ -278,7 +280,7 @@ export default {
 
     denyMessage() {
       // this.visible = true;
-      firebase.firestore().collection('chat').add({
+      store.collection('chat').add({
         renter: false,
         message: 'Từ chối trả giá của bạn',
         bargain: true,
@@ -290,7 +292,7 @@ export default {
     },
 
     fetchMessages() {
-      firebase.firestore().collection('chat').orderBy('createdAt').onSnapshot((querySnapshot) => {
+      store.collection('chat').orderBy('createdAt').onSnapshot((querySnapshot) => {
         const allMessages = [];
         querySnapshot.forEach((doc) => {
           allMessages.push(doc.data());

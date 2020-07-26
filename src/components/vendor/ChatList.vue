@@ -307,6 +307,8 @@
 <script>
 import firebase from '../../config/firebase';
 
+const { store } = firebase;
+
 export default {
   name: 'ChatList',
   props: {
@@ -437,7 +439,7 @@ export default {
     acceptMessage() {
       // this.visible = true;
       this.dialogAccept = false;
-      firebase.firestore().collection('chat').add({
+      store.collection('chat').add({
         renter: false,
         message: 'Chấp nhận trả giá của bạn',
         bargain: true,
@@ -452,7 +454,7 @@ export default {
     denyMessage() {
       // this.visible = true;
       this.dialogDeny = false;
-      firebase.firestore().collection('chat').add({
+      store.collection('chat').add({
         renter: false,
         message: 'Từ chối trả giá của bạn',
         bargain: true,
