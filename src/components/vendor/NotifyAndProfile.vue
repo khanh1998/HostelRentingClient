@@ -1,9 +1,13 @@
 <template>
   <div class="d-flex flex-row justify-center align-center pa-2">
-    <v-menu left :offset-y="true" :offset-x="true">
+    <v-menu left :offset-y="true" :offset-x="true" @blur="this.notifications = []">
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs" v-on="on" icon>
-          <v-badge color="red" content="6" bordered overlap v-bind="attrs" v-on="on">
+          <v-badge color="red"
+            :content="notifications.length"
+            bordered overlap v-bind="attrs"
+            v-on="on"
+          >
             <v-img :src="require('@/assets/notification.svg')" height="30" width="30"></v-img>
           </v-badge>
         </v-btn>
@@ -18,7 +22,7 @@
       >
         <v-list-item-group color="primary">
           <v-list-item
-            v-for="(item, i) in listBookChange"
+            v-for="(item, i) in notifications"
             :key="i"
             class="mb-2 pt-2"
             style="backgroundColor: #F2F2F2"
@@ -68,6 +72,11 @@
 
 <script>
 import { mapActions } from 'vuex';
+import firebase from '../../config/firebase';
+import constant from '../../config/constant';
+
+const { PUBLIC_VAPID_KEY } = constant;
+const { messaging } = firebase;
 
 export default {
   name: 'NotifyAndProfile',
@@ -75,7 +84,91 @@ export default {
     ...mapActions({
       getUser: 'user/getUser',
       clearUserData: 'user/clearUserData',
+      getNewCommingBooking: 'user/getOneBooking',
     }),
+    getMessagingToken() {
+      messaging
+        .getToken()
+        .then(async (token) => {
+          if (token) {
+            const currentMessageToken = window.localStorage.getItem(
+              'messagingToken',
+            );
+            console.log('token will be updated', currentMessageToken !== token);
+            if (currentMessageToken !== token) {
+              await this.saveToken(token);
+            }
+          } else {
+            console.log(
+              'No Instance ID token available. Request permission to generate one.',
+            );
+            this.notificationsPermisionRequest();
+          }
+        })
+        .catch((err) => {
+          console.log('An error occurred while retrieving token. ', err);
+        });
+    },
+    notificationsPermisionRequest() {
+      messaging
+        .requestPermission()
+        .then(() => {
+          this.getMessagingToken();
+        })
+        .catch((err) => {
+          console.log('Unable to get permission to notify.', err);
+        });
+    },
+    saveToken(token) {
+      console.log('tokens', token);
+      window.axios
+        .post(
+          'https://us-central1-cropchien.cloudfunctions.net/GeneralSubscription',
+          { token },
+        )
+        .then((response) => {
+          window.localStorage.setItem('messagingToken', token);
+          console.log(response);
+        })
+        .catch((err) => {
+          window.localStorage.setItem('messagingToken', token);
+          console.log(err);
+        });
+    },
+    listenTokenRefresh() {
+      const currentMessageToken = window.localStorage.getItem('messagingToken');
+      console.log('currentMessageToken', currentMessageToken);
+      if (!currentMessageToken) {
+        messaging.onTokenRefresh(() => {
+          messaging
+            .getToken()
+            .then((token) => {
+              this.saveToken(token);
+            })
+            .catch((err) => {
+              console.log('Unable to retrieve refreshed token ', err);
+            });
+        });
+      }
+    },
+    addNewNotificaton(payload) {
+      const noti = {
+        avatar: payload.notification.icon,
+        message: payload.notification.body,
+        title: payload.data.renterName,
+      };
+      this.notifications.unshift(noti);
+    },
+    receivePayload(payload) {
+      console.log(this);
+      console.log(payload);
+      this.getNewCommingBooking(payload.data.bookingId);
+      this.addNewNotificaton(payload);
+    },
+  },
+  mounted() {
+    messaging.usePublicVapidKey(PUBLIC_VAPID_KEY);
+    messaging.onMessage(this.receivePayload);
   },
   computed: {
     listBookChange() {
@@ -94,6 +187,7 @@ export default {
     },
   },
   data: () => ({
+    notifications: [],
     items: [
       {
         avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',

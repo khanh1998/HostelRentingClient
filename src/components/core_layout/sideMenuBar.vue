@@ -1,8 +1,5 @@
 <template>
   <v-card height="100%" class="overflow-hidden rounded-0 d-flex align-strench">
-    <v-btn icon large @click="getMessagingToken">
-      <v-icon large>notifications_none</v-icon>
-    </v-btn>
     <v-list nav class="py-0 rounded-1" height="100%">
       <v-list-item class="item-image">
         <v-img
@@ -14,6 +11,11 @@
           max-width="300"
           max-height="300"
         />
+      </v-list-item>
+      <v-list-item v-if="!hasMessagingToken">
+        <v-btn dark rounded color="amber" large @click="getMessagingToken">
+          <v-icon large>notifications_none</v-icon>Bật thông báo
+        </v-btn>
       </v-list-item>
 
       <div class="text-display mt-3 mb-3 ml-7">Danh mục</div>
@@ -65,7 +67,6 @@
 import firebase from '../../config/firebase';
 
 const { messaging } = firebase;
-messaging.onMessage((payload) => console.log(payload));
 
 export default {
   name: 'SideMenuBar',
@@ -157,12 +158,12 @@ export default {
         });
       }
     },
-    newMessage() {
-      messaging.onMessage((payload) => console.log(payload));
-    },
   },
-  mounted() {
-    this.newMessage();
+  mounted() {},
+  computed: {
+    hasMessagingToken() {
+      return localStorage.getItem('messagingToken') != null;
+    },
   },
 };
 </script>

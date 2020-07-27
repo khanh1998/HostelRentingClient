@@ -27,6 +27,9 @@ const mutationTypes = {
   GET_BOOKINGS_REQUEST: 'GET_BOOKINGS_REQUEST',
   GET_BOOKINGS_SUCCESS: 'GET_BOOKINGS_SUCCESS',
   GET_BOOKINGS_FAILURE: 'GET_BOOKINGS_FAILURE',
+  GET_BOOKING_REQUEST: 'GET_BOOKING_REQUEST',
+  GET_BOOKING_SUCCESS: 'GET_BOOKING_SUCCESS',
+  GET_BOOKING_FAILURE: 'GET_BOOKING_FAILURE',
 };
 const mutations = {
   CLEAR_USER_DATA(state) {
@@ -52,9 +55,11 @@ const mutations = {
   GET_CONTRACTS_SUCCESS(state, contracts) {
     state.contracts.data = contracts;
     state.contracts.isLoading = false;
+    state.contracts.success = true;
   },
   GET_CONTRACTS_FAILURE(state) {
     state.contracts.isLoading = false;
+    state.contracts.success = false;
   },
   GET_BOOKINGS_REQUEST(state) {
     state.bookings.isLoading = true;
@@ -62,9 +67,23 @@ const mutations = {
   GET_BOOKINGS_SUCCESS(state, booking) {
     state.bookings.data = booking;
     state.bookings.isLoading = false;
+    state.bookings.success = true;
   },
   GET_BOOKINGS_FAILURE(state) {
     state.bookings.isLoading = false;
+    state.bookings.success = false;
+  },
+  GET_BOOKING_REQUEST(state) {
+    state.bookings.isLoading = true;
+  },
+  GET_BOOKING_SUCCESS(state, booking) {
+    state.bookings.data.unshift(booking);
+    state.bookings.isLoading = false;
+    state.bookings.success = true;
+  },
+  GET_BOOKING_FAILURE(state) {
+    state.bookings.isLoading = false;
+    state.bookings.success = false;
   },
 };
 
@@ -128,6 +147,21 @@ const actions = {
       }
     } else {
       throw new Error('You have to login before get contracts');
+    }
+  },
+  async getOneBooking({ commit }, bookingId) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role) {
+      commit(mutationTypes.GET_BOOKING_REQUEST);
+      const res = await window.axios.get(`/api/v1/bookings/${bookingId}`);
+      if (res.status === 200) {
+        commit(mutationTypes.GET_BOOKING_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.GET_BOOKING_FAILURE);
+      }
+    } else {
+      throw new Error('You have to login before get a new booking');
     }
   },
 };

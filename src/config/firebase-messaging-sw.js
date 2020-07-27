@@ -1,5 +1,5 @@
-importScripts('https://www.gstatic.com/firebasejs/5.6.0/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/5.6.0/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/7.16.0/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/7.16.0/firebase-messaging.js');
 
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
@@ -10,7 +10,14 @@ workbox.routing.registerRoute(
 );
 
 firebase.initializeApp({
-  'messagingSenderId': '223687361307'
+  apiKey: 'AIzaSyCWNT4MhALulebmekYoHKbwyAx-htB76tA',
+  authDomain: 'td-vue-firestore-chat.firebaseapp.com',
+  databaseURL: 'https://td-vue-firestore-chat.firebaseio.com',
+  projectId: 'td-vue-firestore-chat',
+  storageBucket: 'td-vue-firestore-chat.appspot.com',
+  messagingSenderId: '223687361307',
+  appId: '1:223687361307:web:ed8fd5232accfb095f09be',
+  measurementId: 'G-0K8CSPWJ17',
 });
 
 const messaging = firebase.messaging();
