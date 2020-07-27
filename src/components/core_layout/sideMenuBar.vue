@@ -65,6 +65,7 @@
 import firebase from '../../config/firebase';
 
 const { messaging } = firebase;
+messaging.onMessage((payload) => console.log(payload));
 
 export default {
   name: 'SideMenuBar',
@@ -156,6 +157,12 @@ export default {
         });
       }
     },
+    newMessage() {
+      messaging.onMessage((payload) => console.log(payload));
+    },
+  },
+  mounted() {
+    this.newMessage();
   },
 };
 </script>
