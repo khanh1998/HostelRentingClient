@@ -87,14 +87,18 @@ const mutations = {
 };
 const getters = {
   getHostelGroupById: (state) => (id) => {
-    const result = state.results.data.groups.filter((group) => group.groupId === Number(id));
+    const result = state.results.data.groups.filter(
+      (group) => group.groupId === Number(id),
+    );
     if (result.length > 0) {
       return result[0];
     }
     return null;
   },
   getHostelTypeById: (state) => (id) => {
-    const result = state.results.data.types.filter((type) => type.typeId === Number(id));
+    const result = state.results.data.types.filter(
+      (type) => type.typeId === Number(id),
+    );
     if (result.length > 0) {
       return result[0];
     }
@@ -132,7 +136,9 @@ const actions = {
       }
       return '';
     });
-    queryString = `?${queryString.join('')}size=${params.size}&page=${params.page}`;
+    queryString = `?${queryString.join('')}size=${params.size}&page=${
+      params.page
+    }`;
     const res = await window.axios.get(`/api/v1/types${queryString}`);
     if (res.status === 200) {
       commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
@@ -151,12 +157,11 @@ const actions = {
     }
   },
   async searchByCoordinator({ commit }, params) {
-    // params contains { lat, long }
-    // params.lat
-    // params.long
+    // params = {lat, long}
     try {
-      commit(mutationTypes.GET_FILTER_RESULT_REQUEST)
-      const url = '';
+      commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
+      // const url = `/api/v1/types?distance=5&latitude=10.8014659&longitude=106.6525974&page=1&size=50`;
+      const url = `/api/v1/types?distance=5&latitude=${params.lat}&longitude=${params.long}&page=1&size=50`;
       const res = await window.axios.get(url);
       if (res.status === 200) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
@@ -164,7 +169,7 @@ const actions = {
     } catch (error) {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
     }
-  }
+  },
 };
 export default {
   namespaced: true,

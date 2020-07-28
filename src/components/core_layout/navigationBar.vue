@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <google-map/> -->
     <v-overlay :value="overlay.show" light opacity="0.6">
       <v-text-field
         color="#E5E5E5"
@@ -36,25 +35,11 @@
       <gmap-autocomplete
         placeholder="Tìm theo địa chỉ, địa điểm..."
         class="searchBar"
-        @place_changed="setPlace">
-      </gmap-autocomplete>
-      <v-btn depressed @click="addMarker" color="primary" height="40">
+        @place_changed="setPlace"
+      ></gmap-autocomplete>
+      <v-btn depressed @click="searchByCoordinates" color="primary" height="40">
         <v-icon>search</v-icon>
       </v-btn>
-      <!-- <v-text-field
-        outlined
-        dense
-        hide-details
-        placeholder="Tìm theo địa chỉ, địa điểm..."
-        class="hidden-sm-and-down"
-        clearable
-      >
-        <template v-slot:append>
-          <v-btn depressed @click="addMarker" color="primary" height="40">
-            <v-icon>search</v-icon>
-          </v-btn>
-        </template>
-      </v-text-field> -->
       <v-btn
         color="primary"
         height="48"
@@ -80,8 +65,7 @@
         <v-icon left>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
       </v-btn>
 
-      <v-btn color="#6C98C6" to="/cart" depressed dark class="ma-1 hidden-xs-only">
-      Lịch hẹn của bạn</v-btn>
+      <v-btn color="#6C98C6" to="/cart" depressed dark class="ma-1 hidden-xs-only">Lịch hẹn của bạn</v-btn>
       <v-menu>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
@@ -133,25 +117,20 @@
 }
 .searchBar {
   height: 40px;
-  border: 1px solid #E4E7EA;
+  border: 1px solid #e4e7ea;
   width: 300px;
 }
 </style>
 <script>
 import { mapActions } from 'vuex';
-// import googleMap from './googleMap.vue';
 
 export default {
   name: 'MyAppBar',
-  components: {
-    // googleMap,
-  },
   data: () => ({
     overlay: {
       show: false,
     },
-    center: { lat: 45.508, lng: -73.587 },
-    markers: [],
+    center: { lat: 10.7542893, lng: 106.1346955 },
     places: [],
     currentPlace: null,
   }),
@@ -159,17 +138,23 @@ export default {
     setPlace(place) {
       this.currentPlace = place;
     },
-    addMarker() {
+    searchByCoordinates() {
       if (this.currentPlace) {
-        alert(`lat: ${this.currentPlace.geometry.location.lat()} ,lng: ${this.currentPlace.geometry.location.lng()}`);
-        const marker = {
+        alert(
+          `lat: ${this.currentPlace.geometry.location.lat()} ,lng: ${this.currentPlace.geometry.location.lng()}`,
+        );
+        const coordinates = {
           lat: this.currentPlace.geometry.location.lat(),
           lng: this.currentPlace.geometry.location.lng(),
         };
-        this.markers.push({ position: marker });
-        this.places.push(this.currentPlace);
-        this.center = marker;
-        this.currentPlace = null;
+        console.log(coordinates.lat);
+        console.log(coordinates.lng);
+        this.center = coordinates;
+        this.searchByCoordinator({
+          lat: coordinates.lat,
+          long: coordinates.lng,
+        });
+        this.$router.push('/filter');
       }
     },
     search() {
