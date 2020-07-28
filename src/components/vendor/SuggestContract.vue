@@ -1,8 +1,8 @@
 <template>
   <v-card v-if="!isLoadingContracts">
     <div
-      style="font-size:20px; fontWeight:bold"
-      class="pt-3 pl-2 pb-6"
+      style="font-size:20px; fontWeight:bold;"
+      class="pt-3 pl-2 mb-5"
     >
       Các phòng sắp hết hạn hợp đồng
     </div>
