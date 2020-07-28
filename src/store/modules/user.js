@@ -156,6 +156,7 @@ const actions = {
       commit(mutationTypes.GET_BOOKING_REQUEST);
       const res = await window.axios.get(`/api/v1/bookings/${bookingId}`);
       if (res.status === 200) {
+        res.data.data.new = true;
         commit(mutationTypes.GET_BOOKING_SUCCESS, res.data.data);
       } else {
         commit(mutationTypes.GET_BOOKING_FAILURE);

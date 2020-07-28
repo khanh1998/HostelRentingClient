@@ -22,6 +22,8 @@ firebase.initializeApp(firebaseConfig);
 //   timestampsInSnapshots: true,
 // });
 const store = firebase.firestore();
+store.enablePersistence({ synchronizeTabs: true });
+
 const messaging = firebase.messaging();
 
 export default {

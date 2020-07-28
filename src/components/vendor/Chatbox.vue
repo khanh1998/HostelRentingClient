@@ -1,6 +1,7 @@
 <template>
   <div v-if="chatShow">
     <v-card
+      v-if="!userState.isLoading && userState.success"
       width="100%"
       class="d-flex flex-row justify-space-between align-center pa-2"
     >
@@ -234,6 +235,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import firebase from '../../config/firebase';
 
 const { store } = firebase;
@@ -250,6 +252,9 @@ export default {
     dialogDeny: false,
   }),
   methods: {
+    ...mapActions({
+      getUser: 'user/getUser',
+    }),
     myOnScroll() { },
     sendMessage() {
       if (this.inputChat.model.length > 0) {
@@ -311,6 +316,12 @@ export default {
   },
   created() {
     this.fetchMessages();
+    this.getUser();
+  },
+  computed: {
+    userState() {
+      return this.$store.state.user.user;
+    },
   },
   mounted() {
     this.$nextTick(() => this.scrollToBottom());
