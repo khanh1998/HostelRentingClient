@@ -161,7 +161,7 @@ export default {
     },
     addMarker() {
       if (this.currentPlace) {
-        alert('lat:' + this.currentPlace.geometry.location.lat() + ',lng:' + this.currentPlace.geometry.location.lng());
+        alert(`lat: ${this.currentPlace.geometry.location.lat()} ,lng: ${this.currentPlace.geometry.location.lng()}`);
         const marker = {
           lat: this.currentPlace.geometry.location.lat(),
           lng: this.currentPlace.geometry.location.lng(),
@@ -174,12 +174,17 @@ export default {
     },
     search() {
       this.setSearchValue(this.searchValue);
-      this.searchByAddress();
+      // this.searchByAddress();
+      this.searchByCoordinator({
+        lat: '', // gan latitude vao day
+        long: '', // gan longtitude vao day
+      });
       this.$router.push('/filter');
     },
     ...mapActions({
       setSearchValue: 'renter/filterResult/setSearchValue',
       searchByAddress: 'renter/filterResult/searchByAddress',
+      searchByCoordinator: 'renter/filterResult/searchByCoordinator',
     }),
   },
   computed: {

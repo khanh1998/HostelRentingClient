@@ -89,7 +89,7 @@
                   </v-sheet>
                 </v-col>-->
                 <v-col cols="12">
-                  <ArticleList :list="hostelTypes" />
+                  <ArticleList :list="hostelTypes"/>
                 </v-col>
               </v-row>
             </v-col>

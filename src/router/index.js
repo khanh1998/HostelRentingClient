@@ -1,17 +1,17 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import * as VueGoogleMaps from 'vue2-google-maps';
 import RenterRoutes from './routes/renter';
 import VendorRoutes from './routes/vendor';
 import AdminRoutes from './routes/admin';
-import * as VueGoogleMaps from 'vue2-google-maps';
 
 Vue.use(VueRouter);
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: "AIzaSyDcw-KnCAPzni3QYvgk3RDoTZL65xh8a4o",
-    libraries: "places" // necessary for places input
-  }
+    key: 'AIzaSyDcw-KnCAPzni3QYvgk3RDoTZL65xh8a4o',
+    libraries: 'places', // necessary for places input
+  },
 });
 
 const routes = [

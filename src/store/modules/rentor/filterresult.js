@@ -150,6 +150,21 @@ const actions = {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
     }
   },
+  async searchByCoordinator({ commit }, params) {
+    // params contains { lat, long }
+    // params.lat
+    // params.long
+    try {
+      commit(mutationTypes.GET_FILTER_RESULT_REQUEST)
+      const url = '';
+      const res = await window.axios.get(url);
+      if (res.status === 200) {
+        commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
+    }
+  }
 };
 export default {
   namespaced: true,
