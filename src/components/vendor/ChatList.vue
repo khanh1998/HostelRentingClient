@@ -305,15 +305,18 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import firebase from '../../config/firebase';
 
 const { store } = firebase;
+const chatCollectionRef = store.collection('chat');
 
 export default {
   name: 'ChatList',
   props: {
     chatShow: Boolean,
     itemSelected: Object,
+    vendorId,
   },
   data() {
     return {

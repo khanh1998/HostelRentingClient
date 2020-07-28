@@ -239,9 +239,11 @@ import { mapActions } from 'vuex';
 import firebase from '../../config/firebase';
 
 const { store } = firebase;
+const chatCollectionRef = store.collection('chat');
 
 export default {
   name: 'ChatBox',
+  props: ['vendorId', 'renterId', 'typeId', 'groupId'],
   data: () => ({
     items: [],
     inputChat: {
@@ -250,6 +252,7 @@ export default {
     chatShow: true,
     dialogAccept: false,
     dialogDeny: false,
+    messageCollectionRef: null,
   }),
   methods: {
     ...mapActions({
@@ -297,14 +300,23 @@ export default {
     },
 
     fetchMessages() {
-      store.collection('chat').orderBy('createdAt').onSnapshot((querySnapshot) => {
-        const allMessages = [];
-        querySnapshot.forEach((doc) => {
-          allMessages.push(doc.data());
+      chatCollectionRef
+        .where('vendorId', '==', this.vendorId)
+        .where('renterId', '==', this.renterId)
+        .where('typeId', '==', this.typeId)
+        .limit(1)
+        .onSnapshot((querySnapshot) => {
+          const allMessages = [];
+          querySnapshot.forEach((doc) => {
+            this.messageCollectionRef = doc.ref.collection('messages');
+            this.messageCollectionRef.onSnapshot((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                
+              });
+            });
+          this.items = allMessages;
+          });
         });
-        this.items = allMessages;
-        this.$nextTick(() => this.scrollToBottom());
-      });
     },
     scrollToBottom() {
       const chatbox = this.$el.querySelector('#chatbox');
