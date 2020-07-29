@@ -122,6 +122,9 @@ export default {
       if (!this.chatBoxes.chat1.show) {
         this.chatBoxes.chat1.show = true;
         this.chatBoxes.chat1.doc = event;
+        this.chatBoxes.chat1.vendorId = event.vendorId;
+        this.chatBoxes.chat1.renterId = event.renterId;
+        this.chatBoxes.chat1.typeId = event.typeId;
       } else if (!this.chatBoxes.chat1.show) {
         this.chatBoxes.chat2.show = true;
         this.chatBoxes.chat2.doc = event;

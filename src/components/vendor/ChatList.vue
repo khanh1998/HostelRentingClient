@@ -50,11 +50,11 @@
                 <v-row align="center" justify="center">
                   <v-list-item-group v-model="item" color="primary">
                     <v-list-item
-                      v-for="(item) in docs"
+                      v-for="(item, i) in docs"
                       :key="item.id"
                       class="mb-2 pt-2"
                       style="backgroundColor: #F2F2F2"
-                      @click="$emit('clickChat', item)"
+                      @click="$emit('clickChat', docRefs[i])"
                     >
                       <v-list-item-avatar>
                         <v-img :src="'#'"></v-img>
