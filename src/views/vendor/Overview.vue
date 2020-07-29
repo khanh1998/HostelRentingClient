@@ -27,13 +27,13 @@
       </v-col>
       <v-col cols="4">
         <div style="width: 95%">
-          <ChatList />
+          <ChatList :vendorId="user.userId"/>
         </div>
       </v-col>
     </v-row>
     <v-card style="position: absolute; right: 20px; bottom: 10px;
     height:auto; width:350px">
-      <Chatbox />
+      <!-- <Chatbox /> -->
     </v-card>
   </div>
 </template>
@@ -43,7 +43,7 @@ import ChatList from '@/components/vendor/ChatList.vue';
 import SlideBooking from '@/components/vendor/SlideBooking.vue';
 import SuggestContract from '@/components/vendor/SuggestContract.vue';
 import ChartOverview from '@/components/vendor/ChartOverview.vue';
-import Chatbox from '@/components/vendor/Chatbox.vue';
+// import Chatbox from '@/components/vendor/Chatbox.vue';
 // import ChatboxBottom from '@/components/vendor/ChatboxBottom.vue';
 
 export default {
@@ -53,7 +53,7 @@ export default {
     SlideBooking,
     SuggestContract,
     ChartOverview,
-    Chatbox,
+    // Chatbox,
     // ChatboxBottom,
   },
   data: () => ({}),
@@ -63,7 +63,11 @@ export default {
         this.$store.state.vendor.group.groups.isLoading
         || this.$store.state.vendor.group.types.isLoading
         || this.$store.state.vendor.group.rooms.isLoading
+        || this.$store.state.user.user.isLoading
       );
+    },
+    user() {
+      return this.$store.state.user.user.data;
     },
   },
   methods: {
@@ -71,6 +75,7 @@ export default {
       getGroups: 'vendor/group/getGroups',
       getTypes: 'vendor/group/getTypes',
       getRooms: 'vendor/group/getRooms',
+      getUser: 'user/getUser',
     }),
   },
   async created() {
@@ -79,6 +84,7 @@ export default {
         this.getTypes()
           .then(() => this.getRooms());
       });
+    this.getUser();
   },
 };
 </script>

@@ -173,8 +173,10 @@ export default {
       const newContent = content;
       newContent.bargain = true;
       newContent.message = this.bargainOverlay.price;
-      // this.items.push(newContent);
       this.messCollectionRef.add(newContent);
+      this.messCollectionRef.parent.update({
+        lastedMessage: content,
+      });
     },
     book(content) {
       this.bargainOverlay.show = false;
@@ -183,11 +185,10 @@ export default {
       const { date } = this.dateTimeOverlay;
       newContent.message = `${this.getSimpleFormatDate(date)} từ
         ${this.dateTimeOverlay.time}`;
-      // newContent.message = date;
-      // this.items.push(newContent);
       this.messCollectionRef.add(newContent);
-      // const dateInfo = this.getSimpleFormatDate(date);
-      // const timeInfo = this.dateTimeOverlay.time;
+      this.messCollectionRef.parent.update({
+        lastedMessage: content,
+      });
     },
     sendMessage(type = null) {
       const content = {
@@ -197,7 +198,6 @@ export default {
         createdAt: Date.now(),
       };
       if (type === null) {
-        // this.items.push(content);
         this.messCollectionRef.add(content);
       } else if (type === 'book') {
         this.book(content);
@@ -205,8 +205,9 @@ export default {
         this.bargain(content);
         this.bargainOverlay.step = 1;
       }
-      this.docRef.update({
+      this.messCollectionRef.parent.update({
         updated: Date.now(),
+        lastedMessage: content,
       });
       this.$nextTick(() => this.scrollToBottom());
       this.inputChat.text = '';

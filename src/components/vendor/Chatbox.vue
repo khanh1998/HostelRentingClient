@@ -236,14 +236,14 @@
 
 <script>
 import { mapActions } from 'vuex';
-import firebase from '../../config/firebase';
+// import firebase from '../../config/firebase';
 
-const { store } = firebase;
-const chatCollectionRef = store.collection('chat');
+// const { store } = firebase;
+// const chatCollectionRef = store.collection('chat');
 
 export default {
   name: 'ChatBox',
-  props: ['vendorId', 'renterId', 'typeId', 'groupId'],
+  props: ['vendorId', 'renterId', 'typeId', 'groupId', 'messageCollectionRef'],
   data: () => ({
     items: [],
     inputChat: {
@@ -252,7 +252,6 @@ export default {
     chatShow: true,
     dialogAccept: false,
     dialogDeny: false,
-    messageCollectionRef: null,
   }),
   methods: {
     ...mapActions({
@@ -261,7 +260,7 @@ export default {
     myOnScroll() { },
     sendMessage() {
       if (this.inputChat.model.length > 0) {
-        store.collection('chat').add({
+        this.messageCollectonRef.add({
           renter: false,
           message: this.inputChat.model,
           bargain: false,
@@ -275,7 +274,7 @@ export default {
 
     acceptMessage() {
       // this.visible = true;
-      store.collection('chat').add({
+      this.messageCollectonRef.add({
         renter: false,
         message: 'Chấp nhận trả giá của bạn',
         bargain: true,
@@ -288,7 +287,7 @@ export default {
 
     denyMessage() {
       // this.visible = true;
-      store.collection('chat').add({
+      this.messageCollectonRef.add({
         renter: false,
         message: 'Từ chối trả giá của bạn',
         bargain: true,
@@ -300,22 +299,14 @@ export default {
     },
 
     fetchMessages() {
-      chatCollectionRef
-        .where('vendorId', '==', this.vendorId)
-        .where('renterId', '==', this.renterId)
-        .where('typeId', '==', this.typeId)
-        .limit(1)
+      this.messageCollectonRef
+        .orderBy('createAt', 'desc')
         .onSnapshot((querySnapshot) => {
           const allMessages = [];
           querySnapshot.forEach((doc) => {
-            this.messageCollectionRef = doc.ref.collection('messages');
-            this.messageCollectionRef.onSnapshot((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                
-              });
-            });
-          this.items = allMessages;
+            allMessages.push(doc.data());
           });
+          this.items = allMessages;
         });
     },
     scrollToBottom() {
