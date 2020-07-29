@@ -54,7 +54,7 @@
                       :key="item.id"
                       class="mb-2 pt-2"
                       style="backgroundColor: #F2F2F2"
-                      @click="$emit('clickedItem', item)"
+                      @click="$emit('clickChat', item)"
                     >
                       <v-list-item-avatar>
                         <v-img :src="'#'"></v-img>

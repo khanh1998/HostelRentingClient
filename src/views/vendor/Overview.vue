@@ -27,21 +27,30 @@
       </v-col>
       <v-col cols="4">
         <div style="width: 95%">
-          <ChatList :vendorId="user.userId"/>
+          <ChatList
+            :vendorId="user.userId"
+            v-on:clickChat="showChatBox($event)"
+          />
         </div>
       </v-col>
     </v-row>
     <v-card style="position: absolute; right: 20px; bottom: 10px;
     height:auto; width:350px">
-      <Chatbox />
+      <Chatbox
+        v-if="chatBoxes.chat1.show"
+        :doc="chatBoxes.chat1.doc"/>
     </v-card>
     <v-card style="position: absolute; right: 370px; bottom: 10px;
     height:auto; width:350px">
-      <Chatbox />
+      <Chatbox
+        v-if="chatBoxes.chat2.show"
+        :doc="chatBoxes.chat2.doc"/>
     </v-card>
     <v-card style="position: absolute; right: 720px; bottom: 10px;
     height:auto; width:350px">
-      <Chatbox />
+      <Chatbox
+      v-if="chatBoxes.chat3.show"
+      :doc="chatBoxes.chat3.doc"/>
     </v-card>
   </div>
 </template>
@@ -51,7 +60,7 @@ import ChatList from '@/components/vendor/ChatList.vue';
 import SlideBooking from '@/components/vendor/SlideBooking.vue';
 import SuggestContract from '@/components/vendor/SuggestContract.vue';
 import ChartOverview from '@/components/vendor/ChartOverview.vue';
-// import Chatbox from '@/components/vendor/Chatbox.vue';
+import Chatbox from '@/components/vendor/Chatbox.vue';
 // import ChatboxBottom from '@/components/vendor/ChatboxBottom.vue';
 
 export default {
@@ -61,10 +70,34 @@ export default {
     SlideBooking,
     SuggestContract,
     ChartOverview,
-    // Chatbox,
+    Chatbox,
     // ChatboxBottom,
   },
-  data: () => ({}),
+  data: () => ({
+    chatBoxes: {
+      chat1: {
+        show: false,
+        vendorId: null,
+        renterId: null,
+        typeId: null,
+        doc: null,
+      },
+      chat2: {
+        show: false,
+        vendorId: null,
+        renterId: null,
+        typeId: null,
+        doc: null,
+      },
+      chat3: {
+        show: false,
+        vendorId: null,
+        renterId: null,
+        typeId: null,
+        doc: null,
+      },
+    },
+  }),
   computed: {
     isLoading() {
       return (
@@ -85,6 +118,18 @@ export default {
       getRooms: 'vendor/group/getRooms',
       getUser: 'user/getUser',
     }),
+    showChatBox(event) {
+      if (!this.chatBoxes.chat1.show) {
+        this.chatBoxes.chat1.show = true;
+        this.chatBoxes.chat1.doc = event;
+      } else if (!this.chatBoxes.chat1.show) {
+        this.chatBoxes.chat2.show = true;
+        this.chatBoxes.chat2.doc = event;
+      } else {
+        this.chatBoxes.chat3.show = true;
+        this.chatBoxes.chat3.doc = event;
+      }
+    },
   },
   async created() {
     this.getGroups()

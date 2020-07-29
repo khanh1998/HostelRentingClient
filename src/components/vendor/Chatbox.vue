@@ -243,7 +243,7 @@ import { mapActions } from 'vuex';
 
 export default {
   name: 'ChatBox',
-  props: ['vendorId', 'renterId', 'typeId', 'groupId', 'messageCollectionRef'],
+  props: ['vendorId', 'renterId', 'typeId', 'groupId', 'doc'],
   data: () => ({
     items: [],
     inputChat: {
@@ -299,8 +299,10 @@ export default {
     },
 
     fetchMessages() {
-      this.messageCollectonRef
-        .orderBy('createAt', 'desc')
+      this.doc
+        .ref
+        .collection('messages')
+        .orderBy('createdAt', 'desc')
         .onSnapshot((querySnapshot) => {
           const allMessages = [];
           querySnapshot.forEach((doc) => {
