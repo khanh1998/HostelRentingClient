@@ -36,21 +36,30 @@
     </v-row>
     <v-card style="position: absolute; right: 20px; bottom: 10px;
     height:auto; width:350px">
+    0
       <Chatbox
-        v-if="chatBoxes.chat1.show"
-        :doc="chatBoxes.chat1.doc"/>
+        v-if="docList[0]"
+        :doc="docList[0]"
+        :index="0"
+        v-on:closeChat="closeChatBox($event)"/>
     </v-card>
     <v-card style="position: absolute; right: 370px; bottom: 10px;
     height:auto; width:350px">
+    1
       <Chatbox
-        v-if="chatBoxes.chat2.show"
-        :doc="chatBoxes.chat2.doc"/>
+        v-if="docList[1]"
+        :doc="docList[1]"
+        :index="1"
+        v-on:closeChat="closeChatBox($event)"/>
     </v-card>
     <v-card style="position: absolute; right: 720px; bottom: 10px;
     height:auto; width:350px">
+    2
       <Chatbox
-      v-if="chatBoxes.chat3.show"
-      :doc="chatBoxes.chat3.doc"/>
+        v-if="docList[2]"
+        :doc="docList[2]"
+        :index="2"
+        v-on:closeChat="closeChatBox($event)"/>
     </v-card>
   </div>
 </template>
@@ -74,29 +83,7 @@ export default {
     // ChatboxBottom,
   },
   data: () => ({
-    chatBoxes: {
-      chat1: {
-        show: false,
-        vendorId: null,
-        renterId: null,
-        typeId: null,
-        doc: null,
-      },
-      chat2: {
-        show: false,
-        vendorId: null,
-        renterId: null,
-        typeId: null,
-        doc: null,
-      },
-      chat3: {
-        show: false,
-        vendorId: null,
-        renterId: null,
-        typeId: null,
-        doc: null,
-      },
-    },
+    docList: [],
   }),
   computed: {
     isLoading() {
@@ -119,19 +106,21 @@ export default {
       getUser: 'user/getUser',
     }),
     showChatBox(event) {
-      if (!this.chatBoxes.chat1.show) {
-        this.chatBoxes.chat1.show = true;
-        this.chatBoxes.chat1.doc = event;
-        this.chatBoxes.chat1.vendorId = event.vendorId;
-        this.chatBoxes.chat1.renterId = event.renterId;
-        this.chatBoxes.chat1.typeId = event.typeId;
-      } else if (!this.chatBoxes.chat1.show) {
-        this.chatBoxes.chat2.show = true;
-        this.chatBoxes.chat2.doc = event;
-      } else {
-        this.chatBoxes.chat3.show = true;
-        this.chatBoxes.chat3.doc = event;
+      // event is index of chatbox
+      if (!this.docList.includes(event)) {
+        if (this.docList.length <= 2) {
+          this.docList.push(event);
+        } else {
+          console.log(this.docList.length);
+          this.docList.pop();
+          console.log(this.docList.length);
+          this.docList.push(event);
+          console.log(this.docList.length);
+        }
       }
+    },
+    closeChatBox(event) {
+      this.docList.splice(event, 1); // because index
     },
   },
   async created() {

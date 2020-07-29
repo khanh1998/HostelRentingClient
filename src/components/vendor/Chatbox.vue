@@ -20,7 +20,7 @@
       </v-btn>
     </v-card>
     <div
-      class="rounded-l overflow-y-auto"
+      class="chatbox rounded-l overflow-y-auto"
       style="max-height: 350px;"
       id="chatbox"
     >
@@ -243,7 +243,7 @@ import { mapActions } from 'vuex';
 
 export default {
   name: 'ChatBox',
-  props: ['vendorId', 'renterId', 'typeId', 'groupId', 'doc'],
+  props: ['index', 'doc'],
   data: () => ({
     items: [],
     inputChat: {
@@ -260,13 +260,15 @@ export default {
     myOnScroll() { },
     sendMessage() {
       if (this.inputChat.model.length > 0) {
-        this.messageCollectonRef.add({
-          renter: false,
-          message: this.inputChat.model,
-          bargain: false,
-          booking: false,
-          createdAt: new Date(),
-        });
+        this.doc
+          .ref
+          .collection('messages').add({
+            renter: false,
+            message: this.inputChat.model,
+            bargain: false,
+            booking: false,
+            createdAt: Date.now(),
+          });
         this.$nextTick(() => this.scrollToBottom());
         this.inputChat.model = '';
       }
@@ -274,26 +276,30 @@ export default {
 
     acceptMessage() {
       // this.visible = true;
-      this.messageCollectonRef.add({
-        renter: false,
-        message: 'Chấp nhận trả giá của bạn',
-        bargain: true,
-        booking: false,
-        createdAt: new Date(),
-      });
+      this.doc
+        .ref
+        .collection('messages').add({
+          renter: false,
+          message: 'Chấp nhận trả giá của bạn',
+          bargain: true,
+          booking: false,
+          createdAt: Date.now(),
+        });
       this.$nextTick(() => this.scrollToBottom());
       // this.visible = false;
     },
 
     denyMessage() {
       // this.visible = true;
-      this.messageCollectonRef.add({
-        renter: false,
-        message: 'Từ chối trả giá của bạn',
-        bargain: true,
-        booking: false,
-        createdAt: new Date(),
-      });
+      this.doc
+        .ref
+        .collection('messages').add({
+          renter: false,
+          message: 'Từ chối trả giá của bạn',
+          bargain: true,
+          booking: false,
+          createdAt: Date.now(),
+        });
       this.$nextTick(() => this.scrollToBottom());
       // this.visible = false;
     },
@@ -302,7 +308,7 @@ export default {
       this.doc
         .ref
         .collection('messages')
-        .orderBy('createdAt', 'desc')
+        .orderBy('createdAt', 'asc')
         .onSnapshot((querySnapshot) => {
           const allMessages = [];
           querySnapshot.forEach((doc) => {
@@ -316,7 +322,8 @@ export default {
       chatbox.scrollTop = chatbox.scrollHeight;
     },
     closeChat() {
-      this.chatShow = false;
+      // this.chatShow = false;
+      this.$emit('closeChat', this.index);
     },
   },
   created() {

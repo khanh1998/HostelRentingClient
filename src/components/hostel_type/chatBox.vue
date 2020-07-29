@@ -196,6 +196,7 @@ export default {
         book: false,
         message: this.inputChat.text,
         createdAt: Date.now(),
+        renter: true,
       };
       if (type === null) {
         this.messCollectionRef.add(content);
