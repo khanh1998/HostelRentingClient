@@ -33,7 +33,15 @@
     </v-row>
     <v-card style="position: absolute; right: 20px; bottom: 10px;
     height:auto; width:350px">
-      <!-- <Chatbox /> -->
+      <Chatbox />
+    </v-card>
+    <v-card style="position: absolute; right: 370px; bottom: 10px;
+    height:auto; width:350px">
+      <Chatbox />
+    </v-card>
+    <v-card style="position: absolute; right: 720px; bottom: 10px;
+    height:auto; width:350px">
+      <Chatbox />
     </v-card>
   </div>
 </template>
