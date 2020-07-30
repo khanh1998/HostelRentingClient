@@ -43,7 +43,7 @@
               <v-row class="px-0 d-flex align-center">
                 <v-col class="col-9 pl-5 searchBar d-flex align-center">
                   <gmap-autocomplete
-                    placeholder="Tìm theo địa chỉ, địa điểm..."
+                    placeholder="Tìm theo địa chỉ, địa điểm thuy..."
                     class="col-11 gmap-input"
                     clearable
                     clear-icon="cancel"

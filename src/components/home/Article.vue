@@ -61,10 +61,11 @@
                     max-width="25"
                     max-height="25"
                   />
-                  <span class="item-text">Dùng riêng</span>
+                  <!-- eslint-disable -->
+                  <span class="item-text">{{facilities.find(f => f.name.includes("WC")).name}}</span>
                 </div>
               </div>
-              <div class="mt-3 d-flex align-center">
+              <!-- <div class="mt-3 d-flex align-center">
                 <v-img
                   class="shrink mr-5"
                   src="@/assets/home/energy.png"
@@ -72,9 +73,7 @@
                   max-width="20"
                   max-height="20"
                 />
-                <span class="item-text">3k/kwh</span>
-                <!-- eslint-disable -->
-                <!-- <span class="item-text">{{services.find(s=> s.name === "internet").price}}</span> -->
+                <span class="item-text">{{services.find(s=> s.name === "điện").price}}</span>
                 <div class="ml-auto d-flex">
                   <v-img
                     class="shrink mr-4 ml-auto"
@@ -84,8 +83,6 @@
                     max-height="25"
                   />
                   <span class="item-text">50k/người</span>
-                  <!-- eslint-disable -->
-                  <!-- <span class="item-text">{{services.find(s=> s.name === "nước").price}}</span> -->
                 </div>
                 <div class="ml-auto d-flex">
                   <v-img
@@ -95,16 +92,17 @@
                     max-width="25"
                     max-height="25"
                   />
-                  <span class="item-text">{{services.find(s=> s.name === "internet").price}}</span>
                 </div>
-              </div>
+              </div>-->
               <div class="mt-3 d-flex align-center">
                 <span class="item-text">Giới nghiêm:</span>
-                <div class="ml-auto d-flex left">
-                  <span class="item-text">Trước 12h đêm</span>
+                <div class="d-flex ml-1 left">
+                  <span class="item-text" v-if="group.curfewTime == '-1'">Không</span>
+                  <span class="item-text" v-else>{{group.curfewTime}}</span>
                 </div>
                 <div class="ml-auto d-flex">
-                  <span class="item-text">Không chung chủ</span>
+                  <span class="item-text" v-if="group.ownerJoin == false">Không chung chủ</span>
+                  <span class="item-text" v-else>Chung chủ</span>
                 </div>
               </div>
               <v-card-actions class="pl-0 mt-3">
@@ -317,10 +315,20 @@ export default {
     },
     services() {
       return this.type.services.map((s) => ({
-        name: s.serviceName,
+        name: s.service.serviceName,
         price: `${s.servicePrice} ${s.priceUnit}/${s.userUnit}`,
       }));
     },
+    facilities() {
+      return this.type.facilities.map((f) => ({
+        name: f.facilityName,
+      }));
+    },
+    // toiletFacility() {
+    //   return this.type.facilities.map((t) => ({
+
+    //   }));
+    // },
     res() {
       return this.$vuetify.breakpoint.name;
     },

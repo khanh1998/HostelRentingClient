@@ -160,7 +160,7 @@ const actions = {
     // params = {lat, long}
     try {
       commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
-      const url = `/api/v1/types?distance=5&latitude=${params.lat}&longitude=${params.long}&page=1&size=50`;
+      const url = `/api/v1/types?distance=5&latitude=${params.lat}&longitude=${params.long}&page=1&size=5`;
       const res = await window.axios.get(url);
       if (res.status === 200) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);

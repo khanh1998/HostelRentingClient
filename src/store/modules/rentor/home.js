@@ -18,14 +18,18 @@ const myState = () => ({
 });
 const getters = {
   getHostelGroupById: (state) => (id) => {
-    const result = state.hostelGroups.data.filter((group) => group.groupId === id);
+    const result = state.hostelGroups.data.filter(
+      (group) => group.groupId === id,
+    );
     if (result.length > 0) {
       return result[0];
     }
     return null;
   },
   getHostelTypeById: (state) => (id) => {
-    const result = state.hostelTypes.data.filter((type) => type.typeId === Number(id));
+    const result = state.hostelTypes.data.filter(
+      (type) => type.typeId === Number(id),
+    );
     if (result.length > 0) {
       console.log('finded');
       return result[0];
@@ -58,7 +62,9 @@ const actions = {
   async getHostelTypes({ commit }, params) {
     // params = { page, size }
     commit(mutationTypes.GET_HOSTEL_TYPES_REQUEST);
-    const response = await window.axios.get(`/api/v1/types?page=${params.page}&size=${params.size}`);
+    const response = await window.axios.get(
+      `/api/v1/types?page=${params.page}&size=${params.size}`,
+    );
     if (response.status === 200) {
       commit(mutationTypes.GET_HOSTEL_TYPES_SUCCESS, response.data.data);
     } else {
