@@ -10,9 +10,7 @@
         <v-col cols="12" class="item-classic-inner d-flex justify-start">
           <v-col cols="4" class="item-classic-left left">
             <div class="item-classic-media">
-              <v-img
-                :src="'https://tiendoduan.org/wp-content/uploads/2020/04/can-ho-mini-25m2.jpg'"
-              >
+              <v-img :src="type.typeImages[0].resourceUrl" v-if="type.typeImages.length !== 0">
                 <div class="top">
                   Top
                   <v-icon right color="white">{{numberIcons[index-1]}}</v-icon>
@@ -53,7 +51,10 @@
                   />
                   <span class="item-text">{{type.capacity}} người</span>
                 </div>
-                <div class="ml-auto d-flex">
+                <div
+                  class="ml-auto d-flex"
+                  v-if="type.facilities.filter(f => f.facilityName.includes('WC')).length !== 0"
+                >
                   <v-img
                     class="shrink mr-4 ml-auto"
                     src="@/assets/home/toilet.png"
@@ -61,8 +62,10 @@
                     max-width="25"
                     max-height="25"
                   />
-                  <!-- eslint-disable -->
-                  <span class="item-text">{{facilities.find(f => f.name.includes("WC")).name}}</span>
+                  <span class="item-text">
+                    <!-- eslint-enable -->
+                    {{type.facilities.filter(f => f.facilityName.includes("WC"))[0].facilityName}}
+                  </span>
                 </div>
               </div>
               <!-- <div class="mt-3 d-flex align-center">
@@ -97,8 +100,8 @@
               <div class="mt-3 d-flex align-center">
                 <span class="item-text">Giới nghiêm:</span>
                 <div class="d-flex ml-1 left">
-                  <span class="item-text" v-if="group.curfewTime == '-1'">Không</span>
-                  <span class="item-text" v-else>{{group.curfewTime}}</span>
+                  <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
+                  <span class="item-text">{{group.curfewTime}}</span>
                 </div>
                 <div class="ml-auto d-flex">
                   <span class="item-text" v-if="group.ownerJoin == false">Không chung chủ</span>
@@ -311,6 +314,7 @@ export default {
   },
   computed: {
     isLoadingProvinces() {
+      console.log(`${this.group.curfewTime}thuy`);
       return this.$store.state.renter.common.provinces.isLoading;
     },
     services() {
@@ -324,11 +328,6 @@ export default {
         name: f.facilityName,
       }));
     },
-    // toiletFacility() {
-    //   return this.type.facilities.map((t) => ({
-
-    //   }));
-    // },
     res() {
       return this.$vuetify.breakpoint.name;
     },
