@@ -243,7 +243,10 @@ import { mapActions } from 'vuex';
 
 export default {
   name: 'ChatBox',
-  props: ['index', 'doc'],
+  props: {
+    index: Number,
+    doc: Object,
+  },
   data: () => ({
     items: [],
     inputChat: {

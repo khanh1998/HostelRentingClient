@@ -36,29 +36,26 @@
     </v-row>
     <v-card style="position: absolute; right: 20px; bottom: 10px;
     height:auto; width:350px">
-    0
       <Chatbox
-        v-if="docList[0]"
-        :doc="docList[0]"
-        :index="0"
+        v-if="this.docs.doc1"
+        :doc="this.docs.doc1"
+        :index="1"
         v-on:closeChat="closeChatBox($event)"/>
     </v-card>
     <v-card style="position: absolute; right: 370px; bottom: 10px;
     height:auto; width:350px">
-    1
       <Chatbox
-        v-if="docList[1]"
-        :doc="docList[1]"
-        :index="1"
+        v-if="this.docs.doc2"
+        :doc="this.docs.doc2"
+        :index="2"
         v-on:closeChat="closeChatBox($event)"/>
     </v-card>
     <v-card style="position: absolute; right: 720px; bottom: 10px;
     height:auto; width:350px">
-    2
       <Chatbox
-        v-if="docList[2]"
-        :doc="docList[2]"
-        :index="2"
+        v-if="this.docs.doc3"
+        :doc="this.docs.doc3"
+        :index="3"
         v-on:closeChat="closeChatBox($event)"/>
     </v-card>
   </div>
@@ -84,6 +81,11 @@ export default {
   },
   data: () => ({
     docList: [],
+    docs: {
+      doc1: null,
+      doc2: null,
+      doc3: null,
+    },
   }),
   computed: {
     isLoading() {
@@ -107,20 +109,49 @@ export default {
     }),
     showChatBox(event) {
       // event is index of chatbox
-      if (!this.docList.includes(event)) {
-        if (this.docList.length <= 2) {
-          this.docList.push(event);
-        } else {
-          console.log(this.docList.length);
-          this.docList.pop();
-          console.log(this.docList.length);
-          this.docList.push(event);
-          console.log(this.docList.length);
+      for (const [key, value] of Object.entries(this.docs)) { // eslint-disable-line
+        console.log(key);
+        if (value === event) {
+          return;
+        }
+        if (!value) {
+          this.docs[key] = event;
+          return;
         }
       }
+      this.docs.doc3 = null;
+      this.$nextTick(() => {
+        this.docs.doc3 = event;
+      });
     },
     closeChatBox(event) {
-      this.docList.splice(event, 1); // because index
+      console.log(typeof event);
+      console.log(event);
+      const { doc1, doc2, doc3 } = this.docs; // eslint-disable-line
+      switch (event) {
+        case 1:
+          this.docs.doc1 = null;
+          this.docs.doc2 = null;
+          this.docs.doc3 = null;
+          this.$nextTick(() => {
+            this.docs.doc1 = doc2;
+            this.docs.doc2 = doc3;
+          });
+          break;
+        case 2:
+          this.docs.doc2 = null;
+          this.docs.doc3 = null;
+          this.$nextTick(() => {
+            this.docs.doc2 = doc3;
+          });
+          break;
+        case 3:
+          this.docs.doc3 = null;
+          break;
+        default:
+          console.log('why it go in default slot?');
+          break;
+      }
     },
   },
   async created() {
