@@ -217,6 +217,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import firebase from '../../config/firebase';
 
 const { store } = firebase;
@@ -314,9 +315,8 @@ export default {
       dialogDeny: false,
       conservations: [],
       docRefs: [],
-      lastedMessages: [],
-      messageCollectionRefs: [],
       docs: [],
+      renterIds: [],
     };
   },
   computed: {
@@ -342,11 +342,18 @@ export default {
     isLoadingUser() {
       return this.$store.state.user.user.isLoading;
     },
-    theLastedMessages() {
-      return this.lastedMessages;
+    renterList() {
+      return this.$store.state.renter.overview.usersChatList.data;
+    },
+    isLoadingRenterList() {
+      return this.$store.state.renter.overview.usersChatList.isLoadings;
     },
   },
   methods: {
+    ...mapActions({
+      getUserByIds: 'vendor/overview/getUserByIds',
+      addUserToListById: 'vendor/overview/addUserToListById',
+    }),
     acceptMessage() {
       // this.visible = true;
       this.dialogAccept = false;
@@ -404,13 +411,13 @@ export default {
         .onSnapshot((querySnapshot) => {
           this.docRefs = [];
           this.docs = [];
+          this.renterIds = [];
           querySnapshot.docs.map(async (doc) => {
-            // const lasted = await this.getLastedMessage(doc);
-            // this.lastedMessages.push(lasted);
             this.docRefs.push(doc);
-            // doc.ref.collection('').orderBy('').where().onSnapshot()
             this.docs.push({ ...doc.data(), id: doc.id });
+            this.renterIds.push(doc.data().renterId);
           });
+          this.getUserByIds(this.renterIds);
         });
       await this.docRefs.forEach((docRef, index) => {
         docRef

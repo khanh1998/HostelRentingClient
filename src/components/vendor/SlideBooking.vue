@@ -31,7 +31,7 @@
             </v-col>
             <v-list-item class="mb-2 pt-2">
               <v-list-item-avatar>
-                <v-img src="https://cdn.vuetifyjs.com/images/lists/1.jpg"></v-img>
+                <v-img :src="booking.renter.avatar"></v-img>
               </v-list-item-avatar>
               <v-list-item-content class="pl-4">
                 <v-list-item-title

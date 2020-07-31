@@ -84,7 +84,7 @@
       <v-list v-scroll.self="myOnScroll" align="center" justify="center">
         <v-list-item v-for="item in items" v-bind:key="item.createdAt">
           <v-list-item-content>
-            <div v-if="item.renter" class="d-flex justify-end">
+            <div v-if="item.sender === 'renter'" class="d-flex justify-end">
               <v-icon v-if="item.book || item.bargain">info</v-icon>
 
               <span
@@ -92,15 +92,19 @@
                 v-ripple
                 style="width: 75%"
                 class="blue lighten-5 pa-2 rounded"
-              >Bạn đã trả giá : {{item.message}} {{info.priceUnit}}</span>
+              >Bạn đã trả giá : {{item.bargain.newPrice}} {{info.priceUnit}}</span>
 
               <span
                 v-else-if="item.book"
                 v-ripple
                 style="width: 75%"
                 class="blue lighten-5 pa-2 rounded max-w-3/4"
-              >Bạn đã đặt lịch vào: {{item.message}}</span>
-
+              >
+                Bạn đã đặt lịch vào: {{item.book.time}} {{item.book.date}}
+                <v-btn color="amber" v-if="!item.book.cancel" small>
+                  Hủy hẹn
+                </v-btn>
+              </span>
               <span
                 v-else
                 v-ripple
@@ -108,7 +112,7 @@
                 class="blue lighten-5 pa-2 rounded max-w-3/4"
               >{{item.message}}</span>
             </div>
-            <div v-if="!item.renter" class="d-flex justify-start">
+            <div v-if="item.sender === 'vendor'" class="d-flex justify-start">
               <span
                 style="width: 75%"
                 v-ripple
@@ -143,7 +147,11 @@
           <v-chip color="amber" @click="bargainOverlay.show = true">
             <v-icon color="white" class="mr-1">monetization_on</v-icon>Trả giá
           </v-chip>
-          <v-chip color="green" @click="dateTimeOverlay.show = true">
+          <v-chip
+            v-if="!isLoadingDeals || hasPendingBooking"
+            color="green"
+            @click="dateTimeOverlay.show = true"
+          >
             <v-icon color="white" class="mr-1">schedule</v-icon>Đặt lịch
           </v-chip>
         </v-chip-group>
@@ -152,7 +160,7 @@
   </v-card>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
 import firebase from '../../config/firebase';
 
@@ -166,13 +174,21 @@ export default {
   methods: {
     ...mapActions({
       getUser: 'user/getUser',
+      createBooking: 'user/createBooking',
+      getDeals: 'user/getDeals',
+      getBookings: 'user/getBookings',
     }),
     myOnScroll() {},
     bargain(content) {
       this.bargainOverlay.show = false;
       const newContent = content;
-      newContent.bargain = true;
-      newContent.message = this.bargainOverlay.price;
+      newContent.bargain = {
+        originalPrice: this.info.price,
+        newPrice: this.bargainOverlay.price,
+        status: 'wait',
+        typeName: this.info.title,
+        groupAdd: this.group.street,
+      };
       this.messCollectionRef.add(newContent);
       this.messCollectionRef.parent.update({
         lastedMessage: content,
@@ -181,22 +197,40 @@ export default {
     book(content) {
       this.bargainOverlay.show = false;
       const newContent = content;
-      newContent.book = true;
       const { date } = this.dateTimeOverlay;
-      newContent.message = `${this.getSimpleFormatDate(date)} từ
-        ${this.dateTimeOverlay.time}`;
-      this.messCollectionRef.add(newContent);
-      this.messCollectionRef.parent.update({
-        lastedMessage: content,
-      });
+      newContent.book = {
+        date: this.getSimpleFormatDate(date),
+        time: this.dateTimeOverlay.time,
+        cancel: false,
+      };
+      const renterId = this.userState.data.userId;
+      const { vendorId, typeId } = this.id;
+      const lastedDeal = this.findLastedDeal(renterId, vendorId, typeId);
+      const bookingToApi = {
+        renterId,
+        vendorId,
+        typeId,
+        startTime: date.getTime(),
+        dealId: lastedDeal ? lastedDeal.dealId : null,
+        statusId: 1,
+      };
+      console.log(bookingToApi);
+      this.createBooking(bookingToApi)
+        .then(() => {
+          newContent.book.bookingId = this.newlyCreatedBooking.bookingId;
+          this.messCollectionRef.add(newContent);
+          this.messCollectionRef.parent.update({
+            lastedMessage: content,
+          });
+        });
     },
     sendMessage(type = null) {
       const content = {
-        bargain: false,
-        book: false,
+        bargain: null,
+        book: null,
         message: this.inputChat.text,
         createdAt: Date.now(),
-        renter: true,
+        sender: 'renter',
       };
       if (type === null) {
         this.messCollectionRef.add(content);
@@ -208,10 +242,15 @@ export default {
       }
       this.messCollectionRef.parent.update({
         updated: Date.now(),
-        lastedMessage: content,
+        lastedMessage: {
+          ...content,
+          seen: false,
+        },
       });
-      this.$nextTick(() => this.scrollToBottom());
-      this.inputChat.text = '';
+      this.$nextTick(() => {
+        this.scrollToBottom();
+        this.inputChat.text = '';
+      });
     },
     async createDoc() {
       const { userId } = this.userState.data;
@@ -289,10 +328,35 @@ export default {
   }),
   created() {
     this.fetchMessages();
-    this.getUser();
+    Promise.all([this.getUser]).then(() => {
+      this.getDeals();
+      this.getBookings();
+    });
     this.bargainOverlay.price = this.info.price;
   },
   computed: {
+    ...mapGetters({
+      findLastedDeal: 'user/findLastedDeal',
+      findPendingBooking: 'user/findPendingBooking',
+    }),
+    hasPendingDeal() {
+      const renterId = this.userState.data.userId;
+      const { vendorId, typeId } = this.id;
+      const res = this.findLastedDeal(renterId, vendorId, typeId);
+      if (!res) {
+        return true;
+      }
+      return false;
+    },
+    hasPendingBooking() {
+      const renterId = this.userState.data.userId;
+      const { vendorId, typeId } = this.id;
+      const res = this.findPendingBooking(renterId, vendorId, typeId);
+      if (!res) {
+        return false;
+      }
+      return true;
+    },
     userState() {
       return this.$store.state.user.user;
     },
@@ -303,6 +367,15 @@ export default {
         renterId: this.userState.renterId,
         vendorId: this.group.vendorId,
       };
+    },
+    isCreatingBooking() {
+      return this.$store.state.user.bookings.isLoading;
+    },
+    newlyCreatedBooking() {
+      return this.$store.state.user.bookings.newlyCreated;
+    },
+    isLoadingDeals() {
+      return this.$store.state.user.deals.isLoading;
     },
   },
 };
