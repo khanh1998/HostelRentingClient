@@ -62,6 +62,7 @@
             :rating="{average: 3.5, total: 30}"
             :groupId="group.groupId"
             :typeId="info.typeId"
+            :vendorId="group.vendorId"
             v-on:openMessage="chatBox.show = true"
           />
         </v-col>

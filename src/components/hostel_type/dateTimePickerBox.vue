@@ -43,6 +43,7 @@
             width="80%"
             class="ma-6"
             depressed
+            :disabled="hasPendingBooking"
             @click="dateTimePicker.isOpenPicker = true"
           >
             <v-icon left>fas fa-paper-plane</v-icon>ĐẶT LỊCH XEM PHÒNG
@@ -77,6 +78,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
 import sendBookingRequest from '../../utils/booking';
 
@@ -88,6 +90,7 @@ export default {
     rating: Object,
     groupId: Number,
     typeId: Number,
+    vendorId: Number,
   },
   data: () => ({
     dateTimePicker: {
@@ -142,6 +145,22 @@ export default {
       this.dateTimePicker.date = event.date;
       this.dateTimePicker.time = event.time;
       await this.sendBooking();
+    },
+  },
+  computed: {
+    ...mapGetters({
+      findPendingBooking: 'user/findPendingBooking',
+    }),
+    hasPendingBooking() {
+      const renterId = this.userState.data.userId;
+      const res = this.findPendingBooking(renterId, this.vendorId, this.typeId);
+      if (!res) {
+        return false;
+      }
+      return true;
+    },
+    userState() {
+      return this.$store.state.user.user;
     },
   },
 };

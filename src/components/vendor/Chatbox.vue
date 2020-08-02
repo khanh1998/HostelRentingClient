@@ -1,5 +1,33 @@
 <template>
   <div v-if="chatShow">
+    <v-overlay v-model="dialogAccept" width="350" absolute>
+      <v-card>
+        <v-card-title style="backgroundColor: #98B7D7; color: white">
+          Xác nhận</v-card-title>
+        <v-card-text class="text-center mt-3" style="fontSize:20px;">
+          Bạn sẽ chấp nhận trả giá này ?</v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="acceptMessage">Đồng ý</v-btn>
+          <v-btn color="primary" text @click="dialogAccept = false">Hủy</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-overlay>
+    <v-overlay v-model="dialogDeny" width="350" absolute>
+      <v-card>
+        <v-card-title style="backgroundColor: #98B7D7; color: white">
+          Xác nhận</v-card-title>
+        <v-card-text class="text-center mt-3" style="fontSize:20px;">
+          Bạn sẽ từ chối trả giá này ?</v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="denyMessage">Đồng ý</v-btn>
+          <v-btn color="primary" text @click="dialogDeny = false">Hủy</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-overlay>
     <v-card
       v-if="!userState.isLoading && userState.success"
       width="100%"
@@ -7,15 +35,15 @@
     >
       <div class="d-flex flex-nowrap align-center">
         <v-avatar>
-          <v-img src="@/assets/suzy-avatar.jpg"></v-img>
+          <v-img :src="renter.avatar"></v-img>
         </v-avatar>
-        <p class="font-weight-medium mb-0 ml-2">HyunA</p>
+        <p class="font-weight-medium mb-0 ml-2">{{renter.username}}</p>
       </div>
       <v-btn icon color="red" @click="closeChat()">
         <v-icon>clear</v-icon>
       </v-btn>
     </v-card>
-    <div class="chatbox rounded-l overflow-y-auto" style="max-height: 350px;" id="chatbox">
+    <div class="chatbox rounded-l overflow-y-auto chatbox" style="max-height: 350px;" id="chatbox">
       <v-list
         v-scroll.self="myOnScroll"
         align="center"
@@ -23,10 +51,20 @@
         max-height="auto"
         min-height="350px"
       >
+        <v-list-item color="success" two-line>
+          <v-list-item-icon>
+            <v-icon>info</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>{{type.title}}</v-list-item-title>
+            <v-list-item-subtitle>{{type.price}} {{type.priceUnit}}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider />
         <v-list-item v-for="(item, i) in items" v-bind:key="i">
           <v-list-item-content>
             <div v-if="item.sender === 'renter'" class="d-flex justify-start">
-              <div v-if="item.bargain" class="border-deal">
+              <div v-if="item.bargain" class="border-deal pa-1">
                 <v-row>
                   <v-col cols="12">
                     <span
@@ -35,77 +73,39 @@
                     >{{item.bargain.typeName}}</span>
                   </v-col>
                   <v-col cols="12" class="d-flex justify-left align-center">
-                    <div style="fontSize:18px">
-                      <p>
-                        <span style="color:#98B7D7">Giá gốc:</span>
-                        <span style="color:red">{{item.bargain.originalPrice}} Triệu</span>
-                      </p>
-                      <p>
-                        <span style="color:#98B7D7">Trả giá:</span>
-                        <span>{{ item.bargain.newPrice}} Triệu</span>
-                      </p>
-                    </div>
+                    <p>
+                      <span style="color:#98B7D7">Giá gốc:</span>
+                      <span style="color:red">{{item.bargain.originalPrice}} Triệu</span>
+                    </p>
+                    <p>
+                      <span style="color:#98B7D7">Trả giá:</span>
+                      <span>{{ item.bargain.newPrice}} Triệu</span>
+                    </p>
                   </v-col>
                 </v-row>
                 <v-col cols="12" class="d-flex justify-center">
                   <v-row class="d-flex justify-center">
-                    <v-dialog v-model="dialogAccept" width="350">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          color="#EF7239"
-                          dark
-                          v-bind="attrs"
-                          v-on="on"
-                          style="width:80px; height:20px"
-                          class="mx-1"
-                        >Chấp nhận</v-btn>
-                      </template>
-
-                      <v-card>
-                        <v-card-title style="backgroundColor: #98B7D7; color: white">
-                          Xác nhận</v-card-title>
-                        <v-card-text
-                          class="text-center mt-3"
-                          style="fontSize:20px;"
-                        >Bạn sẽ chấp nhận trả giá này ?</v-card-text>
-
-                        <v-divider></v-divider>
-
-                        <v-card-actions>
-                          <v-spacer></v-spacer>
-                          <v-btn color="primary" text @click="acceptMessage">Đồng ý</v-btn>
-                          <v-btn color="primary" text @click="dialogAccept = false">Hủy</v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="dialogDeny" width="350">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          color="#F3F3F3"
-                          v-bind="attrs"
-                          v-on="on"
-                          style="width:80px; height:20px"
-                          class="mx-1"
-                        >Từ chối</v-btn>
-                      </template>
-
-                      <v-card>
-                        <v-card-title style="backgroundColor: #98B7D7; color: white">
-                          Xác nhận</v-card-title>
-                        <v-card-text
-                          class="text-center mt-3"
-                          style="fontSize:20px;"
-                        >Bạn sẽ từ chối trả giá này ?</v-card-text>
-
-                        <v-divider></v-divider>
-
-                        <v-card-actions>
-                          <v-spacer></v-spacer>
-                          <v-btn color="primary" text @click="denyMessage">Đồng ý</v-btn>
-                          <v-btn color="primary" text @click="dialogDeny = false">Hủy</v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
+                    <div v-if="item.bargain.status === 'wait'">
+                      <v-btn
+                        color="#F3F3F3"
+                        style="width:80px; height:20px"
+                        class="mx-1"
+                        @click="showBargainReplyOverlay(item.id, 'deny')"
+                      >Từ chối</v-btn>
+                      <v-btn
+                        color="#EF7239"
+                        dark
+                        style="width:80px; height:20px"
+                        class="mx-1"
+                        @click="showBargainReplyOverlay(item.id, 'accept')"
+                      >Chấp nhận</v-btn>
+                    </div>
+                    <p v-if="item.bargain.status === 'accept'">
+                      Đã đồng ý
+                    </p>
+                    <p v-if="item.bargain.status === 'deny'">
+                      Đã không đồng ý
+                    </p>
                   </v-row>
                 </v-col>
               </div>
@@ -128,14 +128,20 @@
                 style="width: auto; max-width: 75%; "
                 v-ripple
                 class="green lighten-5 pa-2 rounded"
-                v-if="item.book"
-              >{{item.book.date}} {{item.book.time}}</span>
+                v-if="!item.book && !item.bargain"
+              >{{item.message}}</span>
               <span
                 style="width: auto; max-width: 75%; "
                 v-ripple
                 class="green lighten-5 pa-2 rounded"
-                v-if="item.bargain"
-              >{{'reply to bargain'}}</span>
+                v-if="item.bargain && item.bargain.dealId"
+              >Bạn đã đồng ý với mức giá trên</span>
+              <span
+                style="width: auto; max-width: 75%; "
+                v-ripple
+                class="red lighten-5 pa-2 rounded"
+                v-if="item.bargain && !item.bargain.dealId"
+              >Bạn đã không đồng ý với mức giá trên</span>
             </div>
           </v-list-item-content>
         </v-list-item>
@@ -151,9 +157,15 @@
         v-model="inputChat.model"
         class="ma-1"
         hide-details
+        :disabled="hasAPendingBargain"
         v-on:keyup.enter="sendMessage"
       ></v-text-field>
-      <v-btn color="#7794F8" class="ma-1" depressed @click="sendMessage">
+      <v-btn color="#7794F8"
+        class="ma-1"
+        depressed
+        @click="sendMessage"
+        :disabled="hasAPendingBargain"
+      >
         <v-icon color="white">far fa-paper-plane</v-icon>
       </v-btn>
     </div>
@@ -161,7 +173,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 // import firebase from '../../config/firebase';
 
 // const { store } = firebase;
@@ -181,19 +193,30 @@ export default {
     chatShow: true,
     dialogAccept: false,
     dialogDeny: false,
+    bargainDocId: null,
   }),
   methods: {
     ...mapActions({
       getUser: 'user/getUser',
+      createDeal: 'user/createDeal',
     }),
+    showBargainReplyOverlay(docId, type) {
+      this.bargainDocId = docId;
+      if (type === 'accept') {
+        this.dialogAccept = true;
+      }
+      if (type === 'deny') {
+        this.dialogDeny = true;
+      }
+    },
     myOnScroll() {},
     sendMessage() {
       if (this.inputChat.model.length > 0) {
         this.doc.ref.collection('messages').add({
-          renter: false,
+          sender: 'vendor',
           message: this.inputChat.model,
-          bargain: false,
-          booking: false,
+          bargain: null,
+          booking: null,
           createdAt: Date.now(),
         });
         this.$nextTick(() => this.scrollToBottom());
@@ -201,28 +224,48 @@ export default {
       }
     },
 
-    acceptMessage() {
-      // this.visible = true;
+    async acceptMessage() {
+      const { renterId, vendorId, typeId } = this.doc.data();
+      const lastedBargain = this.items[this.items.length - 1].bargain;
+      const deal = {
+        offeredPrice: lastedBargain.newPrice,
+        renterId,
+        typeId,
+        vendorId,
+      };
+      await this.createDeal(deal);
+      this.doc.ref.collection('messages').doc(this.bargainDocId).update({
+        'bargain.status': 'accept',
+      });
       this.doc.ref.collection('messages').add({
-        renter: false,
+        sender: 'vendor',
         message: 'Chấp nhận trả giá của bạn',
-        bargain: true,
+        bargain: {
+          reply: 'accept',
+          dealId: this.newlyCreatedDeal.dealId,
+        },
         booking: false,
         createdAt: Date.now(),
       });
+      this.dialogAccept = false;
       this.$nextTick(() => this.scrollToBottom());
-      // this.visible = false;
     },
 
     denyMessage() {
-      // this.visible = true;
+      console.log(this.bargainDocId);
+      this.doc.ref.collection('messages').doc(this.bargainDocId).update({
+        'bargain.status': 'deny',
+      });
       this.doc.ref.collection('messages').add({
-        renter: false,
+        sender: 'vendor',
         message: 'Từ chối trả giá của bạn',
-        bargain: true,
+        bargain: {
+          reply: 'deny',
+        },
         booking: false,
         createdAt: Date.now(),
       });
+      this.dialogDeny = false;
       this.$nextTick(() => this.scrollToBottom());
       // this.visible = false;
     },
@@ -234,14 +277,18 @@ export default {
         .onSnapshot((querySnapshot) => {
           const allMessages = [];
           querySnapshot.forEach((doc) => {
-            allMessages.push(doc.data());
+            allMessages.push({ ...doc.data(), id: doc.id });
           });
           this.items = allMessages;
+          this.$nextTick(() => this.scrollToBottom());
         });
     },
     scrollToBottom() {
-      const chatbox = this.$el.querySelector('#chatbox');
-      chatbox.scrollTop = chatbox.scrollHeight;
+      const chatboxes = this.$el.querySelectorAll('.chatbox');
+      for (let i = 0; i < chatboxes.length; i += 1) {
+        chatboxes[i].scrollTop = chatboxes[i].scrollHeight;
+        console.log(chatboxes[i]);
+      }
     },
     closeChat() {
       // this.chatShow = false;
@@ -250,18 +297,39 @@ export default {
   },
   created() {
     this.fetchMessages();
-    this.getUser();
   },
   computed: {
+    ...mapGetters({
+      getUserById: 'vendor/overview/getUserById',
+      findTypesById: 'vendor/group/findTypesById',
+    }),
+    hasAPendingBargain() {
+      const mess = this.items[this.items.length - 1];
+      if (mess && mess.bargain && mess.bargain.status === 'wait') {
+        return true;
+      }
+      return false;
+    },
+    type() {
+      return this.findTypesById(this.doc.data().typeId);
+    },
     userState() {
       return this.$store.state.user.user;
     },
     renterId() {
       return this.doc.data().renterId;
     },
+    renter() {
+      return this.getUserById(this.renterId);
+    },
+    newlyCreatedDeal() {
+      return this.$store.state.user.deals.newlyCreated;
+    },
   },
   mounted() {
-    this.$nextTick(() => this.scrollToBottom());
+    if (!this.userState) {
+      this.getUser();
+    }
   },
 };
 </script>

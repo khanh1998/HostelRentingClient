@@ -101,7 +101,12 @@
                 class="blue lighten-5 pa-2 rounded max-w-3/4"
               >
                 Bạn đã đặt lịch vào: {{item.book.time}} {{item.book.date}}
-                <v-btn color="amber" v-if="!item.book.cancel" small>
+                <v-btn
+                  color="amber"
+                  v-if="!item.book.cancel"
+                  small
+                  @click="doCancelBooking(item.book.bookingId, item.id)"
+                >
                   Hủy hẹn
                 </v-btn>
               </span>
@@ -117,7 +122,23 @@
                 style="width: 75%"
                 v-ripple
                 class="green lighten-5 pa-2 rounded max-w-3/4"
+                v-if="!item.book && !item.bargain"
               >{{item.message}}</span>
+              <span
+                style="width: 75%"
+                v-ripple
+                class="green lighten-5 pa-2 rounded max-w-3/4"
+                v-if="item.bargain && item.bargain.dealId"
+              >Chủ trọ đồng ý với mức giá bạn đề xuất.
+                <v-btn small color="amber" class="mt-2">Hủy thỏa thuận</v-btn>
+              </span>
+              <span
+                style="width: 75%"
+                v-ripple
+                class="red lighten-5 pa-2 rounded max-w-3/4"
+                v-if="item.bargain && !item.bargain.dealId"
+              >Chủ trọ không đồng ý với mức giá bạn đề xuất.
+              </span>
             </div>
           </v-list-item-content>
         </v-list-item>
@@ -144,11 +165,15 @@
       </div>
       <div class="d-flex flex-no-wrap pl-1">
         <v-chip-group>
-          <v-chip color="amber" @click="bargainOverlay.show = true">
+          <v-chip
+            color="amber"
+            @click="bargainOverlay.show = true"
+            v-if="!hasPendingDeal && !hasPendingBooking"
+          >
             <v-icon color="white" class="mr-1">monetization_on</v-icon>Trả giá
           </v-chip>
           <v-chip
-            v-if="!isLoadingDeals || hasPendingBooking"
+            v-if="!isLoadingDeals && !hasPendingBooking"
             color="green"
             @click="dateTimeOverlay.show = true"
           >
@@ -177,6 +202,9 @@ export default {
       createBooking: 'user/createBooking',
       getDeals: 'user/getDeals',
       getBookings: 'user/getBookings',
+      getDeal: 'user/getDeal',
+      cancelDeal: 'user/cancelDeal',
+      cancelBooking: 'user/cancelBooking',
     }),
     myOnScroll() {},
     bargain(content) {
@@ -210,9 +238,9 @@ export default {
         renterId,
         vendorId,
         typeId,
-        startTime: date.getTime(),
+        meetTime: `${date.getTime()}`,
         dealId: lastedDeal ? lastedDeal.dealId : null,
-        statusId: 1,
+        status: 'INCOMING',
       };
       console.log(bookingToApi);
       this.createBooking(bookingToApi)
@@ -281,10 +309,18 @@ export default {
         .orderBy('createdAt', 'asc')
         .onSnapshot((querySnapshot) => {
           const items = [];
+          this.dealIds = [];
           querySnapshot.forEach((doc) => {
-            items.push(doc.data());
+            const data = doc.data();
+            items.push(data);
+            if (data.bargain && data.bargain.dealId) {
+              this.dealIds.push(data.bargain.dealId);
+            }
           });
           this.items = items;
+          if (this.dealIds.length > 0) {
+            this.getDeals();
+          }
           this.$nextTick(() => this.scrollToBottom());
         });
     },
@@ -302,6 +338,17 @@ export default {
       return `${date.getDate()}/
             ${date.getMonth()}/
             ${date.getFullYear()}`;
+    },
+    doCancelDeal(dealId) {
+      this.cancelDeal(dealId);
+    },
+    doCancelBooking(bookingId, docId) {
+      this.cancelBooking(bookingId).then(() => {
+        this.messCollectionRef.doc(docId).update({
+          'book.cancel': true,
+        });
+        this.getBookings();
+      });
     },
   },
   mounted() {
@@ -325,6 +372,7 @@ export default {
     items: [],
     messCollectionRef: null,
     docRef: null,
+    dealIds: [],
   }),
   created() {
     this.fetchMessages();
@@ -343,7 +391,7 @@ export default {
       const renterId = this.userState.data.userId;
       const { vendorId, typeId } = this.id;
       const res = this.findLastedDeal(renterId, vendorId, typeId);
-      if (!res) {
+      if (res) {
         return true;
       }
       return false;

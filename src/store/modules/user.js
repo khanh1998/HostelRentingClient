@@ -6,23 +6,24 @@ const myState = () => ({
     error: null,
   },
   contracts: {
-    data: null,
+    data: [],
     isLoading: false,
     success: null,
     error: null,
   },
   bookings: {
-    data: null,
+    data: [],
     isLoading: false,
     success: null,
     error: null,
     newlyCreated: null,
   },
   deals: {
-    data: null,
+    data: [],
     isLoading: false,
     success: null,
     error: null,
+    newlyCreated: null,
   },
 });
 
@@ -32,12 +33,14 @@ const myGetters = {
     let result = state.deals.data.filter((deal) => {
       if (deal.renter.renterId === renterId
         && deal.vendor.vendorId === vendorId
-        && deal.type.typeId === typeId) {
+        && deal.type.typeId === typeId
+        && deal.status === 'CREATED') {
         return true;
       }
       return false;
     });
     result = result.sort((deal1, deal2) => deal1.creationTime - deal2.creationTime);
+    console.log(`lasted deal: ${result[0]}`);
     return result[0];
   },
   findPendingBooking: (state) => (renterId, vendorId, typeId) => {
@@ -45,11 +48,12 @@ const myGetters = {
       if (booking.renter.renterId === renterId
         && booking.vendor.vendorId === vendorId
         && booking.type.typeId === typeId
-        && booking.status.statusId === 1) { // status id == 1 means the booking is pending
+        && booking.status === 'INCOMING') {
         return true;
       }
       return false;
     });
+    console.log(`pending booking ${result[0]}`);
     return result[0];
   },
 };
@@ -73,6 +77,18 @@ const mutationTypes = {
   GET_DEALS_REQUEST: 'GET_DEALS_REQUEST',
   GET_DEALS_SUCCESS: 'GET_DEALS_SUCCESS',
   GET_DEALS_FAILURE: 'GET_DEALS_FAILURE',
+  CREATE_DEAL_REQUEST: 'CREATE_DEAL_REQUEST',
+  CREATE_DEAL_SUCCESS: 'CREATE_DEAL_SUCCESS',
+  CREATE_DEAL_FAILURE: 'CREATE_DEAL_FAILURE',
+  GET_DEAL_REQUEST: 'GET_DEAL_REQUEST',
+  GET_DEAL_SUCCESS: 'GET_DEAL_SUCCESS',
+  GET_DEAL_FAILURE: 'GET_DEAL_FAILURE',
+  CANCEL_DEAL_REQUEST: 'CANCEL_DEAL_REQUEST',
+  CANCEL_DEAL_SUCCESS: 'CANCEL_DEAL_SUCCESS',
+  CANCEL_DEAL_FAILURE: 'CANCEL_DEAL_FAILURE',
+  CANCEL_BOOKING_REQUEST: 'CANCEL_BOOKING_REQUEST',
+  CANCEL_BOOKING_SUCCESS: 'CANCEL_BOOKING_SUCCESS',
+  CANCEL_BOOKING_FAILURE: 'CANCEL_BOOKING_FAILURE',
 };
 const mutations = {
   CLEAR_USER_DATA(state) {
@@ -136,7 +152,7 @@ const mutations = {
     state.bookings.isLoading = true;
   },
   CREATE_BOOKING_SUCCESS(state, booking) {
-    state.bookings.data.unshift(booking);
+    state.bookings.data.push(booking);
     state.bookings.newlyCreated = booking;
     state.bookings.isLoading = false;
     state.bookings.success = true;
@@ -158,6 +174,58 @@ const mutations = {
     state.deals.isLoading = false;
     state.deals.success = false;
     state.deals.error = error;
+  },
+  CREATE_DEAL_REQUEST(state) {
+    state.deals.isLoading = false;
+  },
+  CREATE_DEAL_SUCCESS(state, deal) {
+    state.deals.data.push(deal);
+    state.deals.newlyCreated = deal;
+    state.deals.success = true;
+    state.deals.isLoading = false;
+  },
+  CREATE_DEAL_FAILURE(state, error) {
+    state.deals.success = false;
+    state.deals.error = error;
+  },
+  GET_DEAL_REQUEST(state) {
+    state.deals.isLoading = false;
+  },
+  GET_DEAL_SUCCESS(state, deal) {
+    state.deals.data.push(deal);
+    state.deals.newlyCreated = deal;
+    state.deals.success = true;
+    state.deals.isLoading = false;
+  },
+  GET_DEAL_FAILURE(state, error) {
+    state.deals.success = false;
+    state.deals.error = error;
+  },
+  CANCEL_DEAL_REQUEST(state) {
+    state.deals.isLoading = true;
+  },
+  CANCEL_DEAL_SUCCESS(state, dealId) {
+    state.deals.isLoading = false;
+    state.deals.success = true;
+    const res = state.deals.data.filter((deal) => deal.dealId === dealId);
+    res[0].status = 'CANCEL';
+  },
+  CANCEL_DEAL_FAILURE(state, error) {
+    state.deals.isLoading = false;
+    state.deals.error = error;
+  },
+  CANCEL_BOOKING_REQUEST(state) {
+    state.bookings.isLoading = true;
+  },
+  CANCEL_BOOKING_SUCCESS(state, bookingId) {
+    state.bookings.isLoading = false;
+    state.bookings.success = true;
+    const res = state.bookings.data.filter((book) => book.bookingId === bookingId);
+    res[0].status = 'CANCEL';
+  },
+  CANCEL_BOOKING_FAILURE(state, error) {
+    state.bookings.isLoading = false;
+    state.bookings.error = error;
   },
 };
 
@@ -242,13 +310,18 @@ const actions = {
     const role = window.$cookies.get('role');
     if (userId && role && state.user.data) {
       try {
-        commit(mutationTypes.GET_BOOKING_REQUEST);
-        const res = await window.axios.get(`/api/v1/bookings/${bookingId}`);
-        if (res.status === 200) {
-          res.data.data.new = true;
-          commit(mutationTypes.GET_BOOKING_SUCCESS, res.data.data);
+        const currentIds = state.bookings.data.map((booking) => booking.bookingId);
+        if (!currentIds.includes(bookingId)) {
+          commit(mutationTypes.GET_BOOKING_REQUEST);
+          const res = await window.axios.get(`/api/v1/bookings/${bookingId}`);
+          if (res.status === 200) {
+            res.data.data.new = true;
+            commit(mutationTypes.GET_BOOKING_SUCCESS, res.data.data);
+          } else {
+            commit(mutationTypes.GET_BOOKING_FAILURE);
+          }
         } else {
-          commit(mutationTypes.GET_BOOKING_FAILURE);
+          console.log('this booking is already in store');
         }
       } catch (error) {
         commit(mutationTypes.GET_BOOKING_FAILURE, error);
@@ -291,6 +364,110 @@ const actions = {
       }
     } else {
       throw new Error('You have to login before get deals');
+    }
+  },
+  async createDeal({ commit, state }, deal) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role && state.user.data) {
+      try {
+        commit(mutationTypes.CREATE_DEAL_REQUEST);
+        const res = await window.axios.post('/api/v1/deals', deal);
+        if (res.status === 201) {
+          commit(mutationTypes.CREATE_DEAL_SUCCESS, res.data.data);
+        } else {
+          commit(mutationTypes.CREATE_DEAL_FAILURE);
+        }
+      } catch (error) {
+        commit(mutationTypes.CREATE_DEAL_FAILURE, error);
+      }
+    } else {
+      throw new Error('You have to login before get deals');
+    }
+  },
+  async getDeal({ commit, state }, dealIds) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    const currentIds = state.deals.data.map((deal) => deal.dealId);
+    const newIds = dealIds.filter((newId) => !currentIds.includes(newId));
+    if (newIds.lenght > 0) {
+      if (userId && role && state.user.data) {
+        try {
+          commit(mutationTypes.GET_DEAL_REQUEST);
+          const res = await window.axios.get(`/api/v1/deals/${newIds[0]}`);
+          if (res.status === 200) {
+            commit(mutationTypes.GET_DEAL_SUCCESS, res.data.data);
+          } else {
+            commit(mutationTypes.GET_DEAL_FAILURE);
+          }
+        } catch (error) {
+          commit(mutationTypes.GET_DEAL_FAILURE, error);
+        }
+      } else {
+        throw new Error('You have to login before get deals');
+      }
+    } else {
+      console.log('not a new deal');
+    }
+  },
+  async cancelDeal({ commit, state }, dealId) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role && state.user.data) {
+      try {
+        const deal = state.deals.data.filter((item) => item.dealId === dealId)[0];
+        if (deal) {
+          commit(mutationTypes.CANCEL_DEAL_REQUEST);
+          const res = await window.axios.put('/api/v1/deals', {
+            dealId,
+            renterId: deal.renter.renterId,
+            vendorId: deal.vendor.vendorId,
+            typeId: deal.type.typeId,
+            status: 'CANCELED',
+            offeredPrice: deal.offeredPrice,
+          });
+          if (res.status === 200) {
+            commit(mutationTypes.CANCEL_DEAL_SUCCESS, res.data.data);
+          }
+        } else {
+          console.log('deal is null');
+        }
+      } catch (error) {
+        commit(mutationTypes.CANCEL_DEAL_FAILURE, error);
+      }
+    } else {
+      throw new Error('you are not loged in');
+    }
+  },
+  async cancelBooking({ commit, state }, bookingId) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role && state.user.data) {
+      try {
+        const booking = state.bookings.data.filter((item) => item.bookingId === bookingId)[0];
+        if (booking) {
+          commit(mutationTypes.CANCEL_BOOKING_REQUEST);
+          const res = await window.axios.put(`/api/v1/bookings/${bookingId}`, {
+            bookingId,
+            dealId: booking.deal.dealId,
+            typeId: booking.type.typeId,
+            renterId: booking.renter.renterId,
+            vendorId: booking.vendor.vendorId,
+            status: 'CANCELLED',
+            meetTime: booking.meetTime,
+            qrCode: booking.qrCode,
+          });
+          if (res.status === 200) {
+            commit(mutationTypes.CANCEL_BOOKING_SUCCESS, res.data.data);
+          }
+        } else {
+          console.log(`booking ${bookingId} is not existed in store`);
+        }
+      } catch (error) {
+        commit(mutationTypes.CREATE_BOOKING_FAILURE, error);
+      }
+    } else {
+      throw new Error('you are not loged in');
     }
   },
 };
