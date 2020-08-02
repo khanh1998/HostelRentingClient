@@ -1,18 +1,19 @@
 <template>
   <div>
-    <div class="d-flex justify-space-between pa-3">
-      <div style="fontSize:20px">Khu trọ</div>
-      <v-btn
-        fab
-        dark
-        small
-        color="#EF7239"
-      >
-        <v-icon dark>mdi-plus</v-icon>
-      </v-btn>
-    </div>
+    <v-list-item>
+      <v-list-item-icon>
+        <v-icon>mdi-home-city-outline</v-icon>
+      </v-list-item-icon>
+
+      <v-list-item-content>
+        <v-list-item-title style="fontSize:22px; color: #6C98C6 ">Khu trọ</v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
+    <v-divider></v-divider>
     <v-list
       dense
+      nav
+      class="py-0"
       two-line
     >
       <v-container
@@ -31,14 +32,38 @@
             <v-list-item
               v-for="(item, i) in groups"
               :key="i"
-              class="mb-2 pt-2"
+              class="pt-2"
+              :class="miniVariant && 'px-0'"
               style="width:100%"
               v-on:click="getGroupItem(item.groupId)"
             >
+              <v-list-item-icon class="pa-2">
+                <v-icon>mdi-home-variant</v-icon>
+              </v-list-item-icon>
               <v-list-item-content class="py-1">
-                <v-list-item-subtitle style="fontSize:16px; fontWeight:bold; height: 30px">
+                <v-list-item-subtitle style="fontSize:16px; fontWeight:bold; height: 30px;">
                   {{item.groupName}}</v-list-item-subtitle>
               </v-list-item-content>
+              <v-list-item-action class="d-flex flex-row pb-2">
+                <v-btn
+                  fab
+                  dark
+                  small
+                  text
+                  color="#EF7239"
+                >
+                  <v-icon dark>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn
+                  fab
+                  dark
+                  small
+                  text
+                  color="#EF7239"
+                >
+                  <v-icon dark>mdi-delete</v-icon>
+                </v-btn>
+              </v-list-item-action>
             </v-list-item>
           </v-list-item-group>
         </v-row>
@@ -61,6 +86,7 @@ export default {
     },
   },
   data: () => ({
+    miniVariant: true,
   }),
 };
 </script>

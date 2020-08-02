@@ -6,6 +6,10 @@
       :search="search"
       :page.sync="page"
       :items-per-page="itemsPerPage"
+      :single-expand="singleExpand"
+      :expanded.sync="expanded"
+      show-expand
+      item-key="typeName"
       hide-default-footer
       @page-count="pageCount = $event"
       sort-by="calories"
@@ -16,7 +20,7 @@
           flat
           color="white"
         >
-          <v-toolbar-title style="fontSize:20px">Phòng trọ</v-toolbar-title>
+          <v-toolbar-title style="fontSize:20px">Loại phòng</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-card-title>
             <v-text-field
@@ -36,6 +40,7 @@
                 dark
                 fab
                 small
+                text
                 class="mb-2"
                 v-bind="attrs"
                 v-on="on"
@@ -134,6 +139,9 @@
           mdi-delete
         </v-icon>
       </template>
+      <template v-slot:expanded-item="{ headers, item }">
+        <td :colspan="headers.length">More info about {{ item.typeName }}</td>
+      </template>s
       <template v-slot:no-data>
         <v-btn
           color="primary"
@@ -164,18 +172,20 @@ export default {
     itemsPerPage: 10,
     search: '',
     dialog: false,
+    singleExpand: true,
     headers: [
       {
-        text: 'Tên phòng',
+        text: 'Tên loại phòng',
         align: 'start',
         sortable: false,
-        value: 'roomName',
+        value: 'typeName',
       },
-      { text: 'Diện tích (mét vuông)', value: 'superficiality' },
+      { text: 'Diện tích (m²)', value: 'superficiality' },
       { text: 'Người', value: 'capacity' },
       { text: 'Giá tiền', value: 'price' },
-      //   { text: 'Protein (g)', value: 'protein' },
+      { text: 'Trạng thái', value: 'status', sortable: false },
       { value: 'actions', sortable: false },
+      { value: 'data-table-expand', sortable: false },
     ],
     desserts: [],
     editedIndex: -1,
@@ -197,42 +207,117 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? 'Tạo mới phòng trọ' : 'Cập nhật thông tin phòng trọ';
     },
-    initialize() {
-      return this.groups.forEach((element) => {
-        if (element.groupId === this.groupId) {
-          element.types.forEach((element1) => {
-            if (element1.typeId === this.typeId) {
-              element1.rooms.forEach((element2) => {
-                const ten = element2.roomName;
-                const dientich = element1.superficiality;
-                const nguoi = element1.capacity;
-                const gia = element1.price;
-                const tong = {
-                  roomName: ten,
-                  superficiality: dientich,
-                  capacity: nguoi,
-                  price: `${gia} triệu`,
-                };
-                this.desserts.push(tong);
-              });
-            }
-          });
-        }
-      });
-    },
+    // initialize() {
+    //   return this.groups.forEach((element) => {
+    //     if (element.groupId === this.groupId) {
+    //       element.types.forEach((element1) => {
+    //         if (element1.typeId === this.typeId) {
+    //           element1.rooms.forEach((element2) => {
+    //             const ten = element2.roomName;
+    //             const dientich = element1.superficiality;
+    //             const nguoi = element1.capacity;
+    //             const gia = element1.price;
+    //             const tong = {
+    //               roomName: ten,
+    //               superficiality: dientich,
+    //               capacity: nguoi,
+    //               price: `${gia} triệu`,
+    //             };
+    //             this.desserts.push(tong);
+    //           });
+    //         }
+    //       });
+    //     }
+    //   });
+    // },
   },
 
-  //   watch: {
-  //     dialog(val) {
-  //       val || this.close();
-  //     },
-  //   },
-
-  //   created() {
-  //     this.initialize();
-  //   },
+  created() {
+    this.initialize();
+  },
 
   methods: {
+    initialize() {
+      this.desserts = [
+        {
+          typeName: 'Frozen Yogurt1',
+          superficiality: 159,
+          capacity: 6.0,
+          price: 24,
+          status: 'Cho thuê',
+        },
+        {
+          typeName: 'Frozen Yogurt2',
+          superficiality: 159,
+          capacity: 6.0,
+          price: 24,
+          status: 'Cho thuê',
+        },
+        {
+          typeName: 'Frozen Yogurt3',
+          superficiality: 159,
+          capacity: 6.0,
+          price: 24,
+          status: 'Cho thuê',
+        },
+        {
+          typeName: 'Frozen Yogurt4',
+          superficiality: 159,
+          capacity: 6.0,
+          price: 24,
+          status: 'Cho thuê',
+        },
+        {
+          typeName: 'Frozen Yogurt5',
+          superficiality: 159,
+          capacity: 6.0,
+          price: 24,
+          status: 'Cho thuê',
+        },
+        {
+          typeName: 'Frozen Yogurt6',
+          superficiality: 159,
+          capacity: 6.0,
+          price: 24,
+          status: 'Cho thuê',
+        },
+        {
+          typeName: 'Frozen Yogurt7',
+          superficiality: 159,
+          capacity: 6.0,
+          price: 24,
+          status: 'Cho thuê',
+        },
+        {
+          typeName: 'Frozen Yogurt8',
+          superficiality: 159,
+          capacity: 6.0,
+          price: 24,
+          status: 'Cho thuê',
+        },
+        {
+          typeName: 'Frozen Yogurt9',
+          superficiality: 159,
+          capacity: 6.0,
+          price: 24,
+          status: 'Cho thuê',
+        },
+        {
+          typeName: 'Frozen Yogurt10',
+          superficiality: 159,
+          capacity: 6.0,
+          price: 24,
+          status: 'Cho thuê',
+        },
+        {
+          typeName: 'Frozen Yogurt11',
+          superficiality: 159,
+          capacity: 6.0,
+          price: 24,
+          status: 'Cho thuê',
+        },
+      ];
+    },
 
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);

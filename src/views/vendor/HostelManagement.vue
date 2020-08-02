@@ -1,38 +1,36 @@
 <template>
-  <!-- <v-card
-    style="background-color: coral;"
-    height="836px"
-    v-if="!isLoadingGroup"
-  > -->
   <div
-
     height="836px"
     v-if="!isLoadingGroup"
   >
-    <v-row>
-      <v-col cols="2">
-        <v-card style="min-height: 825px">
-          <HostelGroup :groups="groups" :groupId="groupId" @getIdSelected="groupId = $event"/>
-        </v-card>
-      </v-col>
-      <v-col cols="2">
-        <v-card style="min-height: 825px">
-          <HostelType :groups="groups" :groupId="groupId"
+    <v-card
+      height="836px"
+      class="overflow-hidden"
+    >
+      <v-navigation-drawer
+        v-model="drawer"
+        :expand-on-hover="expandOnHover"
+        :mini-variant="miniVariant"
+        absolute
+        width="350"
+      >
+        <HostelGroup
+          :groups="groups"
+          :groupId="groupId"
+          @getIdSelected="groupId = $event"
+        />
+      </v-navigation-drawer>
+      <v-card style="min-height: 836px; max-height: 836px" class="ml-15">
+        <HostelType :groups="groups" :groupId="groupId"
           :typeId="typeId" @getTypeIdSelected="typeId = $event"/>
-        </v-card>
-      </v-col>
-      <v-col cols="8">
-        <v-card style="min-height: 825px">
-          <HostelRoom :groups="groups" :groupId="groupId" :typeId="typeId"/>
-        </v-card>
-      </v-col>
-    </v-row>
+      </v-card>
+    </v-card>
   </div>
 </template>
 <script>
 import HostelGroup from '@/components/vendor/hostel_management/HostelGroup.vue';
 import HostelType from '@/components/vendor/hostel_management/HostelType.vue';
-import HostelRoom from '@/components/vendor/hostel_management/HostelRoom.vue';
+// import HostelRoom from '@/components/vendor/hostel_management/HostelRoom.vue';
 import { mapActions } from 'vuex';
 
 export default {
@@ -40,11 +38,20 @@ export default {
   components: {
     HostelGroup,
     HostelType,
-    HostelRoom,
+    // HostelRoom,
   },
   data: () => ({
     groupId: null,
     typeId: null,
+    drawer: true,
+    items: [
+      { title: 'Dashboard', icon: 'mdi-view-dashboard' },
+      { title: 'Photos', icon: 'mdi-image' },
+      { title: 'About', icon: 'mdi-help-box' },
+    ],
+
+    miniVariant: true,
+    expandOnHover: true,
   }),
   computed: {
     groups() {
