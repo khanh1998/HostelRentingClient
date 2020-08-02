@@ -110,11 +110,19 @@
                 </v-col>
               </div>
               <span
-                v-if="item.book"
+                v-if="item.book && !item.book.cancel"
                 v-ripple
                 style="width: 75%; "
                 class="blue lighten-5 pa-2 rounded"
-              >{{item.book.date}} {{item.book.time}}</span>
+              >bạn có một lich hẹn vào
+              {{ item.book.date }} {{ item.book.time }}</span>
+              <span
+                v-if="item.book && item.book.cancel"
+                v-ripple
+                style="width: 75%; "
+                class="red lighten-5 pa-2 rounded"
+              >{{renter.username}} đã hủy lich hẹn vào
+              {{ item.book.date }} {{ item.book.time }}</span>
               <span
                 v-if="!item.book && !item.bargain"
                 v-ripple

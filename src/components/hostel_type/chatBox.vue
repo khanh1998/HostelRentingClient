@@ -20,6 +20,15 @@
           v-on:cancel="dateTimeOverlay.show = false"
         />
       </v-overlay>
+      <v-overlay :value="bookingCancel.show" absolute opacity="0.8">
+        <v-card>
+          <v-card-title>Bạn có muốn hủy lịch hẹn?</v-card-title>
+          <v-card-actions>
+            <v-btn color="green" @click="doCancelBooking">Có</v-btn>
+            <v-btn color="red" @click="bookingCancel.show = false">Không</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-overlay>
       <v-overlay :value="bargainOverlay.show" absolute opacity="0.8">
         <v-card
           color="white"
@@ -95,7 +104,7 @@
               >Bạn đã trả giá : {{item.bargain.newPrice}} {{info.priceUnit}}</span>
 
               <span
-                v-else-if="item.book"
+                v-else-if="item.book && !item.book.cancel"
                 v-ripple
                 style="width: 75%"
                 class="blue lighten-5 pa-2 rounded max-w-3/4"
@@ -103,12 +112,19 @@
                 Bạn đã đặt lịch vào: {{item.book.time}} {{item.book.date}}
                 <v-btn
                   color="amber"
-                  v-if="!item.book.cancel"
                   small
-                  @click="doCancelBooking(item.book.bookingId, item.id)"
+                  @click="showBookingCancel(item.book.bookingId, item.id)"
                 >
                   Hủy hẹn
                 </v-btn>
+              </span>
+              <span
+                v-else-if="item.book && item.book.cancel"
+                v-ripple
+                style="width: 75%"
+                class="red lighten-5 pa-2 rounded max-w-3/4"
+              >
+                Bạn hủy lịch hẹn vào vào: {{item.book.time}} {{item.book.date}}
               </span>
               <span
                 v-else
@@ -130,7 +146,7 @@
                 class="green lighten-5 pa-2 rounded max-w-3/4"
                 v-if="item.bargain && item.bargain.dealId"
               >Chủ trọ đồng ý với mức giá bạn đề xuất.
-                <v-btn small color="amber" class="mt-2">Hủy thỏa thuận</v-btn>
+                <!-- <v-btn small color="amber" class="mt-2">Hủy thỏa thuận</v-btn> -->
               </span>
               <span
                 style="width: 75%"
@@ -312,7 +328,7 @@ export default {
           this.dealIds = [];
           querySnapshot.forEach((doc) => {
             const data = doc.data();
-            items.push(data);
+            items.push({ ...data, id: doc.id });
             if (data.bargain && data.bargain.dealId) {
               this.dealIds.push(data.bargain.dealId);
             }
@@ -342,19 +358,34 @@ export default {
     doCancelDeal(dealId) {
       this.cancelDeal(dealId);
     },
-    doCancelBooking(bookingId, docId) {
+    doCancelBooking() {
+      const { bookingId, docId } = this.bookingCancel.id;
       this.cancelBooking(bookingId).then(() => {
         this.messCollectionRef.doc(docId).update({
           'book.cancel': true,
         });
+        this.bookingCancel.id.bookingId = null;
+        this.bookingCancel.id.docId = null;
+        this.bookingCancel.show = false;
         this.getBookings();
       });
+    },
+    showBookingCancel(bookingId, docId) {
+      this.bookingCancel.show = true;
+      this.bookingCancel.id = { bookingId, docId };
     },
   },
   mounted() {
     this.$nextTick(() => this.scrollToBottom());
   },
   data: () => ({
+    bookingCancel: {
+      show: false,
+      id: {
+        bookingId: null,
+        docId: null,
+      },
+    },
     dateTimeOverlay: {
       show: false,
       width: 350,
