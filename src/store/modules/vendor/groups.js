@@ -1,18 +1,18 @@
 const myState = () => ({
   groups: {
-    data: null,
+    data: [],
     isLoading: false,
     success: null,
     error: null,
   },
   types: {
-    data: null,
+    data: [],
     isLoading: false,
     success: null,
     error: null,
   },
   rooms: {
-    data: null,
+    data: [],
     isLoading: false,
     success: null,
     error: null,
@@ -119,7 +119,7 @@ const actions = {
           const res = await window.axios.get(`/api/v1/groups/${groupId}/types`);
           types = [...types, ...res.data.data];
           const group = getters.findGroupById(groupId);
-          group.types = types;
+          group.types = res.data.data;
         }));
         commit(mutationTypes.GET_TYPES_SUCCESS, types);
       } catch (error) {
@@ -142,7 +142,7 @@ const actions = {
           const res = await window.axios.get(`/api/v1/types/${typeId}/rooms`);
           rooms = [...rooms, ...res.data.data];
           const type = getters.findTypesById(typeId);
-          type.rooms = rooms;
+          type.rooms = res.data.data;
         }));
         commit(mutationTypes.GET_ROOMS_SUCCESS, rooms);
       } catch (error) {

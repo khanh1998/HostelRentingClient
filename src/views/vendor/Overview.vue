@@ -20,7 +20,7 @@
           </v-col>
           <v-col cols="8">
             <div style="height: 500px; width: 100%" class="pr-2">
-              <ChartOverview />
+              <ShowEmptyRoom />
             </div>
           </v-col>
         </v-row>
@@ -65,9 +65,8 @@ import { mapActions } from 'vuex';
 import ChatList from '@/components/vendor/ChatList.vue';
 import SlideBooking from '@/components/vendor/SlideBooking.vue';
 import SuggestContract from '@/components/vendor/SuggestContract.vue';
-import ChartOverview from '@/components/vendor/ChartOverview.vue';
 import Chatbox from '@/components/vendor/Chatbox.vue';
-// import ChatboxBottom from '@/components/vendor/ChatboxBottom.vue';
+import ShowEmptyRoom from '../../components/vendor/ShowEmptyRoom.vue';
 
 export default {
   name: 'Overview',
@@ -75,9 +74,8 @@ export default {
     ChatList,
     SlideBooking,
     SuggestContract,
-    ChartOverview,
     Chatbox,
-    // ChatboxBottom,
+    ShowEmptyRoom,
   },
   data: () => ({
     docList: [],

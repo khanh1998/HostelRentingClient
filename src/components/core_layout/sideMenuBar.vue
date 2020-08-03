@@ -1,5 +1,8 @@
 <template>
-  <v-card height="100%" class="overflow-hidden rounded-0 d-flex align-strench">
+  <v-card
+    height="100%" class="overflow-hidden rounded-0 d-flex align-strench"
+    v-if="!user.isLoading"
+  >
     <v-list nav class="py-0 rounded-1" height="100%">
       <v-list-item class="item-image">
         <v-img
@@ -55,7 +58,11 @@
             <v-icon>mdi-logout-variant</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="item-text-display text-h6">Đăng xuất</v-list-item-title>
+            <v-list-item-title
+              @click="logout"
+              class="item-text-display text-h6">
+                Đăng xuất
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </div>
@@ -64,6 +71,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import firebase from '../../config/firebase';
 
 const { messaging } = firebase;
@@ -93,6 +101,10 @@ export default {
     };
   },
   methods: {
+    ...mapActions({
+      clearUserData: 'user/clearUserData',
+      updateUser: 'user/updateUser',
+    }),
     getMessagingToken() {
       messaging
         .getToken()
@@ -128,11 +140,9 @@ export default {
     },
     saveToken(token) {
       console.log('tokens', token);
-      window.axios
-        .post(
-          'https://us-central1-cropchien.cloudfunctions.net/GeneralSubscription',
-          { token },
-        )
+      const newUser = { ...this.user.data };
+      newUser.firebaseToken = token;
+      this.updateUser(newUser)
         .then((response) => {
           window.localStorage.setItem('messagingToken', token);
           console.log(response);
@@ -158,9 +168,21 @@ export default {
         });
       }
     },
+    logout() {
+      this.$cookies.remove('role');
+      this.$cookies.remove('userId');
+      this.$cookies.remove('jwt');
+      this.clearUserData();
+      this.$router.push('/');
+    },
   },
-  mounted() {},
+  mounted() {
+    this.getMessagingToken();
+  },
   computed: {
+    ...mapState({
+      user: (state) => state.user.user,
+    }),
     hasMessagingToken() {
       return localStorage.getItem('messagingToken') != null;
     },

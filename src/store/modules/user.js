@@ -61,6 +61,9 @@ const mutationTypes = {
   GET_USER_REQUEST: 'GET_USER_REQUEST',
   GET_USER_SUCCESS: 'GET_USER_SUCCESS',
   GET_USER_FAILURE: 'GET_USER_FAILURE',
+  UPDATE_USER_REQUEST: 'UPDATE_USER_REQUEST',
+  UPDATE_USER_SUCCESS: 'UPDATE_USER_SUCCESS',
+  UPDATE_USER_FAILURE: 'UPDATE_USER_FAILURE',
   CLEAR_USER_DATA: 'CLEAR_USER_DATA',
   GET_CONTRACTS_REQUEST: 'GET_CONTRACTS_REQUEST',
   GET_CONTRACTS_SUCCESS: 'GET_CONTRACTS_SUCCESS',
@@ -227,6 +230,19 @@ const mutations = {
     state.bookings.isLoading = false;
     state.bookings.error = error;
   },
+  UPDATE_USER_REQUEST(state) {
+    state.user.isLoading = true;
+  },
+  UPDATE_USER_SUCCESS(state, user) {
+    state.user.data = user;
+    state.user.success = true;
+    state.user.isLoading = false;
+  },
+  UPDATE_USER_FAILURE(state, error) {
+    state.user.error = error;
+    state.user.success = false;
+    state.user.isLoading = false;
+  },
 };
 
 const actions = {
@@ -262,6 +278,25 @@ const actions = {
         }
       } catch (error) {
         commit(mutationTypes.GET_USER_FAILURE, error);
+      }
+    } else {
+      throw new Error('userId, role or user.data null');
+    }
+  },
+  async updateUser({ commit, state }, newUser) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role && state.user.data) {
+      try {
+        commit(mutationTypes.UPDATE_USER_REQUEST);
+        const res = await window.axios.put(`/api/v1/${role}/${userId}`, newUser);
+        if (res.status === 200) {
+          commit(mutationTypes.UPDATE_USER_SUCCESS, res.data.data);
+        } else {
+          commit(mutationTypes.UPDATE_USER_FAILURE);
+        }
+      } catch (error) {
+        commit(mutationTypes.UPDATE_USER_FAILURE, error);
       }
     } else {
       throw new Error('userId, role or user.data null');

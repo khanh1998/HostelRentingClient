@@ -23,11 +23,11 @@
             >
               <p
                 style="fontWeight:bold; color:white"
-              >{{getDateString(Number(booking.startTime))}}</p>
+              >{{getDateString(Number(booking.meetTime))}}</p>
               <v-divider vertical class="mx-3"></v-divider>
               <p
                 style="fontWeight:bold; color:white"
-              >{{getTimeString(Number(booking.startTime))}}</p>
+              >{{getTimeString(Number(booking.meetTime))}}</p>
             </v-col>
             <v-list-item class="mb-2 pt-2">
               <v-list-item-avatar>
