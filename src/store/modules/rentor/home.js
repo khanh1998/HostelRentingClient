@@ -15,6 +15,14 @@ const myState = () => ({
     data: [],
     isLoading: false,
   },
+  topView: {
+    data: [],
+    isLoading: false,
+  },
+  topViewHostelGroup: {
+    data: [],
+    isLoading: false,
+  },
 });
 const getters = {
   getHostelGroupById: (state) => (id) => {
@@ -36,11 +44,24 @@ const getters = {
     }
     return null;
   },
+  getTopViewHostelGroupById: (state) => (id) => {
+    const result = state.topViewHostelGroup.data.filter(
+      (group) => group.groupId === id,
+    );
+    if (result.length > 0) {
+      return result[0];
+    }
+    return null;
+  },
 };
 const mutationTypes = {
   GET_HOSTEL_TYPES_SUCCESS: 'GET_HOSTEL_TYPES_SUCCESS',
   GET_HOSTEL_TYPES_FAILURE: 'GET_HOSTEL_TYPES_FAILURE',
   GET_HOSTEL_TYPES_REQUEST: 'GET_HOSTEL_TYPES_REQUEST',
+
+  GET_TOP_VIEW_SUCCESS: 'GET_TOP_VIEW_SUCCESS',
+  GET_TOP_VIEW_FAILURE: 'GET_TOP_VIEW_FAILURE',
+  GET_TOP_VIEW_REQUEST: 'GET_TOP_VIEW_REQUEST',
 };
 const mutations = {
   GET_HOSTEL_TYPES_SUCCESS(state, inputData) {
@@ -57,6 +78,21 @@ const mutations = {
     state.hostelTypes.isLoading = true;
     state.hostelGroups.isLoading = true;
   },
+
+  GET_TOP_VIEW_SUCCESS(state, inputData) {
+    state.topView.data = inputData.types;
+    state.topView.isLoading = false;
+    state.topViewHostelGroup.data = inputData.groups;
+    state.topView.isLoading = false;
+  },
+  GET_TOP_VIEW_FAILURE(state) {
+    state.topView.isLoading = false;
+    state.topView.isLoading = false;
+  },
+  GET_TOP_VIEW_REQUEST(state) {
+    state.topView.isLoading = true;
+    state.topView.isLoading = true;
+  },
 };
 const actions = {
   async getHostelTypes({ commit }, params) {
@@ -69,6 +105,20 @@ const actions = {
       commit(mutationTypes.GET_HOSTEL_TYPES_SUCCESS, response.data.data);
     } else {
       commit(mutationTypes.GET_HOSTEL_TYPES_FAILURE);
+    }
+  },
+  async getTopViewHostelTypes({ commit }, params) {
+    // params = { size }
+    try {
+      commit(mutationTypes.GET_TOP_VIEW_REQUEST);
+      const response = await window.axios.get(
+        `/api/v1/types?sortBy=view&size=${params.size}`,
+      );
+      if (response.status === 200) {
+        commit(mutationTypes.GET_TOP_VIEW_SUCCESS, response.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_TOP_VIEW_FAILURE);
     }
   },
 };

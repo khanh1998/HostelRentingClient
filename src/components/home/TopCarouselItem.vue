@@ -1,18 +1,38 @@
 <template>
-  <v-card class="mx-auto">
-    <v-img class="white--text align-end" height="175px" light :src="imgUrl">
+  <v-card class="ml-5 mr-5">
+    <v-img
+      :src="type.typeImages[0].resourceUrl"
+      v-if="type.typeImages.length !== 0"
+      style="height:200px"
+    >
       <div class="category">
-        <h4>Kí túc xá</h4>
+        <h4>{{type.category.categoryName}}</h4>
       </div>
       <div class="arrow-price">
-        <span class="price">500.000 đ</span>
+        <span class="price">{{type.price}} {{type.priceUnit}}</span>
+      </div>
+    </v-img>
+    <v-img style="height:200px" src="@/assets/image-error.png" v-else>
+      <div class="category">
+        <h4>{{type.category.categoryName}}</h4>
+      </div>
+      <div class="arrow-price">
+        <span class="price">{{type.price}} {{type.priceUnit}}</span>
       </div>
     </v-img>
     <v-divider class="mx-4" />
     <v-row class="d-flex align-center justify-center">
-      <v-col cols="10">
-        <div class="type-name">
-          <p class="font-weight-bold mb-0">Ký túc xá đại học quốc gia</p>
+      <v-col cols="10 pt-0">
+        <div
+          class="type-name d-flex align-center py-3"
+          style="height: 60px"
+          background-color="light-blue"
+        >
+          <p
+            style="display: block; display: -webkit-box;-webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
+            class="font-weight-bold mb-0"
+          >{{type.title}}</p>
         </div>
         <div class="mt-3 d-flex align-center">
           <v-img
@@ -22,7 +42,12 @@
             max-width="20"
             max-height="20"
           />
-          <span class="item-text">Linh Trung, Thủ Đức, TP.HCM</span>
+          <span class="item-text" v-if="!isLoadingProvinces">
+            {{group.street}},
+            {{ward.wardName}},
+            {{district.districtName}},
+            {{province.provinceName}}
+          </span>
         </div>
         <div class="mt-3 d-flex align-center">
           <v-img
@@ -32,7 +57,7 @@
             max-width="25"
             max-height="25"
           />
-          <span class="item-text blue--text">BigC:</span>
+          <span class="blue--text">BigC:</span>
           <span class="item-text item-text-detail ml-auto">300 m</span>
         </div>
         <div class="mt-3 d-flex align-center">
@@ -43,20 +68,23 @@
             max-width="15"
             max-height="15"
           />
-          <span class="item-text">20m2</span>
-          <div class="ml-auto d-flex">
-            <v-img
-              class="shrink mr-4 ml-auto"
-              src="@/assets/home/people.png"
-              transition="scale-transition"
-              max-width="15"
-              max-height="15"
-            />
-            <span class="item-text">3 người</span>
-          </div>
+          <span class="item-title font-weight-black">DIỆN TÍCH</span>
+          <span class="item-text ml-auto">{{type.superficiality}}m2</span>
         </div>
-        <v-card-actions class="pl-0 mt-3">
-          <v-btn color="#484848" class="btnDetail pl-3 pr-3">Chi tiết</v-btn>
+        <div class="mt-3 d-flex align-center">
+          <v-img
+            class="shrink mr-5"
+            src="@/assets/home/people.png"
+            transition="scale-transition"
+            max-width="15"
+            max-height="15"
+          />
+          <span class="item-title font-weight-black">SỨC CHỨA</span>
+          <span class="item-text ml-auto">{{type.capacity}} người</span>
+        </div>
+        <v-card-actions class="px-0 mt-3" md="auto">
+          <!-- eslint-disable -->
+          <v-btn color="#484848" class="btnDetail pl-3 pr-3" :to="'/detail/' + type.typeId">CHI TIẾT</v-btn>
         </v-card-actions>
       </v-col>
     </v-row>
@@ -65,7 +93,34 @@
 <script>
 export default {
   name: 'TopCarouselItem',
-  props: ['imgUrl', 'i'],
+  props: {
+    type: Object,
+  },
+  computed: {
+    isLoadingProvinces() {
+      return this.$store.state.renter.common.provinces.isLoading;
+    },
+    group: {
+      get() {
+        const id = this.type.groupId;
+        return this.$store.getters['renter/home/getTopViewHostelGroupById'](id);
+      },
+    },
+    ward() {
+      const { wardId } = this.group;
+      return this.$store.getters['renter/common/getWardById'](wardId);
+    },
+    district() {
+      const { wardId } = this.group;
+      return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
+    },
+    province() {
+      const { districtId } = this.district;
+      return this.$store.getters['renter/common/getProvinceByDistrictId'](
+        districtId,
+      );
+    },
+  },
 };
 </script>
 <style scoped>
@@ -90,7 +145,11 @@ export default {
 }
 .arrow-price {
   /* background-image: linear-gradient(to right, rgba(216, 36, 96, 0.6), #d82460); */
-  background-image: linear-gradient(to right, rgba(52, 203, 247, 0.71) , #1c63b8);
+  background-image: linear-gradient(
+    to right,
+    rgba(52, 203, 247, 0.71),
+    #1c63b8
+  );
   color: #fff;
   padding: 4px 10px;
   position: absolute;
@@ -112,13 +171,18 @@ export default {
 }
 .type-name {
   border-bottom: 1px solid #e2e6ed;
-  padding-bottom: 10px;
   color: #3476b2;
   font-size: 16.5px;
 }
+.item-title {
+  color: #838e9d;
+  font-size: 13px;
+  font-weight: normal;
+  font-family: 'Lato';
+}
 .item-text {
   color: #656565;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: normal;
   font-family: 'Lato';
 }
@@ -128,10 +192,10 @@ export default {
 .btnDetail {
   font-size: 13px;
   color: #fff;
-  padding: 0 0 20px 25px;
   font-family: 'Nunito';
+  width: 100%;
 }
 .v-btn:hover {
-  background-color: #6C98C6 !important;
+  background-color: #6c98c6 !important;
 }
 </style>

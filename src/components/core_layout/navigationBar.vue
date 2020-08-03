@@ -43,15 +43,21 @@
               <v-row class="px-0 d-flex align-center">
                 <v-col class="col-9 pl-5 searchBar d-flex align-center">
                   <gmap-autocomplete
-                    placeholder="Tìm theo địa chỉ, địa điểm thuy..."
+                    placeholder="Tìm theo địa chỉ, địa điểm ..."
                     class="col-11 gmap-input"
-                    clearable
-                    clear-icon="cancel"
                     @place_changed="setPlace"
-                    :value="address"
+                    @change="changeSearchValue"
+                    :value="coordinates"
+                    v-model="searchValue"
+                    ref="address"
                   ></gmap-autocomplete>
                   <v-btn icon>
-                    <v-icon>clear</v-icon>
+                    <!-- eslint-disable max-len -->
+                    <v-icon
+                      v-bind:style="{ visibility: computedClearable }"
+                      @click="clearField()"
+                    >clear</v-icon>
+                    <!-- <v-icon v-bind:style="{ visibility: computedClearable }">clear</v-icon> -->
                   </v-btn>
                 </v-col>
                 <v-col class="col-3 px-0">
@@ -165,13 +171,28 @@ export default {
       show: false,
     },
     center: { lat: 10.7542893, lng: 106.1346955 },
+    coordinates: null,
     places: [],
     currentPlace: null,
+    visibleProperty: 'hidden',
   }),
   methods: {
     setPlace(place) {
-      this.isActive = !this.isActive;
+      // this.isActive = !this.isActive;
+      // this.coordinates = null;
       this.currentPlace = place;
+    },
+    changeSearchValue() {
+      this.visibleProperty = 'visible';
+    },
+    clearField() {
+      // console.log('thuy');
+      // this.$refs.address.value = '';
+      // console.log(this.$refs.address);
+      // console.log(this.coordinates);
+      this.coordinates = null;
+      console.log('dele');
+      console.log(this.coordinates);
     },
     searchByCoordinates() {
       if (this.currentPlace) {
@@ -191,7 +212,6 @@ export default {
     },
     search() {
       this.setSearchValue(this.searchValue);
-      // this.searchByAddress();
       this.searchByCoordinator({
         lat: '', // gan latitude vao day
         long: '', // gan longtitude vao day
@@ -206,12 +226,15 @@ export default {
   },
   computed: {
     searchValue: {
-      get() {
-        return this.$store.state.renter.filterResult.search.value;
-      },
+      // get() {
+      //   return this.$store.state.renter.filterResult.search.value;
+      // },
       set(value) {
         this.setSearchValue(value);
       },
+    },
+    computedClearable() {
+      return this.visibleProperty;
     },
   },
 };

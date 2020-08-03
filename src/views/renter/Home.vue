@@ -18,8 +18,8 @@
         </v-col>
       </v-row>
       <v-row justify="center" class="content">
-        <v-col cols="10" sm="12" md="10" lg="10" xl="10" class="top-carousel">
-          <TopCarousel />
+        <v-col cols="10" sm="12" md="10" lg="10" xl="10" mt="5">
+          <TopCarousel :list="topView" />
         </v-col>
       </v-row>
       <v-row justify="center" class="content">
@@ -35,8 +35,14 @@
           <v-row class="d-flex flex-row-reverse">
             <v-col cols="12" lg="11" md="9">
               <v-row>
-                <v-col cols="7" sm="7" md="12" lg="12" xl="12"
-                class="pl-0 pr-0 pt-4 pb-4 mb-10 white d-flex">
+                <v-col
+                  cols="7"
+                  sm="7"
+                  md="12"
+                  lg="12"
+                  xl="12"
+                  class="pl-0 pr-0 pt-4 pb-4 mb-10 white d-flex"
+                >
                   <v-sheet class="ml-4">
                     <v-select
                       v-model="roomType.select"
@@ -52,21 +58,20 @@
                   </v-sheet>
                   <v-sheet light>
                     <v-btn
-                        outlined
-                        class="ml-5"
-                        :style="'height: 40px'"
-                        @click="overlay = !overlay">Bộ lọc
-                        </v-btn>
-                      <v-overlay :value="overlay">
-                        <v-btn
-                          icon
-                          @click="overlay = false"
-                        >
-                          <v-icon>mdi-close</v-icon>
-                        </v-btn>
-                        <HostelFilter v-on:submitFilter="onFilterSubmit($event)"
-                        style="background-color: #fff; border-radius: 5px;"/>
-                      </v-overlay>
+                      outlined
+                      class="ml-5"
+                      :style="'height: 40px'"
+                      @click="overlay = !overlay"
+                    >Bộ lọc</v-btn>
+                    <v-overlay :value="overlay">
+                      <v-btn icon @click="overlay = false">
+                        <v-icon>mdi-close</v-icon>
+                      </v-btn>
+                      <HostelFilter
+                        v-on:submitFilter="onFilterSubmit($event)"
+                        style="background-color: #fff; border-radius: 5px;"
+                      />
+                    </v-overlay>
                   </v-sheet>
                 </v-col>
                 <!-- <v-col cols="6" sm="6" md="0" lg="0" xl="0" class="hidden-md-and-up">
@@ -89,7 +94,7 @@
                   </v-sheet>
                 </v-col>-->
                 <v-col cols="12">
-                  <ArticleList :list="hostelTypes"/>
+                  <ArticleList :list="hostelTypes" />
                 </v-col>
               </v-row>
             </v-col>
@@ -147,9 +152,6 @@
   margin-bottom: 20px;
   margin-top: 70px;
 }
-.top-carousel {
-  margin-top: 5px;
-}
 </style>
 <script>
 import Banner from '@/components/home/Banner.vue';
@@ -185,6 +187,9 @@ export default {
       getHostelTypes: 'renter/home/getHostelTypes',
     }),
     ...mapActions({
+      getTopView: 'renter/home/getTopViewHostelTypes',
+    }),
+    ...mapActions({
       getFilterResult: 'renter/filterResult/getFilterResult',
     }),
     onFilterSubmit(data) {
@@ -209,15 +214,23 @@ export default {
         return this.$store.state.renter.home.hostelTypes.data;
       },
     },
+    topView: {
+      get() {
+        return this.$store.state.renter.home.topView.data;
+      },
+    },
     isLoading: {
       get() {
-        return this.$store.state.renter.home.hostelTypes.isLoading;
+        return this.$store.state.renter.home.topView.isLoading;
       },
     },
   },
   created() {
     if (this.hostelTypes.length === 0) {
       this.getHostelTypes({ page: 1, size: 5 });
+    }
+    if (this.topView.length === 0) {
+      this.getTopView({ size: 10 });
     }
   },
 };

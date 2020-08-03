@@ -314,7 +314,6 @@ export default {
   },
   computed: {
     isLoadingProvinces() {
-      console.log(`${this.group.curfewTime}thuy`);
       return this.$store.state.renter.common.provinces.isLoading;
     },
     services() {
