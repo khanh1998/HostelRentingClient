@@ -3,7 +3,7 @@
     <v-img
       :src="type.typeImages[0].resourceUrl"
       v-if="type.typeImages.length !== 0"
-      style="height:200px"
+      style="height:180px"
     >
       <div class="category">
         <h4>{{type.category.categoryName}}</h4>
@@ -12,7 +12,7 @@
         <span class="price">{{type.price}} {{type.priceUnit}}</span>
       </div>
     </v-img>
-    <v-img style="height:200px" src="@/assets/image-error.png" v-else>
+    <v-img style="height:180px" src="@/assets/image-error.png" v-else>
       <div class="category">
         <h4>{{type.category.categoryName}}</h4>
       </div>
@@ -23,18 +23,14 @@
     <v-divider class="mx-4" />
     <v-row class="d-flex align-center justify-center">
       <v-col cols="10 pt-0">
-        <div
-          class="type-name d-flex align-center py-3"
-          style="height: 60px"
-          background-color="light-blue"
-        >
+        <div class="type-name d-flex align-center py-3" style="height: 60px">
           <p
             style="display: block; display: -webkit-box;-webkit-line-clamp: 2;
             -webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
             class="font-weight-bold mb-0"
           >{{type.title}}</p>
         </div>
-        <div class="mt-3 d-flex align-center">
+        <div class="mt-3 d-flex align-center" style="height: 30px">
           <v-img
             class="shrink mr-3"
             src="@/assets/home/address.png"

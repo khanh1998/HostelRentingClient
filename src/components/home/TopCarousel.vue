@@ -35,7 +35,6 @@ import TopCarouselItem from './TopCarouselItem.vue';
 
 export default {
   name: 'TopCarousel',
-  // components: { VueperSlides, VueperSlide },
   components: { VueperSlides, VueperSlide, TopCarouselItem },
   props: {
     list: Array,

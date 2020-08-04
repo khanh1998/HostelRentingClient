@@ -47,16 +47,16 @@
                     class="col-11 gmap-input"
                     @place_changed="setPlace"
                     @change="changeSearchValue"
-                    :value="coordinates"
-                    v-model="searchValue"
+                    :value="searchValue"
                     ref="address"
                   ></gmap-autocomplete>
-                  <v-btn icon>
+                  <v-btn
+                    icon
+                    @click="clearField()"
+                    v-bind:style="{ visibility: computedClearable }"
+                  >
                     <!-- eslint-disable max-len -->
-                    <v-icon
-                      v-bind:style="{ visibility: computedClearable }"
-                      @click="clearField()"
-                    >clear</v-icon>
+                    <v-icon>clear</v-icon>
                     <!-- <v-icon v-bind:style="{ visibility: computedClearable }">clear</v-icon> -->
                   </v-btn>
                 </v-col>
@@ -171,9 +171,9 @@ export default {
       show: false,
     },
     center: { lat: 10.7542893, lng: 106.1346955 },
-    coordinates: null,
     places: [],
     currentPlace: null,
+    searchValue: '',
     visibleProperty: 'hidden',
   }),
   methods: {
@@ -181,18 +181,15 @@ export default {
       // this.isActive = !this.isActive;
       // this.coordinates = null;
       this.currentPlace = place;
+      this.searchValue = place.formatted_address;
     },
     changeSearchValue() {
       this.visibleProperty = 'visible';
     },
     clearField() {
-      // console.log('thuy');
-      // this.$refs.address.value = '';
-      // console.log(this.$refs.address);
-      // console.log(this.coordinates);
-      this.coordinates = null;
-      console.log('dele');
-      console.log(this.coordinates);
+      this.searchValue = '';
+      this.visibleProperty = 'hidden';
+      this.currentPlace = null;
     },
     searchByCoordinates() {
       if (this.currentPlace) {
@@ -200,9 +197,6 @@ export default {
           lat: this.currentPlace.geometry.location.lat(),
           lng: this.currentPlace.geometry.location.lng(),
         };
-        console.log(coordinates.lat);
-        console.log(coordinates.lng);
-        this.center = coordinates;
         this.searchByCoordinator({
           lat: coordinates.lat,
           long: coordinates.lng,
@@ -213,8 +207,8 @@ export default {
     search() {
       this.setSearchValue(this.searchValue);
       this.searchByCoordinator({
-        lat: '', // gan latitude vao day
-        long: '', // gan longtitude vao day
+        lat: '',
+        long: '',
       });
       this.$router.push('/filter');
     },

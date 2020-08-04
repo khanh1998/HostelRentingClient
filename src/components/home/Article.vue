@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" :width="responsive.article.width">
+  <v-card class="mx-auto" :width="responsive.article.width" :to="'/detail/' + type.typeId">
     <v-row class="mr-0 ml-0">
       <!-- eslint-disable -->
       <v-col
@@ -8,9 +8,13 @@
       >
         <!-- eslint-enable -->
         <v-col cols="12" class="item-classic-inner d-flex justify-start">
-          <v-col cols="4" class="item-classic-left left">
+          <v-col cols="5" class="item-classic-left left">
             <div class="item-classic-media">
-              <v-img :src="type.typeImages[0].resourceUrl" v-if="type.typeImages.length !== 0">
+              <v-img
+                :src="type.typeImages[0].resourceUrl"
+                v-if="type.typeImages.length !== 0"
+                style="height:200px"
+              >
                 <div class="top">
                   Top
                   <v-icon right color="white">{{numberIcons[index-1]}}</v-icon>
@@ -21,54 +25,75 @@
               </div>
             </div>
           </v-col>
-          <v-col cols="8" class="right d-flex align-center justify-center">
-            <v-col cols="11">
-              <span class="item-address" v-if="!isLoadingProvinces">
+          <v-col cols="7" class="right no-padding d-flex">
+            <v-col cols="12" class="px-5 py-0">
+              <span
+                class="item-address"
+                v-if="!isLoadingProvinces"
+                style="display: block; display: -webkit-box;-webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
+              >
                 {{group.street}},
                 {{ward.wardName}},
                 {{district.districtName}},
                 {{province.provinceName}}
               </span>
-              <div class="type-name">
-                <p class="font-weight-bold mb-0">{{type.title}}</p>
+              <div class="type-name mt-2" style="height: 40px">
+                <p
+                  style="display: block; display: -webkit-box;-webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
+                  class="font-weight-bold mb-0"
+                >{{type.title}}</p>
               </div>
-              <div class="mt-3 d-flex align-center">
-                <v-img
-                  class="shrink mr-5"
-                  src="@/assets/home/superficies.svg"
-                  transition="scale-transition"
-                  max-width="20"
-                  max-height="20"
-                />
-                <span class="item-text">{{type.superficiality}}m2</span>
-                <div class="ml-auto d-flex">
+              <div class="align-center justify-center">
+                <div class="mt-3 d-flex align-center">
                   <v-img
-                    class="shrink mr-4 ml-auto"
-                    src="@/assets/home/people.png"
+                    src="@/assets/home/superficies.svg"
                     transition="scale-transition"
-                    max-width="25"
-                    max-height="25"
-                  />
-                  <span class="item-text">{{type.capacity}} người</span>
-                </div>
-                <div
-                  class="ml-auto d-flex"
-                  v-if="type.facilities.filter(f => f.facilityName.includes('WC')).length !== 0"
-                >
-                  <v-img
-                    class="shrink mr-4 ml-auto"
-                    src="@/assets/home/toilet.png"
-                    transition="scale-transition"
-                    max-width="25"
-                    max-height="25"
+                    class="shrink mr-3"
+                    max-width="15"
+                    max-height="15"
                   />
                   <span class="item-text">
-                    <!-- eslint-enable -->
-                    {{type.facilities.filter(f => f.facilityName.includes("WC"))[0].facilityName}}
+                    {{type.superficiality}}
+                    m
+                    <sup>2</sup>
                   </span>
+                  <div class="ml-auto d-flex justify-center align-center">
+                    <v-img
+                      src="@/assets/home/people.png"
+                      transition="scale-transition"
+                      class="shrink mr-3"
+                      max-width="15"
+                      max-height="15"
+                    />
+                    <span class="item-text">{{type.capacity}} người</span>
+                  </div>
+                  <div
+                    class="ml-auto d-flex align-center"
+                    v-if="type.facilities.filter(f => f.facilityName.includes('WC')).length !== 0"
+                  >
+                    <v-img
+                      src="@/assets/home/toilet.png"
+                      transition="scale-transition"
+                      class="shrink mr-3"
+                      max-width="15"
+                      max-height="15"
+                    />
+                    <span class="item-text">
+                      <!-- eslint-enable -->
+                      {{type.facilities.filter(f => f.facilityName.includes("WC"))[0].facilityName}}
+                    </span>
+                  </div>
                 </div>
+                <p
+                  style="font-family: 'Nunito', Helvetica, Arial, sans-serif;
+                  color: #656565;
+                  font-size: 12px;"
+                  class="align-self-center"
+                >Diện tích</p>
               </div>
-              <!-- <div class="mt-3 d-flex align-center">
+              <div class="mt-3 d-flex align-center">
                 <v-img
                   class="shrink mr-5"
                   src="@/assets/home/energy.png"
@@ -96,7 +121,7 @@
                     max-height="25"
                   />
                 </div>
-              </div>-->
+              </div>
               <div class="mt-3 d-flex align-center">
                 <span class="item-text">Giới nghiêm:</span>
                 <div class="d-flex ml-1 left">
@@ -108,13 +133,13 @@
                   <span class="item-text" v-else>Chung chủ</span>
                 </div>
               </div>
-              <v-card-actions class="pl-0 mt-3">
+              <!-- <v-card-actions class="pl-0 mt-3">
                 <v-btn
                   color="#484848"
                   class="btnDetail pl-3 pr-3 ml-auto"
                   :to="'/detail/' + type.typeId"
                 >Chi tiết</v-btn>
-              </v-card-actions>
+              </v-card-actions>-->
             </v-col>
           </v-col>
         </v-col>
@@ -168,7 +193,6 @@
   letter-spacing: 0;
   transition: 0.15s ease-out all;
   backface-visibility: hidden;
-  min-height: 250px;
 }
 .v-card:hover {
   box-shadow: 0 0 29px 0 rgba(0, 0, 0, 0.16) !important;
@@ -181,17 +205,17 @@
 }
 .item-classic-horizontal .item-classic-inner {
   position: relative;
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+  padding-left: 10px !important;
 }
 .item-classic-left {
   display: flex;
-  /* width: 100%; */
   flex-shrink: 0;
-  /* max-width: 265px; */
-  background-color: #f3f4f9;
   padding: 0;
 }
-.v-responsive__sizer {
-  padding-bottom: '100%' !important;
+.no-padding {
+  padding: 0 !important;
 }
 .item-classic-price {
   left: 0 !important;
@@ -202,7 +226,7 @@
   padding: 2px 21px 2px 11px;
   font-family: 'Poppins', sans-serif;
   color: #ffffff;
-  background-color: #2170b9;
+  background-image: linear-gradient(to right, rgba(52, 203, 247), #1c63b8);
 }
 .item-classic-price::before {
   content: '';
@@ -219,6 +243,7 @@
   position: relative;
   padding-left: 7px;
   overflow: hidden;
+  padding-right: 20px;
 }
 .v-sheet.v-card:not(.v-sheet--outlined) {
   box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.14),
@@ -226,10 +251,6 @@
 }
 .v-img {
   background-size: contain, cover !important;
-}
-
-.v-responsive__content {
-  padding-bottom: 100% !important;
 }
 
 .item-equipment {
@@ -267,7 +288,8 @@
   font-size: 16.5px;
 }
 .item-text {
-  color: #656565;
+  /* color: #656565; */
+  color: #000;
   font-size: 15px;
   font-weight: normal;
   font-family: 'Lato';

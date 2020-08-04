@@ -18,7 +18,7 @@
         </v-col>
       </v-row>
       <v-row justify="center" class="content">
-        <v-col cols="10" sm="12" md="10" lg="10" xl="10" mt="5">
+        <v-col cols="10" mt="5">
           <TopCarousel :list="topView" />
         </v-col>
       </v-row>
@@ -30,10 +30,11 @@
           </div>
         </v-col>
       </v-row>
-      <v-row class="content">
-        <v-col cols="8">
-          <v-row class="d-flex flex-row-reverse">
-            <v-col cols="12" lg="11" md="9">
+      <v-row class="content pt-3">
+        <v-col cols="1"></v-col>
+        <v-col cols="10 p-0">
+          <v-row class="d-flex flex-direction: row px-5">
+            <v-col cols="8">
               <v-row>
                 <v-col
                   cols="7"
@@ -41,7 +42,7 @@
                   md="12"
                   lg="12"
                   xl="12"
-                  class="pl-0 pr-0 pt-4 pb-4 mb-10 white d-flex"
+                  class="pl-5 pr-0 pt-7 pb-7 white d-flex"
                 >
                   <v-sheet class="ml-4">
                     <v-select
@@ -53,10 +54,10 @@
                       dense
                       label="Loại phòng"
                       class
-                      :style="'width: 300px'"
+                      :style="'width: 350px'"
                     ></v-select>
                   </v-sheet>
-                  <v-sheet light>
+                  <!-- <v-sheet light>
                     <v-btn
                       outlined
                       class="ml-5"
@@ -72,7 +73,7 @@
                         style="background-color: #fff; border-radius: 5px;"
                       />
                     </v-overlay>
-                  </v-sheet>
+                  </v-sheet>-->
                 </v-col>
                 <!-- <v-col cols="6" sm="6" md="0" lg="0" xl="0" class="hidden-md-and-up">
                   <v-sheet style="height: 100%">
@@ -98,16 +99,17 @@
                 </v-col>
               </v-row>
             </v-col>
-            <!-- <v-col cols="12" lg="4" md="5" class="hidden-sm-and-down">
+            <!-- <v-col cols="4" lg="4" md="5" class="hidden-sm-and-down"> -->
+            <v-col cols="4">
               <v-row>
-                <v-col cols="12">
+                <v-col cols="11 ml-auto pt-0 mt-0">
                   <v-sheet>
                     <p class="text-h6 pt-2 ml-6">Bộ lọc</p>
                     <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
                   </v-sheet>
                 </v-col>
               </v-row>
-            </v-col>-->
+            </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" sm="12" md="7" xl="8" lg="8">
