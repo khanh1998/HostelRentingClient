@@ -83,12 +83,20 @@ export default {
     isLoadingBooking() {
       return this.$store.state.user.bookings.isLoading;
     },
+    filteredBookings() {
+      if (!this.timeDiff) {
+        return this.bookings;
+      }
+      // this.bookings.
+      return null;
+    },
   },
   created() {
     this.getBookings();
   },
   data: () => ({
     chipItems: ['Hôm nay', 'Tuần này', 'Tháng này'],
+    timeDiff: null,
   }),
 };
 </script>
