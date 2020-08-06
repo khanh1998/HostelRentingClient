@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-overlay :value="isLoading" absolute>
+    <v-overlay :value="(isLoadingTopView && isLoadingTopSuggestion)" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-container fluid v-if="!isLoading">
+    <v-container fluid v-if="!(isLoadingTopView || isLoadingTopSuggestion)">
       <v-row>
         <v-col cols="12">
           <Banner />
@@ -102,7 +102,7 @@
             <!-- <v-col cols="4" lg="4" md="5" class="hidden-sm-and-down"> -->
             <v-col cols="4">
               <v-row>
-                <v-col cols="11 ml-auto pt-0 mt-0">
+                <v-col cols="11 ml-auto pt-0 mt-0 red">
                   <v-sheet>
                     <p class="text-h6 pt-2 ml-6">Bộ lọc</p>
                     <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
@@ -221,9 +221,14 @@ export default {
         return this.$store.state.renter.home.topView.data;
       },
     },
-    isLoading: {
+    isLoadingTopView: {
       get() {
         return this.$store.state.renter.home.topView.isLoading;
+      },
+    },
+    isLoadingTopSuggestion: {
+      get() {
+        return this.$store.state.renter.home.hostelTypes.isLoading;
       },
     },
   },
