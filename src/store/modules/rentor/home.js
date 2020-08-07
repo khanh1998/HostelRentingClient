@@ -23,6 +23,10 @@ const myState = () => ({
     data: [],
     isLoading: false,
   },
+  categories: {
+    data: [],
+    isLoading: false,
+  },
 });
 const getters = {
   getHostelGroupById: (state) => (id) => {
@@ -39,7 +43,6 @@ const getters = {
       (type) => type.typeId === Number(id),
     );
     if (result.length > 0) {
-      console.log('finded');
       return result[0];
     }
     return null;
@@ -62,8 +65,13 @@ const mutationTypes = {
   GET_TOP_VIEW_SUCCESS: 'GET_TOP_VIEW_SUCCESS',
   GET_TOP_VIEW_FAILURE: 'GET_TOP_VIEW_FAILURE',
   GET_TOP_VIEW_REQUEST: 'GET_TOP_VIEW_REQUEST',
+
+  GET_CATEGORIES_SUCCESS: 'GET_CATEGORIES_SUCCESS',
+  GET_CATEGORIES_FAILURE: 'GET_CATEGORIES_FAILURE',
+  GET_CATEGORIES_REQUEST: 'GET_CATEGORIES_REQUEST',
 };
 const mutations = {
+  // hostel type
   GET_HOSTEL_TYPES_SUCCESS(state, inputData) {
     state.hostelTypes.data = inputData.types;
     state.hostelTypes.isLoading = false;
@@ -78,7 +86,7 @@ const mutations = {
     state.hostelTypes.isLoading = true;
     state.hostelGroups.isLoading = true;
   },
-
+  // top view
   GET_TOP_VIEW_SUCCESS(state, inputData) {
     state.topView.data = inputData.types;
     state.topView.isLoading = false;
@@ -87,11 +95,22 @@ const mutations = {
   },
   GET_TOP_VIEW_FAILURE(state) {
     state.topView.isLoading = false;
-    state.topView.isLoading = false;
+    state.topViewHostelGroup.isLoading = false;
   },
   GET_TOP_VIEW_REQUEST(state) {
     state.topView.isLoading = true;
-    state.topView.isLoading = true;
+    state.topViewHostelGroup.isLoading = true;
+  },
+  // categories
+  GET_CATEGORIES_SUCCESS(state, inputData) {
+    state.categories.data = inputData;
+    state.categories.isLoading = false;
+  },
+  GET_CATEGORIES_FAILURE(state) {
+    state.categories.isLoading = false;
+  },
+  GET_CATEGORIES_REQUEST(state) {
+    state.categories.isLoading = true;
   },
 };
 const actions = {
@@ -101,7 +120,7 @@ const actions = {
     const response = await window.axios.get(
       `/api/v1/types?page=${params.page}&size=${params.size}`,
     );
-    if (response.status === 200) {
+    if (response.status >= 200 && response.status <= 299) {
       commit(mutationTypes.GET_HOSTEL_TYPES_SUCCESS, response.data.data);
     } else {
       commit(mutationTypes.GET_HOSTEL_TYPES_FAILURE);
@@ -114,11 +133,23 @@ const actions = {
       const response = await window.axios.get(
         `/api/v1/types?sortBy=view&size=${params.size}`,
       );
-      if (response.status === 200) {
+      if (response.status >= 200 && response.status <= 299) {
         commit(mutationTypes.GET_TOP_VIEW_SUCCESS, response.data.data);
       }
     } catch (error) {
       commit(mutationTypes.GET_TOP_VIEW_FAILURE);
+    }
+  },
+  async getAllCategories({ commit }) {
+    // no param
+    try {
+      commit(mutationTypes.GET_CATEGORIES_REQUEST);
+      const response = await window.axios.get('/api/v1/categories');
+      if (response.status >= 200 && response.status <= 299) {
+        commit(mutationTypes.GET_CATEGORIES_SUCCESS, response.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_CATEGORIES_FAILURE);
     }
   },
 };

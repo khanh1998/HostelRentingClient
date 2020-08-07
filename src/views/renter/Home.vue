@@ -1,9 +1,12 @@
 <template>
   <div>
-    <v-overlay :value="(isLoadingTopView && isLoadingTopSuggestion)" absolute>
+    <v-overlay
+      :value="(isLoadingTopView && isLoadingTopSuggestion && isLoadingCategories)"
+      absolute
+    >
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-container fluid v-if="!(isLoadingTopView || isLoadingTopSuggestion)">
+    <v-container fluid v-if="!(isLoadingTopView || isLoadingTopSuggestion || isLoadingCategories)">
       <v-row>
         <v-col cols="12">
           <Banner />
@@ -46,8 +49,10 @@
                 >
                   <v-sheet class="ml-4">
                     <v-select
-                      v-model="roomType.select"
-                      :items="roomType.items"
+                      v-bind:items="categories"
+                      item-text="categoryName"
+                      item-value="categoryName"
+                      _v-model="categories[0].categoryName"
                       light
                       outlined
                       hide-details
@@ -102,7 +107,7 @@
             <!-- <v-col cols="4" lg="4" md="5" class="hidden-sm-and-down"> -->
             <v-col cols="4">
               <v-row>
-                <v-col cols="11 ml-auto pt-0 mt-0 red">
+                <v-col cols="11 ml-auto pt-0 mt-0">
                   <v-sheet>
                     <p class="text-h6 pt-2 ml-6">Bộ lọc</p>
                     <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
@@ -174,7 +179,7 @@ export default {
     overlay: false,
     roomType: {
       select: 'Phòng trọ',
-      items: ['Phòng trọ', 'Ký túc xá', 'Nhà nguyên căn'],
+      items: ['Phòng trọ', 'Ký túc xá', 'Nhà nguyên căn', 'thuy'],
     },
     bottomSheet: {
       show: false,
@@ -185,6 +190,9 @@ export default {
     filterCriteria: null,
   }),
   methods: {
+    ...mapActions({
+      getAllCategories: 'renter/home/getAllCategories',
+    }),
     ...mapActions({
       getHostelTypes: 'renter/home/getHostelTypes',
     }),
@@ -211,6 +219,11 @@ export default {
     },
   },
   computed: {
+    categories: {
+      get() {
+        return this.$store.state.renter.home.categories.data;
+      },
+    },
     hostelTypes: {
       get() {
         return this.$store.state.renter.home.hostelTypes.data;
@@ -231,8 +244,16 @@ export default {
         return this.$store.state.renter.home.hostelTypes.isLoading;
       },
     },
+    isLoadingCategories: {
+      get() {
+        return this.$store.state.renter.home.categories.isLoading;
+      },
+    },
   },
   created() {
+    if (this.categories.length === 0) {
+      this.getAllCategories();
+    }
     if (this.hostelTypes.length === 0) {
       this.getHostelTypes({ page: 1, size: 5 });
     }

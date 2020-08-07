@@ -86,14 +86,14 @@
                     </span>
                   </div>
                 </div>
-                <p
+                <!-- <p
                   style="font-family: 'Nunito', Helvetica, Arial, sans-serif;
                   color: #656565;
                   font-size: 12px;"
                   class="align-self-center"
-                >Diện tích</p>
+                >Diện tích</p>-->
               </div>
-              <div class="mt-3 d-flex align-center">
+              <!-- <div class="mt-3 d-flex align-center">
                 <v-img
                   class="shrink mr-5"
                   src="@/assets/home/energy.png"
@@ -121,9 +121,9 @@
                     max-height="25"
                   />
                 </div>
-              </div>
+              </div>-->
               <div class="mt-3 d-flex align-center">
-                <span class="item-text">Giới nghiêm:</span>
+                <span class="item-text" style="color: #656565">Giới nghiêm:</span>
                 <div class="d-flex ml-1 left">
                   <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
                   <span class="item-text">{{group.curfewTime}}</span>

@@ -63,7 +63,7 @@
       </v-expansion-panel>
     </v-expansion-panels>
 
-    <v-select
+    <!-- <v-select
       v-model="filter.around.selects"
       :items="filter.around.items"
       light
@@ -72,7 +72,7 @@
       label="Tiện nghi xung quanh"
       clearable
       dense
-    ></v-select>
+    ></v-select>-->
     <!--<v-select
       v-model="filter.facility.selects"
       :items="filter.facility.items"
@@ -126,6 +126,9 @@ export default {
   }),
   methods: {
     ...mapActions({
+      getAllFacilities: 'renter/filterresult/getAllFacilities',
+    }),
+    ...mapActions({
       setFilterValue: 'renter/filterResult/setFilterValue',
     }),
     submit() {
@@ -138,6 +141,17 @@ export default {
     filter() {
       return this.$store.state.renter.filterResult.filter;
     },
+    facilities: {
+      get() {
+        return this.$store.state.renter.filterResult.facility.data;
+      },
+    },
+  },
+  created() {
+    if (this.facilities.length === 0) {
+      console.log('facilities');
+      this.getAllFacilities();
+    }
   },
 };
 </script>
