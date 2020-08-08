@@ -1,68 +1,99 @@
 <template>
-  <v-card class="mx-auto" :width="responsive.article.width">
+  <v-card class="mx-auto" :width="responsive.article.width" :to="'/detail/' + type.typeId">
     <v-row class="mr-0 ml-0">
-      <v-col cols="12" class="d-flex flex-xl-row flex-lg-row flex-md-column flex-sm-column
-      flex-column item-classic item-classic-horizontal">
+      <!-- eslint-disable -->
+      <v-col
+        cols="12"
+        class="d-flex flex-xl-row flex-lg-row flex-md-column flex-sm-column flex-column item-classic item-classic-horizontal"
+      >
+        <!-- eslint-enable -->
         <v-col cols="12" class="item-classic-inner d-flex justify-start">
-          <v-col cols="4" class="item-classic-left left">
+          <v-col cols="5" class="item-classic-left left">
             <div class="item-classic-media">
-            <v-img
-              _:max-height="responsive.image.height"
-              _:max-width="responsive.image.width"
-              :src="'https://tiendoduan.org/wp-content/uploads/2020/04/can-ho-mini-25m2.jpg'"
-            >
-              <div class="top">
-                Top
-                <v-icon right color="white">{{numberIcons[index-1]}}</v-icon>
+              <v-img
+                :src="type.typeImages[0].resourceUrl"
+                v-if="type.typeImages.length !== 0"
+                style="height:200px"
+              >
+                <div class="top">
+                  Top
+                  <v-icon right color="white">{{numberIcons[index-1]}}</v-icon>
+                </div>
+              </v-img>
+              <div class="item-classic-price">
+                <span>{{type.price}} {{type.priceUnit}}</span>
               </div>
-            </v-img>
-            <div class="item-classic-price">
-              <span>{{type.price}} {{type.priceUnit}}</span>
             </div>
-          </div>
           </v-col>
-          <v-col cols="8" class="right d-flex align-center justify-center">
-            <v-col cols="11">
-              <span class="item-address" v-if="!isLoadingProvinces">
+          <v-col cols="7" class="right no-padding d-flex">
+            <v-col cols="12" class="px-5 py-0">
+              <span
+                class="item-address"
+                v-if="!isLoadingProvinces"
+                style="display: block; display: -webkit-box;-webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
+              >
                 {{group.street}},
                 {{ward.wardName}},
                 {{district.districtName}},
                 {{province.provinceName}}
               </span>
-              <div class="type-name">
-                <p class="font-weight-bold mb-0">{{type.title}}</p>
+              <div class="type-name mt-2" style="height: 40px">
+                <p
+                  style="display: block; display: -webkit-box;-webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
+                  class="font-weight-bold mb-0"
+                >{{type.title}}</p>
               </div>
-              <div class="mt-3 d-flex align-center">
-                <v-img
-                  class="shrink mr-5"
-                  src="@/assets/home/superficies.svg"
-                  transition="scale-transition"
-                  max-width="20"
-                  max-height="20"
-                />
-                <span class="item-text">{{type.superficiality}}m2</span>
-                <div class="ml-auto d-flex">
+              <div class="align-center justify-center">
+                <div class="mt-3 d-flex align-center">
                   <v-img
-                    class="shrink mr-4 ml-auto"
-                    src="@/assets/home/people.png"
+                    src="@/assets/home/superficies.svg"
                     transition="scale-transition"
-                    max-width="25"
-                    max-height="25"
+                    class="shrink mr-3"
+                    max-width="15"
+                    max-height="15"
                   />
-                  <span class="item-text">{{type.capacity}} người</span>
+                  <span class="item-text">
+                    {{type.superficiality}}
+                    m
+                    <sup>2</sup>
+                  </span>
+                  <div class="ml-auto d-flex justify-center align-center">
+                    <v-img
+                      src="@/assets/home/people.png"
+                      transition="scale-transition"
+                      class="shrink mr-3"
+                      max-width="15"
+                      max-height="15"
+                    />
+                    <span class="item-text">{{type.capacity}} người</span>
+                  </div>
+                  <div
+                    class="ml-auto d-flex align-center"
+                    v-if="type.facilities.filter(f => f.facilityName.includes('WC')).length !== 0"
+                  >
+                    <v-img
+                      src="@/assets/home/toilet.png"
+                      transition="scale-transition"
+                      class="shrink mr-3"
+                      max-width="15"
+                      max-height="15"
+                    />
+                    <span class="item-text">
+                      <!-- eslint-enable -->
+                      {{type.facilities.filter(f => f.facilityName.includes("WC"))[0].facilityName}}
+                    </span>
+                  </div>
                 </div>
-                <div class="ml-auto d-flex">
-                  <v-img
-                    class="shrink mr-4 ml-auto"
-                    src="@/assets/home/toilet.png"
-                    transition="scale-transition"
-                    max-width="25"
-                    max-height="25"
-                  />
-                  <span class="item-text">Dùng riêng</span>
-                </div>
+                <!-- <p
+                  style="font-family: 'Nunito', Helvetica, Arial, sans-serif;
+                  color: #656565;
+                  font-size: 12px;"
+                  class="align-self-center"
+                >Diện tích</p>-->
               </div>
-              <div class="mt-3 d-flex align-center">
+              <!-- <div class="mt-3 d-flex align-center">
                 <v-img
                   class="shrink mr-5"
                   src="@/assets/home/energy.png"
@@ -70,7 +101,7 @@
                   max-width="20"
                   max-height="20"
                 />
-                <span class="item-text">3k/kwh</span>
+                <span class="item-text">{{services.find(s=> s.name === "điện").price}}</span>
                 <div class="ml-auto d-flex">
                   <v-img
                     class="shrink mr-4 ml-auto"
@@ -89,140 +120,35 @@
                     max-width="25"
                     max-height="25"
                   />
-                  <span class="item-text">50k/phòng</span>
                 </div>
-              </div>
+              </div>-->
               <div class="mt-3 d-flex align-center">
-                <span class="item-text">Giới nghiêm:</span>
-                <div class="ml-auto d-flex left">
-                  <span class="item-text">Trước 12h đêm</span>
+                <span class="item-text" style="color: #656565">Giới nghiêm:</span>
+                <div class="d-flex ml-1 left">
+                  <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
+                  <span class="item-text">{{group.curfewTime}}</span>
                 </div>
                 <div class="ml-auto d-flex">
-                  <span class="item-text">Không chung chủ</span>
+                  <span class="item-text" v-if="group.ownerJoin == false">Không chung chủ</span>
+                  <span class="item-text" v-else>Chung chủ</span>
                 </div>
               </div>
-              <v-card-actions class="pl-0 mt-3">
-                <v-btn color="#484848" class="btnDetail pl-3 pr-3 ml-auto"
+              <!-- <v-card-actions class="pl-0 mt-3">
+                <v-btn
+                  color="#484848"
+                  class="btnDetail pl-3 pr-3 ml-auto"
                   :to="'/detail/' + type.typeId"
-                >
-                  Chi tiết
-                </v-btn>
-              </v-card-actions>
+                >Chi tiết</v-btn>
+              </v-card-actions>-->
             </v-col>
           </v-col>
         </v-col>
       </v-col>
     </v-row>
-    <!-- <div class="d-flex flex-xl-row flex-lg-row flex-md-column flex-sm-column flex-column
-    item-classic item-classic-horizontal">
-      <div class="item-classic-inner d-flex"> -->
-        <!-- <div class="item-classic-left">
-          <div class="item-classic-media">
-            <v-img
-              :max-height="responsive.image.height"
-              :max-width="responsive.image.width"
-              :src="'https://tiendoduan.org/wp-content/uploads/2020/04/can-ho-mini-25m2.jpg'"
-            >
-              <div class="top">
-                Top
-                <v-icon right color="white">{{numberIcons[index-1]}}</v-icon>
-              </div>
-            </v-img>
-            <div class="item-classic-price">
-              <span>1.500.000 đ</span>
-            </div>
-          </div>
-        </div> -->
-        <!-- <v-row class="d-flex">
-          <v-col cols="10" class="red">
-            <div class="item-classic-right pl-5">
-              <div class="type-name">
-                <p class="font-weight-bold mb-0">Ký túc xá đại học quốc gia</p>
-              </div>
-          </div>
-          </v-col>
-        </v-row>
-      </div> -->
-      <!-- <div class="right d-flex flex-column">
-        <div class="d-flex justify-space-center align-center type-name flex-xl-row">
-          <v-card-title>{{group.groupName}} - {{type.typeName}}</v-card-title>
-          <v-btn outlined :to="'/detail/' + type.typeId">Chi tiết</v-btn>
-        </div>
-        <v-card-subtitle class="amber--text font-weight-medium"> -->
-          <!-- <v-icon>mdi-currency-usd-circle-outline</v-icon>{{type.price}} {{type.priceUnit}} -->
-        <!-- </v-card-subtitle>
-        <div class="ml-4" style="border: 1px solid #6C98C6; width: 200px"></div>
-        <div class="d-flex align-center justify-space-between">
-          <span class="mx-2 mt-4">
-            <p>
-              <v-icon class="mx-2" x-small>fas fa-map-marker-alt</v-icon>{{group.street}}
-            </p>
-          </span>
-        </div>
-        <div class="d-flex align-center justify-space-between flex-wrap">
-          <span class="mx-2">
-            <p class="success--text">
-              <v-icon class="mx-2" x-small>fas fa-store</v-icon>Chợ Hoàng Hoa Thám
-            </p>
-          </span>
-          <span class="mx-2">
-            <p>
-              <v-icon class="mx-2" x-small>fas fa-ruler</v-icon>0.2 Km
-            </p>
-          </span>
-        </div>
-        <div class="d-flex align-center justify-space-between">
-          <span class="mx-2">
-            <v-icon class="mx-2" x-small>fas fa-ruler-combined</v-icon>20m2
-          </span>
-          <span class="mx-2">
-            <v-icon class="mx-2" x-small>fas fa-users</v-icon>
-            {{type.capacity}} người
-          </span>
-          <span class="mx-2">
-            <v-icon class="mx-2" x-small>mdi-toilet</v-icon>Dùng riêng
-          </span>
-        </div>
-        <div class="d-flex align-center justify-space-between mt-4">
-          <span class="mx-2">
-            <v-icon class="mx-2" x-small>fas fa-bolt</v-icon>3.5k/Kwh
-          </span>
-          <span class="mx-2">
-            <v-icon class="mx-2" x-small>fas fa-tint</v-icon>50k/người
-          </span>
-          <span class="mx-2">
-            <v-icon class="mx-2" x-small>mdi-wifi</v-icon>Miễn phí
-          </span>
-        </div>
-        </div>
-        </div>
-        <div class="d-flex align-center justify-space-between mt-2 ml-2">
-          <v-chip-group class center-active light show-arrows mandatory>
-            <v-chip outlined>
-              <v-icon class="mr-2" x-small>mdi-weather-windy</v-icon>May Lanh
-            </v-chip>
-            <v-chip outlined>
-              <v-icon class="mr-2" x-small>mdi-fridge</v-icon>Tu Lanh
-            </v-chip>
-            <v-chip outlined>
-              <v-icon class="mr-2" x-small>fas fa-motorcycle</v-icon>Cho dau xe
-            </v-chip>
-            <v-chip outlined>
-              <v-icon class="mr-2" x-small>mdi-washing-machine</v-icon>May giat
-            </v-chip>
-          </v-chip-group>
-        </div>
-      </div> -->
-    <div style="background-color: #f3f4f9">
+    <!-- <div style="background-color: #f3f4f9">
       <div class="ml-2" style="background-color: #e7e9f0;">
         <div class="d-flex align-center justify-space-between ml-2 pt-2 pb-2">
-          <v-chip-group
-            class=""
-            center-active
-            light
-            show-arrows
-            mandatory
-          >
+          <v-chip-group class center-active light show-arrows mandatory>
             <div class="d-flex align-center pl-7 pr-7">
               <v-img
                 class="shrink mr-2"
@@ -253,87 +179,80 @@
               />
               <span class="equipment-name ml-2">Chỗ đậu xe</span>
             </div>
-            <!-- </v-chip> -->
-            <!-- <v-chip>
-              <v-icon class="mr-2" x-small>mdi-fridge</v-icon>Tu Lanh
-            </v-chip>
-            <v-chip>
-              <v-icon class="mr-2" x-small>fas fa-motorcycle</v-icon>Cho dau xe
-            </v-chip>
-            <v-chip>
-              <v-icon class="mr-2" x-small>mdi-washing-machine</v-icon>May giat
-            </v-chip> -->
           </v-chip-group>
         </div>
       </div>
-    </div>
+    </div>-->
   </v-card>
 </template>
 <style scoped>
-  .item-classic {
-    position: relative;
-    overflow: hidden !important;
-    z-index: 1;
-    letter-spacing: 0;
-    transition: .15s ease-out all;
-    backface-visibility: hidden;
-    min-height: 250px;
-  }
-  .v-card:hover {
-    box-shadow: 0 0 29px 0 rgba(0, 0, 0, 0.16) !important;
-  }
-  .item-classic-horizontal {
-    padding: 0;
-    box-shadow: none;
-    overflow: visible !important;
-    text-align: left;
-  }
-  .item-classic-horizontal .item-classic-inner {
-    position: relative;
-  }
-  .item-classic-left {
-    display: flex;
-    /* width: 100%; */
-    flex-shrink: 0;
-    /* max-width: 265px; */
-    background-color: #f3f4f9;
-    padding: 0;
-  }
-  .v-responsive__sizer {
-    padding-bottom: 100% !important;
-  }
-  .item-classic-price {
-    left: 0 !important;
-    top: 28px;
-    bottom: auto !important;
-    z-index: 100;
-    position: absolute;
-    padding: 2px 21px 2px 11px;
-    font-family: "Poppins", sans-serif;
-    color: #ffffff;
-    background-color: #2170B9;
-  }
-  .item-classic-price::before {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 8px 8px 0;
-    border-color: transparent #367dc3 transparent transparent;
+.item-classic {
+  position: relative;
+  overflow: hidden !important;
+  z-index: 1;
+  letter-spacing: 0;
+  transition: 0.15s ease-out all;
+  backface-visibility: hidden;
 }
-  .item-classic-media {
-    position: relative;
-    padding-left: 7px;
-    overflow: hidden;
-  }
-  .v-sheet.v-card:not(.v-sheet--outlined) {
-    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.14),
-    0px 0px 0px 0px rgba(0, 0, 0, 0.14),
-    0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+.v-card:hover {
+  box-shadow: 0 0 29px 0 rgba(0, 0, 0, 0.16) !important;
 }
+.item-classic-horizontal {
+  padding: 0;
+  box-shadow: none;
+  overflow: visible !important;
+  text-align: left;
+}
+.item-classic-horizontal .item-classic-inner {
+  position: relative;
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+  padding-left: 10px !important;
+}
+.item-classic-left {
+  display: flex;
+  flex-shrink: 0;
+  padding: 0;
+}
+.no-padding {
+  padding: 0 !important;
+}
+.item-classic-price {
+  left: 0 !important;
+  top: 28px;
+  bottom: auto !important;
+  z-index: 100;
+  position: absolute;
+  padding: 2px 21px 2px 11px;
+  font-family: 'Poppins', sans-serif;
+  color: #ffffff;
+  background-image: linear-gradient(to right, rgba(52, 203, 247), #1c63b8);
+}
+.item-classic-price::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 8px 8px 0;
+  border-color: transparent #367dc3 transparent transparent;
+}
+.item-classic-media {
+  position: relative;
+  padding-left: 7px;
+  overflow: hidden;
+  padding-right: 20px;
+}
+.v-sheet.v-card:not(.v-sheet--outlined) {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.14),
+    0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+}
+.v-img {
+  background-size: contain, cover !important;
+}
+
 .item-equipment {
   background-color: #e7e9f0;
 }
@@ -345,7 +264,7 @@
   width: auto;
   max-width: 80%;
   padding: 8px 16px;
-  background:  rgba(32, 112, 185, 0.66);
+  background: rgba(32, 112, 185, 0.66);
   color: #fff;
   text-align: center;
   line-height: 22px;
@@ -369,7 +288,8 @@
   font-size: 16.5px;
 }
 .item-text {
-  color: #656565;
+  /* color: #656565; */
+  color: #000;
   font-size: 15px;
   font-weight: normal;
   font-family: 'Lato';
@@ -385,7 +305,7 @@
   font-family: 'Nunito';
 }
 .v-btn:hover {
-  background-color: #6C98C6 !important;
+  background-color: #6c98c6 !important;
 }
 </style>
 <script>
@@ -417,6 +337,17 @@ export default {
   computed: {
     isLoadingProvinces() {
       return this.$store.state.renter.common.provinces.isLoading;
+    },
+    services() {
+      return this.type.services.map((s) => ({
+        name: s.service.serviceName,
+        price: `${s.servicePrice} ${s.priceUnit}/${s.userUnit}`,
+      }));
+    },
+    facilities() {
+      return this.type.facilities.map((f) => ({
+        name: f.facilityName,
+      }));
     },
     res() {
       return this.$vuetify.breakpoint.name;

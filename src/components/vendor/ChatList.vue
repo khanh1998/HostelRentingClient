@@ -1,5 +1,8 @@
 <template>
-  <v-card>
+  <v-card
+    v-if="!isLoadingRenterList || !isLoadingUser"
+    :loading="isLoadingRenterList"
+  >
     <v-card flat>
       <v-toolbar color="#6C98C6" dark flat>
         <v-text-field
@@ -52,7 +55,7 @@
                       @click="$emit('clickChat', getDocRef(item.id))"
                     >
                       <v-list-item-avatar>
-                          <v-img :src="getUserById(item.renterId).avatar"></v-img>
+                          <v-img :src="getUserById(item.renterId).avatar || '#'"></v-img>
                         </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title
@@ -154,10 +157,10 @@ export default {
       return this.$store.state.user.user.isLoading;
     },
     renterList() {
-      return this.$store.state.renter.overview.usersChatList.data;
+      return this.$store.state.vendor.overview.usersChatList.data;
     },
     isLoadingRenterList() {
-      return this.$store.state.renter.overview.usersChatList.isLoadings;
+      return this.$store.state.vendor.overview.usersChatList.isLoadings;
     },
   },
   methods: {

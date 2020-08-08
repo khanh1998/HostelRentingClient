@@ -14,14 +14,19 @@ const myState = {
     },
     facility: {
       selects: [],
-      items: [
-        'Máy lạnh',
-        'Máy giặt',
-        'Tủ lạnh',
-        'Bình nóng lạnh',
-        'Chỗ đậu xe',
-      ],
+      data: [],
+      isLoading: false,
     },
+    // facility: {
+    //   selects: [],
+    //   items: [
+    //     'Máy lạnh',
+    //     'Máy giặt',
+    //     'Tủ lạnh',
+    //     'Bình nóng lạnh',
+    //     'Chỗ đậu xe',
+    //   ],
+    // },
     price: {
       select: '1 triệu',
       items: [
@@ -66,6 +71,10 @@ const mutationTypes = {
   GET_FILTER_RESULT_REQUEST: 'GET_FILTER_RESULT_REQUEST',
   GET_FILTER_RESULT_SUCCESS: 'GET_FILTER_RESULT_SUCCESS',
   GET_FILTER_RESULT_FAILURE: 'GET_FILTER_RESULT_FAILURE',
+  // facilities
+  GET_FACILITIES_SUCCESS: 'GET_FACILITIES_SUCCESS',
+  GET_FACILITIES_FAILURE: 'GET_FACILITIES_FAILURE',
+  GET_FACILITIES_REQUEST: 'GET_FACILITIES_REQUEST',
 };
 const mutations = {
   SET_FILTER_VALUES: (state, filterValues) => {
@@ -84,17 +93,33 @@ const mutations = {
   GET_FILTER_RESULT_FAILURE: (state) => {
     state.results.isLoading = false;
   },
+
+  // facilities
+  GET_FACILITIES_SUCCESS(state, inputData) {
+    state.facility.data = inputData;
+    state.facility.isLoading = false;
+  },
+  GET_FACILITIES_FAILURE(state) {
+    state.facility.isLoading = false;
+  },
+  GET_FACILITIES_REQUEST(state) {
+    state.facility.isLoading = true;
+  },
 };
 const getters = {
   getHostelGroupById: (state) => (id) => {
-    const result = state.results.data.groups.filter((group) => group.groupId === Number(id));
+    const result = state.results.data.groups.filter(
+      (group) => group.groupId === Number(id),
+    );
     if (result.length > 0) {
       return result[0];
     }
     return null;
   },
   getHostelTypeById: (state) => (id) => {
-    const result = state.results.data.types.filter((type) => type.typeId === Number(id));
+    const result = state.results.data.types.filter(
+      (type) => type.typeId === Number(id),
+    );
     if (result.length > 0) {
       return result[0];
     }
@@ -132,7 +157,9 @@ const actions = {
       }
       return '';
     });
-    queryString = `?${queryString.join('')}size=${params.size}&page=${params.page}`;
+    queryString = `?${queryString.join('')}size=${params.size}&page=${
+      params.page
+    }`;
     const res = await window.axios.get(`/api/v1/types${queryString}`);
     if (res.status === 200) {
       commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
@@ -148,6 +175,32 @@ const actions = {
       commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
     } else {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
+    }
+  },
+  async searchByCoordinator({ commit }, params) {
+    // params = {lat, long}
+    try {
+      commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
+      const url = `/api/v1/types?distance=5&latitude=${params.lat}&longitude=${params.long}&page=1&size=5`;
+      const res = await window.axios.get(url);
+      if (res.status === 200) {
+        commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
+    }
+  },
+  async getAllFacilities({ commit }) {
+    // no param
+    try {
+      console.log('filter');
+      commit(mutationTypes.GET_FACILITIES_REQUEST);
+      const response = await window.axios.get('/api/v1/facilities');
+      if (response.status >= 200 && response.status <= 299) {
+        commit(mutationTypes.GET_FACILITIES_SUCCESS, response.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_FACILITIES_FAILURE);
     }
   },
 };

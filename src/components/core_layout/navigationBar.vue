@@ -21,143 +21,146 @@
       </v-text-field>
     </v-overlay>
     <v-app-bar app color="#fff" light height="70" id="top-bar">
-      <router-link to="/">
-        <v-img
-          alt="Hostel Renting"
-          class="shrink mr-2"
-          contain
-          src="@/assets/logo1.png"
-          transition="scale-transition"
-          max-width="100"
-          max-height="80"
-        />
-      </router-link>
-      <!-- <v-toolbar-title ml-0 pl-4><span>TD Hostel</span></v-toolbar-title> -->
-      <!-- <v-spacer class="hidden-sm-and-down"/> -->
-      <!-- <div id="search-bar" class="d-flex">
-        <v-text-field
-          background-color="white"
-          outlined
-          flat
-          solo-inverted
-          hide-details
-          label="Tìm theo địa chỉ, địa điểm..."
-          id="search_input"
-          class="hidden-sm-and-down"
-          v-model="searchValue"
-          clearable
-          style="color: #444444!important"
-          dense
-          height="30px"
-          loader-height="1"
-        >
-          <template v-slot:append>
-            <v-btn depressed @click="search" color="primary" height="100%">
-              <v-icon light>search</v-icon>
-            </v-btn>
-          </template>
-        </v-text-field>
-      </div>-->
-      <v-text-field
-        outlined
-        dense
-        hide-details
-        placeholder="Tìm theo địa chỉ, địa điểm..."
-        class="hidden-sm-and-down"
-        clearable
-      >
-        <template v-slot:append>
-          <v-btn depressed @click="search" color="primary" height="40">
-            <v-icon>search</v-icon>
+      <v-row height="70 m-0" class="d-flex">
+        <v-col class="col-7">
+          <v-row>
+            <v-col class="col-2">
+              <router-link to="/">
+                <v-img
+                  alt="Hostel Renting"
+                  class="shrink mr-2"
+                  contain
+                  src="@/assets/logo1.png"
+                  transition="scale-transition"
+                  max-width="100"
+                  max-height="80"
+                />
+              </router-link>
+            </v-col>
+            <!-- </v-col>
+            <v-col class="col-5">-->
+            <v-col class="col-10 pl-10">
+              <v-row class="px-0 d-flex align-center">
+                <v-col class="col-9 pl-5 searchBar d-flex align-center">
+                  <gmap-autocomplete
+                    placeholder="Tìm theo địa chỉ, địa điểm ..."
+                    class="col-11 gmap-input"
+                    @place_changed="setPlace"
+                    @change="changeSearchValue"
+                    :value="searchValue"
+                    ref="address"
+                  ></gmap-autocomplete>
+                  <v-btn
+                    icon
+                    @click="clearField()"
+                    v-bind:style="{ visibility: computedClearable }"
+                  >
+                    <!-- eslint-disable max-len -->
+                    <v-icon>clear</v-icon>
+                    <!-- <v-icon v-bind:style="{ visibility: computedClearable }">clear</v-icon> -->
+                  </v-btn>
+                </v-col>
+                <v-col class="col-3 px-0">
+                  <v-btn
+                    class="rounded-l-0"
+                    depressed
+                    @click="searchByCoordinates"
+                    color="primary"
+                    height="40"
+                  >
+                    <v-icon>search</v-icon>
+                  </v-btn>
+                  <v-btn
+                    color="primary"
+                    height="48"
+                    depressed
+                    icon
+                    fab
+                    class="ma-2 hidden-md-and-up"
+                    @click="overlay.show = true"
+                  >
+                    <v-icon light>mdi-magnify</v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-col>
+
+        <v-col class="col-5 ml-auto d-flex justify-end items-center align-center pr-5">
+          <v-btn
+            color="#2C92D5"
+            light
+            depressed
+            outlined
+            rounded
+            class="mr-5 hidden-xs-only font-weight-regular"
+          >
+            <v-icon left>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
           </v-btn>
-        </template>
-      </v-text-field>
-      <v-btn
-        color="primary"
-        height="48"
-        depressed
-        icon
-        fab
-        class="ma-2 hidden-md-and-up"
-        @click="overlay.show = true"
-      >
-        <v-icon light>mdi-magnify</v-icon>
-      </v-btn>
 
-      <v-spacer></v-spacer>
-
-      <v-btn
-        color="#2C92D5"
-        light
-        depressed
-        outlined
-        rounded
-        class="ma-1 hidden-xs-only font-weight-regular"
-      >
-        <v-icon left>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
-      </v-btn>
-
-      <v-btn color="#6C98C6" to="/cart" depressed dark class="ma-1 hidden-xs-only">
-        Lịch hẹn của bạn
-      </v-btn>
-      <v-menu>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
-            <v-avatar size="32px" item v-if="isLoggedIn && !isLoadingUser">
-              <v-img :src="user.avatar" :alt="user.username"></v-img>
-            </v-avatar>
-            <v-avatar size="32px" item v-if="!isLoggedIn">
-              <v-icon>face</v-icon>
-            </v-avatar>
-          </v-btn>
-        </template>
-        <v-list v-if="!isLoggedIn">
-          <v-list-item to="/login">
-            <v-list-item-icon>
-              <v-icon>login</v-icon>
-              <v-list-item-title>Đăng nhập</v-list-item-title>
-            </v-list-item-icon>
-          </v-list-item>
-          <v-list-item to="/register">
-            <v-list-item-icon>
-              <v-icon>person_add</v-icon>
-              <v-list-item-title>Đăng ký</v-list-item-title>
-            </v-list-item-icon>
-          </v-list-item>
-        </v-list>
-        <v-list v-if="isLoggedIn">
-          <v-list-item to="/cart">
-            <v-list-item-icon>
-              <v-icon>far fa-user-circle</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Hồ sơ</v-list-item-title>
-          </v-list-item>
-          <v-list-item to="/qr">
-            <v-list-item-icon>
-              <v-icon>fas fa-qrcode</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Quét mã QR</v-list-item-title>
-          </v-list-item>
-          <v-list-item to="#" class="hidden-sm-and-up">
-            <v-list-item-icon>
-              <v-icon>fas fa-paper-plane</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
-          </v-list-item>
-          <v-list-item to="#" class="hidden-sm-and-up">
-            <v-list-item-icon>
-              <v-icon>far fa-bookmark</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="logout">
-            <v-list-item-icon>
-              <v-icon>fas fa-sign-out-alt</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Đăng xuất</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+          <!-- eslint-disable -->
+          <v-btn color="#6C98C6" to="/cart" depressed dark class="hidden-xs-only">Lịch hẹn của bạn</v-btn>
+          <v-menu>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
+                <v-avatar size="32px" item v-if="isLoggedIn && !isLoadingUser">
+                  <v-img :src="user.avatar" :alt="user.username"></v-img>
+                </v-avatar>
+                <v-avatar size="32px" item v-if="!isLoggedIn">
+                  <v-icon>face</v-icon>
+                </v-avatar>
+              </v-btn>
+            </template>
+            <v-list v-if="!isLoggedIn">
+              <v-list-item to="/login">
+                <v-list-item-icon>
+                  <v-icon>login</v-icon>
+                  <v-list-item-title>Đăng nhập</v-list-item-title>
+                </v-list-item-icon>
+              </v-list-item>
+              <v-list-item to="/register">
+                <v-list-item-icon>
+                  <v-icon>person_add</v-icon>
+                  <v-list-item-title>Đăng ký</v-list-item-title>
+                </v-list-item-icon>
+              </v-list-item>
+            </v-list>
+            <v-list v-if="isLoggedIn">
+              <v-list-item to="/cart">
+                <v-list-item-icon>
+                  <v-icon>far fa-user-circle</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Hồ sơ</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="/qr">
+                <v-list-item-icon>
+                  <v-icon>fas fa-qrcode</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Quét mã QR</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="#" class="hidden-sm-and-up">
+                <v-list-item-icon>
+                  <v-icon>fas fa-paper-plane</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="#" class="hidden-sm-and-up">
+                <v-list-item-icon>
+                  <v-icon>far fa-bookmark</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="logout">
+                <v-list-item-icon>
+                  <v-icon>fas fa-sign-out-alt</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Đăng xuất</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-col>
+      </v-row>
     </v-app-bar>
   </div>
 </template>
@@ -165,21 +168,20 @@
 .v-btn {
   text-transform: none !important;
 }
-/* #search-bar #search_input:focus{
-  color: #444;
-}
-#search-bar .v-input__control .v-input__slot {
-  padding-right: 0 !important;
-}
-#search-bar .v-input__control .v-input__slot .v-input__append-inner{
-  height: 100% !important;
-} */
 #top-bar .v-input__control > .v-input__slot {
   padding-right: 0;
 }
 #top-bar .v-input__control > .v-input__slot div:nth-child(4) {
   margin-top: 0;
   height: 100%;
+}
+.searchBar {
+  height: 40px;
+  border: 1px solid #e4e7ea;
+  width: 100%;
+}
+.gmap-input:focus {
+  outline: none;
 }
 </style>
 <script>
@@ -191,11 +193,46 @@ export default {
     overlay: {
       show: false,
     },
+    center: { lat: 10.7542893, lng: 106.1346955 },
+    places: [],
+    currentPlace: null,
+    searchValue: '',
+    visibleProperty: 'hidden',
   }),
   methods: {
+    setPlace(place) {
+      // this.isActive = !this.isActive;
+      // this.coordinates = null;
+      this.currentPlace = place;
+      this.searchValue = place.formatted_address;
+    },
+    changeSearchValue() {
+      this.visibleProperty = 'visible';
+    },
+    clearField() {
+      this.searchValue = '';
+      this.visibleProperty = 'hidden';
+      this.currentPlace = null;
+    },
+    searchByCoordinates() {
+      if (this.currentPlace) {
+        const coordinates = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng(),
+        };
+        this.searchByCoordinator({
+          lat: coordinates.lat,
+          long: coordinates.lng,
+        });
+        this.$router.push('/filter');
+      }
+    },
     search() {
       this.setSearchValue(this.searchValue);
-      this.searchByAddress();
+      this.searchByCoordinator({
+        lat: '',
+        long: '',
+      });
       this.$router.push('/filter');
     },
     ...mapActions({
@@ -203,6 +240,7 @@ export default {
       searchByAddress: 'renter/filterResult/searchByAddress',
       getUser: 'user/getUser',
       clearUserData: 'user/clearUserData',
+      searchByCoordinator: 'renter/filterResult/searchByCoordinator',
     }),
     logout() {
       this.$cookies.remove('role');
@@ -214,9 +252,9 @@ export default {
   },
   computed: {
     searchValue: {
-      get() {
-        return this.$store.state.renter.filterResult.search.value;
-      },
+      // get() {
+      //   return this.$store.state.renter.filterResult.search.value;
+      // },
       set(value) {
         this.setSearchValue(value);
       },
@@ -229,6 +267,9 @@ export default {
     },
     isLoadingUser() {
       return this.$store.state.user.user.isLoading;
+    },
+    computedClearable() {
+      return this.visibleProperty;
     },
   },
   created() {

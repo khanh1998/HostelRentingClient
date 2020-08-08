@@ -154,11 +154,9 @@ export default {
     images: {
       get() {
         if (this.info) {
-          // return this.info.typeImages.map((obj) => obj.resourceUrl);
+          return this.info.typeImages.map((item) => item.resourceUrl);
         }
-        return [
-          'https://tiendoduan.org/wp-content/uploads/2020/04/can-ho-mini-25m2.jpg',
-        ];
+        return [];
       },
     },
     hostelTypes: {

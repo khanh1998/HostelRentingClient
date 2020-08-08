@@ -37,10 +37,14 @@ export default {
     groups() {
       return this.$store.state.vendor.group.groups;
     },
+    groupList() {
+      return this.$store.state.vendor.group.groups.data;
+    },
     groupStat() {
       const count = {};
-      if (this.groups.data) {
-        for (const group of this.groups.data) {// eslint-disable-line
+      if (this.groupList.length > 0) {
+        console.log('number of groups: ', this.groupList.length);
+        this.groupList.forEach((group) => {
           const { types } = group;
           let total = 0;
           let empty = 0;
@@ -54,7 +58,7 @@ export default {
             total,
             empty,
           };
-        }
+        });
       }
       return count;
     },

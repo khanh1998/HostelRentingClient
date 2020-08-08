@@ -8,5 +8,8 @@ module.exports = {
     workboxOptions: {
       swSrc: 'src/config/firebase-messaging-sw.js',
     },
+    devServer: {
+      proxy: 'https://hostel-renting.herokuapp.com/',
+    },
   },
-};
+}

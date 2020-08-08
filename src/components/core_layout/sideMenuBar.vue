@@ -23,7 +23,7 @@
 
       <div class="text-display mt-3 mb-3 ml-7">Danh mục</div>
 
-      <v-list-item v-for="item in itemsplus" :key="item.title" link>
+      <v-list-item v-for="item in itemsplus" :key="item.title" link :to="item.link">
         <v-list-item-icon class="ml-5">
           <v-img :src="require('@/assets/'+ item.icon + '.png')" max-height="30" max-width="30" />
         </v-list-item-icon>
@@ -36,7 +36,7 @@
 
       <div class="text-display mt-3 mb-3 ml-7">Mở rộng</div>
 
-      <v-list-item v-for="itemadd in itemadds" :key="itemadd.title" link>
+      <v-list-item v-for="itemadd in itemadds" :key="itemadd.title" link :to="itemadd.link">
         <v-list-item-icon class="ml-5">
           <v-img
             :src="require('@/assets/'+ itemadd.icon + '.png')"
@@ -82,15 +82,15 @@ export default {
     return {
       drawer: true,
       itemsplus: [
-        { title: 'Tổng quan', icon: 'menu_dashboard' },
-        { title: 'Lịch xem phòng', icon: 'menu_calendar' },
-        { title: 'Thống kê', icon: 'menu_chart' },
-        { title: 'Quản lý nhà trọ', icon: 'menu_room' },
+        { title: 'Tổng quan', icon: 'menu_dashboard', link: '/vendor' },
+        { title: 'Lịch xem phòng', icon: 'menu_calendar', link: '/vendor' },
+        { title: 'Thống kê', icon: 'menu_chart', link: '/vendor' },
+        { title: 'Quản lý nhà trọ', icon: 'menu_room', link: '/vendor/management' },
       ],
 
       itemadds: [
-        { title: 'Tài khoản', icon: 'menu_profile' },
-        { title: 'Liên hệ', icon: 'menu_contact' },
+        { title: 'Tài khoản', icon: 'menu_profile', link: '#' },
+        { title: 'Liên hệ', icon: 'menu_contact', link: '#' },
       ],
       color: 'success',
       right: false,
