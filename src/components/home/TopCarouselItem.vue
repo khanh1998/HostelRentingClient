@@ -19,8 +19,8 @@
             class="shrink mr-3"
             src="@/assets/home/address.png"
             transition="scale-transition"
-            max-width="20"
-            max-height="20"
+            max-width="20px"
+            max-height="20px"
           />
           <span class="item-text">Linh Trung, Thủ Đức, TP.HCM</span>
         </div>
@@ -29,8 +29,8 @@
             class="shrink mr-2"
             src="@/assets/home/distance.png"
             transition="scale-transition"
-            max-width="25"
-            max-height="25"
+            max-width="25px"
+            max-height="25px"
           />
           <span class="item-text blue--text">BigC:</span>
           <span class="item-text item-text-detail ml-auto">300 m</span>
@@ -40,8 +40,8 @@
             class="shrink mr-5"
             src="@/assets/home/superficies.svg"
             transition="scale-transition"
-            max-width="15"
-            max-height="15"
+            max-width="15px"
+            max-height="15px"
           />
           <span class="item-text">20m2</span>
           <div class="ml-auto d-flex">
@@ -49,8 +49,8 @@
               class="shrink mr-4 ml-auto"
               src="@/assets/home/people.png"
               transition="scale-transition"
-              max-width="15"
-              max-height="15"
+              max-width="15px"
+              max-height="15px"
             />
             <span class="item-text">3 người</span>
           </div>

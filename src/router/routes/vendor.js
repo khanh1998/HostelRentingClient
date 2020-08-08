@@ -1,6 +1,7 @@
 import VendorView from '../../main-view/Vendor.vue';
 import ChatDetail from '../../views/vendor/ChatDetail.vue';
 import Overview from '../../views/vendor/Overview.vue';
+import HostelManagement from '../../views/vendor/HostelManagement.vue';
 
 const routes = [
   {
@@ -18,6 +19,12 @@ const routes = [
         path: '',
         name: 'Overview',
         component: Overview,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'management',
+        name: 'HostelManagement',
+        component: HostelManagement,
         meta: { requiresAuth: true },
       },
     ],
