@@ -222,7 +222,7 @@ export default {
       },
     },
     isLoggedIn() {
-      return this.$cookies.get('jwt') != null;
+      return this.$store.state.user.user.data;
     },
     user() {
       return this.$store.state.user.user.data;

@@ -73,9 +73,7 @@
 <script>
 import { mapActions } from 'vuex';
 import firebase from '../../config/firebase';
-import constant from '../../config/constant';
 
-const { PUBLIC_VAPID_KEY } = constant;
 const { messaging } = firebase;
 
 export default {
@@ -167,7 +165,6 @@ export default {
     },
   },
   mounted() {
-    messaging.usePublicVapidKey(PUBLIC_VAPID_KEY);
     messaging.onMessage(this.receivePayload);
   },
   computed: {

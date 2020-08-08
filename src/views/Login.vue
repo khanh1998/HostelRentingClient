@@ -1,18 +1,51 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col>
-        <v-card width="300" class="pa-3">
-          <v-card-title>Đăng nhập</v-card-title>
-          <v-text-field label="Phone" v-model="phone" />
-          <v-text-field label="password" v-model="password" />
-          <v-card-actions>
-            <v-btn :loading="isLoging" @click="login">Đăng nhập</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+  <v-app>
+    <v-main>
+      <v-container class="fill-height d-flex justify-center align-center">
+        <div>
+          <v-card class="elevation-12" width="300">
+            <v-toolbar color="primary" dark flat>
+              <v-toolbar-title>Đăng nhập</v-toolbar-title>
+              <v-spacer></v-spacer>
+            </v-toolbar>
+            <v-card-text>
+              <v-form>
+                <v-text-field
+                  label="Số điện thoại"
+                  name="Số điện thoại"
+                  prepend-icon="mdi-account"
+                  type="text"
+                  v-model="phone"
+                  autofocus
+                  hide-details="auto"
+                  validate-on-blur
+                  :rules="[rules.empty, rules.phone]"
+                ></v-text-field>
+
+                <v-text-field
+                  validate-on-blur
+                  id="password"
+                  autofocus
+                  hide-details="auto"
+                  v-model="password"
+                  label="Mật khẩu"
+                  name="Mật khẩu"
+                  prepend-icon="mdi-lock"
+                  type="password"
+                  :rules="[rules.empty]"
+                ></v-text-field>
+              </v-form>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" :loading="isLoging" @click="login">Đăng nhập</v-btn>
+            </v-card-actions>
+            <v-card-text class="red--text">{{message}}</v-card-text>
+          </v-card>
+        </div>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 <script>
 import { mapActions } from 'vuex';
@@ -20,8 +53,13 @@ import { mapActions } from 'vuex';
 export default {
   name: 'login',
   data: () => ({
-    phone: '0987654321',
-    password: '1234567',
+    phone: '',
+    password: '',
+    message: '',
+    rules: {
+      empty: (value) => value.length > 0 || 'Không được để trống.',
+      phone: (value) => (Number.isInteger(Number(value)) === true) || 'Phải là số điện thoại',
+    },
   }),
   computed: {
     isLoging() {
@@ -60,18 +98,21 @@ export default {
           this.$router.push(nextUrl);
         } else {
           switch (role) {
-            case 'vendors': this.$router.push('/vendor');
+            case 'vendors':
+              this.$router.push('/vendor');
               break;
-            case 'renters': this.$router.push('/');
+            case 'renters':
+              this.$router.push('/');
               break;
-            case 'admin': this.$router.push('/admin');
+            case 'admin':
+              this.$router.push('/admin');
               break;
             default:
               this.$router.push('/');
           }
         }
       } else {
-        alert('login fail');
+        this.message = 'Số điện thoại hoặc mật khẩu không đúng!';
       }
     },
     async login() {

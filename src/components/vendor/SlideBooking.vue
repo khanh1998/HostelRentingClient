@@ -15,7 +15,11 @@
           :key="booking.bookingId"
           v-slot:default="{ active, toggle }"
         >
-          <v-card class="ma-3 rounded-xl" height="180" width="319" @click="toggle">
+          <v-card
+            class="ma-3 rounded-xl" height="180" width="319"
+            :color="active ? 'primary' : 'grey lighten-1'"
+            @click="toggle"
+          >
             <v-col
               cols="12"
               style="background-color: #98B7D7; height: 28%; width: 100%"

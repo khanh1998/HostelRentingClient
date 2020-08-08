@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import constant from './constant';
 import 'firebase/firestore';
 import 'firebase/messaging';
 
@@ -25,6 +26,7 @@ const store = firebase.firestore();
 store.enablePersistence({ synchronizeTabs: true });
 
 const messaging = firebase.messaging();
+messaging.usePublicVapidKey(constant.PUBLIC_VAPID_KEY);
 
 export default {
   store,
