@@ -161,7 +161,7 @@ const actions = {
       params.page
     }`;
     const res = await window.axios.get(`/api/v1/types${queryString}`);
-    if (res.status === 200) {
+    if (res.status >= 200 && res.status <= 299) {
       commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
     } else {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
@@ -171,7 +171,7 @@ const actions = {
     commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
     const url = `/api/v1/types?address=${state.search.value}`;
     const res = await window.axios.get(url);
-    if (res.status === 200) {
+    if (res.status >= 200 && res.status <= 299) {
       commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
     } else {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
@@ -183,8 +183,9 @@ const actions = {
       commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
       const url = `/api/v1/types?distance=5&latitude=${params.lat}&longitude=${params.long}&page=1&size=5`;
       const res = await window.axios.get(url);
-      if (res.status === 200) {
+      if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
+        console.log(res.data.data);
       }
     } catch (error) {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
@@ -195,9 +196,9 @@ const actions = {
     try {
       console.log('filter');
       commit(mutationTypes.GET_FACILITIES_REQUEST);
-      const response = await window.axios.get('/api/v1/facilities');
-      if (response.status >= 200 && response.status <= 299) {
-        commit(mutationTypes.GET_FACILITIES_SUCCESS, response.data.data);
+      const res = await window.axios.get('/api/v1/facilities');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_FACILITIES_SUCCESS, res.data.data);
       }
     } catch (error) {
       commit(mutationTypes.GET_FACILITIES_FAILURE);
