@@ -28,13 +28,13 @@ const routes = [
         path: '/user',
         name: 'User',
         component: User,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, is_renter: true },
       },
       {
         path: '/cart',
         name: 'ViewCard',
         component: ViewCart,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, is_renter: true },
       },
       {
         path: '/qr',

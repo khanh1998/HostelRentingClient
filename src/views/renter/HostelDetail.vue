@@ -5,7 +5,19 @@
     </v-overlay>
     <v-container v-if="!isLoading">
       <v-dialog width="350" v-model="chatBox.show">
-        <chatBox v-on:close="chatBox.show=false" :info="info" :group="group" />
+        <chatBox v-if="renter" v-on:close="chatBox.show=false" :info="info" :group="group" />
+        <v-card v-if="!renter">
+          <v-card-title>Đăng nhập để nhắn tin</v-card-title>
+          <v-card-actions >
+            <v-btn to="/register" dark class="green lighten-3">
+              <v-icon>create</v-icon> Tạo tài khoản mới
+            </v-btn>
+            <v-spacer/>
+            <v-btn to="/login" dark class="blue lighten-3">
+              <v-icon>login</v-icon> Đăng nhập
+            </v-btn>
+          </v-card-actions>
+        </v-card>
       </v-dialog>
       <v-row no-gutters class="pt-2">
         <v-col cols="8">
@@ -195,6 +207,9 @@ export default {
         data = this.$store.state.renter.hostelType.hostelGroup.data;
       }
       return data;
+    },
+    renter() {
+      return this.$store.state.user.user.data;
     },
   },
   created() {

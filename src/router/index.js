@@ -29,17 +29,38 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (window.$cookies.get('jwt') === null) {
+    if (window.$cookies.get('jwt') === null) { // not logged in
       next({
-        path: '/login',
-        params: { nextUrl: to.fullPath },
+        name: 'Login',
+        params: { nextUrl: to.path, preUrl: from.path },
       });
-    } else {
-      next();
+    } else { // logged in
+      const role = window.$cookies.get('role');
+      if (to.matched.some((record) => record.meta.is_vendor)) {
+        if (role === 'vendors') {
+          next();
+        } else {
+          next(from.path);
+        }
+      } else if (to.matched.some((record) => record.meta.is_admin)) {
+        if (role === 'admins') {
+          next();
+        } else {
+          next(from.path);
+        }
+      } else if (to.matched.some((record) => record.meta.is_renter)) {
+        if (role === 'renters') {
+          next();
+        } else {
+          next(from.path);
+        }
+      } else {
+        next();
+      }
     }
-  } else if (to.matched.some((record) => record.meta.guest)) {
+  } else if (to.matched.some((record) => record.meta.guest)) { // not require authen
     next();
-  } else {
+  } else { // not require authen
     next();
   }
 });

@@ -1,12 +1,25 @@
 <template>
   <div class="info-card d-flex flex-column">
-    <v-overlay :value="dateTimePicker.isOpenPicker">
+    <v-dialog v-model="dateTimePicker.isOpenPicker" width="350">
+      <v-card v-if="!userState.data" color="white" light>
+        <v-card-title>Đăng nhập để đặt lịch xem phòng</v-card-title>
+        <v-card-actions>
+          <v-btn to="/register" dark class="green lighten-3">
+            <v-icon>create</v-icon>Tạo tài khoản mới
+          </v-btn>
+          <v-spacer/>
+          <v-btn to="/login" dark class="blue lighten-3">
+            <v-icon>login</v-icon>Đăng nhập
+          </v-btn>
+        </v-card-actions>
+      </v-card>
       <dateTimePickerStepper
+        v-if="userState.data"
         v-on:cancel="dateTimePicker.isOpenPicker = false"
         v-on:ok="receivedDateTime"
         :groupId="groupId"
       />
-    </v-overlay>
+    </v-dialog>
     <div
       class="above d-flex flex-column justify-center align-center rounded-lg"
       style="background-color: #fff;"
@@ -43,7 +56,6 @@
             width="80%"
             class="ma-6"
             depressed
-            :disabled="hasPendingBooking"
             @click="dateTimePicker.isOpenPicker = true"
           >
             <v-icon left>fas fa-paper-plane</v-icon>ĐẶT LỊCH XEM PHÒNG

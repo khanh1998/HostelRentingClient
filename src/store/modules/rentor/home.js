@@ -2,10 +2,14 @@ const myState = () => ({
   hostelTypes: {
     data: [],
     isLoading: false,
+    success: null,
+    error: null,
   },
   hostelGroups: {
     data: [],
     isLoading: false,
+    success: null,
+    error: null,
   },
   facilities: {
     data: [],
@@ -77,10 +81,14 @@ const mutations = {
     state.hostelTypes.isLoading = false;
     state.hostelGroups.data = inputData.groups;
     state.hostelGroups.isLoading = false;
+    state.hostelTypes.success = true;
+    state.hostelGroups.success = true;
   },
-  GET_HOSTEL_TYPES_FAILURE(state) {
+  GET_HOSTEL_TYPES_FAILURE(state, error) {
     state.hostelTypes.isLoading = false;
     state.hostelGroups.isLoading = false;
+    state.hostelTypes.error = error;
+    state.hostelGroups.error = error;
   },
   GET_HOSTEL_TYPES_REQUEST(state) {
     state.hostelTypes.isLoading = true;
@@ -116,14 +124,18 @@ const mutations = {
 const actions = {
   async getHostelTypes({ commit }, params) {
     // params = { page, size }
-    commit(mutationTypes.GET_HOSTEL_TYPES_REQUEST);
-    const response = await window.axios.get(
-      `/api/v1/types?page=${params.page}&size=${params.size}`,
-    );
-    if (response.status >= 200 && response.status <= 299) {
-      commit(mutationTypes.GET_HOSTEL_TYPES_SUCCESS, response.data.data);
-    } else {
-      commit(mutationTypes.GET_HOSTEL_TYPES_FAILURE);
+    try {
+      commit(mutationTypes.GET_HOSTEL_TYPES_REQUEST);
+      const response = await window.axios.get(
+        `/api/v1/types?page=${params.page}&size=${params.size}`,
+      );
+      if (response.status >= 200 && response.status <= 299) {
+        commit(mutationTypes.GET_HOSTEL_TYPES_SUCCESS, response.data.data);
+      } else {
+        commit(mutationTypes.GET_HOSTEL_TYPES_FAILURE);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_HOSTEL_TYPES_FAILURE, error);
     }
   },
   async getTopViewHostelTypes({ commit }, params) {

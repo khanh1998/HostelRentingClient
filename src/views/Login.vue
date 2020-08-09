@@ -37,6 +37,9 @@
               </v-form>
             </v-card-text>
             <v-card-actions>
+              <v-btn to="/register" dark class="green lighten-3">
+                <v-icon>create</v-icon>Tạo tài khoản mới
+              </v-btn>
               <v-spacer></v-spacer>
               <v-btn color="primary" :loading="isLoging" @click="login">Đăng nhập</v-btn>
             </v-card-actions>
@@ -58,7 +61,7 @@ export default {
     message: '',
     rules: {
       empty: (value) => value.length > 0 || 'Không được để trống.',
-      phone: (value) => (Number.isInteger(Number(value)) === true) || 'Phải là số điện thoại',
+      phone: (value) => Number.isInteger(Number(value)) === true || 'Phải là số điện thoại',
     },
   }),
   computed: {
@@ -93,7 +96,9 @@ export default {
         }
         this.$cookies.set('role', role);
         this.$cookies.set('userId', id);
-        const { nextUrl } = this.$route.params;
+        const { nextUrl, preUrl } = this.$route.params;
+        console.log(this.$attrs);
+        console.log(nextUrl, preUrl);
         if (nextUrl) {
           this.$router.push(nextUrl);
         } else {
@@ -102,7 +107,7 @@ export default {
               this.$router.push('/vendor');
               break;
             case 'renters':
-              this.$router.push('/');
+              this.$router.push(preUrl || '/');
               break;
             case 'admin':
               this.$router.push('/admin');

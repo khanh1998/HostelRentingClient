@@ -56,8 +56,7 @@
             <p>phòng/tháng</p>
             <div class="d-flex align-center justify-space-around pb-1">
               <v-btn color="green" class="mr-1" depressed @click="bargainOverlay.step += 1">
-                Tiếp tục
-              </v-btn>
+                Tiếp tục</v-btn>
               <v-btn
                 color="red"
                 class="ml-1"
@@ -114,18 +113,14 @@
                   color="amber"
                   small
                   @click="showBookingCancel(item.book.bookingId, item.id)"
-                >
-                  Hủy hẹn
-                </v-btn>
+                >Hủy hẹn</v-btn>
               </span>
               <span
                 v-else-if="item.book && item.book.cancel"
                 v-ripple
                 style="width: 75%"
                 class="red lighten-5 pa-2 rounded max-w-3/4"
-              >
-                Bạn hủy lịch hẹn vào vào: {{item.book.time}} {{item.book.date}}
-              </span>
+              >Bạn hủy lịch hẹn vào vào: {{item.book.time}} {{item.book.date}}</span>
               <span
                 v-else
                 v-ripple
@@ -145,7 +140,8 @@
                 v-ripple
                 class="green lighten-5 pa-2 rounded max-w-3/4"
                 v-if="item.bargain && item.bargain.dealId"
-              >Chủ trọ đồng ý với mức giá bạn đề xuất.
+              >
+                Chủ trọ đồng ý với mức giá bạn đề xuất.
                 <!-- <v-btn small color="amber" class="mt-2">Hủy thỏa thuận</v-btn> -->
               </span>
               <span
@@ -153,8 +149,7 @@
                 v-ripple
                 class="red lighten-5 pa-2 rounded max-w-3/4"
                 v-if="item.bargain && !item.bargain.dealId"
-              >Chủ trọ không đồng ý với mức giá bạn đề xuất.
-              </span>
+              >Chủ trọ không đồng ý với mức giá bạn đề xuất.</span>
             </div>
           </v-list-item-content>
         </v-list-item>
@@ -214,7 +209,6 @@ export default {
   props: ['info', 'group'],
   methods: {
     ...mapActions({
-      getUser: 'user/getUser',
       createBooking: 'user/createBooking',
       getDeals: 'user/getDeals',
       getBookings: 'user/getBookings',
@@ -259,37 +253,38 @@ export default {
         status: 'INCOMING',
       };
       console.log(bookingToApi);
-      this.createBooking(bookingToApi)
-        .then(() => {
-          newContent.book.bookingId = this.newlyCreatedBooking.bookingId;
-          this.messCollectionRef.add(newContent);
-          this.messCollectionRef.parent.update({
-            lastedMessage: content,
-          });
+      this.createBooking(bookingToApi).then(() => {
+        newContent.book.bookingId = this.newlyCreatedBooking.bookingId;
+        this.messCollectionRef.add(newContent);
+        this.messCollectionRef.parent.update({
+          lastedMessage: content,
         });
+      });
     },
     sendMessage(type = null) {
-      const content = {
-        bargain: null,
-        book: null,
-        message: this.inputChat.text,
-        createdAt: Date.now(),
-        sender: 'renter',
-      };
-      if (type === null) {
-        this.messCollectionRef.add(content);
-      } else if (type === 'book') {
-        this.book(content);
-      } else if (type === 'bargain') {
-        this.bargain(content);
-        this.bargainOverlay.step = 1;
-      }
-      this.messCollectionRef.parent.update({
-        updated: Date.now(),
-        lastedMessage: {
-          ...content,
-          seen: false,
-        },
+      this.createDoc().then(() => {
+        const content = {
+          bargain: null,
+          book: null,
+          message: this.inputChat.text,
+          createdAt: Date.now(),
+          sender: 'renter',
+        };
+        if (type === null) {
+          this.messCollectionRef.add(content);
+        } else if (type === 'book') {
+          this.book(content);
+        } else if (type === 'bargain') {
+          this.bargain(content);
+          this.bargainOverlay.step = 1;
+        }
+        this.messCollectionRef.parent.update({
+          updated: Date.now(),
+          lastedMessage: {
+            ...content,
+            seen: false,
+          },
+        });
       });
       this.$nextTick(() => {
         this.scrollToBottom();
@@ -320,7 +315,13 @@ export default {
       this.items = messages;
     },
     fetchMessages() {
-      this.createDoc();
+      // this.createDoc();
+      const { userId } = this.userState.data;
+      const { vendorId, typeId } = this.id;
+      const docRef = chatCollectionRef.doc(
+        `renter-${userId}:vendor-${vendorId}:type-${typeId}`,
+      );
+      this.messCollectionRef = docRef.collection('messages');
       this.messCollectionRef
         .orderBy('createdAt', 'asc')
         .onSnapshot((querySnapshot) => {
@@ -406,11 +407,9 @@ export default {
     dealIds: [],
   }),
   created() {
+    this.getDeals();
+    this.getBookings();
     this.fetchMessages();
-    Promise.all([this.getUser]).then(() => {
-      this.getDeals();
-      this.getBookings();
-    });
     this.bargainOverlay.price = this.info.price;
   },
   computed: {
