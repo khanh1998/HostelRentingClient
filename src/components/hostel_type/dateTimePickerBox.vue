@@ -3,12 +3,13 @@
     <v-dialog v-model="dateTimePicker.isOpenPicker" width="350">
       <v-card v-if="!userState.data" color="white" light>
         <v-card-title>Đăng nhập để đặt lịch xem phòng</v-card-title>
+        <v-card-subtitle>dfdfdfd</v-card-subtitle>
         <v-card-actions>
-          <v-btn to="/register" dark class="green lighten-3">
+          <v-btn :to="registerRouteObject" dark class="green lighten-3">
             <v-icon>create</v-icon>Tạo tài khoản mới
           </v-btn>
           <v-spacer/>
-          <v-btn to="/login" dark class="blue lighten-3">
+          <v-btn :to="loginRouteObject" dark class="blue lighten-3">
             <v-icon>login</v-icon>Đăng nhập
           </v-btn>
         </v-card-actions>
@@ -173,6 +174,22 @@ export default {
     },
     userState() {
       return this.$store.state.user.user;
+    },
+    loginRouteObject() {
+      return {
+        name: 'Login',
+        params: {
+          preUrl: this.$route.path,
+        },
+      };
+    },
+    registerRouteObject() {
+      return {
+        name: 'Register',
+        params: {
+          preUrl: this.$route,
+        },
+      };
     },
   },
 };

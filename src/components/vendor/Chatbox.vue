@@ -2,8 +2,7 @@
   <div v-if="chatShow">
     <v-overlay v-model="dialogAccept" width="350" absolute>
       <v-card>
-        <v-card-title style="backgroundColor: #98B7D7; color: white">
-          Xác nhận</v-card-title>
+        <v-card-title style="backgroundColor: #98B7D7; color: white">Xác nhận</v-card-title>
         <v-card-text class="text-center mt-3" style="fontSize:20px;">
           Bạn sẽ chấp nhận trả giá này ?</v-card-text>
         <v-divider></v-divider>
@@ -16,8 +15,7 @@
     </v-overlay>
     <v-overlay v-model="dialogDeny" width="350" absolute>
       <v-card>
-        <v-card-title style="backgroundColor: #98B7D7; color: white">
-          Xác nhận</v-card-title>
+        <v-card-title style="backgroundColor: #98B7D7; color: white">Xác nhận</v-card-title>
         <v-card-text class="text-center mt-3" style="fontSize:20px;">
           Bạn sẽ từ chối trả giá này ?</v-card-text>
         <v-divider></v-divider>
@@ -52,84 +50,107 @@
         min-height="350px"
       >
         <v-list-item color="success" two-line>
-          <v-list-item-icon>
-            <v-icon>info</v-icon>
-          </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>{{type.title}}</v-list-item-title>
-            <v-list-item-subtitle>{{type.price}} {{type.priceUnit}}</v-list-item-subtitle>
+            <v-list-item-content>
+              <p><v-icon>attach_money</v-icon>{{type.price}} {{type.priceUnit}}</p>
+              <p><v-icon>room</v-icon>{{group.street}}</p>
+            </v-list-item-content>
           </v-list-item-content>
         </v-list-item>
         <v-divider />
-        <v-list-item v-for="(item, i) in items" v-bind:key="i">
+        <v-list-item v-for="(item, i) in filteredMessage" v-bind:key="i">
           <v-list-item-content>
             <div v-if="item.sender === 'renter'" class="d-flex justify-start">
-              <div v-if="item.bargain" class="border-deal pa-1">
+              <div v-if="item.bargain" class="blue lighten-5 border-deal pa-1" style="width: 75%">
                 <v-row>
                   <v-col cols="12">
-                    <span
-                      class="mx-2"
-                      style="color: #6C98C6; fontSize:20px"
-                    >{{item.bargain.typeName}}</span>
-                  </v-col>
-                  <v-col cols="12" class="d-flex justify-left align-center">
-                    <p>
-                      <span style="color:#98B7D7">Giá gốc:</span>
-                      <span style="color:red">{{item.bargain.originalPrice}} Triệu</span>
-                    </p>
-                    <p>
-                      <span style="color:#98B7D7">Trả giá:</span>
-                      <span>{{ item.bargain.newPrice}} Triệu</span>
-                    </p>
+                    <v-icon color="amber">attach_money</v-icon>
+                    <span class="font-weight-bold">
+                      Trả giá mới
+                    </span>
                   </v-col>
                 </v-row>
-                <v-col cols="12" class="d-flex justify-center">
-                  <v-row class="d-flex justify-center">
-                    <div v-if="item.bargain.status === 'wait'">
+                <v-divider/>
+                <v-row>
+                  <v-col cols="12">
+                    Loại phòng: <span
+                      class="mx-2 blue--text font-weight-bold"
+                    >{{item.bargain.typeName}}</span>
+                    <br/>
+                    <span style="color:#98B7D7">Giá gốc: </span>
+                    <span style="color:red" class="font-weight-bold">
+                      {{item.bargain.originalPrice}} Triệu</span>
+                    <br/>
+                    <span style="color:#98B7D7">Trả giá: </span>
+                    <span class="font-weight-bold">
+                      {{ item.bargain.newPrice}} Triệu</span>
+                  </v-col>
+                </v-row>
+                <v-divider/>
+                <v-row class="d-flex justify-center">
+                  <v-col cols="12" class="d-flex justify-center">
+                    <div v-if="item.bargain.status === 'wait'"
+                      class="d-flex justify-space-around"
+                    >
                       <v-btn
+                        small
                         color="#F3F3F3"
-                        style="width:80px; height:20px"
                         class="mx-1"
                         @click="showBargainReplyOverlay(item.id, 'deny')"
                       >Từ chối</v-btn>
                       <v-btn
+                        small
                         color="#EF7239"
                         dark
-                        style="width:80px; height:20px"
                         class="mx-1"
                         @click="showBargainReplyOverlay(item.id, 'accept')"
                       >Chấp nhận</v-btn>
                     </div>
-                    <p v-if="item.bargain.status === 'accept'">
-                      Đã đồng ý
-                    </p>
-                    <p v-if="item.bargain.status === 'deny'">
-                      Đã không đồng ý
-                    </p>
-                  </v-row>
-                </v-col>
+                    <span v-if="item.bargain.status === 'accept'">
+                      <v-icon color="green">thumb_up</v-icon>
+                      Bạn đã đồng ý</span>
+                    <span v-if="item.bargain.status === 'deny'">
+                      <v-icon color="red">thumb_down</v-icon>
+                      Bạn đã không đồng ý</span>
+                    <span v-if="item.bargain.status === 'cancel'">
+                      <v-icon color="red">clear</v-icon>
+                      {{renter.username}} đã hủy trả giá này</span>
+                  </v-col>
+                </v-row>
               </div>
-              <span
-                v-if="item.book && !item.book.cancel"
+              <p
+                v-if="item.book"
                 v-ripple
                 style="width: 75%; "
-                class="blue lighten-5 pa-2 rounded"
-              >bạn có một lich hẹn vào
-              {{ item.book.date }} {{ item.book.time }}</span>
-              <span
-                v-if="item.book && item.book.cancel"
-                v-ripple
-                style="width: 75%; "
-                class="red lighten-5 pa-2 rounded"
-              >{{renter.username}} đã hủy lich hẹn vào
-              {{ item.book.date }} {{ item.book.time }}</span>
+                class="blue lighten-5 pa-2 rounded border-deal"
+              >
+                <v-icon color="pink">event</v-icon>
+                <span class="font-weight-bold">Lịch hẹn mới</span>
+                <v-divider class="my-1"></v-divider>
+                Ngày: <span class="font-weight-bold">
+                  {{ item.book.date }}
+                </span>
+                <br/>
+                Giờ: <span class="font-weight-bold">
+                  {{ item.book.time }}
+                </span>
+                <br/>
+                Địa chỉ: <span class="font-weight-bold">
+                  {{ group.street }}
+                </span>
+                <span v-if="item.book.cancel">
+                  <v-divider class="my-1"></v-divider>
+                  <v-icon color="red">clear</v-icon>
+                  Lịch hẹn đã hủy
+                </span>
+              </p>
               <span
                 v-if="!item.book && !item.bargain"
                 v-ripple
                 style="width: 75%; "
                 class="blue lighten-5 pa-2 rounded"
               >{{item.message}}</span>
-              <v-icon v-if="item.book || item.bargain">info</v-icon>
             </div>
             <div v-if="item.sender === 'vendor'" class="d-flex justify-end">
               <span
@@ -138,12 +159,6 @@
                 class="green lighten-5 pa-2 rounded"
                 v-if="!item.book && !item.bargain"
               >{{item.message}}</span>
-              <span
-                style="width: auto; max-width: 75%; "
-                v-ripple
-                class="green lighten-5 pa-2 rounded"
-                v-if="item.bargain && item.bargain.dealId"
-              >Bạn đã đồng ý với mức giá trên</span>
               <span
                 style="width: auto; max-width: 75%; "
                 v-ripple
@@ -168,7 +183,8 @@
         :disabled="hasAPendingBargain"
         v-on:keyup.enter="sendMessage"
       ></v-text-field>
-      <v-btn color="#7794F8"
+      <v-btn
+        color="#7794F8"
         class="ma-1"
         depressed
         @click="sendMessage"
@@ -234,7 +250,9 @@ export default {
 
     async acceptMessage() {
       const { renterId, vendorId, typeId } = this.doc.data();
-      const lastedBargain = this.items[this.items.length - 1].bargain;
+      const lastedBargain = this.items.filter(
+        (item) => item.sender === 'renter' && item.bargain && item.bargain.status === 'wait',
+      )[0];
       const deal = {
         offeredPrice: lastedBargain.newPrice,
         renterId,
@@ -310,6 +328,7 @@ export default {
     ...mapGetters({
       getUserById: 'vendor/overview/getUserById',
       findTypesById: 'vendor/group/findTypesById',
+      findGroupById: 'vendor/group/findGroupById',
     }),
     hasAPendingBargain() {
       const mess = this.items[this.items.length - 1];
@@ -320,6 +339,10 @@ export default {
     },
     type() {
       return this.findTypesById(this.doc.data().typeId);
+    },
+    group() {
+      const { groupId } = this.type;
+      return this.findGroupById(groupId);
     },
     userState() {
       return this.$store.state.user.user;
@@ -332,6 +355,14 @@ export default {
     },
     newlyCreatedDeal() {
       return this.$store.state.user.deals.newlyCreated;
+    },
+    filteredMessage() {
+      return this.items.filter((item) => {
+        if (item.sender === 'vendor' && item.bargain) {
+          return false;
+        }
+        return true;
+      });
     },
   },
   mounted() {

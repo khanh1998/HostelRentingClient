@@ -61,34 +61,45 @@ const mutationTypes = {
   GET_USER_REQUEST: 'GET_USER_REQUEST',
   GET_USER_SUCCESS: 'GET_USER_SUCCESS',
   GET_USER_FAILURE: 'GET_USER_FAILURE',
+
   UPDATE_USER_REQUEST: 'UPDATE_USER_REQUEST',
   UPDATE_USER_SUCCESS: 'UPDATE_USER_SUCCESS',
   UPDATE_USER_FAILURE: 'UPDATE_USER_FAILURE',
+
   CLEAR_USER_DATA: 'CLEAR_USER_DATA',
+
   GET_CONTRACTS_REQUEST: 'GET_CONTRACTS_REQUEST',
   GET_CONTRACTS_SUCCESS: 'GET_CONTRACTS_SUCCESS',
   GET_CONTRACTS_FAILURE: 'GET_CONTRACTS_FAILURE',
+
   GET_BOOKINGS_REQUEST: 'GET_BOOKINGS_REQUEST',
   GET_BOOKINGS_SUCCESS: 'GET_BOOKINGS_SUCCESS',
   GET_BOOKINGS_FAILURE: 'GET_BOOKINGS_FAILURE',
+
   GET_BOOKING_REQUEST: 'GET_BOOKING_REQUEST',
   GET_BOOKING_SUCCESS: 'GET_BOOKING_SUCCESS',
   GET_BOOKING_FAILURE: 'GET_BOOKING_FAILURE',
+
   CREATE_BOOKING_REQUEST: 'CREATE_BOOKING_REQUEST',
   CREATE_BOOKING_SUCCESS: 'CREATE_BOOKING_SUCCESS',
   CREATE_BOOKING_FAILURE: 'CREATE_BOOKING_FAILURE',
+
   GET_DEALS_REQUEST: 'GET_DEALS_REQUEST',
   GET_DEALS_SUCCESS: 'GET_DEALS_SUCCESS',
   GET_DEALS_FAILURE: 'GET_DEALS_FAILURE',
+
   CREATE_DEAL_REQUEST: 'CREATE_DEAL_REQUEST',
   CREATE_DEAL_SUCCESS: 'CREATE_DEAL_SUCCESS',
   CREATE_DEAL_FAILURE: 'CREATE_DEAL_FAILURE',
+
   GET_DEAL_REQUEST: 'GET_DEAL_REQUEST',
   GET_DEAL_SUCCESS: 'GET_DEAL_SUCCESS',
   GET_DEAL_FAILURE: 'GET_DEAL_FAILURE',
+
   CANCEL_DEAL_REQUEST: 'CANCEL_DEAL_REQUEST',
   CANCEL_DEAL_SUCCESS: 'CANCEL_DEAL_SUCCESS',
   CANCEL_DEAL_FAILURE: 'CANCEL_DEAL_FAILURE',
+
   CANCEL_BOOKING_REQUEST: 'CANCEL_BOOKING_REQUEST',
   CANCEL_BOOKING_SUCCESS: 'CANCEL_BOOKING_SUCCESS',
   CANCEL_BOOKING_FAILURE: 'CANCEL_BOOKING_FAILURE',
@@ -220,11 +231,12 @@ const mutations = {
   CANCEL_BOOKING_REQUEST(state) {
     state.bookings.isLoading = true;
   },
-  CANCEL_BOOKING_SUCCESS(state, bookingId) {
+  CANCEL_BOOKING_SUCCESS(state, newBooking) {
+    const { bookingId } = newBooking;
     state.bookings.isLoading = false;
     state.bookings.success = true;
     const res = state.bookings.data.filter((book) => book.bookingId === bookingId);
-    res[0].status = 'CANCEL';
+    res[0].status = 'CANCELLED';
   },
   CANCEL_BOOKING_FAILURE(state, error) {
     state.bookings.isLoading = false;
@@ -484,7 +496,7 @@ const actions = {
           commit(mutationTypes.CANCEL_BOOKING_REQUEST);
           const res = await window.axios.put(`/api/v1/bookings/${bookingId}`, {
             bookingId,
-            dealId: booking.deal.dealId,
+            dealId: booking.deal ? booking.deal.dealId : null,
             typeId: booking.type.typeId,
             renterId: booking.renter.renterId,
             vendorId: booking.vendor.vendorId,

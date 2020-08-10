@@ -22,7 +22,7 @@
     </v-app-bar>
 
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="fill-height">
         <v-row
           align="center"
           justify="center"

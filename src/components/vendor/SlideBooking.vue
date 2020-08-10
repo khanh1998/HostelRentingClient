@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-sheet class="mx-auto rounded" elevation="1" max-width="100%">
-      <div class="d-flex justify-space-between text-center">
+      <div class="d-flex justify-space-between text-center" v-if="bookings.length > 0">
         <div style="font-size:20px; fontWeight:bold" class="pt-3 pl-2">Lịch hẹn xem phòng</div>
         <div>
           <v-chip-group mandatory active-class="primary--text">
@@ -9,7 +9,8 @@
           </v-chip-group>
         </div>
       </div>
-      <v-slide-group>
+      <v-divider/>
+      <v-slide-group v-if="bookings.length > 0">
         <v-slide-item
           v-for="booking in bookings"
           :key="booking.bookingId"
@@ -53,7 +54,12 @@
           </v-card>
         </v-slide-item>
       </v-slide-group>
-      <div class="d-flex justify-end">
+      <v-card v-if="bookings.length === 0">
+        <v-card-title>
+          Bạn không có lịch hẹn nào
+        </v-card-title>
+      </v-card>
+      <div class="d-flex justify-end" v-if="bookings.length > 0">
         <v-card-text style="color:#818286">Xem thêm >></v-card-text>
       </div>
     </v-sheet>

@@ -29,6 +29,15 @@
           </v-card-actions>
         </v-card>
       </v-overlay>
+      <v-overlay :value="bargainCancel.show" absolute opacity="0.8">
+        <v-card>
+          <v-card-title>Bạn có muốn hủy trả giả này?</v-card-title>
+          <v-card-actions>
+            <v-btn color="green" @click="doCancelBargain">Có</v-btn>
+            <v-btn color="red" @click="resetBargainCancel">Không</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-overlay>
       <v-overlay :value="bargainOverlay.show" absolute opacity="0.8">
         <v-card
           color="white"
@@ -90,37 +99,72 @@
         </v-card>
       </v-overlay>
       <v-list v-scroll.self="myOnScroll" align="center" justify="center">
-        <v-list-item v-for="item in items" v-bind:key="item.createdAt">
+        <v-list-item v-for="item in filteredMessage" v-bind:key="item.createdAt">
           <v-list-item-content>
             <div v-if="item.sender === 'renter'" class="d-flex justify-end">
-              <v-icon v-if="item.book || item.bargain">info</v-icon>
-
-              <span
+              <p
                 v-if="item.bargain"
                 v-ripple
                 style="width: 75%"
                 class="blue lighten-5 pa-2 rounded"
-              >Bạn đã trả giá : {{item.bargain.newPrice}} {{info.priceUnit}}</span>
+              ><v-icon color="amber">attach_money</v-icon>
+              <span class="font-weight-bold">
+                Bạn trả giá : {{item.bargain.newPrice}} {{info.priceUnit}}
+              </span>
+              <span v-if="item.bargain.status === 'wait'">
+                <v-divider class="my-1"></v-divider>
+                <v-icon>fas fa-spinner fa-spin</v-icon>
+                Đang chờ phản hồi của chủ trọ
+              </span>
+              <span v-if="item.bargain.status === 'deny'">
+                <v-divider class="my-1"></v-divider>
+                <v-icon color="red">thumb_down</v-icon>
+                Chủ trọ không đồng ý với mức giá của bạn
+              </span>
+              <span v-if="item.bargain.status === 'accept'">
+                <v-divider class="my-1"></v-divider>
+                <v-icon color="green">thumb_up</v-icon>
+                Chủ trọ đã đồng ý với mức giá của bạn
+              </span>
+              <span v-if="item.bargain.status === 'cancel'">
+                <v-divider class="my-1"></v-divider>
+                <v-icon color="red">clear</v-icon>
+                Bạn đã hủy trả giá này
+              </span>
+              <span v-if="item.bargain.status === 'wait'">
+                <v-divider class="my-2"/>
+                <v-btn class="red lighten-3" dark depressed
+                  @click="showBargainCancel(item.id)"
+                >
+                  Hủy trả giá này
+                </v-btn>
+              </span>
+              </p>
 
-              <span
-                v-else-if="item.book && !item.book.cancel"
+              <p
+                v-else-if="item.book"
                 v-ripple
                 style="width: 75%"
                 class="blue lighten-5 pa-2 rounded max-w-3/4"
               >
-                Bạn đã đặt lịch vào: {{item.book.time}} {{item.book.date}}
+                <v-icon color="pink">event</v-icon>
+                <span class="font-weight-bold">Bạn đã tạo một lịch hẹn mới</span>
+                <v-divider class="my-2"/>
+                Ngày: <span class="font-weight-bold">{{item.book.date}}</span><br/>
+                Giờ: <span class="font-weight-bold">{{item.book.time}}</span><br/>
+                <v-divider class="my-2"/>
                 <v-btn
+                  v-if="!item.book.cancel"
+                  depressed
                   color="amber"
                   small
                   @click="showBookingCancel(item.book.bookingId, item.id)"
                 >Hủy hẹn</v-btn>
-              </span>
-              <span
-                v-else-if="item.book && item.book.cancel"
-                v-ripple
-                style="width: 75%"
-                class="red lighten-5 pa-2 rounded max-w-3/4"
-              >Bạn hủy lịch hẹn vào vào: {{item.book.time}} {{item.book.date}}</span>
+                <span v-if="item.book.cancel">
+                  <v-icon color="red">clear</v-icon>
+                  Lịch hẹn đã bị hủy
+                </span>
+              </p>
               <span
                 v-else
                 v-ripple
@@ -179,12 +223,12 @@
           <v-chip
             color="amber"
             @click="bargainOverlay.show = true"
-            v-if="!hasPendingDeal && !hasPendingBooking"
+            v-if="!hasPendingDeal && !hasPendingBooking && !hasUnreplyBargain"
           >
             <v-icon color="white" class="mr-1">monetization_on</v-icon>Trả giá
           </v-chip>
           <v-chip
-            v-if="!isLoadingDeals && !hasPendingBooking"
+            v-if="!isLoadingDeals && !hasPendingBooking && !hasUnreplyBargain"
             color="green"
             @click="dateTimeOverlay.show = true"
           >
@@ -375,6 +419,21 @@ export default {
       this.bookingCancel.show = true;
       this.bookingCancel.id = { bookingId, docId };
     },
+    doCancelBargain() {
+      const { docId } = this.bargainCancel.id;
+      this.messCollectionRef.doc(docId).update({
+        'bargain.status': 'cancel',
+      });
+      this.resetBargainCancel();
+    },
+    showBargainCancel(docId) {
+      this.bargainCancel.show = true;
+      this.bargainCancel.id.docId = docId;
+    },
+    resetBargainCancel() {
+      this.bargainCancel.show = false;
+      this.bargainCancel.id.docId = null;
+    },
   },
   mounted() {
     this.$nextTick(() => this.scrollToBottom());
@@ -384,6 +443,12 @@ export default {
       show: false,
       id: {
         bookingId: null,
+        docId: null,
+      },
+    },
+    bargainCancel: {
+      show: false,
+      id: {
         docId: null,
       },
     },
@@ -454,6 +519,19 @@ export default {
     },
     isLoadingDeals() {
       return this.$store.state.user.deals.isLoading;
+    },
+    filteredMessage() {
+      return this.items.filter((item) => {
+        if (item.sender === 'vendor' && item.bargain) {
+          return false;
+        }
+        return true;
+      });
+    },
+    hasUnreplyBargain() {
+      return this.items.some(
+        (item) => item.sender === 'renter' && item.bargain && item.bargain.status === 'wait',
+      );
     },
   },
 };

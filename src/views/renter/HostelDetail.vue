@@ -9,11 +9,11 @@
         <v-card v-if="!renter">
           <v-card-title>Đăng nhập để nhắn tin</v-card-title>
           <v-card-actions >
-            <v-btn to="/register" dark class="green lighten-3">
+            <v-btn :to="registerRouteObject" dark class="green lighten-3">
               <v-icon>create</v-icon> Tạo tài khoản mới
             </v-btn>
             <v-spacer/>
-            <v-btn to="/login" dark class="blue lighten-3">
+            <v-btn :to="loginRouteObject" dark class="blue lighten-3">
               <v-icon>login</v-icon> Đăng nhập
             </v-btn>
           </v-card-actions>
@@ -210,6 +210,22 @@ export default {
     },
     renter() {
       return this.$store.state.user.user.data;
+    },
+    loginRouteObject() {
+      return {
+        name: 'Login',
+        params: {
+          preUrl: this.$route.path,
+        },
+      };
+    },
+    registerRouteObject() {
+      return {
+        name: 'Register',
+        params: {
+          preUrl: this.$route,
+        },
+      };
     },
   },
   created() {
