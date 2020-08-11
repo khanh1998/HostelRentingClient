@@ -13,7 +13,8 @@
               <v-img
                 :src="type.typeImages[0].resourceUrl"
                 v-if="type.typeImages.length !== 0"
-                style="height:200px"
+                style="height:180px"
+                class="image-box"
               >
                 <div class="top">
                   Top
@@ -133,56 +134,11 @@
                   <span class="item-text" v-else>Chung chủ</span>
                 </div>
               </div>
-              <!-- <v-card-actions class="pl-0 mt-3">
-                <v-btn
-                  color="#484848"
-                  class="btnDetail pl-3 pr-3 ml-auto"
-                  :to="'/detail/' + type.typeId"
-                >Chi tiết</v-btn>
-              </v-card-actions>-->
             </v-col>
           </v-col>
         </v-col>
       </v-col>
     </v-row>
-    <!-- <div style="background-color: #f3f4f9">
-      <div class="ml-2" style="background-color: #e7e9f0;">
-        <div class="d-flex align-center justify-space-between ml-2 pt-2 pb-2">
-          <v-chip-group class center-active light show-arrows mandatory>
-            <div class="d-flex align-center pl-7 pr-7">
-              <v-img
-                class="shrink mr-2"
-                src="@/assets/home/air-conditioner.png"
-                transition="scale-transition"
-                max-width="15"
-                max-height="15"
-              />
-              <span class="equipment-name ml-2">Máy lạnh</span>
-            </div>
-            <div class="d-flex align-center pl-7 pr-7">
-              <v-img
-                class="shrink mr-2"
-                src="@/assets/home/fridge.png"
-                transition="scale-transition"
-                max-width="15"
-                max-height="15"
-              />
-              <span class="equipment-name ml-2">Tủ lạnh</span>
-            </div>
-            <div class="d-flex align-center pl-7 pr-7">
-              <v-img
-                class="shrink mr-2"
-                src="@/assets/home/parking.png"
-                transition="scale-transition"
-                max-width="15"
-                max-height="15"
-              />
-              <span class="equipment-name ml-2">Chỗ đậu xe</span>
-            </div>
-          </v-chip-group>
-        </div>
-      </div>
-    </div>-->
   </v-card>
 </template>
 <style scoped>
@@ -306,6 +262,14 @@
 }
 .v-btn:hover {
   background-color: #6c98c6 !important;
+}
+.image-box {
+  transition: all 3s;
+  /* height: 100%; */
+  transform: scale(1);
+}
+.image-box:hover {
+  transform: scale(1.3);
 }
 </style>
 <script>

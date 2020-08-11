@@ -21,7 +21,7 @@
         </v-col>
       </v-row>
       <v-row justify="center" class="content">
-        <v-col cols="10" mt="5">
+        <v-col cols="9" mt="5">
           <TopCarousel :list="topView" />
         </v-col>
       </v-row>
@@ -33,9 +33,9 @@
           </div>
         </v-col>
       </v-row>
-      <v-row class="content pt-3">
-        <v-col cols="1"></v-col>
-        <v-col cols="10 p-0">
+      <v-row class="content pt-3" justify="center">
+        <!-- <v-col class="red" cols="1"></v-col> -->
+        <v-col cols="9 p-0">
           <v-row class="d-flex flex-direction: row px-5">
             <v-col cols="8">
               <v-row>
@@ -68,7 +68,7 @@
                       class="ml-5"
                       :style="'height: 40px'"
                       @click="overlay = !overlay"
-                    >Bộ lọc</v-btn>
+                    >Lọc nâng cao</v-btn>
                     <v-overlay :value="overlay">
                       <v-btn icon @click="overlay = false">
                         <v-icon>mdi-close</v-icon>
@@ -80,25 +80,6 @@
                     </v-overlay>
                   </v-sheet>-->
                 </v-col>
-                <!-- <v-col cols="6" sm="6" md="0" lg="0" xl="0" class="hidden-md-and-up">
-                  <v-sheet style="height: 100%">
-                    <v-bottom-sheet v-model="bottomSheet.show" scrollable>
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                        color="green"
-                        dark
-                        v-bind="attrs"
-                        v-on="on"
-                        class="mt-6 ml-6">
-                          Bộ lọc
-                        </v-btn>
-                      </template>
-                      <v-sheet light class="pt-6">
-                        <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
-                      </v-sheet>
-                    </v-bottom-sheet>
-                  </v-sheet>
-                </v-col>-->
                 <v-col cols="12">
                   <ArticleList :list="hostelTypes" />
                 </v-col>
@@ -109,7 +90,7 @@
               <v-row>
                 <v-col cols="11 ml-auto pt-0 mt-0">
                   <v-sheet>
-                    <p class="text-h6 pt-2 ml-6">Bộ lọc</p>
+                    <p class="text-h6 pt-2 ml-6">Lọc nâng cao</p>
                     <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
                   </v-sheet>
                 </v-col>
