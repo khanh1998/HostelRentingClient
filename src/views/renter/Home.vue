@@ -21,7 +21,7 @@
         </v-col>
       </v-row>
       <v-row justify="center" class="content">
-        <v-col cols="10" mt="5">
+        <v-col cols="9" mt="5">
           <TopCarousel :list="topView" />
         </v-col>
       </v-row>
@@ -33,9 +33,9 @@
           </div>
         </v-col>
       </v-row>
-      <v-row class="content pt-3">
-        <v-col cols="1"></v-col>
-        <v-col cols="10 p-0">
+      <v-row class="content pt-3" justify="center">
+        <!-- <v-col class="red" cols="1"></v-col> -->
+        <v-col cols="9 p-0">
           <v-row class="d-flex flex-direction: row px-5">
             <v-col cols="8">
               <v-row>
@@ -62,7 +62,7 @@
                       :style="'width: 350px'"
                     ></v-select>
                   </v-sheet>
-                  <v-sheet light>
+                  <!-- <v-sheet light>
                     <v-btn
                       outlined
                       class="ml-5"
@@ -78,27 +78,8 @@
                         style="background-color: #fff; border-radius: 5px;"
                       />
                     </v-overlay>
-                  </v-sheet>
+                  </v-sheet>-->
                 </v-col>
-                <!-- <v-col cols="6" sm="6" md="0" lg="0" xl="0" class="hidden-md-and-up">
-                  <v-sheet style="height: 100%">
-                    <v-bottom-sheet v-model="bottomSheet.show" scrollable>
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                        color="green"
-                        dark
-                        v-bind="attrs"
-                        v-on="on"
-                        class="mt-6 ml-6">
-                          Bộ lọc
-                        </v-btn>
-                      </template>
-                      <v-sheet light class="pt-6">
-                        <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
-                      </v-sheet>
-                    </v-bottom-sheet>
-                  </v-sheet>
-                </v-col>-->
                 <v-col cols="12">
                   <ArticleList :list="hostelTypes" />
                 </v-col>
@@ -255,7 +236,7 @@ export default {
       this.getAllCategories();
     }
     if (this.hostelTypes.length === 0) {
-      this.getHostelTypes({ page: 1, size: 20 });
+      this.getHostelTypes({ page: 1, size: 5 });
     }
     if (this.topView.length === 0) {
       this.getTopView({ size: 10 });

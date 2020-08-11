@@ -108,7 +108,7 @@
         class="mt-6"
         color="amber"
         @click="filterSubmit()"
-      >TÌM KIẾM</v-btn>
+      >ÁP DỤNG</v-btn>
     </div>
   </v-sheet>
 </template>
