@@ -58,6 +58,7 @@
             class="ma-6"
             depressed
             @click="dateTimePicker.isOpenPicker = true"
+            :disabled="hasPendingBooking"
           >
             <v-icon left>fas fa-paper-plane</v-icon>ĐẶT LỊCH XEM PHÒNG
           </v-btn>
@@ -91,9 +92,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
-import sendBookingRequest from '../../utils/booking';
 
 export default {
   name: 'DateTimePickerBox',
@@ -122,6 +122,9 @@ export default {
     },
   }),
   methods: {
+    ...mapActions({
+      createBooking: 'user/createBooking',
+    }),
     showSnackbar(color, message) {
       this.snackbar.message = message;
       this.snackbar.color = color;
@@ -135,14 +138,14 @@ export default {
       this.dateTimePicker.date.setMinutes(minutes);
       this.dateTimePicker.date.setSeconds(0);
       const bookingObj = {
-        renterId: 1,
-        vendorId: 1,
+        renterId: this.userState.data.userId,
+        vendorId: this.vendorId,
         typeId: this.typeId,
-        statusId: 1,
-        dealId: 1,
-        startTime: this.dateTimePicker.date.getTime(),
+        status: 'INCOMING',
+        dealId: null,
+        meetTime: this.dateTimePicker.date.getTime(),
       };
-      const success = await sendBookingRequest(bookingObj);
+      const success = await this.createBooking(bookingObj);
       if (success) {
         this.showSnackbar(
           'success',

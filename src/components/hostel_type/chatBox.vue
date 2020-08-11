@@ -18,6 +18,7 @@
           :width="dateTimeOverlay.width"
           v-on:ok="receiveDateTime"
           v-on:cancel="dateTimeOverlay.show = false"
+          :groupId="group.groupId"
         />
       </v-overlay>
       <v-overlay :value="bookingCancel.show" absolute opacity="0.8">
@@ -279,6 +280,10 @@ export default {
     book(content) {
       this.bargainOverlay.show = false;
       const newContent = content;
+      const [hours, minutes] = this.dateTimeOverlay.time.split(':');
+      this.dateTimeOverlay.date.setHours(hours);
+      this.dateTimeOverlay.date.setMinutes(minutes);
+      this.dateTimeOverlay.date.setSeconds(0);
       const { date } = this.dateTimeOverlay;
       newContent.book = {
         date: this.getSimpleFormatDate(date),

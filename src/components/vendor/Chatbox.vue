@@ -253,8 +253,10 @@ export default {
       const lastedBargain = this.items.filter(
         (item) => item.sender === 'renter' && item.bargain && item.bargain.status === 'wait',
       )[0];
+      console.log('lasted bargain', lastedBargain);
+      console.log('lasted bargain price', lastedBargain.bargain.newPrice);
       const deal = {
-        offeredPrice: lastedBargain.newPrice,
+        offeredPrice: lastedBargain.bargain.newPrice,
         renterId,
         typeId,
         vendorId,
