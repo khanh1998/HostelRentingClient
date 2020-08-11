@@ -1,5 +1,5 @@
 <template>
-  <div class="info-card d-flex flex-column">
+  <div class="info-card d-flex flex-column" v-if="!isLoading">
     <v-dialog v-model="dateTimePicker.isOpenPicker" width="350">
       <v-card v-if="!userState.data" color="white" light>
         <v-card-title>Đăng nhập để đặt lịch xem phòng</v-card-title>
@@ -164,6 +164,11 @@ export default {
     },
   },
   computed: {
+    isLoading() {
+      const loadingUser = this.userState.isLoading;
+      const loadingBooking = this.$store.state.user.bookings.isLoading;
+      return loadingUser || loadingBooking;
+    },
     ...mapGetters({
       findPendingBooking: 'user/findPendingBooking',
     }),

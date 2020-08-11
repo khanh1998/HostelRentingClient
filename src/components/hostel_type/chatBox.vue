@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card v-if="!isLoading">
     <v-card-title class="blue--text py-0 px-2">
       <v-icon color="blue">message</v-icon>
       {{group.groupName}}
@@ -229,7 +229,7 @@
             <v-icon color="white" class="mr-1">monetization_on</v-icon>Trả giá
           </v-chip>
           <v-chip
-            v-if="!isLoadingDeals && !hasPendingBooking && !hasUnreplyBargain"
+            v-if="!hasPendingBooking && !hasUnreplyBargain"
             color="green"
             @click="dateTimeOverlay.show = true"
           >
@@ -274,7 +274,7 @@ export default {
       };
       this.messCollectionRef.add(newContent);
       this.messCollectionRef.parent.update({
-        lastedMessage: content,
+        lastedMessage: newContent,
       });
     },
     book(content) {
@@ -306,34 +306,31 @@ export default {
         newContent.book.bookingId = this.newlyCreatedBooking.bookingId;
         this.messCollectionRef.add(newContent);
         this.messCollectionRef.parent.update({
-          lastedMessage: content,
+          lastedMessage: newContent,
         });
       });
     },
     sendMessage(type = null) {
+      const content = {
+        bargain: null,
+        book: null,
+        message: this.inputChat.text,
+        createdAt: Date.now(),
+        sender: 'renter',
+      };
       this.createDoc().then(() => {
-        const content = {
-          bargain: null,
-          book: null,
-          message: this.inputChat.text,
-          createdAt: Date.now(),
-          sender: 'renter',
-        };
         if (type === null) {
+          console.log('content', content);
           this.messCollectionRef.add(content);
+          this.docRef.update({
+            lastedMessage: content,
+          });
         } else if (type === 'book') {
           this.book(content);
         } else if (type === 'bargain') {
           this.bargain(content);
           this.bargainOverlay.step = 1;
         }
-        this.messCollectionRef.parent.update({
-          updated: Date.now(),
-          lastedMessage: {
-            ...content,
-            seen: false,
-          },
-        });
       });
       this.$nextTick(() => {
         this.scrollToBottom();
@@ -346,7 +343,7 @@ export default {
       const docRef = chatCollectionRef.doc(
         `renter-${userId}:vendor-${vendorId}:type-${typeId}`,
       );
-      docRef.get().then((doc) => {
+      await docRef.get().then((doc) => {
         if (!doc.exists) {
           doc.ref.set({
             vendorId,
@@ -354,6 +351,7 @@ export default {
             typeId,
             groupId,
             updated: Date.now(),
+            lastedMessage: null,
           });
         }
       });
@@ -483,6 +481,12 @@ export default {
     this.bargainOverlay.price = this.info.price;
   },
   computed: {
+    isLoading() {
+      const loadingUser = this.userState.isLoading;
+      const loadingBookings = this.$store.state.user.bookings.isLoading;
+      const loadingDeals = this.$store.state.user.bookings.isLoading;
+      return loadingUser || loadingBookings || loadingDeals;
+    },
     ...mapGetters({
       findLastedDeal: 'user/findLastedDeal',
       findPendingBooking: 'user/findPendingBooking',
@@ -521,9 +525,6 @@ export default {
     },
     newlyCreatedBooking() {
       return this.$store.state.user.bookings.newlyCreated;
-    },
-    isLoadingDeals() {
-      return this.$store.state.user.deals.isLoading;
     },
     filteredMessage() {
       return this.items.filter((item) => {
