@@ -62,13 +62,13 @@
                       :style="'width: 350px'"
                     ></v-select>
                   </v-sheet>
-                  <!-- <v-sheet light>
+                  <v-sheet light>
                     <v-btn
                       outlined
                       class="ml-5"
                       :style="'height: 40px'"
                       @click="overlay = !overlay"
-                    >Bộ lọc</v-btn>
+                    >Lọc nâng cao</v-btn>
                     <v-overlay :value="overlay">
                       <v-btn icon @click="overlay = false">
                         <v-icon>mdi-close</v-icon>
@@ -78,7 +78,7 @@
                         style="background-color: #fff; border-radius: 5px;"
                       />
                     </v-overlay>
-                  </v-sheet>-->
+                  </v-sheet>
                 </v-col>
                 <!-- <v-col cols="6" sm="6" md="0" lg="0" xl="0" class="hidden-md-and-up">
                   <v-sheet style="height: 100%">
@@ -109,7 +109,7 @@
               <v-row>
                 <v-col cols="11 ml-auto pt-0 mt-0">
                   <v-sheet>
-                    <p class="text-h6 pt-2 ml-6">Bộ lọc</p>
+                    <p class="text-h6 pt-2 ml-6">Lọc nâng cao</p>
                     <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
                   </v-sheet>
                 </v-col>
@@ -255,7 +255,7 @@ export default {
       this.getAllCategories();
     }
     if (this.hostelTypes.length === 0) {
-      this.getHostelTypes({ page: 1, size: 5 });
+      this.getHostelTypes({ page: 1, size: 20 });
     }
     if (this.topView.length === 0) {
       this.getTopView({ size: 10 });

@@ -17,16 +17,7 @@ const myState = {
       data: [],
       isLoading: false,
     },
-    // facility: {
-    //   selects: [],
-    //   items: [
-    //     'Máy lạnh',
-    //     'Máy giặt',
-    //     'Tủ lạnh',
-    //     'Bình nóng lạnh',
-    //     'Chỗ đậu xe',
-    //   ],
-    // },
+
     price: {
       select: '1 triệu',
       items: [
@@ -96,14 +87,14 @@ const mutations = {
 
   // facilities
   GET_FACILITIES_SUCCESS(state, inputData) {
-    state.facility.data = inputData;
-    state.facility.isLoading = false;
+    state.filter.facility.data = inputData;
+    state.filter.facility.isLoading = false;
   },
   GET_FACILITIES_FAILURE(state) {
-    state.facility.isLoading = false;
+    state.filter.facility.isLoading = false;
   },
   GET_FACILITIES_REQUEST(state) {
-    state.facility.isLoading = true;
+    state.filter.facility.isLoading = true;
   },
 };
 const getters = {
@@ -185,7 +176,38 @@ const actions = {
       const res = await window.axios.get(url);
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
-        console.log(res.data.data);
+        commit(mutationTypes.SET_SEARCH_VALUE, params.coordinator);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
+    }
+  },
+  async filterSearchByCoordinatorResult({ commit }, params) {
+    // params = facilityId
+    try {
+      let facilitiesStr = '';
+      params.facilitiesIds.forEach((element) => {
+        facilitiesStr += `&facilityIds=${element}`;
+      });
+      const coordinatorStr = '';
+      // if (params.coordinator !== '') {
+      //   coordinatorStr = `&latitude=${params.coordinator.lat}&
+      // longitude=${params.coordinator.lng}`;
+      // }
+      let priceStr = '';
+      if (params.disabledPrice) {
+        priceStr = `&maxPrice=${params.rangePirce[1]}&minPrice=${params.rangePirce[0]}`;
+      }
+      let minSuperficialityStr = '';
+      if (params.minSuperficiality !== 0) {
+        const minSuperficiality = params.minSuperficiality.split(' ')[0];
+        minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
+      }
+      console.log(minSuperficialityStr);
+      const url = `/api/v1/types?asc=false&distance=5${facilitiesStr}${coordinatorStr}${priceStr}${minSuperficialityStr}&page=1&size=5&sortBy=score`;
+      const res = await window.axios.get(url);
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
       }
     } catch (error) {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
@@ -194,7 +216,6 @@ const actions = {
   async getAllFacilities({ commit }) {
     // no param
     try {
-      console.log('filter');
       commit(mutationTypes.GET_FACILITIES_REQUEST);
       const res = await window.axios.get('/api/v1/facilities');
       if (res.status >= 200 && res.status <= 299) {

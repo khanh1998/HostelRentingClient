@@ -201,8 +201,6 @@ export default {
   }),
   methods: {
     setPlace(place) {
-      // this.isActive = !this.isActive;
-      // this.coordinates = null;
       this.currentPlace = place;
       this.searchValue = place.formatted_address;
     },
@@ -223,7 +221,9 @@ export default {
         this.searchByCoordinator({
           lat: coordinates.lat,
           long: coordinates.lng,
+          coordinator: coordinates,
         });
+        this.setSearchValue(this.coordinates);
         this.$router.push('/filter');
       }
     },
