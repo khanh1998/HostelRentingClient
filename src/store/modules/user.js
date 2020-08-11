@@ -56,6 +56,10 @@ const myGetters = {
     console.log(`pending booking ${result[0]}`);
     return result[0];
   },
+  findDealById: (state) => (id) => {
+    const result = state.deals.data.filter((deal) => deal.dealId === id);
+    return result[0];
+  },
 };
 const mutationTypes = {
   GET_USER_REQUEST: 'GET_USER_REQUEST',

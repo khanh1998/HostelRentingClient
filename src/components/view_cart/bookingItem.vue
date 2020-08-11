@@ -22,9 +22,20 @@
             {{booking.type.title}}
           </p>
           <p>
-            <span class="grey--text">Giá thuê</span>
-            <span class="blue--text"> {{booking.type.price}} {{booking.type.priceUnit}}</span>
-            <span class="font-italic"> (đã trả giá)</span>
+            <span class="grey--text">Giá thuê: </span>
+            <span
+              class="blue--text text-decoration-line-through"
+              v-if="booking.deal"
+            >
+              {{booking.type.price}} {{booking.type.priceUnit}}
+            </span>
+            <span class="blue--text" v-if="!booking.deal">
+              {{booking.type.price}} {{booking.type.priceUnit}}
+            </span>
+            <span class="blue--text" v-if="booking.deal">
+               {{booking.deal.offeredPrice}} {{booking.type.priceUnit}}
+            </span>
+            <span class="font-italic" v-if="booking.deal"> (đã trả giá)</span>
           </p>
           <p class="grey--text font-italic">
             {{booking.group.street}},
@@ -83,7 +94,7 @@ export default {
   props: ['booking'],
   computed: {
     timestamp() {
-      return new Date(Number(this.booking.startTime));
+      return new Date(Number(this.booking.meetTime));
     },
     ward() {
       const { wardId } = this.booking.group;

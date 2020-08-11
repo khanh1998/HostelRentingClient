@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-overlay :value="isLoadingBooking" absolute>
+    <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-container v-if="!isLoadingBooking">
+    <v-container v-if="!isLoading">
       <v-row justify="center">
         <v-col cols="0" md="4"></v-col>
         <v-col cols="10" md="8">
@@ -62,43 +62,66 @@ export default {
   methods: {
     ...mapActions({
       getBookings: 'user/getBookings',
+      getUser: 'user/getUser',
     }),
   },
-  mounted() {
-    this.arrayEvents = [...Array(10)].map(() => {
-      const day = Math.floor(Math.random() * 30);
-      const d = new Date();
-      d.setDate(day);
-      return d.toISOString().substr(0, 10);
-    });
-  },
   created() {
-    this.getBookings();
+    this.getUser()
+      .then(() => {
+        this.getBookings()
+          .then(() => {
+            const bookings = this.$store.state.user.bookings.data;
+            this.arrayEvents = bookings.map(
+              (booking) => new Date(booking.meetTime).toISOString().substr(0, 10),
+            );
+          });
+      });
   },
   computed: {
+    isLoading() {
+      const loadingUser = this.$store.state.user.user.isLoading;
+      const loadingBookings = this.$store.state.user.bookings.isLoading;
+      const loadingDeals = this.$store.state.user.deals.isLoading;
+      return loadingUser || loadingBookings || loadingDeals;
+    },
     bookings() {
       const list = this.$store.state.user.bookings.data;
       const result = list.filter((booking) => {
-        const { statusId } = booking.status;
-        const selectedId = this.buttonGroup.selectedBookingStatus + 1;
-        return statusId === selectedId;
+        const selectedIdx = this.buttonGroup.selectedBookingStatus;
+        switch (selectedIdx) {
+          case 0: return booking.status === 'INCOMING';
+          case 1: return booking.status === 'DONE';
+          case 2: return booking.status === 'CANCELLED';
+          default:
+            return true;
+        }
       });
       return result;
+    },
+    incommingBooking() {
+      return this.bookings.filter((booking) => booking.status === 'INCOMING');
+    },
+    doneBookings() {
+      return this.bookings.filter((booking) => booking.status === 'DONE');
+    },
+    cancelledBookings() {
+      return this.bookings.filter((booking) => booking.status === 'CANCELLED');
     },
     isLoadingBooking() {
       return this.$store.state.user.bookings.isLoading;
     },
     counter() {
+      const bookings = this.$store.state.user.bookings.data;
       let incomming = 0;
       let done = 0;
       let cancel = 0;
-      this.bookings.forEach((booking) => {
-        switch (booking.status.statusId) {
-          case 1: incomming += 1;
+      bookings.forEach((booking) => {
+        switch (booking.status) {
+          case 'INCOMING': incomming += 1;
             break;
-          case 2: done += 1;
+          case 'DONE': done += 1;
             break;
-          case 3: cancel += 1;
+          case 'CANCELLED': cancel += 1;
             break;
           default:
             console.log('error in counter computed');
