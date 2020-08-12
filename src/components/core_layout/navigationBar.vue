@@ -22,9 +22,9 @@
     </v-overlay>
     <v-app-bar app color="#fff" light height="70" id="top-bar">
       <v-row height="70 m-0" class="d-flex">
-        <v-col class="col-7">
+        <v-col cols="11" md="7">
           <v-row>
-            <v-col class="col-2">
+            <v-col class="col-2 hidden-sm-and-down">
               <router-link to="/">
                 <v-img
                   alt="Hostel Renting"
@@ -70,24 +70,13 @@
                   >
                     <v-icon>search</v-icon>
                   </v-btn>
-                  <v-btn
-                    color="primary"
-                    height="48"
-                    depressed
-                    icon
-                    fab
-                    class="ma-2 hidden-md-and-up"
-                    @click="overlay.show = true"
-                  >
-                    <v-icon light>mdi-magnify</v-icon>
-                  </v-btn>
                 </v-col>
               </v-row>
             </v-col>
           </v-row>
         </v-col>
 
-        <v-col class="col-5 ml-auto d-flex justify-end items-center align-center pr-5">
+        <v-col cols="1" md="5" class="ml-auto d-flex justify-end items-center align-center pr-5">
           <v-btn
             color="#2C92D5"
             light
@@ -95,12 +84,30 @@
             outlined
             rounded
             class="mr-5 hidden-xs-only font-weight-regular"
+            v-if="!user || (user && user.role.roleName === 'Người thuê')"
           >
             <v-icon left>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
           </v-btn>
 
           <!-- eslint-disable -->
-          <v-btn color="#6C98C6" to="/cart" depressed dark class="hidden-xs-only">Lịch hẹn của bạn</v-btn>
+          <v-btn
+            color="#6C98C6"
+            to="/cart"
+            depressed
+            dark
+            class="hidden-xs-only"
+            v-if="!user || (user && user.role.roleName === 'Người thuê')"
+          >Lịch hẹn của bạn</v-btn>
+          <v-btn
+            to="/vendor"
+            depressed
+            dark
+            color="blue"
+            class="hidden-xs-only"
+            v-if="user && user.role.roleName === 'Chủ trọ'"
+          >
+            <v-icon left>settings</v-icon>Quản lý phòng trọ
+          </v-btn>
           <v-menu>
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
@@ -116,28 +123,14 @@
               <v-list-item to="/login">
                 <v-list-item-icon>
                   <v-icon>login</v-icon>
-                  <v-list-item-title>Đăng nhập</v-list-item-title>
                 </v-list-item-icon>
+                <v-list-item-title>Đăng nhập</v-list-item-title>
               </v-list-item>
               <v-list-item to="/register">
                 <v-list-item-icon>
                   <v-icon>person_add</v-icon>
-                  <v-list-item-title>Đăng ký</v-list-item-title>
                 </v-list-item-icon>
-              </v-list-item>
-            </v-list>
-            <v-list v-if="isLoggedIn">
-              <v-list-item to="/cart">
-                <v-list-item-icon>
-                  <v-icon>far fa-user-circle</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>Hồ sơ</v-list-item-title>
-              </v-list-item>
-              <v-list-item to="/qr">
-                <v-list-item-icon>
-                  <v-icon>fas fa-qrcode</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>Quét mã QR</v-list-item-title>
+                <v-list-item-title>Đăng ký</v-list-item-title>
               </v-list-item>
               <v-list-item to="#" class="hidden-sm-and-up">
                 <v-list-item-icon>
@@ -145,11 +138,54 @@
                 </v-list-item-icon>
                 <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
               </v-list-item>
-              <v-list-item to="#" class="hidden-sm-and-up">
+              <v-list-item to="/cart" class="hidden-sm-and-up">
                 <v-list-item-icon>
                   <v-icon>far fa-bookmark</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
+              </v-list-item>
+            </v-list>
+            <v-list v-if="isLoggedIn">
+              <v-list-item to="#">
+                <v-list-item-icon>
+                  <v-icon>far fa-user-circle</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Hồ sơ</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                to="#" class="hidden-sm-and-up"
+                v-if="user.role.roleName === 'Người thuê'"
+              >
+                <v-list-item-icon>
+                  <v-icon>fas fa-paper-plane</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                to="/cart"
+                class="hidden-sm-and-up"
+                v-if="user.role.roleName === 'Người thuê'"
+              >
+                <v-list-item-icon>
+                  <v-icon>far fa-bookmark</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                to="/vendor"
+                class="hidden-sm-and-up"
+                v-if="user.role.roleName === 'Chủ trọ'"
+              >
+                <v-list-item-icon>
+                  <v-icon>settings</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Quản lý phòng trọ</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="/qr">
+                <v-list-item-icon>
+                  <v-icon>fas fa-qrcode</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Quét mã QR</v-list-item-title>
               </v-list-item>
               <v-list-item @click="logout">
                 <v-list-item-icon>
