@@ -93,6 +93,8 @@
   </v-card>
 </template>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'TopCarouselItem',
   props: {
@@ -110,7 +112,8 @@ export default {
     },
     ward() {
       const { wardId } = this.group;
-      return this.$store.getters['renter/common/getWardById'](wardId);
+      const res = this.$store.getters['renter/common/getWardById'](wardId);
+      return res;
     },
     district() {
       const { wardId } = this.group;
@@ -122,6 +125,14 @@ export default {
         districtId,
       );
     },
+  },
+  methods: {
+    ...mapActions({
+      getProvinces: 'renter/common/getProvinces',
+    }),
+  },
+  created() {
+    this.getProvinces();
   },
 };
 </script>

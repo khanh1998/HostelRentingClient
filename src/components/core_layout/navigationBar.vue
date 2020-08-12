@@ -232,7 +232,6 @@ export default {
     center: { lat: 10.7542893, lng: 106.1346955 },
     places: [],
     currentPlace: null,
-    searchValue: '',
     visibleProperty: 'hidden',
   }),
   methods: {
@@ -288,9 +287,9 @@ export default {
   },
   computed: {
     searchValue: {
-      // get() {
-      //   return this.$store.state.renter.filterResult.search.value;
-      // },
+      get() {
+        return this.$store.state.renter.filterResult.search.value;
+      },
       set(value) {
         this.setSearchValue(value);
       },

@@ -296,7 +296,7 @@ const actions = {
         commit(mutationTypes.GET_USER_FAILURE, error);
       }
     } else {
-      throw new Error('userId, role or user.data null');
+      console.log('User are not logged in, cannot get user data');
     }
   },
   async updateUser({ commit, state }, newUser) {

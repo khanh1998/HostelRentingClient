@@ -39,6 +39,7 @@ const mutationTypes = {
   GET_PROVINCES_REQUEST: 'GET_PROVINCES_REQUEST',
   GET_PROVINCES_SUCCESS: 'GET_PROVINCES_SUCCESS',
   GET_PROVINCES_FAILURE: 'GET_PROVINCES_FAILURE',
+
   GET_CATEGORIES_REQUEST: 'GET_CATEGORIES_REQUEST',
   GET_CATEGORIES_SUCCESS: 'GET_CATEGORIES_SUCCESS',
   GET_CATEGORIES_FAILURE: 'GET_CATEGORIES_FAILURE',
@@ -76,7 +77,7 @@ const mutations = {
 };
 const actions = {
   async getCategories({ commit, state }) {
-    if (state.categories.data.length === 0) {
+    if (state.categories.data.length === 0 && !state.categories.isLoading) {
       commit(mutationTypes.GET_CATEGORIES_REQUEST);
       const res = await window.axios.get('/api/v1/categories');
       if (res.status === 200) {
@@ -87,7 +88,7 @@ const actions = {
     }
   },
   async getProvinces({ commit, state }) {
-    if (state.provinces.data.length === 0) {
+    if (state.provinces.data.length === 0 && !state.provinces.isLoading) {
       commit(mutationTypes.GET_PROVINCES_REQUEST);
       const res = await window.axios.get('/api/v1/provinces');
       if (res.status === 200) {
