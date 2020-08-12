@@ -244,7 +244,9 @@
 import { mapActions, mapGetters } from 'vuex';
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
 import firebase from '../../config/firebase';
+import utils from '../../utils/firebaseNotification';
 
+const { sendBookingNotification } = utils;
 const { store } = firebase;
 const chatCollectionRef = store.collection('chat');
 
@@ -303,6 +305,7 @@ export default {
       };
       console.log(bookingToApi);
       this.createBooking(bookingToApi).then(() => {
+        sendBookingNotification(this.newlyCreatedBooking);
         newContent.book.bookingId = this.newlyCreatedBooking.bookingId;
         this.messCollectionRef.add(newContent);
         this.messCollectionRef.parent.update({
@@ -385,7 +388,6 @@ export default {
           if (this.dealIds.length > 0) {
             this.getDeals();
           }
-          this.$nextTick(() => this.scrollToBottom());
         });
     },
     scrollToBottom() {
@@ -438,9 +440,6 @@ export default {
       this.bargainCancel.id.docId = null;
     },
   },
-  mounted() {
-    this.$nextTick(() => this.scrollToBottom());
-  },
   data: () => ({
     bookingCancel: {
       show: false,
@@ -478,6 +477,7 @@ export default {
     this.getDeals();
     this.getBookings();
     this.fetchMessages();
+    // this.$nextTick(() => this.scrollToBottom());
     this.bargainOverlay.price = this.info.price;
   },
   computed: {

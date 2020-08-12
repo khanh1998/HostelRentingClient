@@ -43,7 +43,12 @@
         <p class="mb-0">({{rating.total}})</p>
       </div>
       <div class="d-flex">
-        <v-btn color="orange" outlined @click="$emit('openMessage')" rounded class="my-2 mx-1">
+        <v-btn
+          color="orange"
+          outlined @click="$emit('openMessage')"
+          rounded class="my-2 mx-1"
+          :disabled="userState.data.role.roleName === 'Chủ trọ'"
+        >
           <v-icon>fas fa-comment-dots</v-icon>Nhắn tin ngay!
         </v-btn>
       </div>
@@ -58,7 +63,7 @@
             class="ma-6"
             depressed
             @click="dateTimePicker.isOpenPicker = true"
-            :disabled="hasPendingBooking"
+            :disabled="hasPendingBooking || userState.data.role.roleName === 'Chủ trọ'"
           >
             <v-icon left>fas fa-paper-plane</v-icon>ĐẶT LỊCH XEM PHÒNG
           </v-btn>
@@ -94,6 +99,9 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
+import utils from '../../utils/firebaseNotification';
+
+const { sendBookingNotification } = utils;
 
 export default {
   name: 'DateTimePickerBox',
@@ -151,6 +159,7 @@ export default {
           'success',
           'Bạn đã đặt lịch hẹn xem phòng thành công!!!',
         );
+        sendBookingNotification(this.newlyCreated);
       } else {
         this.showSnackbar('red', 'Đặt lịch xem phòng thất bại');
       }
@@ -172,6 +181,9 @@ export default {
     ...mapGetters({
       findPendingBooking: 'user/findPendingBooking',
     }),
+    newlyCreated() {
+      return this.$store.state.user.bookings.newlyCreated;
+    },
     hasPendingBooking() {
       const renterId = this.userState.data.userId;
       const res = this.findPendingBooking(renterId, this.vendorId, this.typeId);

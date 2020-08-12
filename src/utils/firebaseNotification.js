@@ -1,73 +1,34 @@
-// import firebase from '../config/firebase';
-// const { messaging } = firebase;
-function getMessagingToken(messaging) {
-  messaging
-    .getToken()
-    .then(async (token) => {
-      if (token) {
-        const currentMessageToken = window.localStorage.getItem(
-          'messagingToken',
-        );
-        console.log('token will be updated', currentMessageToken !== token);
-        if (currentMessageToken !== token) {
-          await this.saveToken(token);
-        }
-      } else {
-        console.log(
-          'No Instance ID token available. Request permission to generate one.',
-        );
-        this.notificationsPermisionRequest();
-      }
-    })
-    .catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
-    });
+function getDateTimeString(milisecond) {
+  const date = new Date(milisecond);
+  const d = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+  return `${d}/${month}/${year} ${hour}:${minute}`;
 }
-function notificationsPermisionRequest(messaging) {
-  messaging
-    .requestPermission()
-    .then(() => {
-      this.getMessagingToken();
-    })
-    .catch((err) => {
-      console.log('Unable to get permission to notify.', err);
-    });
+async function sendBookingNotification(booking) {
+  const vendor = booking.vendor.firebaseToken;
+  const content = {
+    to: vendor.firebaseToken,
+    priority: 'high',
+    notification: {
+      title: 'Bạn có một booking mới!',
+      body: getDateTimeString(booking.meetTime),
+      // click_action: "https://google.com",
+      icon: booking.renter.avatar,
+    },
+    data: {
+      bookingId: booking.bookingId,
+      renterName: booking.renter.username,
+      time: booking.meetTime,
+    },
+  };
+
+  const res = await window.axios.post('/api/v1/notification/token', content);
+  return res.status === 200;
 }
-function listenTokenRefresh(messaging) {
-  const currentMessageToken = window.localStorage.getItem('messagingToken');
-  console.log('currentMessageToken', currentMessageToken);
-  if (!currentMessageToken) {
-    messaging.onTokenRefresh(() => {
-      messaging
-        .getToken()
-        .then((token) => {
-          this.saveToken(token);
-        })
-        .catch((err) => {
-          console.log('Unable to retrieve refreshed token ', err);
-        });
-    });
-  }
-}
-function saveToken(token) {
-  console.log('tokens', token);
-  window.axios
-    .post(
-      'https://us-central1-cropchien.cloudfunctions.net/GeneralSubscription',
-      { token },
-    )
-    .then((response) => {
-      window.localStorage.setItem('messagingToken', token);
-      console.log(response);
-    })
-    .catch((err) => {
-      window.localStorage.setItem('messagingToken', token);
-      console.log(err);
-    });
-}
+
 export default {
-  saveToken,
-  listenTokenRefresh,
-  notificationsPermisionRequest,
-  getMessagingToken,
+  sendBookingNotification,
 };
