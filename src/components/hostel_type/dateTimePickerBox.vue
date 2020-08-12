@@ -3,12 +3,11 @@
     <v-dialog v-model="dateTimePicker.isOpenPicker" width="350">
       <v-card v-if="!userState.data" color="white" light>
         <v-card-title>Đăng nhập để đặt lịch xem phòng</v-card-title>
-        <v-card-subtitle>dfdfdfd</v-card-subtitle>
         <v-card-actions>
           <v-btn :to="registerRouteObject" dark class="green lighten-3">
             <v-icon>create</v-icon>Tạo tài khoản mới
           </v-btn>
-          <v-spacer/>
+          <v-spacer />
           <v-btn :to="loginRouteObject" dark class="blue lighten-3">
             <v-icon>login</v-icon>Đăng nhập
           </v-btn>
@@ -45,9 +44,11 @@
       <div class="d-flex">
         <v-btn
           color="orange"
-          outlined @click="$emit('openMessage')"
-          rounded class="my-2 mx-1"
-          :disabled="userState.data.role.roleName === 'Chủ trọ'"
+          outlined
+          @click="$emit('openMessage')"
+          rounded
+          class="my-2 mx-1"
+          :disabled="userState.data && isVendor"
         >
           <v-icon>fas fa-comment-dots</v-icon>Nhắn tin ngay!
         </v-btn>
@@ -63,7 +64,7 @@
             class="ma-6"
             depressed
             @click="dateTimePicker.isOpenPicker = true"
-            :disabled="hasPendingBooking || userState.data.role.roleName === 'Chủ trọ'"
+            :disabled="hasPendingBooking || isVendor"
           >
             <v-icon left>fas fa-paper-plane</v-icon>ĐẶT LỊCH XEM PHÒNG
           </v-btn>
@@ -185,15 +186,24 @@ export default {
       return this.$store.state.user.bookings.newlyCreated;
     },
     hasPendingBooking() {
-      const renterId = this.userState.data.userId;
-      const res = this.findPendingBooking(renterId, this.vendorId, this.typeId);
-      if (!res) {
-        return false;
+      if (this.userState.data) {
+        const renterId = this.userState.data.userId;
+        const res = this.findPendingBooking(
+          renterId,
+          this.vendorId,
+          this.typeId,
+        );
+        return res != null;
       }
-      return true;
+      return false;
     },
     userState() {
       return this.$store.state.user.user;
+    },
+    isVendor() {
+      return (
+        this.userState.data && this.userState.data.role.roleName === 'Chủ trọ'
+      );
     },
     loginRouteObject() {
       return {
