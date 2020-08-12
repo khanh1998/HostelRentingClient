@@ -6,18 +6,24 @@
       style="height:180px"
     >
       <div class="category">
-        <h4>{{type.category.categoryName}}</h4>
+        <!-- eslint-disable max-len -->
+        <span class="font-weight-bold text-body-1 yellow--text">{{type.price}} {{type.priceUnit}}</span>
+        <br />
+        <span class="text-caption">{{type.view}} lượt xem</span>
       </div>
       <div class="arrow-price">
-        <span class="price">{{type.price}} {{type.priceUnit}}</span>
+        <span class="transition-swing text-caption">{{type.category.categoryName}}</span>
       </div>
     </v-img>
     <v-img style="height:180px" src="@/assets/image-error.png" v-else>
       <div class="category">
-        <h4>{{type.category.categoryName}}</h4>
+        <!-- eslint-disable max-len -->
+        <span class="font-weight-bold text-body-1 yellow--text">{{type.price}} {{type.priceUnit}}</span>
+        <br />
+        <span class="text-caption">{{type.view}} lượt xem</span>
       </div>
       <div class="arrow-price">
-        <span class="price">{{type.price}} {{type.priceUnit}}</span>
+        <span class="transition-swing text-caption">{{type.category.categoryName}}</span>
       </div>
     </v-img>
     <v-divider class="mx-4" />
@@ -134,13 +140,11 @@ export default {
   background: rgba(32, 112, 185, 0.66);
   color: #fff;
   text-align: center;
-  line-height: 22px;
-  font-weight: 400;
   border-bottom-left-radius: 24px;
   box-sizing: border-box;
 }
 .arrow-price {
-  /* background-image: linear-gradient(to right, rgba(216, 36, 96, 0.6), #d82460); */
+  background-image: linear-gradient(to right, rgba(216, 36, 96, 0.6), #d82460);
   background-image: linear-gradient(
     to right,
     rgba(52, 203, 247, 0.71),
@@ -151,7 +155,6 @@ export default {
   position: absolute;
   bottom: 0;
   right: -1px;
-  font-size: 13px;
 }
 .arrow-price:before {
   position: absolute;

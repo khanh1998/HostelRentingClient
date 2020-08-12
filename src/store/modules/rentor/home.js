@@ -73,6 +73,10 @@ const mutationTypes = {
   GET_CATEGORIES_SUCCESS: 'GET_CATEGORIES_SUCCESS',
   GET_CATEGORIES_FAILURE: 'GET_CATEGORIES_FAILURE',
   GET_CATEGORIES_REQUEST: 'GET_CATEGORIES_REQUEST',
+
+  GET_FACILITIES_SUCCESS: 'GET_FACILITIES_SUCCESS',
+  GET_FACILITIES_FAILURE: 'GET_FACILITIES_FAILURE',
+  GET_FACILITIES_REQUEST: 'GET_FACILITIES_REQUEST',
 };
 const mutations = {
   // hostel type
@@ -120,6 +124,16 @@ const mutations = {
   GET_CATEGORIES_REQUEST(state) {
     state.categories.isLoading = true;
   },
+  GET_FACILITIES_SUCCESS(state, inputData) {
+    state.facility.data = inputData;
+    state.facility.isLoading = false;
+  },
+  GET_FACILITIES_FAILURE(state) {
+    state.facility.isLoading = false;
+  },
+  GET_FACILITIES_REQUEST(state) {
+    state.facility.isLoading = true;
+  },
 };
 const actions = {
   async getHostelTypes({ commit }, params) {
@@ -162,6 +176,19 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_CATEGORIES_FAILURE);
+    }
+  },
+  async getAllFacilities({ commit }) {
+    // no param
+    try {
+      console.log('filter');
+      commit(mutationTypes.GET_FACILITIES_REQUEST);
+      const res = await window.axios.get('/api/v1/facilities');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_FACILITIES_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_FACILITIES_FAILURE);
     }
   },
 };
