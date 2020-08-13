@@ -20,17 +20,21 @@
         </v-card>
       </v-dialog>
       <v-row no-gutters class="pt-2">
-        <v-col cols="8">
-          <p class="text-h5 font-weight-medium">{{info.title}}</p>
-          <p class="grey--text" v-if="!isLoadingProvinces">
-            <v-icon>location_on</v-icon>
-            {{group.street}},
-            {{ward.wardName}},
-            {{district.districtName}},
-            {{province.provinceName}}
-          </p>
+        <v-col cols="12" md="8">
+          <div class="d-flex flex-column justify-sm-center">
+            <p class="text-h5 font-weight-medium text-sm-center">
+              {{info.title}}
+            </p>
+            <p class="grey--text" v-if="!isLoadingProvinces">
+              <v-icon>location_on</v-icon>
+              {{group.street}},
+              {{ward.wardName}},
+              {{district.districtName}},
+              {{province.provinceName}}
+            </p>
+          </div>
         </v-col>
-        <v-col cols="4">
+        <v-col cols="12" md="4">
           <div class="d-flex flex-column justify-end">
             <p
               class="font-weight-medium text-h5 blue--text text-center"

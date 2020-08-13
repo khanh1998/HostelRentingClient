@@ -41,7 +41,7 @@
                 <v-icon>create</v-icon>Tạo tài khoản mới
               </v-btn>
               <v-spacer></v-spacer>
-              <v-btn color="primary" :loading="isLoging" @click="login">Đăng nhập</v-btn>
+              <v-btn color="primary" :loading="loging" @click="login">Đăng nhập</v-btn>
             </v-card-actions>
             <v-card-text class="red--text">{{message}}</v-card-text>
           </v-card>
@@ -52,6 +52,9 @@
 </template>
 <script>
 import { mapActions } from 'vuex';
+import firebase from '../config/firebase';
+
+const { auth } = firebase;
 
 export default {
   name: 'login',
@@ -63,6 +66,7 @@ export default {
       empty: (value) => value.length > 0 || 'Không được để trống.',
       phone: (value) => Number.isInteger(Number(value)) === true || 'Phải là số điện thoại',
     },
+    loging: false,
   }),
   computed: {
     isLoging() {
@@ -79,9 +83,24 @@ export default {
     ...mapActions({
       loginRequest: 'user/login',
     }),
-    afterLogin() {
+    async getTokenIdFromFirebase(jwtToken) {
+      try {
+        await auth.signInWithCustomToken(jwtToken);
+        const idToken = await auth.currentUser.getIdToken();
+        return idToken;
+      } catch (error) {
+        console.log('firebase login error: ', error);
+        alert(`error when login with firebase: ${error}`);
+      }
+      return null;
+    },
+    async afterLogin() {
       if (this.loginSuccess) {
-        this.$cookies.set('jwt', 'justAJsonWebToken');
+        const { jwtToken } = this.userData;
+        this.$cookies.set('jwt', jwtToken);
+        const idToken = await this.getTokenIdFromFirebase(jwtToken);
+        this.$cookies.set('firebaseIdToken', idToken);
+        console.log('firebase id token', idToken);
         let role = 'admin';
         const id = this.userData.userId;
         switch (this.userData.role.roleId) {
@@ -121,12 +140,14 @@ export default {
       }
     },
     async login() {
+      this.loging = true;
       await this.loginRequest({
         phone: this.phone,
         password: this.password,
       });
       console.log(this.userData);
-      this.afterLogin();
+      await this.afterLogin();
+      this.loging = false;
     },
   },
   created() {

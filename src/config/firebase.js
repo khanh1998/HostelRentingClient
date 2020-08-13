@@ -1,7 +1,8 @@
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import constant from './constant';
 import 'firebase/firestore';
 import 'firebase/messaging';
+import 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCWNT4MhALulebmekYoHKbwyAx-htB76tA',
@@ -28,7 +29,10 @@ store.enablePersistence({ synchronizeTabs: true });
 const messaging = firebase.messaging();
 messaging.usePublicVapidKey(constant.PUBLIC_VAPID_KEY);
 
+const auth = firebase.auth();
+
 export default {
   store,
   messaging,
+  auth,
 };

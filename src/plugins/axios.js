@@ -14,14 +14,12 @@ axios.interceptors.request.use(
     // If request is different than any of the URLS in urlsExcludedForBearerHeader
     // then send Authorization header with token from localstorage
     const urlsExcludedForBearerHeader = [
-      '/login',
-      '/forgot',
-      '/register',
-      '/reset',
+      '/api/v1/login',
+      '/api/v1/register',
       `${window.location.origin}/version.json`,
     ];
     if (urlsExcludedForBearerHeader.indexOf(myConfig.url) === -1) {
-      myConfig.headers.Authorization = `Bearer ${window.$cookies.get('jwt')}`;
+      myConfig.headers.Authorization = `Bearer ${window.$cookies.get('firebaseIdToken')}`;
     }
     return myConfig;
   },
