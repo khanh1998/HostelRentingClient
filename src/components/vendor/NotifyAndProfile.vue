@@ -54,7 +54,7 @@
         <v-list two-line>
           <template v-for="(item, index) in infoMenu">
             <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
-            <v-list-item v-else :key="item.title">
+            <v-list-item v-else :key="item.title" :to= "item.url">
               <v-list-item-content>
                 <v-list-item-title
                   style="color:#1F17FF; fontSize:18px"
@@ -163,6 +163,9 @@ export default {
       this.getNewCommingBooking(payload.data.bookingId);
       this.addNewNotificaton(payload);
     },
+    changePage() {
+
+    },
   },
   mounted() {
     messaging.onMessage(this.receivePayload);
@@ -258,10 +261,17 @@ export default {
     infoMenu: [
       {
         title: 'Thông tin',
+        url: '',
+      },
+      { divider: true, inset: false },
+      {
+        title: 'Xem mã QR',
+        url: '/vendor/qrgeneration',
       },
       { divider: true, inset: false },
       {
         title: 'Đổi mật khẩu',
+        url: '',
       },
     ],
   }),

@@ -92,6 +92,9 @@ const mutationTypes = {
   CANCEL_BOOKING_REQUEST: 'CANCEL_BOOKING_REQUEST',
   CANCEL_BOOKING_SUCCESS: 'CANCEL_BOOKING_SUCCESS',
   CANCEL_BOOKING_FAILURE: 'CANCEL_BOOKING_FAILURE',
+  DONE_BOOKING_REQUEST: 'DONE_BOOKING_REQUEST',
+  DONE_BOOKING_SUCCESS: 'DONE_BOOKING_SUCCESS',
+  DONE_BOOKING_FAILURE: 'DONE_BOOKING_FAILURE',
 };
 const mutations = {
   CLEAR_USER_DATA(state) {
@@ -227,6 +230,19 @@ const mutations = {
     res[0].status = 'CANCEL';
   },
   CANCEL_BOOKING_FAILURE(state, error) {
+    state.bookings.isLoading = false;
+    state.bookings.error = error;
+  },
+  DONE_BOOKING_REQUEST(state) {
+    state.bookings.isLoading = true;
+  },
+  DONE_BOOKING_SUCCESS(state, bookingId) {
+    state.bookings.isLoading = false;
+    state.bookings.success = true;
+    const res = state.bookings.data.filter((book) => book.bookingId === bookingId);
+    res[0].status = 'DONE';
+  },
+  DONE_BOOKING_FAILURE(state, error) {
     state.bookings.isLoading = false;
     state.bookings.error = error;
   },
@@ -494,6 +510,37 @@ const actions = {
           });
           if (res.status === 200) {
             commit(mutationTypes.CANCEL_BOOKING_SUCCESS, res.data.data);
+          }
+        } else {
+          console.log(`booking ${bookingId} is not existed in store`);
+        }
+      } catch (error) {
+        commit(mutationTypes.CREATE_BOOKING_FAILURE, error);
+      }
+    } else {
+      throw new Error('you are not loged in');
+    }
+  },
+  async updateBookingStatus({ commit, state }, bookingId) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role && state.user.data) {
+      try {
+        const booking = state.bookings.data.filter((item) => item.bookingId === bookingId)[0];
+        if (booking) {
+          commit(mutationTypes.DONE_BOOKING_REQUEST);
+          const res = await window.axios.put(`/api/v1/bookings/${bookingId}`, {
+            bookingId,
+            dealId: booking.deal.dealId,
+            typeId: booking.type.typeId,
+            renterId: booking.renter.renterId,
+            vendorId: booking.vendor.vendorId,
+            status: 'DONE',
+            meetTime: booking.meetTime,
+            qrCode: booking.qrCode,
+          });
+          if (res.status === 200) {
+            commit(mutationTypes.DONE_BOOKING_SUCCESS, res.data.data);
           }
         } else {
           console.log(`booking ${bookingId} is not existed in store`);

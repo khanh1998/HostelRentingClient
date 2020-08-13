@@ -2,6 +2,7 @@ import VendorView from '../../main-view/Vendor.vue';
 import ChatDetail from '../../views/vendor/ChatDetail.vue';
 import Overview from '../../views/vendor/Overview.vue';
 import HostelManagement from '../../views/vendor/HostelManagement.vue';
+import QRGeneration from '../../components/vendor/QRGeneration.vue';
 
 const routes = [
   {
@@ -25,6 +26,12 @@ const routes = [
         path: 'management',
         name: 'HostelManagement',
         component: HostelManagement,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'qrgeneration',
+        name: 'QRGeneration',
+        component: QRGeneration,
         meta: { requiresAuth: true },
       },
     ],

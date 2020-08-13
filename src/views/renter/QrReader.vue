@@ -1,15 +1,38 @@
 <template>
-  <div>
-    <p class="error">{{ error }}</p>
-    <p class="decode-result">Last result: <b>{{ result }}</b></p>
-    <qrcode-drop-zone @decode="onDecode" @init="logErrors">
-      <qrcode-stream @decode="onDecode" @init="onInit" />
-    </qrcode-drop-zone>
-    <qrcode-capture v-if="noStreamApiSupport" @decode="onDecode" />
+  <div
+    v-if="!isLoading"
+    class="d-flex justify-center"
+  >
+    <v-col cols="8">
+      <v-card
+        style="background-color: coral; height: auto"
+        class="mt-5"
+      >
+        <p class="error">{{ error }}</p>
+        <p class="decode-result">Last result: <b>{{ result }}</b></p>
+        <qrcode-drop-zone
+          @decode="onDecode"
+          @init="logErrors"
+        >
+          <qrcode-stream
+            @decode="onDecode"
+            @init="onInit"
+          />
+        </qrcode-drop-zone>
+        <qrcode-capture
+          v-if="noStreamApiSupport"
+          @decode="onDecode"
+        />
+      </v-card>
+      <v-btn @click="doUpdateBookingStatus">
+          aaa
+      </v-btn>
+    </v-col>
   </div>
 </template>
 <script>
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'QR-Reader',
@@ -20,8 +43,21 @@ export default {
     noStreamApiSupport: false,
   }),
   methods: {
+    ...mapActions({
+      getUser: 'user/getUser',
+      getBookings: 'user/getBookings',
+      updateBookingStatus: 'user/updateBookingStatus',
+    }),
     onDecode(result) {
       this.result = result;
+      // this.qrresult = this.updateBookingStatus(Number(this.result));
+      // alert(this.qrresult);
+    },
+    doUpdateBookingStatus() {
+      // alert(`số${Number(this.result)}`);
+      // alert(`chữ${this.result}`);
+      console.log('aaa');
+      this.updateBookingStatus(58);
     },
     async onInit(promise) {
       try {
@@ -42,6 +78,19 @@ export default {
         }
       }
     },
+  },
+  computed: {
+    isLoading() {
+      return this.$store.state.user.bookings.isLoading;
+    },
+    bookings() {
+      return this.$store.state.user.bookings.data;
+    },
+  },
+  created() {
+    Promise.all([this.getUser]).then(() => {
+      this.getBookings();
+    });
   },
 };
 </script>

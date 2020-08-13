@@ -40,7 +40,7 @@ const routes = [
         path: '/qr',
         name: 'QrReader',
         component: QrReader,
-        meta: { requiresAuth: true },
+        // meta: { requiresAuth: true },
       },
       {
         path: '/filter',
