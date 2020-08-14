@@ -5,6 +5,8 @@ import User from '../../views/renter/User.vue';
 import ViewCart from '../../views/renter/ViewCart.vue';
 import QrReader from '../../views/renter/QrReader.vue';
 import FilterResult from '../../views/renter/FilterResult.vue';
+import DiscoveryOverivew from '../../views/renter/DiscoveryOverview.vue';
+import DiscoveryDistrict from '../../views/renter/DiscoveryDistrict.vue';
 
 const routes = [
   {
@@ -46,6 +48,18 @@ const routes = [
         path: '/filter',
         name: 'FilterResult',
         component: FilterResult,
+        props: true,
+      },
+      {
+        path: '/discovery',
+        name: 'DiscoveryOverview',
+        component: DiscoveryOverivew,
+        props: true,
+      },
+      {
+        path: '/discovery/:districtId',
+        name: 'DiscoveryDistrict',
+        component: DiscoveryDistrict,
         props: true,
       },
     ],
