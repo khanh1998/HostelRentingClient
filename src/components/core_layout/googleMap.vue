@@ -15,14 +15,14 @@
 
 <script>
 export default {
-  name: "googleMap",
+  name: 'googleMap',
   data() {
     return {
-        //mặc định là Montreal
+      // mặc định là Montreal
       center: { lat: 45.508, lng: -73.587 },
       markers: [],
       places: [],
-      currentPlace: null
+      currentPlace: null,
     };
   },
 
@@ -37,10 +37,10 @@ export default {
     },
     addMarker() {
       if (this.currentPlace) {
-        alert('lat:'+this.currentPlace.geometry.location.lat()+',lng:'+this.currentPlace.geometry.location.lng());
+        alert(`lat:${this.currentPlace.geometry.location.lat()},lng:${this.currentPlace.geometry.location.lng()}`);
         const marker = {
           lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng()
+          lng: this.currentPlace.geometry.location.lng(),
         };
         this.markers.push({ position: marker });
         this.places.push(this.currentPlace);
@@ -48,6 +48,6 @@ export default {
         this.currentPlace = null;
       }
     },
-  }
+  },
 };
 </script>

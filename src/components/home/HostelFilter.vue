@@ -78,7 +78,7 @@
                   color="indigo"
                   height="30"
                   width="30"
-                  :disabled="disabled"
+                  :disabled="!disabled"
                   @click="changeMaxPrice()"
                 >
                   <v-icon>add</v-icon>
