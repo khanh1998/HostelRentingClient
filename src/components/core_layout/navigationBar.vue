@@ -9,7 +9,7 @@
         light
         hide-details
         autofocus
-        placeholder="Tìm theo địa chỉ, địa điểm..."
+        placeholder="Tìm kiếm theo địa điểm, khu vực, địa chỉ bạn muốn ở gần"
         v-model="searchValue"
         clearable
         class="flex-fill"
@@ -41,14 +41,13 @@
             <v-col class="col-5">-->
             <v-col class="col-10 pl-10">
               <v-row class="px-0 d-flex align-center">
-                <v-col class="col-9 pl-5 searchBar d-flex align-center">
+                <v-col class="col-9 pl-2 searchBar d-flex align-center">
                   <gmap-autocomplete
-                    placeholder="Tìm theo địa chỉ, địa điểm ..."
-                    class="col-11 gmap-input"
+                    placeholder="Tìm kiếm theo địa điểm, khu vực bạn muốn ở gần"
+                    class="col-11 gmap-input text-body-2 blue-grey--text"
                     @place_changed="setPlace"
                     @change="changeSearchValue"
                     :value="searchValue"
-                    ref="address"
                   ></gmap-autocomplete>
                   <v-btn
                     icon
@@ -65,10 +64,11 @@
                     class="rounded-l-0"
                     depressed
                     @click="searchByCoordinates"
-                    color="primary"
+                    color="#98B7D7"
                     height="40"
+                    width="50%"
                   >
-                    <v-icon>search</v-icon>
+                    <v-icon color="white">search</v-icon>
                   </v-btn>
                 </v-col>
               </v-row>
@@ -153,7 +153,8 @@
                 <v-list-item-title>Hồ sơ</v-list-item-title>
               </v-list-item>
               <v-list-item
-                to="#" class="hidden-sm-and-up"
+                to="#"
+                class="hidden-sm-and-up"
                 v-if="user.role.roleName === 'Người thuê'"
               >
                 <v-list-item-icon>
@@ -232,6 +233,7 @@ export default {
     center: { lat: 10.7542893, lng: 106.1346955 },
     places: [],
     currentPlace: null,
+    searchValue: '',
     visibleProperty: 'hidden',
   }),
   methods: {

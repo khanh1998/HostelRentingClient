@@ -34,7 +34,6 @@
         </v-col>
       </v-row>
       <v-row class="content pt-3" justify="center">
-        <!-- <v-col class="red" cols="1"></v-col> -->
         <v-col cols="9 p-0">
           <v-row class="d-flex flex-direction: row px-5">
             <v-col cols="8">
@@ -62,30 +61,12 @@
                       :style="'width: 350px'"
                     ></v-select>
                   </v-sheet>
-                  <!-- <v-sheet light>
-                    <v-btn
-                      outlined
-                      class="ml-5"
-                      :style="'height: 40px'"
-                      @click="overlay = !overlay"
-                    >Lọc nâng cao</v-btn>
-                    <v-overlay :value="overlay">
-                      <v-btn icon @click="overlay = false">
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                      <HostelFilter
-                        v-on:submitFilter="onFilterSubmit($event)"
-                        style="background-color: #fff; border-radius: 5px;"
-                      />
-                    </v-overlay>
-                  </v-sheet>-->
                 </v-col>
                 <v-col cols="12">
                   <ArticleList :list="hostelTypes" />
                 </v-col>
               </v-row>
             </v-col>
-            <!-- <v-col cols="4" lg="4" md="5" class="hidden-sm-and-down"> -->
             <v-col cols="4">
               <v-row>
                 <v-col cols="11 ml-auto pt-0 mt-0">

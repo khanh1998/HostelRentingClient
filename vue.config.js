@@ -13,4 +13,4 @@ module.exports = {
       proxy: 'https://hostel-renting.herokuapp.com/',
     },
   },
-}
+};
