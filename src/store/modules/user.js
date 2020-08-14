@@ -531,7 +531,7 @@ const actions = {
           commit(mutationTypes.DONE_BOOKING_REQUEST);
           const res = await window.axios.put(`/api/v1/bookings/${bookingId}`, {
             bookingId,
-            dealId: booking.deal.dealId,
+            dealId: booking.deal ? booking.deal.dealId : null,
             typeId: booking.type.typeId,
             renterId: booking.renter.renterId,
             vendorId: booking.vendor.vendorId,
@@ -540,13 +540,13 @@ const actions = {
             qrCode: booking.qrCode,
           });
           if (res.status === 200) {
-            commit(mutationTypes.DONE_BOOKING_SUCCESS, res.data.data);
+            commit(mutationTypes.DONE_BOOKING_SUCCESS, bookingId);
           }
         } else {
           console.log(`booking ${bookingId} is not existed in store`);
         }
       } catch (error) {
-        commit(mutationTypes.CREATE_BOOKING_FAILURE, error);
+        commit(mutationTypes.DONE_BOOKING_FAILURE, error);
       }
     } else {
       throw new Error('you are not loged in');

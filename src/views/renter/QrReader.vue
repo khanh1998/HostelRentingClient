@@ -4,29 +4,64 @@
     class="d-flex justify-center"
   >
     <v-col cols="8">
-      <v-card
-        style="background-color: coral; height: auto"
-        class="mt-5"
-      >
-        <p class="error">{{ error }}</p>
-        <p class="decode-result">Last result: <b>{{ result }}</b></p>
-        <qrcode-drop-zone
-          @decode="onDecode"
-          @init="logErrors"
-        >
-          <qrcode-stream
-            @decode="onDecode"
-            @init="onInit"
-          />
-        </qrcode-drop-zone>
-        <qrcode-capture
-          v-if="noStreamApiSupport"
-          @decode="onDecode"
-        />
-      </v-card>
       <v-btn @click="doUpdateBookingStatus">
-          aaa
+        aaa
       </v-btn>
+      <v-dialog
+        v-model="dialog"
+        width="500"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-card
+            style="background-color: coral; height: auto"
+            class="mt-5"
+          >
+            <p class="error">{{ error }}</p>
+            <p class="decode-result">Last result: <b>{{ result }}</b></p>
+            <qrcode-drop-zone
+              @decode="onDecode"
+              @init="logErrors"
+              v-on="on"
+              v-bind="attrs"
+            >
+              <qrcode-stream
+                @decode="onDecode"
+                @init="onInit"
+              />
+            </qrcode-drop-zone>
+            <qrcode-capture
+              v-if="noStreamApiSupport"
+              @decode="onDecode"
+            />
+          </v-card>
+        </template>
+
+        <v-card>
+          <v-card-title
+            class="headline"
+            style="background-color: #98B7D7; color: white"
+          >
+            Xác nhận
+          </v-card-title>
+
+          <v-card-text class="d-flex justify-center mt-5">
+            Xác nhận quét thành công !
+          </v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary"
+              text
+              @click="doUpdateBookingStatus()"
+            >
+              Đóng
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-col>
   </div>
 </template>
@@ -40,6 +75,7 @@ export default {
   data: () => ({
     result: '',
     error: '',
+    dialog: false,
     noStreamApiSupport: false,
   }),
   methods: {
@@ -50,14 +86,14 @@ export default {
     }),
     onDecode(result) {
       this.result = result;
-      // this.qrresult = this.updateBookingStatus(Number(this.result));
-      // alert(this.qrresult);
+      this.dialog = true;
     },
     doUpdateBookingStatus() {
       // alert(`số${Number(this.result)}`);
       // alert(`chữ${this.result}`);
       console.log('aaa');
-      this.updateBookingStatus(58);
+      this.updateBookingStatus(Number(this.result));
+      this.dialog = false;
     },
     async onInit(promise) {
       try {
@@ -88,9 +124,7 @@ export default {
     },
   },
   created() {
-    Promise.all([this.getUser]).then(() => {
-      this.getBookings();
-    });
+    this.getUser().then(() => this.getBookings());
   },
 };
 </script>
