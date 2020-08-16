@@ -65,8 +65,7 @@
             />
             <p>phòng/tháng</p>
             <div class="d-flex align-center justify-space-around pb-1">
-              <v-btn color="green" class="mr-1" depressed @click="bargainOverlay.step += 1">
-                Tiếp tục</v-btn>
+              <v-btn color="green" class="mr-1" depressed @click="bargainOverlay.step += 1">Tiếp tục</v-btn>
               <v-btn
                 color="red"
                 class="ml-1"
@@ -108,38 +107,36 @@
                 v-ripple
                 style="width: 75%"
                 class="blue lighten-5 pa-2 rounded"
-              ><v-icon color="amber">attach_money</v-icon>
-              <span class="font-weight-bold">
-                Bạn trả giá : {{item.bargain.newPrice}} {{info.priceUnit}}
-              </span>
-              <span v-if="item.bargain.status === 'wait'">
-                <v-divider class="my-1"></v-divider>
-                <v-icon>fas fa-spinner fa-spin</v-icon>
-                Đang chờ phản hồi của chủ trọ
-              </span>
-              <span v-if="item.bargain.status === 'deny'">
-                <v-divider class="my-1"></v-divider>
-                <v-icon color="red">thumb_down</v-icon>
-                Chủ trọ không đồng ý với mức giá của bạn
-              </span>
-              <span v-if="item.bargain.status === 'accept'">
-                <v-divider class="my-1"></v-divider>
-                <v-icon color="green">thumb_up</v-icon>
-                Chủ trọ đã đồng ý với mức giá của bạn
-              </span>
-              <span v-if="item.bargain.status === 'cancel'">
-                <v-divider class="my-1"></v-divider>
-                <v-icon color="red">clear</v-icon>
-                Bạn đã hủy trả giá này
-              </span>
-              <span v-if="item.bargain.status === 'wait'">
-                <v-divider class="my-2"/>
-                <v-btn class="red lighten-3" dark depressed
-                  @click="showBargainCancel(item.id)"
-                >
-                  Hủy trả giá này
-                </v-btn>
-              </span>
+              >
+                <v-icon color="amber">attach_money</v-icon>
+                <span
+                  class="font-weight-bold"
+                >Bạn trả giá : {{item.bargain.newPrice}} {{info.priceUnit}}</span>
+                <span v-if="item.bargain.status === 'wait'">
+                  <v-divider class="my-1"></v-divider>
+                  <v-icon>fas fa-spinner fa-spin</v-icon>Đang chờ phản hồi của chủ trọ
+                </span>
+                <span v-if="item.bargain.status === 'deny'">
+                  <v-divider class="my-1"></v-divider>
+                  <v-icon color="red">thumb_down</v-icon>Chủ trọ không đồng ý với mức giá của bạn
+                </span>
+                <span v-if="item.bargain.status === 'accept'">
+                  <v-divider class="my-1"></v-divider>
+                  <v-icon color="green">thumb_up</v-icon>Chủ trọ đã đồng ý với mức giá của bạn
+                </span>
+                <span v-if="item.bargain.status === 'cancel'">
+                  <v-divider class="my-1"></v-divider>
+                  <v-icon color="red">clear</v-icon>Bạn đã hủy trả giá này
+                </span>
+                <span v-if="item.bargain.status === 'wait'">
+                  <v-divider class="my-2" />
+                  <v-btn
+                    class="red lighten-3"
+                    dark
+                    depressed
+                    @click="showBargainCancel(item.id)"
+                  >Hủy trả giá này</v-btn>
+                </span>
               </p>
 
               <p
@@ -150,10 +147,12 @@
               >
                 <v-icon color="pink">event</v-icon>
                 <span class="font-weight-bold">Bạn đã tạo một lịch hẹn mới</span>
-                <v-divider class="my-2"/>
-                Ngày: <span class="font-weight-bold">{{item.book.date}}</span><br/>
-                Giờ: <span class="font-weight-bold">{{item.book.time}}</span><br/>
-                <v-divider class="my-2"/>
+                <v-divider class="my-2" />Ngày:
+                <span class="font-weight-bold">{{item.book.date}}</span>
+                <br />Giờ:
+                <span class="font-weight-bold">{{item.book.time}}</span>
+                <br />
+                <v-divider class="my-2" />
                 <v-btn
                   v-if="!item.book.cancel"
                   depressed
@@ -162,8 +161,7 @@
                   @click="showBookingCancel(item.book.bookingId, item.id)"
                 >Hủy hẹn</v-btn>
                 <span v-if="item.book.cancel">
-                  <v-icon color="red">clear</v-icon>
-                  Lịch hẹn đã bị hủy
+                  <v-icon color="red">clear</v-icon>Lịch hẹn đã bị hủy
                 </span>
               </p>
               <span
@@ -536,7 +534,10 @@ export default {
     },
     hasUnreplyBargain() {
       return this.items.some(
-        (item) => item.sender === 'renter' && item.bargain && item.bargain.status === 'wait',
+        (item) =>
+          item.sender === 'renter' &&
+          item.bargain &&
+          item.bargain.status === 'wait',
       );
     },
   },

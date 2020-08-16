@@ -2,7 +2,7 @@ import home from './home';
 import hostelType from './hosteltype';
 import filterResult from './filterresult';
 import common from './common';
-import booking from './booking';
+import discovery from './discovery';
 
 export default {
   namespaced: true,
@@ -11,6 +11,6 @@ export default {
     hostelType,
     filterResult,
     common,
-    booking,
+    discovery,
   },
 };
