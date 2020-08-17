@@ -11,9 +11,8 @@ const myState = () => ({
 });
 
 const getters = {
-  getStatsByIds: (state) => (ids) => {
-    return state.stats.streets.filter((street) => ids.includes(street.streetId));
-  },
+  getStatsByIds:
+    (state) => (ids) => state.stats.streets.filter((street) => ids.includes(street.streetId)),
 };
 const mutationTypes = {
   GET_STREET_STATS_REQUEST: 'GET_STREET_STATS_REQUEST',
@@ -27,12 +26,12 @@ const mutations = {
   GET_STREET_STATS_SUCCESS(state, stats) {
     state.stats.streets.data = stats;
     state.stats.streets.success = true;
-    state.stats.streets.isLoading = true;
+    state.stats.streets.isLoading = false;
   },
   GET_STREET_STATS_FAILURE(state, error) {
     state.stats.streets.error = error;
     state.stats.streets.success = false;
-    state.stats.streets.isLoading = true;
+    state.stats.streets.isLoading = false;
   },
 };
 const actions = {
@@ -42,7 +41,7 @@ const actions = {
     currentIds.push(notDuplicateIds);
     try {
       commit(mutationTypes.GET_STREET_STATS_REQUEST);
-      const res = await window.axios.get(`/api/v1/statistic?streetIds=${notDuplicateIds.join(',')}`)
+      const res = await window.axios.get(`/api/v1/statistic?streetIds=${notDuplicateIds.join(',')}`);
       commit(mutationTypes.GET_STREET_STATS_SUCCESS, res.data.data);
     } catch (error) {
       commit(mutationTypes.GET_STREET_STATS_FAILURE, error);
