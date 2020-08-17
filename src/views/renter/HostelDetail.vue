@@ -8,13 +8,13 @@
         <chatBox v-if="renter" v-on:close="chatBox.show=false" :info="info" :group="group" />
         <v-card v-if="!renter">
           <v-card-title>Đăng nhập để nhắn tin</v-card-title>
-          <v-card-actions >
+          <v-card-actions>
             <v-btn :to="registerRouteObject" dark class="green lighten-3">
-              <v-icon>create</v-icon> Tạo tài khoản mới
+              <v-icon>create</v-icon>Tạo tài khoản mới
             </v-btn>
-            <v-spacer/>
+            <v-spacer />
             <v-btn :to="loginRouteObject" dark class="blue lighten-3">
-              <v-icon>login</v-icon> Đăng nhập
+              <v-icon>login</v-icon>Đăng nhập
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -22,9 +22,7 @@
       <v-row no-gutters class="pt-2">
         <v-col cols="12" md="8">
           <div class="d-flex flex-column justify-sm-center">
-            <p class="text-h5 font-weight-medium text-sm-center">
-              {{info.title}}
-            </p>
+            <p class="text-h5 font-weight-medium text-sm-center">{{info.title}}</p>
             <p class="grey--text" v-if="!isLoadingProvinces">
               <v-icon>location_on</v-icon>
               {{group.street}},
@@ -87,25 +85,34 @@
         <v-col cols="12" md="4">
           <v-card class="pa-3">
             <v-card-title>
-              <v-icon class="mr-2">weekend</v-icon>
-              Tiện nghi
+              <v-icon class="mr-2">weekend</v-icon>Tiện nghi
             </v-card-title>
             <v-divider />
             <facilitiesBox :facilities="info.facilities" />
+          </v-card>
+          <v-card class="mt-2">
+            <v-card-title>Giá trung bình</v-card-title>
+            <v-card-text>
+              <p>{{district.districtName}} : <span class="font-weight-bold">1.4 tr</span> </p>
+              <p>{{ward.wardName}} : <span class="font-weight-bold">1.5 tr</span> </p>
+              <p>{{group.street}} : <span class="font-weight-bold">1.55 tr</span></p>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn dark color="amber"> <v-icon>read_more</v-icon> Xem thêm</v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
           <v-card class="pa-3">
             <v-card-title>
-              <v-icon class="mr-2">cleaning_services</v-icon>
-              Dịch vụ
+              <v-icon class="mr-2">cleaning_services</v-icon>Dịch vụ
             </v-card-title>
             <v-divider />
             <servicesBox :services="info.services" />
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
-          <v-card  class="pa-3">
+          <v-card class="pa-3">
             <div class="d-flex justify-space-between align-center">
               <v-card-title>Tiện nghi xung quanh</v-card-title>
               <v-btn color="success" class="ml-1" depressed tile>

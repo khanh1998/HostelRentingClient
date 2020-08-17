@@ -65,7 +65,8 @@
             />
             <p>phòng/tháng</p>
             <div class="d-flex align-center justify-space-around pb-1">
-              <v-btn color="green" class="mr-1" depressed @click="bargainOverlay.step += 1">Tiếp tục</v-btn>
+              <v-btn color="green" class="mr-1" depressed @click="bargainOverlay.step += 1">
+                Tiếp tục</v-btn>
               <v-btn
                 color="red"
                 class="ml-1"
