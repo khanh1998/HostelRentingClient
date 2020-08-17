@@ -4,9 +4,6 @@
     class="d-flex justify-center"
   >
     <v-col cols="8">
-      <v-btn @click="doUpdateBookingStatus">
-        aaa
-      </v-btn>
       <v-dialog
         v-model="dialog"
         width="500"
