@@ -107,8 +107,8 @@ export default {
     }),
     showChatBox(event) {
       // event is index of chatbox
+      // eslint-disable-next-line no-restricted-syntax
       for (const [key, value] of Object.entries(this.docs)) {
-        // eslint-disable-line
         console.log(key);
         if (value === event) {
           return;

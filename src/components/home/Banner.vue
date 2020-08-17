@@ -49,7 +49,8 @@
       <p
         class="white--text px-2 font-weight-bold"
       >HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT</p>
-      <v-btn color="#F9B707" light @click="openLeftBanner" id="search-optional">TÌM KIẾM NÂNG CAO</v-btn>
+      <v-btn color="#F9B707" light @click="openLeftBanner" id="search-optional">
+        TÌM KIẾM NÂNG CAO</v-btn>
     </div>
   </div>
 </template>
