@@ -7,33 +7,33 @@
         class="d-flex flex-xl-row flex-lg-row flex-md-column flex-sm-column flex-column item-classic item-classic-horizontal"
       >
         <!-- eslint-enable -->
-        <v-col cols="12" class="item-classic-inner d-flex justify-start">
-          <v-col cols="5" class="item-classic-left left">
-            <div class="item-classic-media">
+        <v-col cols="12" class="d-flex justify-start top-item" style="padding: 0px !important;">
+          <v-col cols="4" class="item-classic-left left" style="background: #F3F4F9">
+            <div class="item-classic-media" style="padding-right: 0px !important;">
               <v-img
                 :src="type.typeImages[0].resourceUrl"
                 v-if="type.typeImages.length !== 0"
-                style="height:180px"
+                style="height:180px; width: '100%'"
                 class="image-box"
               >
                 <div class="top">
                   Top
-                  <v-icon right color="white">{{numberIcons[index-1]}}</v-icon>
+                  <v-icon right color="yellow">{{numberIcons[index-1]}}</v-icon>
                 </div>
               </v-img>
               <v-img src="@/assets/image-error.png" v-else style="height:180px" class="image-box">
                 <div class="top">
                   Top
-                  <v-icon right color="white">{{numberIcons[index-1]}}</v-icon>
+                  <v-icon right color="yellow">{{numberIcons[index-1]}}</v-icon>
                 </div>
               </v-img>
-              <div class="item-classic-price">
+              <div class="item-classic-price text-body-1 white--text">
                 <span>{{type.price}} {{type.priceUnit}}</span>
               </div>
             </div>
           </v-col>
-          <v-col cols="7" class="right no-padding d-flex">
-            <v-col cols="12" class="px-5 py-0">
+          <v-col cols="8" class="right no-padding d-flex justify-center align-center">
+            <v-col cols="12" class="px-6">
               <span
                 class="item-address"
                 v-if="!isLoadingProvinces"
@@ -88,7 +88,7 @@
                       max-height="15"
                     />
                     <span class="item-text">
-                      <!-- eslint-enable -->
+                      <!-- eslint-disable max-len -->
                       {{type.facilities.filter(f => f.facilityName.includes("WC"))[0].facilityName}}
                     </span>
                   </div>
@@ -144,6 +144,36 @@
           </v-col>
         </v-col>
       </v-col>
+      <v-col
+        cols="12"
+        class="pr-0 pb-0 pt-0"
+        style="background: #F3F4F9; padding-left: 7px !important;"
+      >
+        <v-col cols="12" class="flex d-flex" style="background-color: #E7E9F0 !important">
+          <v-col cols="3" style="padding: 0 !important;">
+            <v-icon class="ml-2" color="#ABB4C0">visibility</v-icon>
+            <span class="text-caption ml-2">{{type.view}} lượt xem</span>
+          </v-col>
+          <!-- <v-col cols="6" style="padding: 0 !important;" v-if="school !== ''"> -->
+          <v-col
+            cols="5"
+            style="padding: 0 !important;"
+            class="d-flex align-start justify-center"
+            v-if="school !== ''"
+          >
+            <v-icon color="#ABB4C0">school</v-icon>
+            <div class="text-caption ml-2">
+              <span>20 người học</span>
+              <br />
+              <span>{{school}}</span>
+            </div>
+          </v-col>
+          <v-col cols="4" style="padding: 0 !important;" v-if="hometown !== ''">
+            <v-icon color="#ABB4C0">supervisor_account</v-icon>
+            <span class="text-caption ml-2">3 người quê {{hometown}}</span>
+          </v-col>
+        </v-col>
+      </v-col>
     </v-row>
   </v-card>
 </template>
@@ -164,12 +194,6 @@
   box-shadow: none;
   overflow: visible !important;
   text-align: left;
-}
-.item-classic-horizontal .item-classic-inner {
-  position: relative;
-  padding-top: 15px !important;
-  padding-bottom: 15px !important;
-  padding-left: 10px !important;
 }
 .item-classic-left {
   display: flex;
@@ -305,6 +329,18 @@ export default {
     }),
   },
   computed: {
+    isSearchOptional() {
+      return this.$store.state.renter.home.searchType.isOptional;
+    },
+    nameAddress() {
+      return this.$store.state.renter.home.searchType.nameAddress;
+    },
+    school() {
+      return this.$store.state.renter.home.searchType.school;
+    },
+    hometown() {
+      return this.$store.state.renter.home.searchType.hometown;
+    },
     isLoadingProvinces() {
       return this.$store.state.renter.common.provinces.isLoading;
     },

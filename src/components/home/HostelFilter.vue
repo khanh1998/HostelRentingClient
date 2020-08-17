@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="pl-2 pr-2 pb-2 pt-2 pl-md-6 pr-md-6 pb-md-6 pt-md-6">
+  <v-sheet class="pl-2 pr-2 pb-2 pl-md-6 pr-md-6 pb-md-6">
     <v-expansion-panels focusable multiple>
       <v-expansion-panel class="mb-3">
         <v-expansion-panel-header>Tiện nghi xung quanh</v-expansion-panel-header>
