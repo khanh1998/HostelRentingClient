@@ -128,7 +128,7 @@
           </v-dialog>
         </v-toolbar>
       </template>
-      <template v-slot:item.typeName="{ item }">
+      <template v-slot:[`item.typeName`]="{ item }">
         <div class="d-flex justify-space-between">
           <div>{{ item.typeName }}</div>
           <div>
@@ -136,10 +136,7 @@
           </div>
         </div>
       </template>
-      <template
-        v-slot:item.actions="{ item }"
-        style=""
-      >
+      <template v-slot:[`item.actions`]="{ item }">
         <v-badge
           :content="6"
           class="ml-5"
@@ -180,7 +177,12 @@
                 Phòng trống
               </v-card-text>
             </v-col>
-            <v-col cols="7">
+            <v-col
+              cols="7"
+              style="max-height:100px; overflow-y: auto;"
+              class="mt-2"
+              id="style-1"
+            >
               <v-chip
                 class="ml-2 mt-2"
                 color="green lighten-1"
@@ -361,20 +363,10 @@ export default {
       }
       return [];
     },
-    // emptyRoom() {
-    //   if (this.groupId != null) {
-    //     const groupList = this.groups.filter((groupItem) => groupItem.groupId === this.groupId);
-    //     const dessertList = [];
-    //     const typeList = groupList[0].types.filter((typeItem) => typeItem.typeId === this.);
-    //     return dessertList;
-    //   }
-    //   return [];
-    // },
   },
   methods: {
     clicked(value) {
       this.expanded.push(value);
-      alert(value.typeName);
     },
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
@@ -413,5 +405,21 @@ th {
 }
 td {
   font-size: 18px !important;
+}
+#style-1::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #f5f5f5;
+}
+
+#style-1::-webkit-scrollbar {
+  width: 12px;
+  background-color: #f5f5f5;
+}
+
+#style-1::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #555;
 }
 </style>
