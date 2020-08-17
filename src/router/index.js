@@ -11,6 +11,8 @@ Vue.use(VueRouter);
 Vue.use(VueGoogleMaps, {
   load: {
     key: 'AIzaSyDcw-KnCAPzni3QYvgk3RDoTZL65xh8a4o',
+    language: 'vi',
+    region: 'VI',
     libraries: 'places', // necessary for places input
   },
 });
@@ -29,12 +31,14 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (window.$cookies.get('jwt') === null) { // not logged in
+    if (window.$cookies.get('jwt') === null) {
+      // not logged in
       next({
         name: 'Login',
         params: { nextUrl: to.path, preUrl: from.path },
       });
-    } else { // logged in
+    } else {
+      // logged in
       const role = window.$cookies.get('role');
       if (to.matched.some((record) => record.meta.is_vendor)) {
         if (role === 'vendors') {
@@ -58,9 +62,11 @@ router.beforeEach((to, from, next) => {
         next();
       }
     }
-  } else if (to.matched.some((record) => record.meta.guest)) { // not require authen
+  } else if (to.matched.some((record) => record.meta.guest)) {
+    // not require authen
     next();
-  } else { // not require authen
+  } else {
+    // not require authen
     next();
   }
 });

@@ -27,10 +27,7 @@
       </v-col>
       <v-col cols="4">
         <div style="width: 95%">
-          <ChatList
-            :vendorId="user.userId"
-            v-on:clickChat="showChatBox($event)"
-          />
+          <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
         </div>
       </v-col>
     </v-row>
@@ -40,7 +37,8 @@
         v-if="this.docs.doc1"
         :doc="this.docs.doc1"
         :index="1"
-        v-on:closeChat="closeChatBox($event)"/>
+        v-on:closeChat="closeChatBox($event)"
+      />
     </v-card>
     <v-card style="position: absolute; right: 370px; bottom: 10px;
     height:auto; width:350px">
@@ -48,7 +46,8 @@
         v-if="this.docs.doc2"
         :doc="this.docs.doc2"
         :index="2"
-        v-on:closeChat="closeChatBox($event)"/>
+        v-on:closeChat="closeChatBox($event)"
+      />
     </v-card>
     <v-card style="position: absolute; right: 720px; bottom: 10px;
     height:auto; width:350px">
@@ -56,7 +55,8 @@
         v-if="this.docs.doc3"
         :doc="this.docs.doc3"
         :index="3"
-        v-on:closeChat="closeChatBox($event)"/>
+        v-on:closeChat="closeChatBox($event)"
+      />
     </v-card>
   </div>
 </template>
@@ -107,7 +107,8 @@ export default {
     }),
     showChatBox(event) {
       // event is index of chatbox
-      for (const [key, value] of Object.entries(this.docs)) { // eslint-disable-line
+      for (const [key, value] of Object.entries(this.docs)) {
+        // eslint-disable-line
         console.log(key);
         if (value === event) {
           return;
@@ -153,11 +154,9 @@ export default {
     },
   },
   async created() {
-    this.getGroups()
-      .then(() => {
-        this.getTypes()
-          .then(() => this.getRooms());
-      });
+    this.getGroups().then(() => {
+      this.getTypes().then(() => this.getRooms());
+    });
     this.getUser();
   },
 };

@@ -49,9 +49,7 @@
       <p
         class="white--text px-2 font-weight-bold"
       >HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT</p>
-      <v-btn color="#F9B707" light @click="openLeftBanner" id="search-optional">
-        TÌM KIẾM NÂNG CAO
-      </v-btn>
+      <v-btn color="#F9B707" light @click="openLeftBanner" id="search-optional">TÌM KIẾM NÂNG CAO</v-btn>
     </div>
   </div>
 </template>
@@ -59,7 +57,7 @@
 @import url('https://cdn.jsdelivr.net/npm/animate.css@3.5.1');
 .banner-right {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("https://img.homedy.com/store/images/2019/06/19/can-ho-mini-gia-re-1-636965585916507395.jpg");
+    url('http://thicongnhadanang.com/uploads/image/images/thiet%20ke%20can%20ho%20mini-dep-da-nang%20(2).jpg');
   background-position: center;
   background-size: cover;
   height: 500px;
@@ -76,10 +74,10 @@
   margin-bottom: 50px;
 }
 .v-application .text-h2 {
-    font-size: 60px !important;
-    font-weight: bold;
-    letter-spacing: 0.1em !important;
-    font-family: "Montserrat" !important;
+  font-size: 60px !important;
+  font-weight: bold;
+  letter-spacing: 0.1em !important;
+  font-family: 'Montserrat' !important;
 }
 .px-2 {
   font-size: 20px !important;
@@ -91,8 +89,8 @@
 }
 #search-optional {
   height: 60px;
-    width: 300px;
-    color: white;
+  width: 300px;
+  color: white;
 }
 </style>
 <script>
@@ -137,8 +135,10 @@ export default {
   computed: {
     responsive() {
       switch (this.$vuetify.breakpoint.name) {
-        case 'sm': return {};
-        default: return {};
+        case 'sm':
+          return {};
+        default:
+          return {};
       }
     },
   },
