@@ -83,7 +83,8 @@
               <v-row>
                 <v-col cols="11 ml-auto pt-0 mt-0">
                   <v-sheet>
-                    <p class="text-h6 pt-2 ml-6">Lọc nâng cao</p><HostelFilter" />
+                    <p class="text-h6 pt-2 ml-6">Lọc nâng cao</p>
+                    <HostelFilter />
                   </v-sheet>
                 </v-col>
               </v-row>
@@ -102,17 +103,6 @@
               ></v-pagination>
             </v-col>
           </v-row>
-        </v-col>
-        <v-col cols="12" md="8" v-if="list.length != 0">
-          <v-pagination
-            light
-            v-model="paging.page"
-            :length="5"
-            :total-visible="5"
-            prev-icon="mdi-menu-left"
-            next-icon="mdi-menu-right"
-            v-on:input="onUpdatePaging"
-          ></v-pagination>
         </v-col>
       </v-row>
     </v-container>

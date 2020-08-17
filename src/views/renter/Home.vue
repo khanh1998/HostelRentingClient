@@ -72,7 +72,7 @@
                 <v-col cols="11 ml-auto pt-0 mt-0">
                   <v-sheet>
                     <p class="text-h6 pt-2 ml-6">Lọc nâng cao</p>
-                    <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
+                    <HostelFilter />
                   </v-sheet>
                 </v-col>
               </v-row>
