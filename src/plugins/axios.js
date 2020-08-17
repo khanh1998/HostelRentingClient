@@ -35,8 +35,8 @@ axios.interceptors.response.use(
     // Do something with response data
     // Checks if app is being used in mobile
     if (
-      response.config.url !== `${process.env.VUE_APP_API_URL}/token`
-      && response.config.url !== `${window.location.origin}/version.json`
+      response.config.url !== `${process.env.VUE_APP_API_URL}/token` &&
+      response.config.url !== `${window.location.origin}/version.json`
     ) {
       checkForUpdates();
       checkIfTokenNeedsRefresh();

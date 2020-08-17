@@ -79,7 +79,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" sm="12" md="7" xl="8" lg="8">
+            <v-col cols="12" sm="12" md="7" xl="8" lg="8" class="mt-10">
               <v-pagination
                 light
                 v-model="paging.page"

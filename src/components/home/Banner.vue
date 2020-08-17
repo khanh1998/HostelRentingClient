@@ -84,7 +84,7 @@
           </div>
         </v-col>
         <v-row class="mt-2">
-          <v-col cols="8" style="margin-right: -20px">
+          <!-- <v-col cols="8" style="margin-right: -20px">
             <div class="flex d-flex" :style="{width: '100%',border: '2px solid #b2ccf7'}">
               <v-col cols="10" class="red">
                 <div style="height: 46px" v-show="!showMore">
@@ -112,7 +112,7 @@
                 <v-icon>add_circle</v-icon>
               </v-btn>
             </div>
-          </v-col>
+          </v-col>-->
           <v-col cols="4" class="ml-auto">
             <v-btn
               class="white--text text-button"
@@ -154,7 +154,7 @@
     url('http://thicongnhadanang.com/uploads/image/images/thiet%20ke%20can%20ho%20mini-dep-da-nang%20(2).jpg');
   background-position: center;
   background-size: cover;
-  height: 550px;
+  height: 500px;
   overflow: hidden;
 }
 .slogan {
@@ -190,6 +190,8 @@
 }
 </style>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'Banner',
   data: () => ({
@@ -313,28 +315,66 @@ export default {
         image: '',
       },
     ],
-    visibleProperty: 'visible',
+    visibleSearchOptional: 'visible',
+    address: '',
+    center: { lat: 10.7542893, lng: 106.1346955 },
+    places: [],
+    currentPlace: null,
+    visibleProperty: 'hidden',
   }),
   methods: {
+    ...mapActions({
+      setIsSearchOptional: 'renter/home/setSearchTypeValue',
+      setSearchValue: 'renter/filterResult/setSearchValue',
+    }),
     closeLeftBanner() {
+      this.isSearchOptional = true;
       this.banner.left.show = false;
-      this.visibleProperty = 'visible';
+      this.visibleSearchOptional = 'visible';
       if (this.$vuetify.breakpoint.name === 'xs') {
         this.banner.right.style.width = '100%';
       }
     },
     openLeftBanner() {
+      this.isSearchOptional = false;
       this.banner.left.show = true;
-      this.visibleProperty = 'hidden';
+      this.visibleSearchOptional = 'hidden';
       if (this.$vuetify.breakpoint.name === 'xs') {
         this.banner.right.style.width = 0;
       }
     },
-    showMoreProperties() {
-      this.showMore = false;
+    setPlace(place) {
+      this.currentPlace = place;
+      this.address = place.name;
+      this.searchValue = place.formatted_address;
+    },
+    changeSearchValue() {
+      this.visibleProperty = 'visible';
+    },
+    clearField() {
+      this.searchValue = '';
+      this.address = '';
+      this.visibleProperty = 'hidden';
+      this.currentPlace = null;
     },
   },
   computed: {
+    isSearchOptional: {
+      get() {
+        return this.$store.state.renter.home.searchType.isOptional;
+      },
+      set(value) {
+        this.setIsSearchOptional(value);
+      },
+    },
+    searchValue: {
+      get() {
+        return this.address;
+      },
+      set(value) {
+        this.setSearchValue(value);
+      },
+    },
     responsive() {
       switch (this.$vuetify.breakpoint.name) {
         case 'sm':
@@ -344,10 +384,13 @@ export default {
       }
     },
     visibleSearchOptional() {
-      return this.visibleProperty;
+      return this.visibleSearchOptional;
     },
     moreProperties() {
       return this.showMore;
+    },
+    computedClearable() {
+      return this.visibleProperty;
     },
   },
 };

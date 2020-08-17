@@ -39,7 +39,7 @@
             </v-col>
             <!-- </v-col>
             <v-col class="col-5">-->
-            <v-col class="col-10 pl-10">
+            <v-col class="col-10 pl-10" v-show="isSearchOptional">
               <v-row class="px-0 d-flex align-center">
                 <v-col class="col-9 pl-2 searchBar d-flex align-center">
                   <gmap-autocomplete
@@ -238,7 +238,7 @@ export default {
   methods: {
     setPlace(place) {
       this.currentPlace = place;
-      this.address = place.formatted_address;
+      this.address = place.name;
       this.searchValue = place.formatted_address;
     },
     changeSearchValue() {
@@ -267,6 +267,7 @@ export default {
     },
     search() {
       this.setSearchValue(this.searchValue);
+      this.setSearchValue(this.coordinates);
       this.searchByCoordinator({
         lat: '',
         long: '',
@@ -275,6 +276,7 @@ export default {
     },
     ...mapActions({
       setSearchValue: 'renter/filterResult/setSearchValue',
+      setIsSearchOptional: 'renter/home/setSearchTypeValue',
       searchByAddress: 'renter/filterResult/searchByAddress',
       getUser: 'user/getUser',
       clearUserData: 'user/clearUserData',
@@ -289,6 +291,14 @@ export default {
     },
   },
   computed: {
+    isSearchOptional: {
+      get() {
+        return this.$store.state.renter.home.searchType.isOptional;
+      },
+      set(value) {
+        this.setIsSearchOptional(value);
+      },
+    },
     searchValue: {
       get() {
         return this.address;

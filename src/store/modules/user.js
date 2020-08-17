@@ -31,10 +31,10 @@ const myGetters = {
   // get lasted deal
   findLastedDeal: (state) => (renterId, vendorId, typeId) => {
     let result = state.deals.data.filter((deal) => {
-      if (deal.renter.renterId === renterId
-        && deal.vendor.vendorId === vendorId
-        && deal.type.typeId === typeId
-        && deal.status === 'CREATED') {
+      if (deal.renter.renterId === renterId &&
+        deal.vendor.vendorId === vendorId &&
+        deal.type.typeId === typeId &&
+        deal.status === 'CREATED') {
         return true;
       }
       return false;
@@ -45,10 +45,10 @@ const myGetters = {
   },
   findPendingBooking: (state) => (renterId, vendorId, typeId) => {
     const result = state.bookings.data.filter((booking) => {
-      if (booking.renter.renterId === renterId
-        && booking.vendor.vendorId === vendorId
-        && booking.type.typeId === typeId
-        && booking.status === 'INCOMING') {
+      if (booking.renter.renterId === renterId &&
+        booking.vendor.vendorId === vendorId &&
+        booking.type.typeId === typeId &&
+        booking.status === 'INCOMING') {
         return true;
       }
       return false;
