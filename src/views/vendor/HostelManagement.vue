@@ -58,9 +58,9 @@ export default {
       return this.$store.state.vendor.group.groups.data;
     },
     isLoadingGroup() {
-      return (this.$store.state.vendor.group.groups.isLoading
-        || this.$store.state.vendor.group.types.isLoading
-        || this.$store.state.vendor.group.rooms.isLoading
+      return (this.$store.state.vendor.group.groups.isLoading ||
+        this.$store.state.vendor.group.types.isLoading ||
+        this.$store.state.vendor.group.rooms.isLoading
       );
     },
   },

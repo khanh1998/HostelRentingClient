@@ -88,10 +88,10 @@ export default {
   computed: {
     isLoading() {
       return (
-        this.$store.state.vendor.group.groups.isLoading
-        || this.$store.state.vendor.group.types.isLoading
-        || this.$store.state.vendor.group.rooms.isLoading
-        || this.$store.state.user.user.isLoading
+        this.$store.state.vendor.group.groups.isLoading ||
+        this.$store.state.vendor.group.types.isLoading ||
+        this.$store.state.vendor.group.rooms.isLoading ||
+        this.$store.state.user.user.isLoading
       );
     },
     user() {

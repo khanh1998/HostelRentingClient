@@ -72,14 +72,14 @@
                 <v-col cols="11 ml-auto pt-0 mt-0">
                   <v-sheet>
                     <p class="text-h6 pt-2 ml-6">Lọc nâng cao</p>
-                    <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
+                    <HostelFilter />
                   </v-sheet>
                 </v-col>
               </v-row>
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" sm="12" md="7" xl="8" lg="8">
+            <v-col cols="12" sm="12" md="7" xl="8" lg="8" class="mt-10">
               <v-pagination
                 light
                 v-model="paging.page"

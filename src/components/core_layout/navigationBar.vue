@@ -39,7 +39,7 @@
             </v-col>
             <!-- </v-col>
             <v-col class="col-5">-->
-            <v-col class="col-10 pl-10">
+            <v-col class="col-10 pl-10" v-show="isSearchOptional">
               <v-row class="px-0 d-flex align-center">
                 <v-col class="col-9 pl-2 searchBar d-flex align-center">
                   <gmap-autocomplete
@@ -56,7 +56,6 @@
                   >
                     <!-- eslint-disable max-len -->
                     <v-icon>clear</v-icon>
-                    <!-- <v-icon v-bind:style="{ visibility: computedClearable }">clear</v-icon> -->
                   </v-btn>
                 </v-col>
                 <v-col class="col-3 px-0">
@@ -230,15 +229,16 @@ export default {
     overlay: {
       show: false,
     },
+    address: '',
     center: { lat: 10.7542893, lng: 106.1346955 },
     places: [],
     currentPlace: null,
-    searchValue: '',
     visibleProperty: 'hidden',
   }),
   methods: {
     setPlace(place) {
       this.currentPlace = place;
+      this.address = place.name;
       this.searchValue = place.formatted_address;
     },
     changeSearchValue() {
@@ -246,6 +246,7 @@ export default {
     },
     clearField() {
       this.searchValue = '';
+      this.address = '';
       this.visibleProperty = 'hidden';
       this.currentPlace = null;
     },
@@ -266,6 +267,7 @@ export default {
     },
     search() {
       this.setSearchValue(this.searchValue);
+      this.setSearchValue(this.coordinates);
       this.searchByCoordinator({
         lat: '',
         long: '',
@@ -274,6 +276,7 @@ export default {
     },
     ...mapActions({
       setSearchValue: 'renter/filterResult/setSearchValue',
+      setIsSearchOptional: 'renter/home/setSearchTypeValue',
       searchByAddress: 'renter/filterResult/searchByAddress',
       getUser: 'user/getUser',
       clearUserData: 'user/clearUserData',
@@ -288,9 +291,17 @@ export default {
     },
   },
   computed: {
+    isSearchOptional: {
+      get() {
+        return this.$store.state.renter.home.searchType.isOptional;
+      },
+      set(value) {
+        this.setIsSearchOptional(value);
+      },
+    },
     searchValue: {
       get() {
-        return this.$store.state.renter.filterResult.search.value;
+        return this.address;
       },
       set(value) {
         this.setSearchValue(value);

@@ -21,6 +21,12 @@
                   <v-icon right color="white">{{numberIcons[index-1]}}</v-icon>
                 </div>
               </v-img>
+              <v-img src="@/assets/image-error.png" v-else style="height:180px" class="image-box">
+                <div class="top">
+                  Top
+                  <v-icon right color="white">{{numberIcons[index-1]}}</v-icon>
+                </div>
+              </v-img>
               <div class="item-classic-price">
                 <span>{{type.price}} {{type.priceUnit}}</span>
               </div>

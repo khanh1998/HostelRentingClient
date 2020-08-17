@@ -1,4 +1,7 @@
 const myState = () => ({
+  searchType: {
+    isOptional: true,
+  },
   hostelTypes: {
     data: [],
     isLoading: false,
@@ -62,6 +65,8 @@ const getters = {
   },
 };
 const mutationTypes = {
+  SET_SEARCH_TYPE_VALUE: 'SET_SEARCH_TYPE_VALUE',
+
   GET_HOSTEL_TYPES_SUCCESS: 'GET_HOSTEL_TYPES_SUCCESS',
   GET_HOSTEL_TYPES_FAILURE: 'GET_HOSTEL_TYPES_FAILURE',
   GET_HOSTEL_TYPES_REQUEST: 'GET_HOSTEL_TYPES_REQUEST',
@@ -79,6 +84,10 @@ const mutationTypes = {
   GET_FACILITIES_REQUEST: 'GET_FACILITIES_REQUEST',
 };
 const mutations = {
+  SET_SEARCH_TYPE_VALUE: (state, isOptional) => {
+    console.log(`SET_SEARCH_TYPE_VALUE${isOptional}`);
+    state.searchType.isOptional = isOptional;
+  },
   // hostel type
   GET_HOSTEL_TYPES_SUCCESS(state, inputData) {
     state.hostelTypes.data = inputData.types;
@@ -136,6 +145,10 @@ const mutations = {
   },
 };
 const actions = {
+  setSearchTypeValue({ commit }, isOptional) {
+    console.log(`setSearchTypeValue${isOptional}`);
+    commit(mutationTypes.SET_SEARCH_TYPE_VALUE, isOptional);
+  },
   async getHostelTypes({ commit }, params) {
     // params = { page, size }
     try {

@@ -189,11 +189,11 @@ const actions = {
       params.facilitiesIds.forEach((element) => {
         facilitiesStr += `&facilityIds=${element}`;
       });
-      const coordinatorStr = '';
-      // if (params.coordinator !== '') {
-      //   coordinatorStr = `&latitude=${params.coordinator.lat}&
-      // longitude=${params.coordinator.lng}`;
-      // }
+      let coordinatorStr = '';
+      if (params.coordinator !== '') {
+        console.log(params.coordinator);
+        coordinatorStr = `&latitude=${params.coordinator.lat}&longitude=${params.coordinator.lng}`;
+      }
       let priceStr = '';
       if (params.disabledPrice) {
         priceStr = `&maxPrice=${params.rangePirce[1]}&minPrice=${params.rangePirce[0]}`;
@@ -203,7 +203,6 @@ const actions = {
         const minSuperficiality = params.minSuperficiality.split(' ')[0];
         minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
       }
-      console.log(minSuperficialityStr);
       const url = `/api/v1/types?asc=false&distance=5${facilitiesStr}${coordinatorStr}${priceStr}${minSuperficialityStr}&page=1&size=5&sortBy=score`;
       const res = await window.axios.get(url);
       if (res.status >= 200 && res.status <= 299) {
