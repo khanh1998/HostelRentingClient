@@ -56,7 +56,6 @@
                   >
                     <!-- eslint-disable max-len -->
                     <v-icon>clear</v-icon>
-                    <!-- <v-icon v-bind:style="{ visibility: computedClearable }">clear</v-icon> -->
                   </v-btn>
                 </v-col>
                 <v-col class="col-3 px-0">
@@ -230,15 +229,16 @@ export default {
     overlay: {
       show: false,
     },
+    address: '',
     center: { lat: 10.7542893, lng: 106.1346955 },
     places: [],
     currentPlace: null,
-    searchValue: '',
     visibleProperty: 'hidden',
   }),
   methods: {
     setPlace(place) {
       this.currentPlace = place;
+      this.address = place.formatted_address;
       this.searchValue = place.formatted_address;
     },
     changeSearchValue() {
@@ -246,6 +246,7 @@ export default {
     },
     clearField() {
       this.searchValue = '';
+      this.address = '';
       this.visibleProperty = 'hidden';
       this.currentPlace = null;
     },
@@ -290,7 +291,7 @@ export default {
   computed: {
     searchValue: {
       get() {
-        return this.$store.state.renter.filterResult.search.value;
+        return this.address;
       },
       set(value) {
         this.setSearchValue(value);

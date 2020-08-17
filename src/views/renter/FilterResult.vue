@@ -38,7 +38,7 @@
                   <v-btn color="green" dark v-bind="attrs" v-on="on">Lọc nâng cao</v-btn>
                 </template>
                 <v-sheet light class="pt-6">
-                  <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
+                  <HostelFilter />
                 </v-sheet>
               </v-bottom-sheet>
             </v-card-actions>
@@ -83,8 +83,7 @@
               <v-row>
                 <v-col cols="11 ml-auto pt-0 mt-0">
                   <v-sheet>
-                    <p class="text-h6 pt-2 ml-6">Lọc nâng cao</p>
-                    <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
+                    <p class="text-h6 pt-2 ml-6">Lọc nâng cao</p><HostelFilter" />
                   </v-sheet>
                 </v-col>
               </v-row>
