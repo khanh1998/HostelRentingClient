@@ -43,7 +43,7 @@
               <v-spacer></v-spacer>
               <v-btn color="primary" :loading="loging" @click="login">Đăng nhập</v-btn>
             </v-card-actions>
-            <v-card-text class="red--text">{{message}}</v-card-text>
+            <v-card-text class="red--text">{{ message }}</v-card-text>
           </v-card>
         </div>
       </v-container>
@@ -155,5 +155,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>

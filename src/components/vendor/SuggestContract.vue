@@ -1,29 +1,35 @@
 <template>
   <v-card v-if="!isLoadingContracts && !groups.isLoading">
-    <div
-      style="font-size:20px; fontWeight:bold"
-      class="pt-3 pl-2 pb-6"
-    >Các phòng sắp hết hạn hợp đồng</div>
+    <div style="font-size: 20px; fontweight: bold;" class="pt-3 pl-2 pb-6">
+      Các phòng sắp hết hạn hợp đồng
+    </div>
     <v-list two-line>
       <v-divider></v-divider>
-      <v-list-item v-for="(group) in groups.data" :key="group.groupId">
+      <v-list-item v-for="group in groups.data" :key="group.groupId">
         <v-list-item-content>
-          <v-list-item-title style="color:#1F17FF; fontSize:18px">
+          <v-list-item-title style="color: #1f17ff; fontsize: 18px;">
             {{ group.groupName }}
           </v-list-item-title>
-          <v-list-item-subtitle v-html="group.street" class="pb-1"></v-list-item-subtitle>
-          <div class="d-flex justify-space-between mt-5"
-            v-for="contract in contractByGroups[group.groupId]" :key="contract.contractId"
+          <v-list-item-subtitle
+            v-html="group.street"
+            class="pb-1"
+          ></v-list-item-subtitle>
+          <div
+            class="d-flex justify-space-between mt-5"
+            v-for="contract in contractByGroups[group.groupId]"
+            :key="contract.contractId"
           >
-            <div style="fontWeight:bold">{{contract.room.roomName}}</div>
-            <div style="fontWeight:bold">
-              {{expiredDate(contract.startTime,contract.duration)}}
+            <div style="fontweight: bold;">{{ contract.room.roomName }}</div>
+            <div style="fontweight: bold;">
+              {{ expiredDate(contract.startTime, contract.duration) }}
             </div>
           </div>
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-card-text style="color:#818286" class="d-flex justify-end">Xem thêm >></v-card-text>
+    <v-card-text style="color: #818286;" class="d-flex justify-end"
+      >Xem thêm >></v-card-text
+    >
   </v-card>
 </template>
 
@@ -72,7 +78,7 @@ export default {
       this.contracts.forEach((contract) => {
         const now = Date.now();
         const diff = now - contract.startTime;
-        if (diff < (6 * oneMonth)) {
+        if (diff < 6 * oneMonth) {
           expiring.push(contract);
         }
       });

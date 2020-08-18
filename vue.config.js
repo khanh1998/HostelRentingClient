@@ -1,7 +1,5 @@
 module.exports = {
-  transpileDependencies: [
-    'vuetify',
-  ],
+  transpileDependencies: ['vuetify'],
   pwa: {
     // configure the workbox plugin
     workboxPluginMode: 'InjectManifest',

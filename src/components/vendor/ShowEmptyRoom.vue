@@ -2,25 +2,40 @@
   <v-sheet v-if="!groups.isLoading" class="pa-2">
     <p class="text-h5 font-weight-medium">Thống kê</p>
     <v-row>
-      <v-col v-for="(group) in groups.data" :key="group.groupId" cols="6">
+      <v-col v-for="group in groups.data" :key="group.groupId" cols="6">
         <v-card>
-          <v-card-title>{{group.groupName}}</v-card-title>
-          <v-card-subtitle>{{group.street}}</v-card-subtitle>
+          <v-card-title>{{ group.groupName }}</v-card-title>
+          <v-card-subtitle>{{ group.street }}</v-card-subtitle>
           <v-card-text>
             <p>
               Tổng số:
-              <span class="font-weight-bold">{{groupStat[group.groupId].total}}</span> phòng
+              <span class="font-weight-bold">{{
+                groupStat[group.groupId].total
+              }}</span>
+              phòng
             </p>
             <p>
               Trống:
-              <span class="font-weight-bold">{{groupStat[group.groupId].empty}}</span> phòng
+              <span class="font-weight-bold">{{
+                groupStat[group.groupId].empty
+              }}</span>
+              phòng
             </p>
             <p>
               Tỷ lệ lấp đầy:
               <span class="font-weight-bold">
-                {{Number((100 - groupStat[group.groupId].empty
-                /groupStat[group.groupId].total*100).toFixed(2))}}
-              </span> %
+                {{
+                  Number(
+                    (
+                      100 -
+                      (groupStat[group.groupId].empty /
+                        groupStat[group.groupId].total) *
+                        100
+                    ).toFixed(2),
+                  )
+                }}
+              </span>
+              %
             </p>
           </v-card-text>
         </v-card>

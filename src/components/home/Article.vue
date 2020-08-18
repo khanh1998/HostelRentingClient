@@ -1,5 +1,9 @@
 <template>
-  <v-card class="mx-auto" :width="responsive.article.width" :to="'/detail/' + type.typeId">
+  <v-card
+    class="mx-auto"
+    :width="responsive.article.width"
+    :to="'/detail/' + type.typeId"
+  >
     <v-row class="mr-0 ml-0">
       <!-- eslint-disable -->
       <v-col
@@ -13,16 +17,18 @@
               <v-img
                 :src="type.typeImages[0].resourceUrl"
                 v-if="type.typeImages.length !== 0"
-                style="height:180px"
+                style="height: 180px;"
                 class="image-box"
               >
                 <div class="top">
                   Top
-                  <v-icon right color="white">{{numberIcons[index-1]}}</v-icon>
+                  <v-icon right color="white">{{
+                    numberIcons[index - 1]
+                  }}</v-icon>
                 </div>
               </v-img>
               <div class="item-classic-price">
-                <span>{{type.price}} {{type.priceUnit}}</span>
+                <span>{{ type.price }} {{ type.priceUnit }}</span>
               </div>
             </div>
           </v-col>
@@ -31,20 +37,33 @@
               <span
                 class="item-address"
                 v-if="!isLoadingProvinces"
-                style="display: block; display: -webkit-box;-webkit-line-clamp: 1;
-                  -webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
+                style="
+                  display: block;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
               >
-                {{group.street}},
-                {{ward.wardName}},
-                {{district.districtName}},
-                {{province.provinceName}}
+                {{ group.street }}, {{ ward.wardName }},
+                {{ district.districtName }},
+                {{ province.provinceName }}
               </span>
-              <div class="type-name mt-2" style="height: 40px">
+              <div class="type-name mt-2" style="height: 40px;">
                 <p
-                  style="display: block; display: -webkit-box;-webkit-line-clamp: 1;
-                  -webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
+                  style="
+                    display: block;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  "
                   class="font-weight-bold mb-0"
-                >{{type.title}}</p>
+                >
+                  {{ type.title }}
+                </p>
               </div>
               <div class="align-center justify-center">
                 <div class="mt-3 d-flex align-center">
@@ -56,7 +75,7 @@
                     max-height="15"
                   />
                   <span class="item-text">
-                    {{type.superficiality}}
+                    {{ type.superficiality }}
                     m
                     <sup>2</sup>
                   </span>
@@ -68,11 +87,15 @@
                       max-width="15"
                       max-height="15"
                     />
-                    <span class="item-text">{{type.capacity}} người</span>
+                    <span class="item-text">{{ type.capacity }} người</span>
                   </div>
                   <div
                     class="ml-auto d-flex align-center"
-                    v-if="type.facilities.filter(f => f.facilityName.includes('WC')).length !== 0"
+                    v-if="
+                      type.facilities.filter((f) =>
+                        f.facilityName.includes('WC'),
+                      ).length !== 0
+                    "
                   >
                     <v-img
                       src="@/assets/home/toilet.png"
@@ -83,7 +106,11 @@
                     />
                     <span class="item-text">
                       <!-- eslint-enable -->
-                      {{type.facilities.filter(f => f.facilityName.includes("WC"))[0].facilityName}}
+                      {{
+                        type.facilities.filter((f) =>
+                          f.facilityName.includes('WC'),
+                        )[0].facilityName
+                      }}
                     </span>
                   </div>
                 </div>
@@ -124,13 +151,19 @@
                 </div>
               </div>-->
               <div class="mt-3 d-flex align-center">
-                <span class="item-text" style="color: #656565">Giới nghiêm:</span>
+                <span class="item-text" style="color: #656565;"
+                  >Giới nghiêm:</span
+                >
                 <div class="d-flex ml-1 left">
-                  <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
-                  <span class="item-text">{{group.curfewTime}}</span>
+                  <span class="item-text" v-if="group.curfewTime === null"
+                    >Giờ giấc tự do</span
+                  >
+                  <span class="item-text">{{ group.curfewTime }}</span>
                 </div>
                 <div class="ml-auto d-flex">
-                  <span class="item-text" v-if="group.ownerJoin == false">Không chung chủ</span>
+                  <span class="item-text" v-if="group.ownerJoin == false"
+                    >Không chung chủ</span
+                  >
                   <span class="item-text" v-else>Chung chủ</span>
                 </div>
               </div>

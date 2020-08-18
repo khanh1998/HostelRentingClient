@@ -16,7 +16,13 @@
         height="30px"
       >
         <template v-slot:append>
-          <v-btn @click="overlay.show = false; search();">Search</v-btn>
+          <v-btn
+            @click="
+              overlay.show = false;
+              search();
+            "
+            >Search</v-btn
+          >
         </template>
       </v-text-field>
     </v-overlay>
@@ -76,7 +82,11 @@
           </v-row>
         </v-col>
 
-        <v-col cols="1" md="5" class="ml-auto d-flex justify-end items-center align-center pr-5">
+        <v-col
+          cols="1"
+          md="5"
+          class="ml-auto d-flex justify-end items-center align-center pr-5"
+        >
           <v-btn
             color="#2C92D5"
             light

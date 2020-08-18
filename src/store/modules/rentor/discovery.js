@@ -11,8 +11,27 @@ const myState = () => ({
 });
 
 const getters = {
-  getStatsByIds: (state) => (ids) =>
-    state.stats.streets.filter((street) => ids.includes(street.streetId)),
+  getStatsByIds: (state) => (ids) => {
+    return state.stats.streets.data.filter((street) => ids.includes(street.streetId));
+  },
+  getAverage: (state) => (ids) => {
+    const res = state.stats.streets.data.filter((street) => ids.includes(street.streetId));
+    const init = {
+      area: 0,
+      room: 0,
+      price: 0,
+    };
+    const summary = res.reduce((acc, curr) => {
+      acc.area += curr.avgSuperficiality * curr.count;
+      acc.room += curr.count;
+      acc.price += curr.avgPrice * curr.count;
+      return acc;
+    }, init);
+    return {
+      price: (summary.price / summary.room).toFixed(2),
+      area: (summary.area / summary.room).toFixed(2),
+    };
+  },
 };
 const mutationTypes = {
   GET_STREET_STATS_REQUEST: 'GET_STREET_STATS_REQUEST',

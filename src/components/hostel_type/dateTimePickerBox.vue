@@ -32,14 +32,14 @@
         <v-avatar height="64" width="64" left>
           <v-img max-height="64" max-width="64" src="../../assets/logo.png" />
         </v-avatar>
-        <p class="text-h6 font-weight-thin text-center ma-2">{{name}}</p>
+        <p class="text-h6 font-weight-thin text-center ma-2">{{ name }}</p>
       </v-sheet>
       <div class="d-flex flex-wrap align-center">
         <v-icon color="yellow" x-small>fas fa-star</v-icon>
-        <span class="white--text">{{'_'}}</span>
-        <p class="grey--text mb-0">{{` ${rating.average}/5 `}}</p>
-        <span class="white--text">{{'_'}}</span>
-        <p class="mb-0">({{rating.total}})</p>
+        <span class="white--text">{{ '_' }}</span>
+        <p class="grey--text mb-0">{{ ` ${rating.average}/5 ` }}</p>
+        <span class="white--text">{{ '_' }}</span>
+        <p class="mb-0">({{ rating.total }})</p>
       </div>
       <div class="d-flex">
         <v-btn
@@ -71,27 +71,36 @@
         </template>
         <v-card>
           <v-card-title class="headline">Xác nhận đặt lịch</v-card-title>
-          <v-card-text v-if="dateTimePicker.date != null && dateTimePicker.time != null">
+          <v-card-text
+            v-if="dateTimePicker.date != null && dateTimePicker.time != null"
+          >
             Bạn muốn đặt lịch vào ngày
             <span>
-              {{dateTimePicker.date.getDate()}}/
-              {{dateTimePicker.date.getMonth()}}/
-              {{dateTimePicker.date.getFullYear()}},
+              {{ dateTimePicker.date.getDate() }}/
+              {{ dateTimePicker.date.getMonth() }}/
+              {{ dateTimePicker.date.getFullYear() }},
             </span>
-            vào lúc {{dateTimePicker.time}}
-            tại nhà trọ {{name}}
+            vào lúc {{ dateTimePicker.time }} tại nhà trọ {{ name }}
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="dialog.booking = false">Không</v-btn>
+            <v-btn color="green darken-1" text @click="dialog.booking = false"
+              >Không</v-btn
+            >
             <v-btn color="green darken-1" text @click="sendBooking">Có</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-snackbar v-model="snackbar.display" :bottom="snackbar.bottom" :color="snackbar.color">
-        {{snackbar.message}}
+      <v-snackbar
+        v-model="snackbar.display"
+        :bottom="snackbar.bottom"
+        :color="snackbar.color"
+      >
+        {{ snackbar.message }}
         <template v-slot:action="{ attrs }">
-          <v-btn text v-bind="attrs" @click="snackbar.display = false">Đóng</v-btn>
+          <v-btn text v-bind="attrs" @click="snackbar.display = false"
+            >Đóng</v-btn
+          >
         </template>
       </v-snackbar>
     </div>
@@ -224,5 +233,4 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

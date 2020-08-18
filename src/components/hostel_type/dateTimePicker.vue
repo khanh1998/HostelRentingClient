@@ -3,9 +3,18 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <div v-if="!isLoading" class="above d-flex justify-center flex-column pa-1 flex-wrap">
+    <div
+      v-if="!isLoading"
+      class="above d-flex justify-center flex-column pa-1 flex-wrap"
+    >
       <p class="h6-text text-center">CHỌN NGÀY</p>
-      <v-chip-group mandatory light v-model="pickedDate" center-active show-arrows>
+      <v-chip-group
+        mandatory
+        light
+        v-model="pickedDate"
+        center-active
+        show-arrows
+      >
         <v-chip
           light
           v-for="i in 7"
@@ -16,19 +25,33 @@
           outlined
           active-class="red--text red"
           link
-          @click="getTimesForDate(i-1)"
+          @click="getTimesForDate(i - 1)"
         >
-          <v-sheet class="d-flex flex-column justify-center align-center ma-1 pa-1 flex-wrap" light>
-            <p class="ma-0">{{daysOfWeek[dates[i-1].getDay()]}}</p>
-            <p class="ma-0 text-h5 font-weight-bold">{{dates[i-1].getDate()}}</p>
+          <v-sheet
+            class="d-flex flex-column justify-center align-center ma-1 pa-1 flex-wrap"
+            light
+          >
+            <p class="ma-0">{{ daysOfWeek[dates[i - 1].getDay()] }}</p>
+            <p class="ma-0 text-h5 font-weight-bold">
+              {{ dates[i - 1].getDate() }}
+            </p>
           </v-sheet>
         </v-chip>
       </v-chip-group>
     </div>
-    <div v-if="timesForDate != null" class="below d-flex flex-column align-center pa-1 flex-wrap">
+    <div
+      v-if="timesForDate != null"
+      class="below d-flex flex-column align-center pa-1 flex-wrap"
+    >
       <p class="h6-text">CHỌN GIỜ</p>
       <div class="pa-2">
-        <v-chip-group mandatory light v-model="pickedTime" center-active show-arrows>
+        <v-chip-group
+          mandatory
+          light
+          v-model="pickedTime"
+          center-active
+          show-arrows
+        >
           <v-chip
             light
             v-for="j in timesForDate.length"
@@ -39,7 +62,8 @@
             outlined
             active-class="amber--text amber"
             link
-          >{{timesForDate[j-1]}}</v-chip>
+            >{{ timesForDate[j - 1] }}</v-chip
+          >
         </v-chip-group>
       </div>
     </div>
@@ -49,12 +73,12 @@
         color="success"
         v-if="pickedDate != null && pickedTime != null"
         @click="$emit('ok', pickDateAndTime())"
-      >CHỌN</v-btn>
+        >CHỌN</v-btn
+      >
     </div>
   </v-sheet>
 </template>
-<style scoped>
-</style>
+<style scoped></style>
 <script>
 import { mapActions } from 'vuex';
 

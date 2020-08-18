@@ -16,11 +16,8 @@
       class="elevation-1"
     >
       <template v-slot:top>
-        <v-toolbar
-          flat
-          color="white"
-        >
-          <v-toolbar-title style="fontSize:20px">Loại phòng</v-toolbar-title>
+        <v-toolbar flat color="white">
+          <v-toolbar-title style="fontsize: 20px;">Loại phòng</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-card-title>
             <v-text-field
@@ -31,10 +28,7 @@
               hide-details
             ></v-text-field>
           </v-card-title>
-          <v-dialog
-            v-model="dialog"
-            max-width="500px"
-          >
+          <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 dark
@@ -57,51 +51,31 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
+                    <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="editedItem.name"
                         label="Dessert name"
                       ></v-text-field>
                     </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
+                    <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="editedItem.calories"
                         label="Calories"
                       ></v-text-field>
                     </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
+                    <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="editedItem.fat"
                         label="Fat (g)"
                       ></v-text-field>
                     </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
+                    <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="editedItem.carbs"
                         label="Carbs (g)"
                       ></v-text-field>
                     </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
+                    <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="editedItem.protein"
                         label="Protein (g)"
@@ -113,16 +87,8 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="close"
-                >Hủy</v-btn>
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="save"
-                >Lưu</v-btn>
+                <v-btn color="blue darken-1" text @click="close">Hủy</v-btn>
+                <v-btn color="blue darken-1" text @click="save">Lưu</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -132,21 +98,17 @@
         <v-icon @click="editItem(item)">
           mdi-pencil
         </v-icon>
-        <v-icon
-          class="ml-5"
-          @click="deleteItem(item)"
-        >
+        <v-icon class="ml-5" @click="deleteItem(item)">
           mdi-delete
         </v-icon>
       </template>
       <template v-slot:expanded-item="{ headers, item }">
-        <td :colspan="headers.length">More info about {{ item.typeName }}</td>
-      </template>s
+        <td :colspan="headers.length">
+          More info about {{ item.typeName }}
+        </td> </template
+      >s
       <template v-slot:no-data>
-        <v-btn
-          color="primary"
-          @click="initialize"
-        >Reset</v-btn>
+        <v-btn color="primary" @click="initialize">Reset</v-btn>
       </template>
     </v-data-table>
     <div class="text-center pt-2">
@@ -160,12 +122,10 @@
 </template>
 
 <script>
-
 export default {
   name: 'HostelRoom',
   props: ['groups', 'groupId', 'typeId'],
-  components: {
-  },
+  components: {},
   data: () => ({
     page: 1,
     pageCount: 0,
@@ -205,7 +165,9 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'Tạo mới phòng trọ' : 'Cập nhật thông tin phòng trọ';
+      return this.editedIndex === -1 ?
+        'Tạo mới phòng trọ' :
+        'Cập nhật thông tin phòng trọ';
     },
     // initialize() {
     //   return this.groups.forEach((element) => {

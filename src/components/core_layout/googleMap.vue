@@ -2,14 +2,12 @@
   <div>
     <div>
       <label>
-        <gmap-autocomplete
-          @place_changed="setPlace">
-        </gmap-autocomplete>
+        <gmap-autocomplete @place_changed="setPlace"> </gmap-autocomplete>
         <button @click="addMarker">Search</button>
       </label>
-      <br/>
+      <br />
     </div>
-    <br>
+    <br />
   </div>
 </template>
 
@@ -37,7 +35,9 @@ export default {
     },
     addMarker() {
       if (this.currentPlace) {
-        alert(`lat:${this.currentPlace.geometry.location.lat()},lng:${this.currentPlace.geometry.location.lng()}`);
+        alert(
+          `lat:${this.currentPlace.geometry.location.lat()},lng:${this.currentPlace.geometry.location.lng()}`,
+        );
         const marker = {
           lat: this.currentPlace.geometry.location.lat(),
           lng: this.currentPlace.geometry.location.lng(),

@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="6" md="8" lg="10" class="d-flex justify-start">
-        <p class="text-h5 font-weight-medium">{{province.provinceName}}</p>
+        <p class="text-h5 font-weight-medium">{{ province.provinceName }}</p>
       </v-col>
       <v-col cols="6" md="4" lg="2">
         <v-select
@@ -26,7 +26,7 @@
         v-for="(district, index) in districts"
         :key="district.districtId"
       >
-        <DistrictItem :district="district" :img="imgs[index]"/>
+        <DistrictItem :district="district" :img="imgs[index]" />
       </v-col>
     </v-row>
   </div>

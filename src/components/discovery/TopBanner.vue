@@ -11,7 +11,8 @@
           Khám phá thành phố
         </p>
         <p class="text-center white--text text-h6">
-          Tìm hiểu về giá cả nhà trọ trên từng khu vực để giúp bạn tìm được một căn phòng ưng ý.
+          Tìm hiểu về giá cả nhà trọ trên từng khu vực để giúp bạn tìm được một
+          căn phòng ưng ý.
         </p>
       </v-col>
     </v-row>

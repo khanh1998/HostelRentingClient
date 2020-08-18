@@ -1,8 +1,7 @@
 <template>
   <p>this is admin view</p>
 </template>
-<style scoped>
-</style>
+<style scoped></style>
 <script>
 export default {
   name: 'AdminView',

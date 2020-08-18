@@ -4,27 +4,36 @@
       name="custom-classes-transition"
       enter-active-class="animated tada"
       leave-active-class="animated bounceOutRight"
-      :duration="{leave: 500}"
+      :duration="{ leave: 500 }"
     >
       <div
         class="banner-left d-flex flex-column justify-center align-center"
         v-bind:style="banner.left.style"
         v-if="banner.left.show"
       >
-        <div class="d-flex justify-end align-center" :style="{width: '100%'}">
+        <div class="d-flex justify-end align-center" :style="{ width: '100%' }">
           <v-tooltip left>
-            <template v-slot:activator="{on, attrs}">
-              <v-btn @click="closeLeftBanner" icon color="amber" v-on="on" v-bind="attrs">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                @click="closeLeftBanner"
+                icon
+                color="amber"
+                v-on="on"
+                v-bind="attrs"
+              >
                 <v-icon>far fa-times-circle</v-icon>
               </v-btn>
             </template>
             <span>Close</span>
           </v-tooltip>
         </div>
-        <p
-          class="white--text font-weight-medium pa-6"
-        >HỖ TRỢ TÌM KIẾM ĐỂ ĐỀ XUẤT PHÒNG TRỌ PHÙ HỢP NHẤT</p>
-        <div class="d-flex justify-center align-center pa-6" :style="{width: '100%'}">
+        <p class="white--text font-weight-medium pa-6">
+          HỖ TRỢ TÌM KIẾM ĐỂ ĐỀ XUẤT PHÒNG TRỌ PHÙ HỢP NHẤT
+        </p>
+        <div
+          class="d-flex justify-center align-center pa-6"
+          :style="{ width: '100%' }"
+        >
           <p></p>
           <v-select
             v-model="banner.left.select"
@@ -46,9 +55,9 @@
     >
       <div class="line"></div>
       <p class="white--text text-h2">TD HOSTEL</p>
-      <p
-        class="white--text px-2 font-weight-bold"
-      >HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT</p>
+      <p class="white--text px-2 font-weight-bold">
+        HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT
+      </p>
       <v-btn color="#F9B707" light @click="openLeftBanner" id="search-optional">
         TÌM KIẾM NÂNG CAO
       </v-btn>
@@ -59,7 +68,7 @@
 @import url('https://cdn.jsdelivr.net/npm/animate.css@3.5.1');
 .banner-right {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("https://img.homedy.com/store/images/2019/06/19/can-ho-mini-gia-re-1-636965585916507395.jpg");
+    url('https://img.homedy.com/store/images/2019/06/19/can-ho-mini-gia-re-1-636965585916507395.jpg');
   background-position: center;
   background-size: cover;
   height: 500px;
@@ -76,10 +85,10 @@
   margin-bottom: 50px;
 }
 .v-application .text-h2 {
-    font-size: 60px !important;
-    font-weight: bold;
-    letter-spacing: 0.1em !important;
-    font-family: "Montserrat" !important;
+  font-size: 60px !important;
+  font-weight: bold;
+  letter-spacing: 0.1em !important;
+  font-family: 'Montserrat' !important;
 }
 .px-2 {
   font-size: 20px !important;
@@ -91,8 +100,8 @@
 }
 #search-optional {
   height: 60px;
-    width: 300px;
-    color: white;
+  width: 300px;
+  color: white;
 }
 </style>
 <script>
@@ -137,8 +146,10 @@ export default {
   computed: {
     responsive() {
       switch (this.$vuetify.breakpoint.name) {
-        case 'sm': return {};
-        default: return {};
+        case 'sm':
+          return {};
+        default:
+          return {};
       }
     },
   },

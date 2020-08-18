@@ -8,7 +8,9 @@
         max-height="165"
       >
         <div class="fill-height d-flex justify-center align-center">
-          <v-card-title class="text-h5">{{district.districtName}}</v-card-title>
+          <v-card-title class="text-h5">{{
+            district.districtName
+          }}</v-card-title>
         </div>
       </v-img>
     </v-card>
@@ -27,13 +29,13 @@ export default {
       return this.img;
     },
     route() {
-      return ({
+      return {
         name: 'DiscoveryDistrict',
         params: {
           districtInput: this.district,
           districtId: this.district.districtId,
         },
-      });
+      };
     },
   },
 };

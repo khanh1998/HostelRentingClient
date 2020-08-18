@@ -18,7 +18,7 @@
           <v-tabs v-model="tabs.tabName" left>
             <v-tab v-for="(item, i) in tabs" :key="i">
               <v-badge color="red" :content="docsHasMessage.length">
-                {{item.tabName}}
+                {{ item.tabName }}
               </v-badge>
             </v-tab>
           </v-tabs>
@@ -32,7 +32,9 @@
             <v-list nav class="rounded-l">
               <v-list-item-group color="primary">
                 <v-list-item v-for="(item, i) in filter" :key="i" class>
-                  <span style="fontSize:16px" class="py-1">{{item.filterName}}</span>
+                  <span style="fontsize: 16px;" class="py-1">{{
+                    item.filterName
+                  }}</span>
                 </v-list-item>
               </v-list-item-group>
             </v-list>
@@ -43,51 +45,74 @@
       <v-tabs-items v-model="tabs.tabName">
         <v-tab-item>
           <v-card flat>
-            <v-list two-line nav avatar class="rounded-l" style="height: 705px">
-              <div id="scroll-target" style="max-height: 700px" class="overflow-y-auto">
+            <v-list
+              two-line
+              nav
+              avatar
+              class="rounded-l"
+              style="height: 705px;"
+            >
+              <div
+                id="scroll-target"
+                style="max-height: 700px;"
+                class="overflow-y-auto"
+              >
                 <v-list>
                   <v-list-item-group color="primary">
                     <v-list-item
-                      v-for="(item) in docsHasMessage"
+                      v-for="item in docsHasMessage"
                       :key="item.id"
                       class="mb-2 pt-2"
-                      style="backgroundColor: #F2F2F2"
+                      style="backgroundcolor: #f2f2f2;"
                       @click="$emit('clickChat', getDocRef(item.id))"
                     >
                       <v-list-item-avatar>
-                          <v-img :src="getUserById(item.renterId).avatar || '#'"></v-img>
-                        </v-list-item-avatar>
+                        <v-img
+                          :src="getUserById(item.renterId).avatar || '#'"
+                        ></v-img>
+                      </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title
-                          style="fontSize:16px"
+                          style="fontsize: 16px;"
                           class="py-1"
-                        >{{getUserById(item.renterId).username}}</v-list-item-title>
+                          >{{
+                            getUserById(item.renterId).username
+                          }}</v-list-item-title
+                        >
                         <div>
                           <v-list-item-subtitle
-                            v-if="item.lastedMessage.message">
+                            v-if="item.lastedMessage.message"
+                          >
                             <p
-                              v-bind:class="{'font-weight-bold': !item.lastedMessage.seen}"
+                              v-bind:class="{
+                                'font-weight-bold': !item.lastedMessage.seen,
+                              }"
                             >
-                              {{item.lastedMessage.message}}</p>
+                              {{ item.lastedMessage.message }}
+                            </p>
                           </v-list-item-subtitle>
                           <v-list-item-subtitle v-if="item.lastedMessage.book">
                             Đặt lịch vào
-                            {{item.lastedMessage.book.time}}
-                            {{item.lastedMessage.book.date}}
+                            {{ item.lastedMessage.book.time }}
+                            {{ item.lastedMessage.book.date }}
                           </v-list-item-subtitle>
                           <v-list-item-subtitle
                             v-if="item.lastedMessage.bargain"
-                          >Trả giá {{item.lastedMessage.bargain.newPrice}} triệu
+                            >Trả giá
+                            {{ item.lastedMessage.bargain.newPrice }} triệu
                           </v-list-item-subtitle>
                         </div>
                       </v-list-item-content>
                       <v-list-item-icon>
                         <v-icon v-if="item.lastedMessage.book" color="pink">
-                          event</v-icon>
+                          event</v-icon
+                        >
                         <v-icon v-if="item.lastedMessage.bargain" color="amber">
-                          attach_money</v-icon>
+                          attach_money</v-icon
+                        >
                         <v-icon v-if="item.lastedMessage.message" color="green">
-                          chat</v-icon>
+                          chat</v-icon
+                        >
                       </v-list-item-icon>
                     </v-list-item>
                   </v-list-item-group>

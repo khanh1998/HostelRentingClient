@@ -1,15 +1,12 @@
 <template>
   <v-card height="500px">
-    <div
-      style="font-size:20px; fontWeight:bold"
-      class="pt-3 pl-2 pb-6"
-    >
+    <div style="font-size: 20px; fontweight: bold;" class="pt-3 pl-2 pb-6">
       Thống kê: lượt xem phòng
     </div>
     <div
       id="chart"
       class="d-flex justify-center pt-10"
-      style="max-height:500px"
+      style="max-height: 500px;"
     >
       <apexcharts
         type="donut"
@@ -18,10 +15,9 @@
         :series="series"
       ></apexcharts>
     </div>
-    <v-card-text
-      style="color:#818286"
-      class="d-flex justify-end"
-    >Xem thêm >></v-card-text>
+    <v-card-text style="color: #818286;" class="d-flex justify-end"
+      >Xem thêm >></v-card-text
+    >
   </v-card>
 </template>
 
@@ -35,7 +31,6 @@ export default {
   },
   data() {
     return {
-
       series: [41, 17, 15],
       chartOptions: {
         chart: {
@@ -74,19 +69,20 @@ export default {
             return `${val}`;
           },
         },
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-            },
-            legend: {
-              position: 'bottom',
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200,
+              },
+              legend: {
+                position: 'bottom',
+              },
             },
           },
-        }],
+        ],
       },
-
     };
   },
 };

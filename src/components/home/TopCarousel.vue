@@ -23,7 +23,7 @@
     </template>
     <vueper-slide v-for="i in list.length" :key="i" :index="i">
       <template v-slot:content>
-        <TopCarouselItem :type="list[i-1]" />
+        <TopCarouselItem :type="list[i - 1]" />
       </template>
     </vueper-slide>
   </vueper-slides>
