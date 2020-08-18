@@ -56,7 +56,7 @@
                   md="12"
                   lg="12"
                   xl="12"
-                  class="pl-5 pr-0 pt-7 pb-7 white d-flex"
+                  class="pl-5 pr-0 pt-7 pb-7 white d-flex mb-4"
                 >
                   <v-sheet class="ml-4">
                     <v-select
@@ -69,7 +69,6 @@
                       hide-details
                       dense
                       label="Loại phòng"
-                      class
                       :style="'width: 350px'"
                     ></v-select>
                   </v-sheet>
@@ -82,8 +81,8 @@
             <v-col cols="4">
               <v-row>
                 <v-col cols="11 ml-auto pt-0 mt-0">
-                  <v-sheet>
-                    <p class="text-h6 pt-2 ml-6">Lọc nâng cao</p>
+                  <v-sheet class="pt-5">
+                    <p class="text-h6 pt-2 text-center">Lọc nâng cao</p>
                     <HostelFilter />
                   </v-sheet>
                 </v-col>

@@ -1,6 +1,9 @@
 const myState = () => ({
   searchType: {
     isOptional: true,
+    nameAddress: '',
+    school: '',
+    hometown: '',
   },
   hostelTypes: {
     data: [],
@@ -66,6 +69,9 @@ const getters = {
 };
 const mutationTypes = {
   SET_SEARCH_TYPE_VALUE: 'SET_SEARCH_TYPE_VALUE',
+  SET_SEARCH_OPTIONAL_NAME_ADDRESS: 'SET_SEARCH_OPTIONAL_NAME_ADDRESS',
+  SET_SEARCH_OPTIONAL_SCHOOL: 'SET_SEARCH_OPTIONAL_SCHOOL',
+  SET_SEARCH_HOMETOWN: 'SET_SEARCH_HOMETOWN',
 
   GET_HOSTEL_TYPES_SUCCESS: 'GET_HOSTEL_TYPES_SUCCESS',
   GET_HOSTEL_TYPES_FAILURE: 'GET_HOSTEL_TYPES_FAILURE',
@@ -85,8 +91,16 @@ const mutationTypes = {
 };
 const mutations = {
   SET_SEARCH_TYPE_VALUE: (state, isOptional) => {
-    console.log(`SET_SEARCH_TYPE_VALUE${isOptional}`);
     state.searchType.isOptional = isOptional;
+  },
+  SET_SEARCH_OPTIONAL_NAME_ADDRESS: (state, nameAddress) => {
+    state.searchType.nameAddress = nameAddress;
+  },
+  SET_SEARCH_OPTIONAL_SCHOOL: (state, school) => {
+    state.searchType.school = school;
+  },
+  SET_SEARCH_HOMETOWN: (state, hometown) => {
+    state.searchType.hometown = hometown;
   },
   // hostel type
   GET_HOSTEL_TYPES_SUCCESS(state, inputData) {
@@ -146,8 +160,16 @@ const mutations = {
 };
 const actions = {
   setSearchTypeValue({ commit }, isOptional) {
-    console.log(`setSearchTypeValue${isOptional}`);
     commit(mutationTypes.SET_SEARCH_TYPE_VALUE, isOptional);
+  },
+  setNameAddress({ commit }, nameAddress) {
+    commit(mutationTypes.SET_SEARCH_OPTIONAL_NAME_ADDRESS, nameAddress);
+  },
+  setSchool({ commit }, school) {
+    commit(mutationTypes.SET_SEARCH_OPTIONAL_SCHOOL, school);
+  },
+  setHometown({ commit }, hometown) {
+    commit(mutationTypes.SET_SEARCH_HOMETOWN, hometown);
   },
   async getHostelTypes({ commit }, params) {
     // params = { page, size }

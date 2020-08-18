@@ -238,7 +238,7 @@ export default {
   methods: {
     setPlace(place) {
       this.currentPlace = place;
-      this.address = place.name;
+      this.address = `${place.name}-${place.formatted_address}`;
       this.searchValue = place.formatted_address;
     },
     changeSearchValue() {

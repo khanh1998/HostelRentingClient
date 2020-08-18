@@ -28,8 +28,8 @@
         <v-row style="height: 80px">
           <v-col cols="7" style="height: 50px">
             <v-autocomplete
-              v-model="model"
-              :items="states"
+              v-model="banner.left.select.school"
+              :items="banner.left.schools"
               label="Bạn học trường"
               class="text-body-2"
               filled
@@ -44,8 +44,8 @@
           </v-col>
           <v-col cols="5" style="padding-right: 0px !important, height: 50px">
             <v-autocomplete
-              v-model="model"
-              :items="province"
+              v-model="banner.left.select.hometown"
+              :items="banner.left.provinces"
               label="Quê ở"
               class="text-body-2"
               filled
@@ -113,6 +113,7 @@
               </v-btn>
             </div>
           </v-col>-->
+          <!-- <p>{{school}} - {{hometown}} - {{searchValue}}</p> -->
           <v-col cols="4" class="ml-auto">
             <v-btn
               class="white--text text-button"
@@ -120,6 +121,7 @@
                 borderRadius: '0px',
                 boxShadow: 'none'}"
               color="amber"
+              @click="searchByCoordinates"
             >TÌM KIẾM</v-btn>
           </v-col>
         </v-row>
@@ -199,8 +201,107 @@ export default {
     banner: {
       left: {
         show: false,
-        select: [],
-        items: ['Sinh viên', 'Công nhân', 'Nhân viên'],
+        select: {
+          school: '',
+          hometown: '',
+        },
+        schools: [
+          'Trường Đại học Bách khoa, Đại học Quốc gia Thành phố Hồ Chí Minh',
+          'Trường Đại học Khoa học Tự nhiên, Đại học Quốc gia Thành phố Hồ Chí Minh',
+          'Trường Đại học Sư phạm Kỹ thuật Thành phố Hồ Chí Minh',
+          'Trường Đại học Quốc tế, Đại học Quốc gia Thành phố Hồ Chí Minh',
+          'Trường Đại học Công nghệ Thông tin, Đại học Quốc gia Thành phố Hồ Chí Minh',
+          'Trường Đại học Trần Đại Nghĩa',
+          'Trường Đại học Thông tin Liên lạc',
+          'Trường Đại học Tôn Đức Thắng',
+          'Trường Đại học Công nghiệp Thành phố Hồ Chí Minh',
+          'Trường Đại học Công nghiệp Thực phẩm Thành phố Hồ Chí Minh',
+          'Trường Đại học Giao thông vận tải Thành phố Hồ Chí Minh',
+          'Trường Đại học Nông Lâm Thành phố Hồ Chí Minh',
+          'Trường Đại học Sài Gòn',
+          'Trường Đại học Sư phạm Thành phố Hồ Chí Minh',
+          'Trường Đại học Mở Thành phố Hồ Chí Minh',
+          'Trường Đại học Công nghệ Sài Gòn',
+          'Trường Đại học Quốc tế Hồng Bàng',
+          'Trường Đại học Hùng Vương',
+          'Trường Đại học Kỹ thuật - Công nghệ Thành phố Hồ Chí Minh',
+          'Trường Đại học Ngoại ngữ - Tin học Thành phố Hồ Chí Minh',
+          'Trường Đại học Văn Hiến',
+          'Trường Đại học Văn Lang',
+          'Trường Đại học Kinh tế - Tài chính Thành phố Hồ Chí Minh',
+          'Trường Đại học Hoa Sen',
+          'Trường Đại học Công nghệ thông tin Gia Định',
+          'Trường Đại học Quốc tế Sài Gòn',
+          'Trường Cao đẳng BC Công nghệ và Quản trị doanh nghiệp',
+          'Trường Cao đẳng Công nghệ Thủ Đức',
+          'Trường Cao đẳng Kinh tế - Kỹ thuật Vinatex TP.HCM',
+          'Trường Đại học FPT',
+        ],
+        provinces: [
+          'An Giang',
+          'Bà rịa – Vũng tàu',
+          'Bắc Giang',
+          'Bắc Kạn',
+          'Bạc Liêu',
+          'Bắc Ninh',
+          'Bến Tre',
+          'Bình Định',
+          'Bình Dương',
+          'Bình Phước',
+          'Bình Thuận',
+          'Cà Mau',
+          'Cần Thơ',
+          'Cao Bằng',
+          'Đà Nẵng',
+          'Đắk Lắk',
+          'Đắk Nông',
+          'Điện Biên',
+          'Đồng Nai',
+          'Đồng Tháp',
+          'Gia Lai',
+          'Hà Giang',
+          'Hà Nam',
+          'Hà Nội',
+          'Hà Tĩnh',
+          'Hải Dương',
+          'Hải Phòng',
+          'Hậu Giang',
+          'Hòa Bình',
+          'Hưng Yên',
+          'Khánh Hòa',
+          'Kiên Giang',
+          'Kon Tum',
+          'Lai Châu',
+          'Lâm Đồng',
+          'Lạng Sơn',
+          'Lào Cai',
+          'Long An',
+          'Nam Định',
+          'Nghệ An',
+          'Ninh Bình',
+          'Ninh Thuận',
+          'Phú Thọ',
+          'Phú Yên',
+          'Quảng Bình',
+          'Quảng Nam',
+          'Quảng Ngãi',
+          'Quảng Ninh',
+          'Quảng Trị',
+          'Sóc Trăng',
+          'Sơn La',
+          'Tây Ninh',
+          'Thái Bình',
+          'Thái Nguyên',
+          'Thanh Hóa',
+          'Thừa Thiên Huế',
+          'Tiền Giang',
+          'Thành phố Hồ Chí Minh',
+          'Trà Vinh',
+          'Tuyên Quang',
+          'Vĩnh Long',
+          'Vĩnh Phúc',
+          'Yên Bái',
+        ],
         style: {
           width: '75%',
         },
@@ -211,103 +312,7 @@ export default {
         },
       },
     },
-    states: [
-      'Trường Đại học Bách khoa, Đại học Quốc gia Thành phố Hồ Chí Minh',
-      'Trường Đại học Khoa học Tự nhiên, Đại học Quốc gia Thành phố Hồ Chí Minh',
-      'Trường Đại học Sư phạm Kỹ thuật Thành phố Hồ Chí Minh',
-      'Trường Đại học Quốc tế, Đại học Quốc gia Thành phố Hồ Chí Minh',
-      'Trường Đại học Công nghệ Thông tin, Đại học Quốc gia Thành phố Hồ Chí Minh',
-      'Trường Đại học Trần Đại Nghĩa',
-      'Trường Đại học Thông tin Liên lạc',
-      'Trường Đại học Tôn Đức Thắng',
-      'Trường Đại học Công nghiệp Thành phố Hồ Chí Minh',
-      'Trường Đại học Công nghiệp Thực phẩm Thành phố Hồ Chí Minh',
-      'Trường Đại học Giao thông vận tải Thành phố Hồ Chí Minh',
-      'Trường Đại học Nông Lâm Thành phố Hồ Chí Minh',
-      'Trường Đại học Sài Gòn',
-      'Trường Đại học Sư phạm Thành phố Hồ Chí Minh',
-      'Trường Đại học Mở Thành phố Hồ Chí Minh',
-      'Trường Đại học Công nghệ Sài Gòn',
-      'Trường Đại học Quốc tế Hồng Bàng',
-      'Trường Đại học Hùng Vương',
-      'Trường Đại học Kỹ thuật - Công nghệ Thành phố Hồ Chí Minh',
-      'Trường Đại học Ngoại ngữ - Tin học Thành phố Hồ Chí Minh',
-      'Trường Đại học Văn Hiến',
-      'Trường Đại học Văn Lang',
-      'Trường Đại học Kinh tế - Tài chính Thành phố Hồ Chí Minh',
-      'Trường Đại học Hoa Sen',
-      'Trường Đại học Công nghệ thông tin Gia Định',
-      'Trường Đại học Quốc tế Sài Gòn',
-      'Trường Cao đẳng BC Công nghệ và Quản trị doanh nghiệp',
-      'Trường Cao đẳng Công nghệ Thủ Đức',
-      'Trường Cao đẳng Kinh tế - Kỹ thuật Vinatex TP.HCM',
-      'Trường Đại học FPT',
-    ],
-    province: [
-      'An Giang',
-      'Bà rịa – Vũng tàu',
-      'Bắc Giang',
-      'Bắc Kạn',
-      'Bạc Liêu',
-      'Bắc Ninh',
-      'Bến Tre',
-      'Bình Định',
-      'Bình Dương',
-      'Bình Phước',
-      'Bình Thuận',
-      'Cà Mau',
-      'Cần Thơ',
-      'Cao Bằng',
-      'Đà Nẵng',
-      'Đắk Lắk',
-      'Đắk Nông',
-      'Điện Biên',
-      'Đồng Nai',
-      'Đồng Tháp',
-      'Gia Lai',
-      'Hà Giang',
-      'Hà Nam',
-      'Hà Nội',
-      'Hà Tĩnh',
-      'Hải Dương',
-      'Hải Phòng',
-      'Hậu Giang',
-      'Hòa Bình',
-      'Hưng Yên',
-      'Khánh Hòa',
-      'Kiên Giang',
-      'Kon Tum',
-      'Lai Châu',
-      'Lâm Đồng',
-      'Lạng Sơn',
-      'Lào Cai',
-      'Long An',
-      'Nam Định',
-      'Nghệ An',
-      'Ninh Bình',
-      'Ninh Thuận',
-      'Phú Thọ',
-      'Phú Yên',
-      'Quảng Bình',
-      'Quảng Nam',
-      'Quảng Ngãi',
-      'Quảng Ninh',
-      'Quảng Trị',
-      'Sóc Trăng',
-      'Sơn La',
-      'Tây Ninh',
-      'Thái Bình',
-      'Thái Nguyên',
-      'Thanh Hóa',
-      'Thừa Thiên Huế',
-      'Tiền Giang',
-      'Thành phố Hồ Chí Minh',
-      'Trà Vinh',
-      'Tuyên Quang',
-      'Vĩnh Long',
-      'Vĩnh Phúc',
-      'Yên Bái',
-    ],
+
     slides: [
       {
         title: 'Slide #1',
@@ -325,7 +330,11 @@ export default {
   methods: {
     ...mapActions({
       setIsSearchOptional: 'renter/home/setSearchTypeValue',
+      setNameAddress: 'renter/home/setNameAddress',
+      setSchool: 'renter/home/setSchool',
+      setHometown: 'renter/home/setHometown',
       setSearchValue: 'renter/filterResult/setSearchValue',
+      searchByCoordinator: 'renter/filterResult/searchByCoordinator',
     }),
     closeLeftBanner() {
       this.isSearchOptional = true;
@@ -345,7 +354,7 @@ export default {
     },
     setPlace(place) {
       this.currentPlace = place;
-      this.address = place.name;
+      this.address = `${place.name}-${place.formatted_address}`;
       this.searchValue = place.formatted_address;
     },
     changeSearchValue() {
@@ -357,6 +366,25 @@ export default {
       this.visibleProperty = 'hidden';
       this.currentPlace = null;
     },
+    searchByCoordinates() {
+      if (this.currentPlace) {
+        const coordinates = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng(),
+        };
+        this.searchByCoordinator({
+          lat: coordinates.lat,
+          long: coordinates.lng,
+          coordinator: coordinates,
+        });
+        this.setSearchValue(this.coordinates);
+        this.school = this.banner.left.select.school;
+        this.hometown = this.banner.left.select.hometown;
+        this.nameAddress = this.searchValue.split('-');
+        this.isSearchOptional = true;
+        this.$router.push('/filter');
+      }
+    },
   },
   computed: {
     isSearchOptional: {
@@ -365,6 +393,30 @@ export default {
       },
       set(value) {
         this.setIsSearchOptional(value);
+      },
+    },
+    nameAddress: {
+      get() {
+        return this.$store.state.renter.home.searchType.nameAddress;
+      },
+      set(value) {
+        this.setNameAddress(value);
+      },
+    },
+    school: {
+      get() {
+        return this.$store.state.renter.home.searchType.school;
+      },
+      set(value) {
+        this.setSchool(value);
+      },
+    },
+    hometown: {
+      get() {
+        return this.$store.state.renter.home.searchType.hometown;
+      },
+      set(value) {
+        this.setHometown(value);
       },
     },
     searchValue: {

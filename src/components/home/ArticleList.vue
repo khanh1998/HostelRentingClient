@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column flex-md-row flex-wrap">
-    <Article v-for="i in list.length" :key="i" :index="i" :type="list[i-1]" class="mt-5" />
+    <Article v-for="i in list.length" :key="i" :index="i" :type="list[i-1]" class="my-4" />
   </div>
 </template>
 <style scoped>
