@@ -3,26 +3,28 @@
     v-if="!isLoading"
     class="d-flex justify-center"
   >
-    <v-col cols="8">
-      <v-btn @click="doUpdateBookingStatus">
+    <v-col cols="6">
+      <!-- <v-btn @click="doUpdateBookingStatus">
         aaa
-      </v-btn>
+      </v-btn> -->
       <v-dialog
         v-model="dialog"
         width="500"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-card
-            style="background-color: coral; height: auto"
+            style="height: 90%"
             class="mt-5"
           >
-            <p class="error">{{ error }}</p>
-            <p class="decode-result">Last result: <b>{{ result }}</b></p>
+            <p></p>
+            <p class="error text-center">{{ error }}</p>
+            <!-- <p class="decode-result">Last result: <b>{{ result }}</b></p> -->
             <qrcode-drop-zone
               @decode="onDecode"
               @init="logErrors"
               v-on="on"
               v-bind="attrs"
+              style="height: 100%;"
             >
               <qrcode-stream
                 @decode="onDecode"
