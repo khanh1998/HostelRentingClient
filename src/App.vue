@@ -23,17 +23,13 @@ export default {
         .getToken()
         .then(async (token) => {
           if (token) {
-            const currentMessageToken = window.localStorage.getItem(
-              'messagingToken',
-            );
+            const currentMessageToken = window.localStorage.getItem('messagingToken');
             console.log('token will be updated', currentMessageToken !== token);
             if (currentMessageToken !== token) {
               await this.saveToken(token);
             }
           } else {
-            console.log(
-              'No Instance ID token available. Request permission to generate one.',
-            );
+            console.log('No Instance ID token available. Request permission to generate one.');
             this.notificationsPermisionRequest();
           }
         })
@@ -70,10 +66,7 @@ export default {
     saveToken(token) {
       console.log('tokens', token);
       window.axios
-        .post(
-          'https://us-central1-cropchien.cloudfunctions.net/GeneralSubscription',
-          { token },
-        )
+        .post('https://us-central1-cropchien.cloudfunctions.net/GeneralSubscription', { token })
         .then((response) => {
           window.localStorage.setItem('messagingToken', token);
           console.log(response);

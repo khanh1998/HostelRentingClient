@@ -17,12 +17,7 @@ Vue.use(VueGoogleMaps, {
   },
 });
 
-const routes = [
-  ...RenterRoutes,
-  ...VendorRoutes,
-  ...AdminRoutes,
-  ...LoginRoutes,
-];
+const routes = [...RenterRoutes, ...VendorRoutes, ...AdminRoutes, ...LoginRoutes];
 
 const router = new VueRouter({
   mode: 'history',

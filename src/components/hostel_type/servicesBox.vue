@@ -7,9 +7,7 @@
         }}</v-list-item-title>
         <v-list-item-subtitle>
           <div v-if="item.servicePrice > 0">
-            <span class="primary--text font-weight-bold">{{
-              item.servicePrice
-            }}</span>
+            <span class="primary--text font-weight-bold">{{ item.servicePrice }}</span>
             {{ item.priceUnit }}/{{ item.userUnit }}
           </div>
           <div v-else>

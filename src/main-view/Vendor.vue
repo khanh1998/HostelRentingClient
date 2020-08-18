@@ -11,9 +11,7 @@
     </v-navigation-drawer>
 
     <v-app-bar :clipped-left="primaryDrawer.clipped" app>
-      <v-app-bar-nav-icon
-        @click.stop="primaryDrawer.model = !primaryDrawer.model"
-      >
+      <v-app-bar-nav-icon @click.stop="primaryDrawer.model = !primaryDrawer.model">
       </v-app-bar-nav-icon>
       <v-toolbar-title>TD Hostel</v-toolbar-title>
       <v-spacer></v-spacer>

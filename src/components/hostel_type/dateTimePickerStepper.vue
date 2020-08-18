@@ -7,13 +7,7 @@
       <div v-if="stepper.step == 1">
         <v-card color="white" class="pa-1" height="300px" width="300">
           <v-card-title class="grey--text">Chọn ngày</v-card-title>
-          <v-chip-group
-            mandatory
-            light
-            v-model="pickedDate"
-            center-active
-            show-arrows
-          >
+          <v-chip-group mandatory light v-model="pickedDate" center-active show-arrows>
             <v-chip
               light
               v-for="i in 7"
@@ -26,10 +20,7 @@
               link
               @click="getTimesForDate(i - 1)"
             >
-              <v-sheet
-                class="d-flex flex-column justify-center align-center pa-1 flex-wrap"
-                light
-              >
+              <v-sheet class="d-flex flex-column justify-center align-center pa-1 flex-wrap" light>
                 <p class="ma-0">{{ daysOfWeek[dates[i - 1].getDay()] }}</p>
                 <p class="ma-0 font-weight-bold">
                   {{ dates[i - 1].getDate() }}
@@ -46,13 +37,7 @@
       <div v-if="stepper.step == 2">
         <v-card class="mb-1 pa-1" color="white" width="300" elevation="0">
           <v-card-title class="grey--text">Chọn giờ</v-card-title>
-          <v-chip-group
-            v-model="selectedTime"
-            light
-            column
-            center-active
-            show-arrows
-          >
+          <v-chip-group v-model="selectedTime" light column center-active show-arrows>
             <v-chip
               light
               v-for="item in listHoursToChoice"
@@ -70,9 +55,7 @@
           <v-card-actions>
             <v-btn color="amber" @click="$emit('cancel')">Hủy</v-btn>
             <v-btn color="primary" @click="stepper.step -= 1">Quay lại</v-btn>
-            <v-btn v-if="pickedTime" color="green" @click="stepper.step += 1"
-              >Tiếp tục</v-btn
-            >
+            <v-btn v-if="pickedTime" color="green" @click="stepper.step += 1">Tiếp tục</v-btn>
           </v-card-actions>
         </v-card>
       </div>
@@ -94,9 +77,7 @@
           <v-card-actions>
             <v-btn color="amber" @click="$emit('cancel')">Hủy</v-btn>
             <v-btn color="primary" @click="stepper.step -= 1">Quay lại</v-btn>
-            <v-btn color="green" @click="$emit('ok', pickDateAndTime())"
-              >Đồng ý</v-btn
-            >
+            <v-btn color="green" @click="$emit('ok', pickDateAndTime())">Đồng ý</v-btn>
           </v-card-actions>
         </v-card>
       </div>
@@ -120,24 +101,8 @@ export default {
     stepper: {
       step: 1,
     },
-    daysOfWeekEn: [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ],
-    daysOfWeek: [
-      'Chủ nhật',
-      'Thứ hai',
-      'Thứ ba',
-      'Thứ tư',
-      'Thứ năm',
-      'Thứ sáu',
-      'Thứ bảy',
-    ],
+    daysOfWeekEn: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    daysOfWeek: ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'],
     dates: [],
     timesForDate: null,
     pickedDate: 0,
@@ -195,9 +160,7 @@ export default {
       return date;
     },
     getTimeString(date) {
-      return `${date.getHours()}:${date.getMinutes()}${
-        date.getMinutes() < 10 ? '0' : ''
-      }`;
+      return `${date.getHours()}:${date.getMinutes()}${date.getMinutes() < 10 ? '0' : ''}`;
     },
     makeListTimes(schedule) {
       // schedule contains startTime and endTime Date object
@@ -229,9 +192,7 @@ export default {
     times() {
       const arr = [];
       this.daysOfWeek.forEach((day) => {
-        let result = this.rawSchedule.filter(
-          (item) => item.dayOfWeek === day.toLowerCase(),
-        );
+        let result = this.rawSchedule.filter((item) => item.dayOfWeek === day.toLowerCase());
         result = result.map((item) => this.createScheduleObject(item));
         arr.push(result);
       });

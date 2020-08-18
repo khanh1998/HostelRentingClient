@@ -117,9 +117,7 @@ const actions = {
         let types = [];
         await Promise.all(
           groupIds.map(async (groupId) => {
-            const res = await window.axios.get(
-              `/api/v1/groups/${groupId}/types`,
-            );
+            const res = await window.axios.get(`/api/v1/groups/${groupId}/types`);
             types = [...types, ...res.data.data];
             const group = getters.findGroupById(groupId);
             group.types = res.data.data;

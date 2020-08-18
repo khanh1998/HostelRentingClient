@@ -35,17 +35,7 @@ const myState = {
     },
     area: {
       select: '20 m2',
-      items: [
-        '10 m2',
-        '15 m2',
-        '20 m2',
-        '25 m2',
-        '30 m2',
-        '40 m2',
-        '50 m2',
-        '70 m2',
-        '100 m2',
-      ],
+      items: ['10 m2', '15 m2', '20 m2', '25 m2', '30 m2', '40 m2', '50 m2', '70 m2', '100 m2'],
     },
   },
   results: {
@@ -99,18 +89,14 @@ const mutations = {
 };
 const getters = {
   getHostelGroupById: (state) => (id) => {
-    const result = state.results.data.groups.filter(
-      (group) => group.groupId === Number(id),
-    );
+    const result = state.results.data.groups.filter((group) => group.groupId === Number(id));
     if (result.length > 0) {
       return result[0];
     }
     return null;
   },
   getHostelTypeById: (state) => (id) => {
-    const result = state.results.data.types.filter(
-      (type) => type.typeId === Number(id),
-    );
+    const result = state.results.data.types.filter((type) => type.typeId === Number(id));
     if (result.length > 0) {
       return result[0];
     }
@@ -148,9 +134,7 @@ const actions = {
       }
       return '';
     });
-    queryString = `?${queryString.join('')}size=${params.size}&page=${
-      params.page
-    }`;
+    queryString = `?${queryString.join('')}size=${params.size}&page=${params.page}`;
     const res = await window.axios.get(`/api/v1/types${queryString}`);
     if (res.status >= 200 && res.status <= 299) {
       commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);

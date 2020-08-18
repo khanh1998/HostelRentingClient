@@ -10,18 +10,14 @@
       hoverable
     >
       <template v-slot:prepend="{ item, open }">
-        <v-icon v-if="!item.icon">{{
-          open ? 'mdi-folder-open' : 'fas fa-map-marker-alt'
-        }}</v-icon>
+        <v-icon v-if="!item.icon">{{ open ? 'mdi-folder-open' : 'fas fa-map-marker-alt' }}</v-icon>
         <v-icon v-else>{{ treeview.icons[item.icon] }}</v-icon>
       </template>
       <template v-slot:append="{ item, leaf }">
         <div class="blue--text font-weight-bold" v-if="leaf">
           {{ item.distance }}
         </div>
-        <div v-else class="green--text font-weight-bold">
-          ({{ item.children.length }})
-        </div>
+        <div v-else class="green--text font-weight-bold">({{ item.children.length }})</div>
       </template>
     </v-treeview>
   </div>

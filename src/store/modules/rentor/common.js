@@ -16,13 +16,10 @@ const myState = () => ({
 });
 const getters = {
   getCategoryId: (state) => (id) => {
-    const result = state.categories.data.find(
-      (category) => category.categoryId === Number(id),
-    );
+    const result = state.categories.data.find((category) => category.categoryId === Number(id));
     return result;
   },
-  getWardById: (state) => (id) =>
-    state.wards.data.find((ward) => ward.wardId === Number(id)),
+  getWardById: (state) => (id) => state.wards.data.find((ward) => ward.wardId === Number(id)),
   // eslint-disable-next-line arrow-body-style
   getDistrictByWardId: (state) => (id) => {
     // eslint-disable-next-line arrow-body-style
@@ -34,9 +31,7 @@ const getters = {
   getProvinceByDistrictId: (state) => (id) => {
     // eslint-disable-next-line arrow-body-style
     return state.provinces.data.find((province) => {
-      return province.districts.find(
-        (district) => district.districtId === Number(id),
-      );
+      return province.districts.find((district) => district.districtId === Number(id));
     });
   },
 };

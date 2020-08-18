@@ -40,27 +40,21 @@ const myState = () => ({
 });
 const getters = {
   getHostelGroupById: (state) => (id) => {
-    const result = state.hostelGroups.data.filter(
-      (group) => group.groupId === id,
-    );
+    const result = state.hostelGroups.data.filter((group) => group.groupId === id);
     if (result.length > 0) {
       return result[0];
     }
     return null;
   },
   getHostelTypeById: (state) => (id) => {
-    const result = state.hostelTypes.data.filter(
-      (type) => type.typeId === Number(id),
-    );
+    const result = state.hostelTypes.data.filter((type) => type.typeId === Number(id));
     if (result.length > 0) {
       return result[0];
     }
     return null;
   },
   getTopViewHostelGroupById: (state) => (id) => {
-    const result = state.topViewHostelGroup.data.filter(
-      (group) => group.groupId === id,
-    );
+    const result = state.topViewHostelGroup.data.filter((group) => group.groupId === id);
     if (result.length > 0) {
       return result[0];
     }
@@ -191,9 +185,7 @@ const actions = {
     // params = { size }
     try {
       commit(mutationTypes.GET_TOP_VIEW_REQUEST);
-      const response = await window.axios.get(
-        `/api/v1/types?sortBy=view&size=${params.size}`,
-      );
+      const response = await window.axios.get(`/api/v1/types?sortBy=view&size=${params.size}`);
       if (response.status >= 200 && response.status <= 299) {
         commit(mutationTypes.GET_TOP_VIEW_SUCCESS, response.data.data);
       }
