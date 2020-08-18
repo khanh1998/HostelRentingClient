@@ -82,11 +82,7 @@
           </v-row>
         </v-col>
 
-        <v-col
-          cols="1"
-          md="5"
-          class="ml-auto d-flex justify-end items-center align-center pr-5"
-        >
+        <v-col cols="1" md="5" class="ml-auto d-flex justify-end items-center align-center pr-5">
           <v-btn
             color="#2C92D5"
             light
@@ -107,7 +103,8 @@
             dark
             class="hidden-xs-only"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
-          >Lịch hẹn của bạn</v-btn>
+            >Lịch hẹn của bạn</v-btn
+          >
           <v-btn
             to="/vendor"
             depressed
@@ -154,6 +151,12 @@
                 </v-list-item-icon>
                 <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
               </v-list-item>
+              <v-list-item to="/discovery">
+                <v-list-item-icon>
+                  <v-icon>explore</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Khám phá</v-list-item-title>
+              </v-list-item>
             </v-list>
             <v-list v-if="isLoggedIn">
               <v-list-item to="#">
@@ -163,7 +166,8 @@
                 <v-list-item-title>Hồ sơ</v-list-item-title>
               </v-list-item>
               <v-list-item
-                to="#" class="hidden-sm-and-up"
+                to="#"
+                class="hidden-sm-and-up"
                 v-if="user.role.roleName === 'Người thuê'"
               >
                 <v-list-item-icon>
@@ -196,6 +200,12 @@
                   <v-icon>fas fa-qrcode</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Quét mã QR</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="/discovery">
+                <v-list-item-icon>
+                  <v-icon>explore</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Khám phá</v-list-item-title>
               </v-list-item>
               <v-list-item @click="logout">
                 <v-list-item-icon>
