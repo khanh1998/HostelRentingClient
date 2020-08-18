@@ -8,15 +8,11 @@
       v-on="changeToString(item.bookingId)"
     >
       <div>
-        <qrcode-vue
-          :value = qrvalue
-          :size="200"
-          level="H"
-        ></qrcode-vue>
+        <qrcode-vue :value="qrvalue" :size="200" level="H"></qrcode-vue>
       </div>
       <div>
         <p>test value in qrcode</p>
-        <h1>{{qrvalue}}</h1>
+        <h1>{{ qrvalue }}</h1>
       </div>
     </v-col>
   </v-row>

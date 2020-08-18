@@ -14,9 +14,7 @@
         <span class="text-caption">{{ type.view }} lượt xem</span>
       </div>
       <div class="arrow-price">
-        <span class="transition-swing text-caption">{{
-          type.category.categoryName
-        }}</span>
+        <span class="transition-swing text-caption">{{ type.category.categoryName }}</span>
       </div>
     </v-img>
     <v-img style="height: 180px;" src="@/assets/image-error.png" v-else>
@@ -29,9 +27,7 @@
         <span class="text-caption">{{ type.view }} lượt xem</span>
       </div>
       <div class="arrow-price">
-        <span class="transition-swing text-caption">{{
-          type.category.categoryName
-        }}</span>
+        <span class="transition-swing text-caption">{{ type.category.categoryName }}</span>
       </div>
     </v-img>
     <v-divider class="mx-4" />
@@ -61,8 +57,7 @@
             max-height="20px"
           />
           <span class="item-text" v-if="!isLoadingProvinces">
-            {{ group.street }}, {{ ward.wardName }},
-            {{ district.districtName }},
+            {{ group.street }}, {{ ward.wardName }}, {{ district.districtName }},
             {{ province.provinceName }}
           </span>
         </div>
@@ -101,7 +96,9 @@
         </div>
         <v-card-actions class="px-0 mt-3" md="auto">
           <!-- eslint-disable -->
-          <v-btn color="#484848" class="btnDetail pl-3 pr-3" :to="'/detail/' + type.typeId">CHI TIẾT</v-btn>
+          <v-btn color="#484848" class="btnDetail pl-3 pr-3" :to="'/detail/' + type.typeId"
+            >CHI TIẾT</v-btn
+          >
         </v-card-actions>
       </v-col>
     </v-row>
@@ -136,9 +133,7 @@ export default {
     },
     province() {
       const { districtId } = this.district;
-      return this.$store.getters['renter/common/getProvinceByDistrictId'](
-        districtId,
-      );
+      return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
     },
   },
   methods: {
@@ -171,11 +166,7 @@ export default {
 }
 .arrow-price {
   background-image: linear-gradient(to right, rgba(216, 36, 96, 0.6), #d82460);
-  background-image: linear-gradient(
-    to right,
-    rgba(52, 203, 247, 0.71),
-    #1c63b8
-  );
+  background-image: linear-gradient(to right, rgba(52, 203, 247, 0.71), #1c63b8);
   color: #fff;
   padding: 4px 10px;
   position: absolute;

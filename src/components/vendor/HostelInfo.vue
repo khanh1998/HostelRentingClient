@@ -1,15 +1,8 @@
 <template>
   <div class="d-flex flex-column justify-center align-start">
-    <v-card
-      width="100%"
-      class="d-flex flex-row justify-center align-center pa-2"
-    >
+    <v-card width="100%" class="d-flex flex-row justify-center align-center pa-2">
       <v-badge color="red" content="6" bordered overlap class="mr-6">
-        <v-img
-          :src="require('@/assets/notification.svg')"
-          height="30"
-          width="30"
-        ></v-img>
+        <v-img :src="require('@/assets/notification.svg')" height="30" width="30"></v-img>
       </v-badge>
       <div class="d-flex flex-nowrap align-center">
         <v-avatar>
@@ -19,10 +12,7 @@
       </div>
     </v-card>
     <v-card class="mt-3">
-      <v-img
-        height="250"
-        src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-      ></v-img>
+      <v-img height="250" src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
       <v-card-title class="text-color">Phòng trọ lalahome</v-card-title>
 
       <v-card-text>
@@ -38,16 +28,10 @@
         <div class="text-color my-4">1.900.000 Đ</div>
       </v-card-text>
       <v-col cols="12" sm="6" md="10" class="ml-6">
-        <v-select
-          :items="chooses"
-          placeholder="Phòng còn trống"
-          solo
-        ></v-select>
+        <v-select :items="chooses" placeholder="Phòng còn trống" solo></v-select>
       </v-col>
       <v-card-actions>
-        <v-btn color="deep-purple lighten-2" text @click="reserve"
-          >Chi tiết</v-btn
-        >
+        <v-btn color="deep-purple lighten-2" text @click="reserve">Chi tiết</v-btn>
       </v-card-actions>
     </v-card>
   </div>

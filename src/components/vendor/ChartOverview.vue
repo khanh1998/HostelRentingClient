@@ -3,21 +3,10 @@
     <div style="font-size: 20px; fontweight: bold;" class="pt-3 pl-2 pb-6">
       Thống kê: lượt xem phòng
     </div>
-    <div
-      id="chart"
-      class="d-flex justify-center pt-10"
-      style="max-height: 500px;"
-    >
-      <apexcharts
-        type="donut"
-        width="520"
-        :options="chartOptions"
-        :series="series"
-      ></apexcharts>
+    <div id="chart" class="d-flex justify-center pt-10" style="max-height: 500px;">
+      <apexcharts type="donut" width="520" :options="chartOptions" :series="series"></apexcharts>
     </div>
-    <v-card-text style="color: #818286;" class="d-flex justify-end"
-      >Xem thêm >></v-card-text
-    >
+    <v-card-text style="color: #818286;" class="d-flex justify-end">Xem thêm >></v-card-text>
   </v-card>
 </template>
 

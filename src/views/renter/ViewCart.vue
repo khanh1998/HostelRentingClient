@@ -7,11 +7,7 @@
       <v-row justify="center">
         <v-col cols="0" md="4"></v-col>
         <v-col cols="10" md="8">
-          <v-btn-toggle
-            mandatory
-            tile
-            v-model="buttonGroup.selectedBookingStatus"
-          >
+          <v-btn-toggle mandatory tile v-model="buttonGroup.selectedBookingStatus">
             <v-btn outlined color="grey">
               SẮP TỚI
               <span class="amber--text">({{ counter.incomming }})</span>

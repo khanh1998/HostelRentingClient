@@ -14,7 +14,7 @@
       <v-divider />
       <v-slide-group v-if="bookings.length > 0">
         <v-slide-item
-          v-for="booking in bookings"
+          v-for="booking in incommingBookings"
           :key="booking.bookingId"
           v-slot:default="{ active, toggle }"
         >
@@ -141,6 +141,9 @@ export default {
   computed: {
     bookings() {
       return this.$store.state.user.bookings.data;
+    },
+    incommingBookings() {
+      return this.bookings.filter((booking) => booking.status === 'INCOMING');
     },
     isLoadingBooking() {
       return this.$store.state.user.bookings.isLoading;

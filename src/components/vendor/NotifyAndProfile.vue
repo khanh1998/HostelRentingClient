@@ -147,15 +147,17 @@ export default {
       const noti = {
         avatar: payload.notification.icon,
         message: payload.notification.body,
-        title: payload.data.renterName,
+        title: payload.data ? payload.data.renterName : 'Bạn có thông báo mới.',
       };
       this.notifications.unshift(noti);
     },
     receivePayload(payload) {
       console.log(this);
       console.log(payload);
-      this.getNewCommingBooking(payload.data.bookingId);
-      this.addNewNotificaton(payload);
+      if (payload.data) {
+        this.getNewCommingBooking(payload.data.bookingId);
+        this.addNewNotificaton(payload);
+      }
     },
     changePage() {},
   },

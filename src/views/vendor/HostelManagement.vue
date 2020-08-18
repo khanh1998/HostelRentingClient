@@ -8,11 +8,7 @@
         absolute
         width="350"
       >
-        <HostelGroup
-          :groups="groups"
-          :groupId="groupId"
-          @getIdSelected="groupId = $event"
-        />
+        <HostelGroup :groups="groups" :groupId="groupId" @getIdSelected="groupId = $event" />
       </v-navigation-drawer>
       <v-card style="min-height: 836px; max-height: 836px;" class="ml-15">
         <HostelType
@@ -56,12 +52,8 @@ export default {
       return this.$store.state.vendor.group.groups.data;
     },
     isLoadingGroup() {
-<<<<<<< HEAD
-      return (this.$store.state.vendor.group.groups.isLoading ||
-=======
       return (
         this.$store.state.vendor.group.groups.isLoading ||
->>>>>>> discovery
         this.$store.state.vendor.group.types.isLoading ||
         this.$store.state.vendor.group.rooms.isLoading
       );

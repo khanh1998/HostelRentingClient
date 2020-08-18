@@ -16,6 +16,7 @@
       style="max-height: 300px; min-height: 300px;"
       class="overflow-y-auto"
       id="chatbox"
+      ref="chatbox"
     >
       <v-overlay :value="dateTimeOverlay.show" absolute opacity="0.8">
         <dateTimePickerStepper
@@ -69,12 +70,7 @@
             />
             <p>phòng/tháng</p>
             <div class="d-flex align-center justify-space-around pb-1">
-              <v-btn
-                color="green"
-                class="mr-1"
-                depressed
-                @click="bargainOverlay.step += 1"
-              >
+              <v-btn color="green" class="mr-1" depressed @click="bargainOverlay.step += 1">
                 Tiếp tục</v-btn
               >
               <v-btn
@@ -102,13 +98,7 @@
           </v-card-text>
           <v-card-actions>
             <div class="d-flex align-center justify-space-around pb-1">
-              <v-btn
-                color="green"
-                class="mr-1"
-                depressed
-                @click="sendMessage('bargain')"
-                >Có</v-btn
-              >
+              <v-btn color="green" class="mr-1" depressed @click="sendMessage('bargain')">Có</v-btn>
               <v-btn
                 color="red"
                 class="ml-1"
@@ -124,10 +114,7 @@
         </v-card>
       </v-overlay>
       <v-list v-scroll.self="myOnScroll" align="center" justify="center">
-        <v-list-item
-          v-for="item in filteredMessage"
-          v-bind:key="item.createdAt"
-        >
+        <v-list-item v-for="item in filteredMessage" v-bind:key="item.createdAt">
           <v-list-item-content>
             <div v-if="item.sender === 'renter'" class="d-flex justify-end">
               <p
@@ -138,23 +125,19 @@
               >
                 <v-icon color="amber">attach_money</v-icon>
                 <span class="font-weight-bold"
-                  >Bạn trả giá : {{ item.bargain.newPrice }}
-                  {{ info.priceUnit }}</span
+                  >Bạn trả giá : {{ item.bargain.newPrice }} {{ info.priceUnit }}</span
                 >
                 <span v-if="item.bargain.status === 'wait'">
                   <v-divider class="my-1"></v-divider>
-                  <v-icon>fas fa-spinner fa-spin</v-icon>Đang chờ phản hồi của
-                  chủ trọ
+                  <v-icon>fas fa-spinner fa-spin</v-icon>Đang chờ phản hồi của chủ trọ
                 </span>
                 <span v-if="item.bargain.status === 'deny'">
                   <v-divider class="my-1"></v-divider>
-                  <v-icon color="red">thumb_down</v-icon>Chủ trọ không đồng ý
-                  với mức giá của bạn
+                  <v-icon color="red">thumb_down</v-icon>Chủ trọ không đồng ý với mức giá của bạn
                 </span>
                 <span v-if="item.bargain.status === 'accept'">
                   <v-divider class="my-1"></v-divider>
-                  <v-icon color="green">thumb_up</v-icon>Chủ trọ đã đồng ý với
-                  mức giá của bạn
+                  <v-icon color="green">thumb_up</v-icon>Chủ trọ đã đồng ý với mức giá của bạn
                 </span>
                 <span v-if="item.bargain.status === 'cancel'">
                   <v-divider class="my-1"></v-divider>
@@ -162,11 +145,7 @@
                 </span>
                 <span v-if="item.bargain.status === 'wait'">
                   <v-divider class="my-2" />
-                  <v-btn
-                    class="red lighten-3"
-                    dark
-                    depressed
-                    @click="showBargainCancel(item.id)"
+                  <v-btn class="red lighten-3" dark depressed @click="showBargainCancel(item.id)"
                     >Hủy trả giá này</v-btn
                   >
                 </span>
@@ -179,9 +158,7 @@
                 class="blue lighten-5 pa-2 rounded max-w-3/4"
               >
                 <v-icon color="pink">event</v-icon>
-                <span class="font-weight-bold"
-                  >Bạn đã tạo một lịch hẹn mới</span
-                >
+                <span class="font-weight-bold">Bạn đã tạo một lịch hẹn mới</span>
                 <v-divider class="my-2" />Ngày:
                 <span class="font-weight-bold">{{ item.book.date }}</span>
                 <br />Giờ:
@@ -380,9 +357,7 @@ export default {
     async createDoc() {
       const { userId } = this.userState.data;
       const { vendorId, typeId, groupId } = this.id;
-      const docRef = chatCollectionRef.doc(
-        `renter-${userId}:vendor-${vendorId}:type-${typeId}`,
-      );
+      const docRef = chatCollectionRef.doc(`renter-${userId}:vendor-${vendorId}:type-${typeId}`);
       await docRef.get().then((doc) => {
         if (!doc.exists) {
           doc.ref.set({
@@ -405,30 +380,30 @@ export default {
       // this.createDoc();
       const { userId } = this.userState.data;
       const { vendorId, typeId } = this.id;
-      const docRef = chatCollectionRef.doc(
-        `renter-${userId}:vendor-${vendorId}:type-${typeId}`,
-      );
+      const docRef = chatCollectionRef.doc(`renter-${userId}:vendor-${vendorId}:type-${typeId}`);
       this.messCollectionRef = docRef.collection('messages');
-      this.messCollectionRef
-        .orderBy('createdAt', 'asc')
-        .onSnapshot((querySnapshot) => {
-          const items = [];
-          this.dealIds = [];
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            items.push({ ...data, id: doc.id });
-            if (data.bargain && data.bargain.dealId) {
-              this.dealIds.push(data.bargain.dealId);
-            }
-          });
-          this.items = items;
-          if (this.dealIds.length > 0) {
-            this.getDeals();
+      this.messCollectionRef.orderBy('createdAt', 'asc').onSnapshot((querySnapshot) => {
+        const items = [];
+        this.dealIds = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          items.push({ ...data, id: doc.id });
+          if (data.bargain && data.bargain.dealId) {
+            this.dealIds.push(data.bargain.dealId);
           }
         });
+        this.items = items;
+        this.$nextTick(() => this.scrollToBottom());
+        if (this.dealIds.length > 0) {
+          this.getDeals();
+        }
+      });
     },
     scrollToBottom() {
-      const chatbox = this.$el.querySelector('#chatbox');
+      console.log(this.$refs);
+      // eslint-disable-next-line
+      const chatbox = this.$refs.chatbox;
+      console.log(chatbox);
       chatbox.scrollTop = chatbox.scrollHeight;
     },
     receiveDateTime(e) {
@@ -511,12 +486,12 @@ export default {
     dealIds: [],
   }),
   created() {
-    this.getDeals();
-    this.getBookings();
-    this.fetchMessages();
-    // this.$nextTick(() => this.scrollToBottom());
+    Promise.all([this.getDeals, this.getBookings]).then(() => {
+      this.fetchMessages();
+    });
     this.bargainOverlay.price = this.info.price;
   },
+  mounted() {},
   computed: {
     isLoading() {
       const loadingUser = this.userState.isLoading;
@@ -573,10 +548,7 @@ export default {
     },
     hasUnreplyBargain() {
       return this.items.some(
-        (item) =>
-          item.sender === 'renter' &&
-          item.bargain &&
-          item.bargain.status === 'wait',
+        (item) => item.sender === 'renter' && item.bargain && item.bargain.status === 'wait',
       );
     },
   },

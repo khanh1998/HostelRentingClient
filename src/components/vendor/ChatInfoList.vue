@@ -5,21 +5,13 @@
         <v-text-field label="Tìm kiếm" solo></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" md="5">
-        <v-select
-          :items="combobox.chooses"
-          v-model="combobox.select"
-          solo
-        ></v-select>
+        <v-select :items="combobox.chooses" v-model="combobox.select" solo></v-select>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="12">
         <v-list :dense="dense" :two-line="twoLine" :nav="nav" :avatar="avatar">
-          <v-container
-            id="scroll-target"
-            style="max-height: 700px;"
-            class="overflow-y-auto"
-          >
+          <v-container id="scroll-target" style="max-height: 700px;" class="overflow-y-auto">
             <v-row
               v-scroll:#scroll-target="onScroll"
               align="center"
@@ -27,11 +19,7 @@
               style="height: 670px rounded-l;"
             >
               <v-list-item-group v-model="item" color="primary">
-                <v-list-item
-                  v-for="(item, i) in items"
-                  :key="i"
-                  class="mb-2 pt-2"
-                >
+                <v-list-item v-for="(item, i) in items" :key="i" class="mb-2 pt-2">
                   <!-- <div class="d-flex mb-2 pt-2"> -->
                   <v-list-item-avatar>
                     <v-img :src="item.avatar"></v-img>
@@ -40,9 +28,7 @@
                     <v-list-item-title style="fontsize: 16px;" class="py-1">
                       {{ item.title }}</v-list-item-title
                     >
-                    <v-list-item-subtitle
-                      v-html="item.subtitle"
-                    ></v-list-item-subtitle>
+                    <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
                   </v-list-item-content>
                   <div class="mt-3">
                     <span v-html="item.price"></span><br />
@@ -67,8 +53,7 @@ export default {
         {
           avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
           title: 'Bùi Quốc Khánh',
-          subtitle:
-            "<span class='green--text'>Phòng gác lửng, không máy lạnh</span>",
+          subtitle: "<span class='green--text'>Phòng gác lửng, không máy lạnh</span>",
           price: "<span class='red--text'>1.500.000 Đ</span>",
           preprice: '<s>1.900.000 Đ</s>',
         },
@@ -81,16 +66,14 @@ export default {
         {
           avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
           title: 'Võ Thị Kim Trang',
-          subtitle:
-            "<span class='green--text'>Phòng gác lửng, không máy lạnh</span>",
+          subtitle: "<span class='green--text'>Phòng gác lửng, không máy lạnh</span>",
           price: "<span class='red--text'>1.500.000 Đ</span>",
           preprice: '<s>1.900.000 Đ</s>',
         },
         {
           avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
           title: 'Võ Thị Kim Thùy',
-          subtitle:
-            "<span class='green--text'>Phòng gác lửng, không máy lạnh</span>",
+          subtitle: "<span class='green--text'>Phòng gác lửng, không máy lạnh</span>",
           price: "<span class='red--text'>1.500.000 Đ</span>",
           preprice: '<s>1.900.000 Đ</s>',
         },
@@ -115,8 +98,7 @@ export default {
         {
           avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
           title: 'Lê Ngọc Ly',
-          subtitle:
-            "<span class='green--text'>Phòng gác lửng, không máy lạnh</span>",
+          subtitle: "<span class='green--text'>Phòng gác lửng, không máy lạnh</span>",
           price: "<span class='red--text'>1.500.000 Đ</span>",
           preprice: '<s>1.900.000 Đ</s>',
         },
@@ -179,10 +161,8 @@ export default {
   backface-visibility: hidden;
   -webkit-transform: rotate3d(0, 0, 0, 0);
   transform: rotate3d(0, 0, 0, 0);
-  -webkit-transition: background-color 100ms ease-out, margin 100ms ease-out,
-    height 100ms ease-out;
-  transition: background-color 100ms ease-out, margin 100ms ease-out,
-    height 100ms ease-out;
+  -webkit-transition: background-color 100ms ease-out, margin 100ms ease-out, height 100ms ease-out;
+  transition: background-color 100ms ease-out, margin 100ms ease-out, height 100ms ease-out;
   background-color: rgba(48, 121, 244, 0.1);
   margin: 5px 5px 5px 0;
   border-radius: 20px;

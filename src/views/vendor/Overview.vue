@@ -26,28 +26,12 @@
         </v-row>
       </v-col>
       <v-col cols="4">
-<<<<<<< HEAD
-        <div style="width: 95%">
-          <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
-=======
         <div style="width: 95%;">
-          <ChatList
-            :vendorId="user.userId"
-            v-on:clickChat="showChatBox($event)"
-          />
->>>>>>> discovery
+          <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
         </div>
       </v-col>
     </v-row>
-    <v-card
-      style="
-        position: absolute;
-        right: 20px;
-        bottom: 10px;
-        height: auto;
-        width: 350px;
-      "
-    >
+    <v-card style="position: absolute; right: 20px; bottom: 10px; height: auto; width: 350px;">
       <Chatbox
         v-if="this.docs.doc1"
         :doc="this.docs.doc1"
@@ -55,15 +39,7 @@
         v-on:closeChat="closeChatBox($event)"
       />
     </v-card>
-    <v-card
-      style="
-        position: absolute;
-        right: 370px;
-        bottom: 10px;
-        height: auto;
-        width: 350px;
-      "
-    >
+    <v-card style="position: absolute; right: 370px; bottom: 10px; height: auto; width: 350px;">
       <Chatbox
         v-if="this.docs.doc2"
         :doc="this.docs.doc2"
@@ -71,15 +47,7 @@
         v-on:closeChat="closeChatBox($event)"
       />
     </v-card>
-    <v-card
-      style="
-        position: absolute;
-        right: 720px;
-        bottom: 10px;
-        height: auto;
-        width: 350px;
-      "
-    >
+    <v-card style="position: absolute; right: 720px; bottom: 10px; height: auto; width: 350px;">
       <Chatbox
         v-if="this.docs.doc3"
         :doc="this.docs.doc3"
@@ -136,11 +104,7 @@ export default {
     }),
     showChatBox(event) {
       // event is index of chatbox
-<<<<<<< HEAD
-      // eslint-disable-next-line no-restricted-syntax
-=======
       // eslint-disable-next-line
->>>>>>> discovery
       for (const [key, value] of Object.entries(this.docs)) {
         console.log(key);
         if (value === event) {

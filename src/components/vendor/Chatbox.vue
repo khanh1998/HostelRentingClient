@@ -2,9 +2,7 @@
   <div v-if="chatShow">
     <v-overlay v-model="dialogAccept" width="350" absolute>
       <v-card>
-        <v-card-title style="backgroundcolor: #98b7d7; color: white;"
-          >Xác nhận</v-card-title
-        >
+        <v-card-title style="backgroundcolor: #98b7d7; color: white;">Xác nhận</v-card-title>
         <v-card-text class="text-center mt-3" style="fontsize: 20px;">
           Bạn sẽ chấp nhận trả giá này ?</v-card-text
         >
@@ -18,9 +16,7 @@
     </v-overlay>
     <v-overlay v-model="dialogDeny" width="350" absolute>
       <v-card>
-        <v-card-title style="backgroundcolor: #98b7d7; color: white;"
-          >Xác nhận</v-card-title
-        >
+        <v-card-title style="backgroundcolor: #98b7d7; color: white;">Xác nhận</v-card-title>
         <v-card-text class="text-center mt-3" style="fontsize: 20px;">
           Bạn sẽ từ chối trả giá này ?</v-card-text
         >
@@ -47,11 +43,7 @@
         <v-icon>clear</v-icon>
       </v-btn>
     </v-card>
-    <div
-      class="chatbox rounded-l overflow-y-auto chatbox"
-      style="max-height: 350px;"
-      id="chatbox"
-    >
+    <div class="chatbox rounded-l overflow-y-auto chatbox" style="max-height: 350px;" id="chatbox">
       <v-list
         v-scroll.self="myOnScroll"
         align="center"
@@ -75,11 +67,7 @@
         <v-list-item v-for="(item, i) in filteredMessage" v-bind:key="i">
           <v-list-item-content>
             <div v-if="item.sender === 'renter'" class="d-flex justify-start">
-              <div
-                v-if="item.bargain"
-                class="blue lighten-5 border-deal pa-1"
-                style="width: 75%;"
-              >
+              <div v-if="item.bargain" class="blue lighten-5 border-deal pa-1" style="width: 75%;">
                 <v-row>
                   <v-col cols="12">
                     <v-icon color="amber">attach_money</v-icon>
@@ -102,18 +90,13 @@
                     >
                     <br />
                     <span style="color: #98b7d7;">Trả giá: </span>
-                    <span class="font-weight-bold">
-                      {{ item.bargain.newPrice }} Triệu</span
-                    >
+                    <span class="font-weight-bold"> {{ item.bargain.newPrice }} Triệu</span>
                   </v-col>
                 </v-row>
                 <v-divider />
                 <v-row class="d-flex justify-center">
                   <v-col cols="12" class="d-flex justify-center">
-                    <div
-                      v-if="item.bargain.status === 'wait'"
-                      class="d-flex justify-space-around"
-                    >
+                    <div v-if="item.bargain.status === 'wait'" class="d-flex justify-space-around">
                       <v-btn
                         small
                         color="#F3F3F3"
@@ -283,9 +266,7 @@ export default {
     async acceptMessage() {
       const { renterId, vendorId, typeId } = this.doc.data();
       const lastedBargain = this.items.filter(
-        (item) => item.sender === 'renter' &&
-          item.bargain &&
-          item.bargain.status === 'wait',
+        (item) => item.sender === 'renter' && item.bargain && item.bargain.status === 'wait',
       )[0];
       console.log('lasted bargain', lastedBargain);
       console.log('lasted bargain price', lastedBargain.bargain.newPrice);

@@ -100,17 +100,9 @@
                       max-height="15"
                     />
                     <span class="item-text">
-                      <<<<<<< HEAD
-                      <!-- eslint-disable max-len -->
                       {{
                         type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
                       }}
-                      =======
-                      <!-- eslint-enable -->
-                      {{
-                        type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
-                      }}
-                      >>>>>>> discovery
                     </span>
                   </div>
                 </div>

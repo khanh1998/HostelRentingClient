@@ -24,18 +24,9 @@
 
       <div class="text-display mt-3 mb-3 ml-7">Danh mục</div>
 
-      <v-list-item
-        v-for="item in itemsplus"
-        :key="item.title"
-        link
-        :to="item.link"
-      >
+      <v-list-item v-for="item in itemsplus" :key="item.title" link :to="item.link">
         <v-list-item-icon class="ml-5">
-          <v-img
-            :src="require('@/assets/' + item.icon + '.png')"
-            max-height="30"
-            max-width="30"
-          />
+          <v-img :src="require('@/assets/' + item.icon + '.png')" max-height="30" max-width="30" />
         </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title
@@ -47,12 +38,7 @@
 
       <div class="text-display mt-3 mb-3 ml-7">Mở rộng</div>
 
-      <v-list-item
-        v-for="itemadd in itemadds"
-        :key="itemadd.title"
-        link
-        :to="itemadd.link"
-      >
+      <v-list-item v-for="itemadd in itemadds" :key="itemadd.title" link :to="itemadd.link">
         <v-list-item-icon class="ml-5">
           <v-img
             :src="require('@/assets/' + itemadd.icon + '.png')"
@@ -75,10 +61,7 @@
             <v-icon>mdi-logout-variant</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title
-              @click="logout"
-              class="item-text-display text-h6"
-            >
+            <v-list-item-title @click="logout" class="item-text-display text-h6">
               Đăng xuất
             </v-list-item-title>
           </v-list-item-content>
@@ -132,17 +115,13 @@ export default {
         .getToken()
         .then(async (token) => {
           if (token) {
-            const currentMessageToken = window.localStorage.getItem(
-              'messagingToken',
-            );
+            const currentMessageToken = window.localStorage.getItem('messagingToken');
             console.log('token will be updated', currentMessageToken !== token);
             if (currentMessageToken !== token) {
               await this.saveToken(token);
             }
           } else {
-            console.log(
-              'No Instance ID token available. Request permission to generate one.',
-            );
+            console.log('No Instance ID token available. Request permission to generate one.');
             this.notificationsPermisionRequest();
           }
         })

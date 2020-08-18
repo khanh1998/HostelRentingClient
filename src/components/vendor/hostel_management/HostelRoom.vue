@@ -30,16 +30,7 @@
           </v-card-title>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                dark
-                fab
-                small
-                text
-                class="mb-2"
-                v-bind="attrs"
-                v-on="on"
-                color="#EF7239"
-              >
+              <v-btn dark fab small text class="mb-2" v-bind="attrs" v-on="on" color="#EF7239">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </template>
@@ -52,34 +43,19 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.name"
-                        label="Dessert name"
-                      ></v-text-field>
+                      <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.calories"
-                        label="Calories"
-                      ></v-text-field>
+                      <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.fat"
-                        label="Fat (g)"
-                      ></v-text-field>
+                      <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.carbs"
-                        label="Carbs (g)"
-                      ></v-text-field>
+                      <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.protein"
-                        label="Protein (g)"
-                      ></v-text-field>
+                      <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -103,20 +79,14 @@
         </v-icon>
       </template>
       <template v-slot:expanded-item="{ headers, item }">
-        <td :colspan="headers.length">
-          More info about {{ item.typeName }}
-        </td> </template
+        <td :colspan="headers.length">More info about {{ item.typeName }}</td> </template
       >s
       <template v-slot:no-data>
         <v-btn color="primary" @click="initialize">Reset</v-btn>
       </template>
     </v-data-table>
     <div class="text-center pt-2">
-      <v-pagination
-        v-model="page"
-        :length="pageCount"
-        color="#6C98C6"
-      ></v-pagination>
+      <v-pagination v-model="page" :length="pageCount" color="#6C98C6"></v-pagination>
     </div>
   </div>
 </template>
@@ -165,9 +135,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ?
-        'Tạo mới phòng trọ' :
-        'Cập nhật thông tin phòng trọ';
+      return this.editedIndex === -1 ? 'Tạo mới phòng trọ' : 'Cập nhật thông tin phòng trọ';
     },
     // initialize() {
     //   return this.groups.forEach((element) => {

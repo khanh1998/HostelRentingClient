@@ -6,18 +6,12 @@
       </v-list-item-icon>
 
       <v-list-item-content>
-        <v-list-item-title style="fontsize: 22px; color: #6c98c6;"
-          >Khu trọ</v-list-item-title
-        >
+        <v-list-item-title style="fontsize: 22px; color: #6c98c6;">Khu trọ</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
     <v-divider></v-divider>
     <v-list dense nav class="py-0" two-line>
-      <v-container
-        id="scroll-target"
-        style="max-height: 745px:"
-        class="overflow-y-auto"
-      >
+      <v-container id="scroll-target" style="max-height: 745px:" class="overflow-y-auto">
         <v-row v-scroll:#scroll-target="onScroll" style="height: 100%;">
           <v-list-item-group v-model="item" color="primary">
             <v-list-item
@@ -32,9 +26,7 @@
                 <v-icon>mdi-home-variant</v-icon>
               </v-list-item-icon>
               <v-list-item-content class="py-1">
-                <v-list-item-subtitle
-                  style="fontsize: 16px; fontweight: bold; height: 30px;"
-                >
+                <v-list-item-subtitle style="fontsize: 16px; fontweight: bold; height: 30px;">
                   {{ item.groupName }}</v-list-item-subtitle
                 >
               </v-list-item-content>

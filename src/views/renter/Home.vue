@@ -6,12 +6,7 @@
     >
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-container
-      fluid
-      v-if="
-        !(isLoadingTopView || isLoadingTopSuggestion || isLoadingCategories)
-      "
-    >
+    <v-container fluid v-if="!(isLoadingTopView || isLoadingTopSuggestion || isLoadingCategories)">
       <v-row>
         <v-col cols="12">
           <Banner />
@@ -19,9 +14,7 @@
       </v-row>
       <v-row justify="center" class="content">
         <v-col cols="12" sm="12" md="10" lg="10" xl="10">
-          <div
-            class="d-flex flex-column justify-center align-center topview-lable"
-          >
+          <div class="d-flex flex-column justify-center align-center topview-lable">
             <div class="line-blue"></div>
             <p>Lượt Xem Nhiều Nhất</p>
           </div>
@@ -34,9 +27,7 @@
       </v-row>
       <v-row justify="center" class="content">
         <v-col cols="12" sm="12" md="10" lg="10" xl="10">
-          <div
-            class="d-flex flex-column justify-center align-center topview-lable"
-          >
+          <div class="d-flex flex-column justify-center align-center topview-lable">
             <div class="line-blue"></div>
             <p>Các Phòng Được Đề Xuất Tốt Nhất</p>
           </div>

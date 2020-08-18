@@ -71,36 +71,25 @@
         </template>
         <v-card>
           <v-card-title class="headline">Xác nhận đặt lịch</v-card-title>
-          <v-card-text
-            v-if="dateTimePicker.date != null && dateTimePicker.time != null"
-          >
+          <v-card-text v-if="dateTimePicker.date != null && dateTimePicker.time != null">
             Bạn muốn đặt lịch vào ngày
             <span>
-              {{ dateTimePicker.date.getDate() }}/
-              {{ dateTimePicker.date.getMonth() }}/
+              {{ dateTimePicker.date.getDate() }}/ {{ dateTimePicker.date.getMonth() }}/
               {{ dateTimePicker.date.getFullYear() }},
             </span>
             vào lúc {{ dateTimePicker.time }} tại nhà trọ {{ name }}
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="dialog.booking = false"
-              >Không</v-btn
-            >
+            <v-btn color="green darken-1" text @click="dialog.booking = false">Không</v-btn>
             <v-btn color="green darken-1" text @click="sendBooking">Có</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-snackbar
-        v-model="snackbar.display"
-        :bottom="snackbar.bottom"
-        :color="snackbar.color"
-      >
+      <v-snackbar v-model="snackbar.display" :bottom="snackbar.bottom" :color="snackbar.color">
         {{ snackbar.message }}
         <template v-slot:action="{ attrs }">
-          <v-btn text v-bind="attrs" @click="snackbar.display = false"
-            >Đóng</v-btn
-          >
+          <v-btn text v-bind="attrs" @click="snackbar.display = false">Đóng</v-btn>
         </template>
       </v-snackbar>
     </div>
@@ -165,10 +154,7 @@ export default {
       };
       const success = await this.createBooking(bookingObj);
       if (success) {
-        this.showSnackbar(
-          'success',
-          'Bạn đã đặt lịch hẹn xem phòng thành công!!!',
-        );
+        this.showSnackbar('success', 'Bạn đã đặt lịch hẹn xem phòng thành công!!!');
         sendBookingNotification(this.newlyCreated);
       } else {
         this.showSnackbar('red', 'Đặt lịch xem phòng thất bại');
@@ -197,11 +183,7 @@ export default {
     hasPendingBooking() {
       if (this.userState.data) {
         const renterId = this.userState.data.userId;
-        const res = this.findPendingBooking(
-          renterId,
-          this.vendorId,
-          this.typeId,
-        );
+        const res = this.findPendingBooking(renterId, this.vendorId, this.typeId);
         return res != null;
       }
       return false;
@@ -210,9 +192,7 @@ export default {
       return this.$store.state.user.user;
     },
     isVendor() {
-      return (
-        this.userState.data && this.userState.data.role.roleName === 'Chủ trọ'
-      );
+      return this.userState.data && this.userState.data.role.roleName === 'Chủ trọ';
     },
     loginRouteObject() {
       return {

@@ -438,9 +438,6 @@ export default {
           return {};
       }
     },
-    visibleSearchOptional() {
-      return this.visibleSearchOptional;
-    },
     moreProperties() {
       return this.showMore;
     },

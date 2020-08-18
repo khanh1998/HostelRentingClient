@@ -35,13 +35,9 @@ export default {
     },
     addMarker() {
       if (this.currentPlace) {
-<<<<<<< HEAD
-        alert(`lat:${this.currentPlace.geometry.location.lat()},lng:${this.currentPlace.geometry.location.lng()}`);
-=======
         alert(
           `lat:${this.currentPlace.geometry.location.lat()},lng:${this.currentPlace.geometry.location.lng()}`,
         );
->>>>>>> discovery
         const marker = {
           lat: this.currentPlace.geometry.location.lat(),
           lng: this.currentPlace.geometry.location.lng(),

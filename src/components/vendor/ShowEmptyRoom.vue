@@ -9,16 +9,12 @@
           <v-card-text>
             <p>
               Tổng số:
-              <span class="font-weight-bold">{{
-                groupStat[group.groupId].total
-              }}</span>
+              <span class="font-weight-bold">{{ groupStat[group.groupId].total }}</span>
               phòng
             </p>
             <p>
               Trống:
-              <span class="font-weight-bold">{{
-                groupStat[group.groupId].empty
-              }}</span>
+              <span class="font-weight-bold">{{ groupStat[group.groupId].empty }}</span>
               phòng
             </p>
             <p>
@@ -28,9 +24,7 @@
                   Number(
                     (
                       100 -
-                      (groupStat[group.groupId].empty /
-                        groupStat[group.groupId].total) *
-                        100
+                      (groupStat[group.groupId].empty / groupStat[group.groupId].total) * 100
                     ).toFixed(2),
                   )
                 }}
@@ -63,7 +57,8 @@ export default {
           const { types } = group;
           let total = 0;
           let empty = 0;
-          for (const type of types) {// eslint-disable-line
+          // eslint-disable-next-line
+          for (const type of types) {
             if (type.rooms) {
               total += type.rooms.length;
               empty += type.rooms.filter((room) => !room.available).length;
