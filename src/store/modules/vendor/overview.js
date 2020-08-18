@@ -9,7 +9,9 @@ const myState = () => ({
 
 const myGetters = {
   getUserById: (state) => (id) => {
-    const result = state.usersChatList.data.filter((user) => user.userId === Number(id));
+    const result = state.usersChatList.data.filter(
+      (user) => user.userId === Number(id),
+    );
     if (result.length > 0) {
       return result[0];
     }
@@ -58,7 +60,9 @@ const actions = {
     // ids is a list of user id
     try {
       commit(mutationTypes.GET_USERSCHATLIST_REQUEST);
-      const currentRenterIds = state.usersChatList.data.map((renter) => renter.userId);
+      const currentRenterIds = state.usersChatList.data.map(
+        (renter) => renter.userId,
+      );
       console.log(`current ${currentRenterIds}`);
       const newRenterIds = ids.filter((id) => !currentRenterIds.includes(id));
       console.log(`new ids: ${newRenterIds}`);

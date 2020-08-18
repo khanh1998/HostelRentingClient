@@ -5,7 +5,12 @@
     </v-overlay>
     <v-container v-if="!isLoading">
       <v-dialog width="350" v-model="chatBox.show">
-        <chatBox v-if="renter" v-on:close="chatBox.show=false" :info="info" :group="group" />
+        <chatBox
+          v-if="renter"
+          v-on:close="chatBox.show = false"
+          :info="info"
+          :group="group"
+        />
         <v-card v-if="!renter">
           <v-card-title>Đăng nhập để nhắn tin</v-card-title>
           <v-card-actions>
@@ -22,29 +27,30 @@
       <v-row no-gutters class="pt-2">
         <v-col cols="12" md="8">
           <div class="d-flex flex-column justify-sm-center">
-            <p class="text-h5 font-weight-medium text-sm-center">{{info.title}}</p>
+            <p class="text-h5 font-weight-medium text-sm-center">
+              {{ info.title }}
+            </p>
             <p class="grey--text" v-if="!isLoadingProvinces">
               <v-icon>location_on</v-icon>
-              {{group.street}},
-              {{ward.wardName}},
-              {{district.districtName}},
-              {{province.provinceName}}
+              {{ group.street }}, {{ ward.wardName }},
+              {{ district.districtName }},
+              {{ province.provinceName }}
             </p>
           </div>
         </v-col>
         <v-col cols="12" md="4">
           <div class="d-flex flex-column justify-end">
-            <p
-              class="font-weight-medium text-h5 blue--text text-center"
-            >{{info.price}} {{info.priceUnit}}/tháng</p>
+            <p class="font-weight-medium text-h5 blue--text text-center">
+              {{ info.price }} {{ info.priceUnit }}/tháng
+            </p>
             <div class="d-flex align-center justify-center">
               <p class="font-weight-medium grey--text mr-3">
                 <v-icon>crop</v-icon>
-                {{info.superficiality}} m2
+                {{ info.superficiality }} m2
               </p>
               <p class="font-weight-medium grey--text">
                 <v-icon>supervisor_account</v-icon>
-                {{info.capacity}} người
+                {{ info.capacity }} người
               </p>
             </div>
           </div>
@@ -73,7 +79,7 @@
         <v-col cols="12" sm="4" md="4" lg="4">
           <dateTimePickerBox
             :name="group.groupName"
-            :rating="{average: 3.5, total: 30}"
+            :rating="{ average: 3.5, total: 30 }"
             :groupId="group.groupId"
             :typeId="info.typeId"
             :vendorId="group.vendorId"
@@ -93,12 +99,23 @@
           <v-card class="mt-2">
             <v-card-title>Giá trung bình</v-card-title>
             <v-card-text>
-              <p>{{district.districtName}} : <span class="font-weight-bold">1.4 tr</span> </p>
-              <p>{{ward.wardName}} : <span class="font-weight-bold">1.5 tr</span> </p>
-              <p>{{group.street}} : <span class="font-weight-bold">1.55 tr</span></p>
+              <p>
+                {{ district.districtName }} :
+                <span class="font-weight-bold">1.4 tr</span>
+              </p>
+              <p>
+                {{ ward.wardName }} :
+                <span class="font-weight-bold">1.5 tr</span>
+              </p>
+              <p>
+                {{ group.street }} :
+                <span class="font-weight-bold">1.55 tr</span>
+              </p>
             </v-card-text>
             <v-card-actions>
-              <v-btn dark color="amber"> <v-icon>read_more</v-icon> Xem thêm</v-btn>
+              <v-btn dark color="amber">
+                <v-icon>read_more</v-icon> Xem thêm</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-col>

@@ -6,7 +6,7 @@
     <v-container v-if="!isLoading">
       <v-row>
         <v-col>
-          <p class="text-h4">Khám phá quận {{district.districtName}}</p>
+          <p class="text-h4">Khám phá quận {{ district.districtName }}</p>
         </v-col>
       </v-row>
       <v-row>

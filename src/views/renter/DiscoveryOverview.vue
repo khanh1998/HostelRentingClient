@@ -1,9 +1,6 @@
 <template>
   <div>
-    <v-overlay
-      :value="provinces.isLoading"
-      absolute
-    >
+    <v-overlay :value="provinces.isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container v-if="!provinces.isLoading">
@@ -14,7 +11,7 @@
       </v-row>
       <v-row>
         <v-col v-for="province in showableProvinces" :key="province.provinceId">
-          <ProvinceView :province="province"/>
+          <ProvinceView :province="province" />
         </v-col>
       </v-row>
     </v-container>
@@ -49,5 +46,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>

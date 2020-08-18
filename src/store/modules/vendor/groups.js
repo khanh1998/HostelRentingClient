@@ -115,12 +115,16 @@ const actions = {
         const groupIds = state.groups.data.map((group) => group.groupId);
         console.log(groupIds);
         let types = [];
-        await Promise.all(groupIds.map(async (groupId) => {
-          const res = await window.axios.get(`/api/v1/groups/${groupId}/types`);
-          types = [...types, ...res.data.data];
-          const group = getters.findGroupById(groupId);
-          group.types = res.data.data;
-        }));
+        await Promise.all(
+          groupIds.map(async (groupId) => {
+            const res = await window.axios.get(
+              `/api/v1/groups/${groupId}/types`,
+            );
+            types = [...types, ...res.data.data];
+            const group = getters.findGroupById(groupId);
+            group.types = res.data.data;
+          }),
+        );
         commit(mutationTypes.GET_TYPES_SUCCESS, types);
       } catch (error) {
         console.log(error);
@@ -138,12 +142,14 @@ const actions = {
       try {
         const typeIds = state.types.data.map((type) => type.typeId);
         let rooms = [];
-        await Promise.all(typeIds.map(async (typeId) => {
-          const res = await window.axios.get(`/api/v1/types/${typeId}/rooms`);
-          rooms = [...rooms, ...res.data.data];
-          const type = getters.findTypesById(typeId);
-          type.rooms = res.data.data;
-        }));
+        await Promise.all(
+          typeIds.map(async (typeId) => {
+            const res = await window.axios.get(`/api/v1/types/${typeId}/rooms`);
+            rooms = [...rooms, ...res.data.data];
+            const type = getters.findTypesById(typeId);
+            type.rooms = res.data.data;
+          }),
+        );
         commit(mutationTypes.GET_ROOMS_SUCCESS, rooms);
       } catch (error) {
         console.log(error);

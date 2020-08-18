@@ -31,24 +31,30 @@ const myGetters = {
   // get lasted deal
   findLastedDeal: (state) => (renterId, vendorId, typeId) => {
     let result = state.deals.data.filter((deal) => {
-      if (deal.renter.renterId === renterId
-        && deal.vendor.vendorId === vendorId
-        && deal.type.typeId === typeId
-        && deal.status === 'CREATED') {
+      if (
+        deal.renter.renterId === renterId &&
+        deal.vendor.vendorId === vendorId &&
+        deal.type.typeId === typeId &&
+        deal.status === 'CREATED'
+      ) {
         return true;
       }
       return false;
     });
-    result = result.sort((deal1, deal2) => deal1.creationTime - deal2.creationTime);
+    result = result.sort(
+      (deal1, deal2) => deal1.creationTime - deal2.creationTime,
+    );
     console.log(`lasted deal: ${result[0]}`);
     return result[0];
   },
   findPendingBooking: (state) => (renterId, vendorId, typeId) => {
     const result = state.bookings.data.filter((booking) => {
-      if (booking.renter.renterId === renterId
-        && booking.vendor.vendorId === vendorId
-        && booking.type.typeId === typeId
-        && booking.status === 'INCOMING') {
+      if (
+        booking.renter.renterId === renterId &&
+        booking.vendor.vendorId === vendorId &&
+        booking.type.typeId === typeId &&
+        booking.status === 'INCOMING'
+      ) {
         return true;
       }
       return false;
@@ -239,7 +245,9 @@ const mutations = {
     const { bookingId } = newBooking;
     state.bookings.isLoading = false;
     state.bookings.success = true;
-    const res = state.bookings.data.filter((book) => book.bookingId === bookingId);
+    const res = state.bookings.data.filter(
+      (book) => book.bookingId === bookingId,
+    );
     res[0].status = 'CANCELLED';
   },
   CANCEL_BOOKING_FAILURE(state, error) {
@@ -305,7 +313,10 @@ const actions = {
     if (userId && role && state.user.data) {
       try {
         commit(mutationTypes.UPDATE_USER_REQUEST);
-        const res = await window.axios.put(`/api/v1/${role}/${userId}`, newUser);
+        const res = await window.axios.put(
+          `/api/v1/${role}/${userId}`,
+          newUser,
+        );
         if (res.status === 200) {
           commit(mutationTypes.UPDATE_USER_SUCCESS, res.data.data);
         } else {
@@ -324,7 +335,9 @@ const actions = {
     if (userId && role && state.user.data) {
       try {
         commit(mutationTypes.GET_BOOKINGS_REQUEST);
-        const res = await window.axios.get(`/api/v1/${role}/${userId}/bookings`);
+        const res = await window.axios.get(
+          `/api/v1/${role}/${userId}/bookings`,
+        );
         if (res.status === 200) {
           commit(mutationTypes.GET_BOOKINGS_SUCCESS, res.data.data);
         } else {
@@ -343,7 +356,9 @@ const actions = {
     if (userId && role && state.user.data) {
       try {
         commit(mutationTypes.GET_CONTRACTS_REQUEST);
-        const res = await window.axios.get(`/api/v1/${role}/${userId}/contracts`);
+        const res = await window.axios.get(
+          `/api/v1/${role}/${userId}/contracts`,
+        );
         if (res.status === 200) {
           commit(mutationTypes.GET_CONTRACTS_SUCCESS, res.data.data);
         } else {
@@ -361,7 +376,9 @@ const actions = {
     const role = window.$cookies.get('role');
     if (userId && role && state.user.data) {
       try {
-        const currentIds = state.bookings.data.map((booking) => booking.bookingId);
+        const currentIds = state.bookings.data.map(
+          (booking) => booking.bookingId,
+        );
         if (!currentIds.includes(bookingId)) {
           commit(mutationTypes.GET_BOOKING_REQUEST);
           const res = await window.axios.get(`/api/v1/bookings/${bookingId}`);
@@ -466,7 +483,9 @@ const actions = {
     const role = window.$cookies.get('role');
     if (userId && role && state.user.data) {
       try {
-        const deal = state.deals.data.filter((item) => item.dealId === dealId)[0];
+        const deal = state.deals.data.filter(
+          (item) => item.dealId === dealId,
+        )[0];
         if (deal) {
           commit(mutationTypes.CANCEL_DEAL_REQUEST);
           const res = await window.axios.put('/api/v1/deals', {
@@ -495,7 +514,9 @@ const actions = {
     const role = window.$cookies.get('role');
     if (userId && role && state.user.data) {
       try {
-        const booking = state.bookings.data.filter((item) => item.bookingId === bookingId)[0];
+        const booking = state.bookings.data.filter(
+          (item) => item.bookingId === bookingId,
+        )[0];
         if (booking) {
           commit(mutationTypes.CANCEL_BOOKING_REQUEST);
           const res = await window.axios.put(`/api/v1/bookings/${bookingId}`, {

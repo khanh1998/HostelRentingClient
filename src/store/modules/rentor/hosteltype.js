@@ -20,9 +20,10 @@ const myState = () => ({
 });
 
 const getters = {
-  isLoading: (state) => state.hostelGroup.isLoading
-    || state.hostelType.isLoading
-    || state.schedules.isLoading,
+  isLoading: (state) =>
+    state.hostelGroup.isLoading ||
+    state.hostelType.isLoading ||
+    state.schedules.isLoading,
 };
 
 const mutationTypes = {
@@ -85,8 +86,14 @@ const actions = {
       commit(mutationTypes.GET_HOSTEL_GROUP_REQUEST);
       const response = await window.axios.get(`/api/v1/types?typeId=${typeId}`);
       if (response.status >= 200 && response.status <= 299) {
-        commit(mutationTypes.GET_HOSTEL_TYPE_SUCCESS, response.data.data.types[0]);
-        commit(mutationTypes.GET_HOSTEL_GROUP_SUCCESS, response.data.data.groups[0]);
+        commit(
+          mutationTypes.GET_HOSTEL_TYPE_SUCCESS,
+          response.data.data.types[0],
+        );
+        commit(
+          mutationTypes.GET_HOSTEL_GROUP_SUCCESS,
+          response.data.data.groups[0],
+        );
       } else {
         commit(mutationTypes.GET_HOSTEL_TYPE_FAILURE);
         commit(mutationTypes.GET_HOSTEL_GROUP_FAILURE);
@@ -99,7 +106,9 @@ const actions = {
   async getSchedules({ commit }, groupId) {
     try {
       commit(mutationTypes.GET_SCHEDULES_REQUEST);
-      const response = await window.axios.get(`/api/v1/schedules?groupId=${groupId}`);
+      const response = await window.axios.get(
+        `/api/v1/schedules?groupId=${groupId}`,
+      );
       if (response.status >= 200 && response.status <= 299) {
         commit(mutationTypes.GET_SCHEDULES_SUCCESS, response.data.data);
       } else {

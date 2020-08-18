@@ -11,8 +11,8 @@ const myState = () => ({
 });
 
 const getters = {
-  getStatsByIds:
-    (state) => (ids) => state.stats.streets.filter((street) => ids.includes(street.streetId)),
+  getStatsByIds: (state) => (ids) =>
+    state.stats.streets.filter((street) => ids.includes(street.streetId)),
 };
 const mutationTypes = {
   GET_STREET_STATS_REQUEST: 'GET_STREET_STATS_REQUEST',
@@ -41,7 +41,9 @@ const actions = {
     currentIds.push(notDuplicateIds);
     try {
       commit(mutationTypes.GET_STREET_STATS_REQUEST);
-      const res = await window.axios.get(`/api/v1/statistic?streetIds=${notDuplicateIds.join(',')}`);
+      const res = await window.axios.get(
+        `/api/v1/statistic?streetIds=${notDuplicateIds.join(',')}`,
+      );
       commit(mutationTypes.GET_STREET_STATS_SUCCESS, res.data.data);
     } catch (error) {
       commit(mutationTypes.GET_STREET_STATS_FAILURE, error);

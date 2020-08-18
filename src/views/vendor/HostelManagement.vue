@@ -1,12 +1,6 @@
 <template>
-  <div
-    height="836px"
-    v-if="!isLoadingGroup"
-  >
-    <v-card
-      height="836px"
-      class="overflow-hidden"
-    >
+  <div height="836px" v-if="!isLoadingGroup">
+    <v-card height="836px" class="overflow-hidden">
       <v-navigation-drawer
         v-model="drawer"
         :expand-on-hover="expandOnHover"
@@ -20,9 +14,13 @@
           @getIdSelected="groupId = $event"
         />
       </v-navigation-drawer>
-      <v-card style="min-height: 836px; max-height: 836px" class="ml-15">
-        <HostelType :groups="groups" :groupId="groupId"
-          :typeId="typeId" @getTypeIdSelected="typeId = $event"/>
+      <v-card style="min-height: 836px; max-height: 836px;" class="ml-15">
+        <HostelType
+          :groups="groups"
+          :groupId="groupId"
+          :typeId="typeId"
+          @getTypeIdSelected="typeId = $event"
+        />
       </v-card>
     </v-card>
   </div>
@@ -58,9 +56,10 @@ export default {
       return this.$store.state.vendor.group.groups.data;
     },
     isLoadingGroup() {
-      return (this.$store.state.vendor.group.groups.isLoading
-        || this.$store.state.vendor.group.types.isLoading
-        || this.$store.state.vendor.group.rooms.isLoading
+      return (
+        this.$store.state.vendor.group.groups.isLoading ||
+        this.$store.state.vendor.group.types.isLoading ||
+        this.$store.state.vendor.group.rooms.isLoading
       );
     },
   },
@@ -72,13 +71,10 @@ export default {
     }),
   },
   async created() {
-    this.getGroups()
-      .then(() => {
-        this.getTypes()
-          .then(() => this.getRooms());
-      });
+    this.getGroups().then(() => {
+      this.getTypes().then(() => this.getRooms());
+    });
   },
 };
 </script>
-<style>
-</style>
+<style></style>

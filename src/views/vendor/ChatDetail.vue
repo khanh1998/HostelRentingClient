@@ -2,13 +2,13 @@
   <div>
     <v-row no-gutters style="flex-wrap: nowrap;">
       <v-col cols="3" class="mx-3">
-          <chatInfoList/>
+        <chatInfoList />
       </v-col>
       <v-col cols="5">
-        <chatBox/>
+        <chatBox />
       </v-col>
       <v-col cols="3" class="mx-3 mt-2">
-        <hostel-info/>
+        <hostel-info />
       </v-col>
     </v-row>
   </div>
@@ -42,7 +42,7 @@ export default {
 .bottom-item {
   margin-top: 120px;
 }
-.container{
-    overflow: initial;
+.container {
+  overflow: initial;
 }
 </style>

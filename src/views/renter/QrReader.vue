@@ -1,7 +1,9 @@
 <template>
   <div>
     <p class="error">{{ error }}</p>
-    <p class="decode-result">Last result: <b>{{ result }}</b></p>
+    <p class="decode-result">
+      Last result: <b>{{ result }}</b>
+    </p>
     <qrcode-drop-zone @decode="onDecode" @init="logErrors">
       <qrcode-stream @decode="onDecode" @init="onInit" />
     </qrcode-drop-zone>

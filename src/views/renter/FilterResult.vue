@@ -7,11 +7,13 @@
       <v-row>
         <v-col cols="12" md="8">
           <v-card class="d-flex flex-column align-center justify-center">
-            <v-card-title>Kết quả tìm kiếm ({{list.length}})</v-card-title>
+            <v-card-title>Kết quả tìm kiếm ({{ list.length }})</v-card-title>
             <v-card-actions class="hidden-md-and-up">
               <v-bottom-sheet v-model="bottomSheet.show" scrollable>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn color="green" dark v-bind="attrs" v-on="on">Lọc nâng cao</v-btn>
+                  <v-btn color="green" dark v-bind="attrs" v-on="on"
+                    >Lọc nâng cao</v-btn
+                  >
                 </template>
                 <v-sheet light class="pt-6">
                   <HostelFilter v-on:submitFilter="onFilterSubmit($event)" />
