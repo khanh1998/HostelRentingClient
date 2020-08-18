@@ -16,11 +16,8 @@
       class="elevation-1"
     >
       <template v-slot:top>
-        <v-toolbar
-          flat
-          color="white"
-        >
-          <v-toolbar-title style="fontSize:20px;  color: #6C98C6 ">Loại phòng</v-toolbar-title>
+        <v-toolbar flat color="white">
+          <v-toolbar-title style="fontsize: 20px; color: #6c98c6;">Loại phòng</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-card-title>
             <v-text-field
@@ -31,21 +28,9 @@
               hide-details
             ></v-text-field>
           </v-card-title>
-          <v-dialog
-            v-model="dialog"
-            max-width="500px"
-          >
+          <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                dark
-                fab
-                small
-                text
-                class="mb-2"
-                v-bind="attrs"
-                v-on="on"
-                color="#EF7239"
-              >
+              <v-btn dark fab small text class="mb-2" v-bind="attrs" v-on="on" color="#EF7239">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </template>
@@ -57,55 +42,20 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.name"
-                        label="Dessert name"
-                      ></v-text-field>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
                     </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.calories"
-                        label="Calories"
-                      ></v-text-field>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
                     </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.fat"
-                        label="Fat (g)"
-                      ></v-text-field>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
                     </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.carbs"
-                        label="Carbs (g)"
-                      ></v-text-field>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
                     </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.protein"
-                        label="Protein (g)"
-                      ></v-text-field>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -113,16 +63,8 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="close"
-                >Hủy</v-btn>
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="save"
-                >Lưu</v-btn>
+                <v-btn color="blue darken-1" text @click="close">Hủy</v-btn>
+                <v-btn color="blue darken-1" text @click="save">Lưu</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -137,52 +79,28 @@
         </div>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-badge
-          :content="6"
-          class="ml-5"
-          color="red lighten-2"
-          overlap
-        >
+        <v-badge :content="6" class="ml-5" color="red lighten-2" overlap>
           <v-icon>mdi-calendar-month-outline</v-icon>
         </v-badge>
-        <v-badge
-          :content="6"
-          class="ml-5"
-          color="red lighten-2"
-          overlap
-        >
+        <v-badge :content="6" class="ml-5" color="red lighten-2" overlap>
           <v-icon>mdi-cash-usd-outline</v-icon>
         </v-badge>
-        <v-icon
-          class="ml-5"
-          @click="editItem(item)"
-        >
+        <v-icon class="ml-5" @click="editItem(item)">
           mdi-pencil
         </v-icon>
-        <v-icon
-          class="ml-5"
-          @click="deleteItem(item)"
-        >
+        <v-icon class="ml-5" @click="deleteItem(item)">
           mdi-delete
         </v-icon>
       </template>
-      <template v-slot:expanded-item="{headers, item}">
+      <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
           <v-row>
             <v-col cols="2">
-              <v-card-text
-                style="fontSize:20px"
-                class="text-center"
-              >
+              <v-card-text style="fontsize: 20px;" class="text-center">
                 Phòng trống
               </v-card-text>
             </v-col>
-            <v-col
-              cols="7"
-              style="max-height:100px; overflow-y: auto;"
-              class="mt-2"
-              id="style-1"
-            >
+            <v-col cols="7" style="max-height: 100px; overflow-y: auto;" class="mt-2" id="style-1">
               <v-chip
                 class="ml-2 mt-2"
                 color="green lighten-1"
@@ -192,26 +110,17 @@
                 <div v-if="tag.available">
                   {{ tag.roomName }}
                 </div>
-
               </v-chip>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-card-text
-                style="fontSize:20px"
-                class="text-center"
-              >
+              <v-card-text style="fontsize: 20px;" class="text-center">
                 Phòng đã thuê
               </v-card-text>
             </v-col>
             <v-col cols="7">
-              <v-chip
-                class="ml-2 mt-2"
-                color="red lighten-2"
-                v-for="tag in item.roomFu"
-                :key="tag"
-              >
+              <v-chip class="ml-2 mt-2" color="red lighten-2" v-for="tag in item.roomFu" :key="tag">
                 <div v-if="!tag.available">
                   {{ tag.roomName }}
                 </div>
@@ -221,29 +130,20 @@
         </td>
       </template>
       <template v-slot:no-data>
-        <v-btn
-          color="primary"
-          @click="desserts"
-        >Reset</v-btn>
+        <v-btn color="primary" @click="desserts">Reset</v-btn>
       </template>
     </v-data-table>
     <div class="text-center pt-2">
-      <v-pagination
-        v-model="page"
-        :length="pageCount"
-        color="#6C98C6"
-      ></v-pagination>
+      <v-pagination v-model="page" :length="pageCount" color="#6C98C6"></v-pagination>
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: 'HostelType',
   props: ['groups', 'groupId'],
-  components: {
-  },
+  components: {},
   data: () => ({
     page: 1,
     pageCount: 0,

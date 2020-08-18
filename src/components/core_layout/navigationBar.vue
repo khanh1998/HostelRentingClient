@@ -16,7 +16,13 @@
         height="30px"
       >
         <template v-slot:append>
-          <v-btn @click="overlay.show = false; search();">Search</v-btn>
+          <v-btn
+            @click="
+              overlay.show = false;
+              search();
+            "
+            >Search</v-btn
+          >
         </template>
       </v-text-field>
     </v-overlay>
@@ -96,7 +102,8 @@
             dark
             class="hidden-xs-only"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
-          >Lịch hẹn của bạn</v-btn>
+            >Lịch hẹn của bạn</v-btn
+          >
           <v-btn
             to="/vendor"
             depressed
@@ -143,6 +150,12 @@
                 </v-list-item-icon>
                 <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
               </v-list-item>
+              <v-list-item to="/discovery">
+                <v-list-item-icon>
+                  <v-icon>explore</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Khám phá</v-list-item-title>
+              </v-list-item>
             </v-list>
             <v-list v-if="isLoggedIn">
               <v-list-item to="#">
@@ -186,6 +199,12 @@
                   <v-icon>fas fa-qrcode</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Quét mã QR</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="/discovery">
+                <v-list-item-icon>
+                  <v-icon>explore</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Khám phá</v-list-item-title>
               </v-list-item>
               <v-list-item @click="logout">
                 <v-list-item-icon>

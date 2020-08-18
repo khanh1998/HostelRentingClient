@@ -7,7 +7,13 @@
       <div v-if="stepper.step == 1">
         <v-card color="white" class="pa-1" height="300px" width="300">
           <v-card-title class="grey--text">Chọn ngày</v-card-title>
-          <v-chip-group mandatory light v-model="pickedDate" center-active show-arrows>
+          <v-chip-group
+            mandatory
+            light
+            v-model="pickedDate"
+            center-active
+            show-arrows
+          >
             <v-chip
               light
               v-for="i in 7"
@@ -18,11 +24,16 @@
               outlined
               active-class="red--text red"
               link
-              @click="getTimesForDate(i-1)"
+              @click="getTimesForDate(i - 1)"
             >
-              <v-sheet class="d-flex flex-column justify-center align-center pa-1 flex-wrap" light>
-                <p class="ma-0">{{daysOfWeek[dates[i-1].getDay()]}}</p>
-                <p class="ma-0 font-weight-bold">{{dates[i-1].getDate()}}</p>
+              <v-sheet
+                class="d-flex flex-column justify-center align-center pa-1 flex-wrap"
+                light
+              >
+                <p class="ma-0">{{ daysOfWeek[dates[i - 1].getDay()] }}</p>
+                <p class="ma-0 font-weight-bold">
+                  {{ dates[i - 1].getDate() }}
+                </p>
               </v-sheet>
             </v-chip>
           </v-chip-group>
@@ -35,7 +46,13 @@
       <div v-if="stepper.step == 2">
         <v-card class="mb-1 pa-1" color="white" width="300" elevation="0">
           <v-card-title class="grey--text">Chọn giờ</v-card-title>
-          <v-chip-group v-model="selectedTime" light column center-active show-arrows>
+          <v-chip-group
+            v-model="selectedTime"
+            light
+            column
+            center-active
+            show-arrows
+          >
             <v-chip
               light
               v-for="item in listHoursToChoice"
@@ -47,12 +64,15 @@
               active-class="amber--text amber"
               link
               @click="pickedTime = item"
-            >{{item}}</v-chip>
+              >{{ item }}</v-chip
+            >
           </v-chip-group>
           <v-card-actions>
             <v-btn color="amber" @click="$emit('cancel')">Hủy</v-btn>
             <v-btn color="primary" @click="stepper.step -= 1">Quay lại</v-btn>
-            <v-btn v-if="pickedTime" color="green" @click="stepper.step += 1">Tiếp tục</v-btn>
+            <v-btn v-if="pickedTime" color="green" @click="stepper.step += 1"
+              >Tiếp tục</v-btn
+            >
           </v-card-actions>
         </v-card>
       </div>
@@ -62,16 +82,21 @@
           <v-card-text class="grey--text">
             Bạn muốn đặt lịch hẹn vào ngày
             <p class="font-weight-bold green--text">
-              {{`${dates[pickedDate].getDate()}/
+              {{
+                `${dates[pickedDate].getDate()}/
               ${dates[pickedDate].getMonth()}/
-              ${dates[pickedDate].getFullYear()}`}}
-            </p>vào lúc
-            <p class="font-weight-bold green--text">{{pickedTime}}</p>
+              ${dates[pickedDate].getFullYear()}`
+              }}
+            </p>
+            vào lúc
+            <p class="font-weight-bold green--text">{{ pickedTime }}</p>
           </v-card-text>
           <v-card-actions>
             <v-btn color="amber" @click="$emit('cancel')">Hủy</v-btn>
             <v-btn color="primary" @click="stepper.step -= 1">Quay lại</v-btn>
-            <v-btn color="green" @click="$emit('ok', pickDateAndTime())">Đồng ý</v-btn>
+            <v-btn color="green" @click="$emit('ok', pickDateAndTime())"
+              >Đồng ý</v-btn
+            >
           </v-card-actions>
         </v-card>
       </div>

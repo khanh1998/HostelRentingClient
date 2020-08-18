@@ -7,18 +7,22 @@
       <v-row justify="center">
         <v-col cols="0" md="4"></v-col>
         <v-col cols="10" md="8">
-          <v-btn-toggle mandatory tile v-model="buttonGroup.selectedBookingStatus">
+          <v-btn-toggle
+            mandatory
+            tile
+            v-model="buttonGroup.selectedBookingStatus"
+          >
             <v-btn outlined color="grey">
               SẮP TỚI
-              <span class="amber--text">({{counter.incomming}})</span>
+              <span class="amber--text">({{ counter.incomming }})</span>
             </v-btn>
             <v-btn outlined color="grey">
               ĐÃ XEM PHÒNG
-              <span class="amber--text">({{counter.done}})</span>
+              <span class="amber--text">({{ counter.done }})</span>
             </v-btn>
             <v-btn outlined color="grey">
               BỎ LỠ
-              <span class="amber--text">({{counter.cancel}})</span>
+              <span class="amber--text">({{ counter.cancel }})</span>
             </v-btn>
           </v-btn-toggle>
         </v-col>
@@ -43,8 +47,7 @@
     </v-container>
   </div>
 </template>
-<style scoped>
-</style>
+<style scoped></style>
 <script>
 import bookingItem from '@/components/view_cart/bookingItem.vue';
 import { mapActions } from 'vuex';
@@ -66,16 +69,14 @@ export default {
     }),
   },
   created() {
-    this.getUser()
-      .then(() => {
-        this.getBookings()
-          .then(() => {
-            const bookings = this.$store.state.user.bookings.data;
-            this.arrayEvents = bookings.map(
-              (booking) => new Date(booking.meetTime).toISOString().substr(0, 10),
-            );
-          });
+    this.getUser().then(() => {
+      this.getBookings().then(() => {
+        const bookings = this.$store.state.user.bookings.data;
+        this.arrayEvents = bookings.map((booking) =>
+          new Date(booking.meetTime).toISOString().substr(0, 10),
+        );
       });
+    });
   },
   computed: {
     isLoading() {
@@ -89,9 +90,12 @@ export default {
       const result = list.filter((booking) => {
         const selectedIdx = this.buttonGroup.selectedBookingStatus;
         switch (selectedIdx) {
-          case 0: return booking.status === 'INCOMING';
-          case 1: return booking.status === 'DONE';
-          case 2: return booking.status === 'CANCELLED';
+          case 0:
+            return booking.status === 'INCOMING';
+          case 1:
+            return booking.status === 'DONE';
+          case 2:
+            return booking.status === 'CANCELLED';
           default:
             return true;
         }
@@ -117,11 +121,14 @@ export default {
       let cancel = 0;
       bookings.forEach((booking) => {
         switch (booking.status) {
-          case 'INCOMING': incomming += 1;
+          case 'INCOMING':
+            incomming += 1;
             break;
-          case 'DONE': done += 1;
+          case 'DONE':
+            done += 1;
             break;
-          case 'CANCELLED': cancel += 1;
+          case 'CANCELLED':
+            cancel += 1;
             break;
           default:
             console.log('error in counter computed');

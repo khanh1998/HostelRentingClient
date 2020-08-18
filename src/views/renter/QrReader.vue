@@ -1,43 +1,22 @@
 <template>
-  <div
-    v-if="!isLoading"
-    class="d-flex justify-center"
-  >
+  <div v-if="!isLoading" class="d-flex justify-center">
     <v-col cols="8">
-      <v-dialog
-        v-model="dialog"
-        width="500"
-      >
+      <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
-          <v-card
-            style="background-color: coral; height: auto"
-            class="mt-5"
-          >
+          <v-card style="background-color: coral; height: auto;" class="mt-5">
             <p class="error">{{ error }}</p>
-            <p class="decode-result">Last result: <b>{{ result }}</b></p>
-            <qrcode-drop-zone
-              @decode="onDecode"
-              @init="logErrors"
-              v-on="on"
-              v-bind="attrs"
-            >
-              <qrcode-stream
-                @decode="onDecode"
-                @init="onInit"
-              />
+            <p class="decode-result">
+              Last result: <b>{{ result }}</b>
+            </p>
+            <qrcode-drop-zone @decode="onDecode" @init="logErrors" v-on="on" v-bind="attrs">
+              <qrcode-stream @decode="onDecode" @init="onInit" />
             </qrcode-drop-zone>
-            <qrcode-capture
-              v-if="noStreamApiSupport"
-              @decode="onDecode"
-            />
+            <qrcode-capture v-if="noStreamApiSupport" @decode="onDecode" />
           </v-card>
         </template>
 
         <v-card>
-          <v-card-title
-            class="headline"
-            style="background-color: #98B7D7; color: white"
-          >
+          <v-card-title class="headline" style="background-color: #98b7d7; color: white;">
             Xác nhận
           </v-card-title>
 
@@ -49,11 +28,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
-              color="primary"
-              text
-              @click="doUpdateBookingStatus()"
-            >
+            <v-btn color="primary" text @click="doUpdateBookingStatus()">
               Đóng
             </v-btn>
           </v-card-actions>

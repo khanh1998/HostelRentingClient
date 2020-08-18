@@ -4,9 +4,12 @@
       width="100%"
       class="d-flex flex-row justify-center align-center pa-2"
     >
-
       <v-badge color="red" content="6" bordered overlap class="mr-6">
-          <v-img :src="require('@/assets/notification.svg')" height="30" width="30"></v-img>
+        <v-img
+          :src="require('@/assets/notification.svg')"
+          height="30"
+          width="30"
+        ></v-img>
       </v-badge>
       <div class="d-flex flex-nowrap align-center">
         <v-avatar>
@@ -27,17 +30,14 @@
         <div class="text-color">Phòng trọ gác lửng có máy lạnh</div>
 
         <div class="my-4 subtitle-1">Địa chỉ</div>
-        <div class="text-color my-4">939 Kha Vạn Cân, phường Linh Tây, quận Thủ Đức</div>
+        <div class="text-color my-4">
+          939 Kha Vạn Cân, phường Linh Tây, quận Thủ Đức
+        </div>
 
         <div class="my-4 subtitle-1">Giá</div>
         <div class="text-color my-4">1.900.000 Đ</div>
       </v-card-text>
-      <v-col
-        cols="12"
-        sm="6"
-        md="10"
-        class="ml-6"
-      >
+      <v-col cols="12" sm="6" md="10" class="ml-6">
         <v-select
           :items="chooses"
           placeholder="Phòng còn trống"
@@ -45,11 +45,9 @@
         ></v-select>
       </v-col>
       <v-card-actions>
-        <v-btn
-          color="deep-purple lighten-2"
-          text
-          @click="reserve"
-        >Chi tiết</v-btn>
+        <v-btn color="deep-purple lighten-2" text @click="reserve"
+          >Chi tiết</v-btn
+        >
       </v-card-actions>
     </v-card>
   </div>

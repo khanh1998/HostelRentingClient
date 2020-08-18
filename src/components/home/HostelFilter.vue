@@ -2,7 +2,9 @@
   <v-sheet class="pl-2 pr-2 pb-2 pl-md-6 pr-md-6 pb-md-6">
     <v-expansion-panels focusable multiple>
       <v-expansion-panel class="mb-3">
-        <v-expansion-panel-header>Tiện nghi xung quanh</v-expansion-panel-header>
+        <v-expansion-panel-header
+          >Tiện nghi xung quanh</v-expansion-panel-header
+        >
         <v-expansion-panel-content class="noPadding">
           <v-list shaped>
             <v-list-item-group v-model="serviceIds" multiple>
@@ -14,10 +16,16 @@
                 >
                   <template v-slot:default="{ active }">
                     <v-list-item-content>
-                      <v-list-item-title v-text="item" class="text-body-2 noWrap" />
+                      <v-list-item-title
+                        v-text="item"
+                        class="text-body-2 noWrap"
+                      />
                     </v-list-item-content>
                     <v-list-item-action>
-                      <v-checkbox :input-value="active" color="deep-purple accent-4" />
+                      <v-checkbox
+                        :input-value="active"
+                        color="deep-purple accent-4"
+                      />
                     </v-list-item-action>
                   </template>
                 </v-list-item>
@@ -39,10 +47,16 @@
                 >
                   <template v-slot:default="{ active }">
                     <v-list-item-content>
-                      <v-list-item-title v-text="item.facilityName" class="text-body-2 noWrap" />
+                      <v-list-item-title
+                        v-text="item.facilityName"
+                        class="text-body-2 noWrap"
+                      />
                     </v-list-item-content>
                     <v-list-item-action>
-                      <v-checkbox :input-value="active" color="deep-purple accent-4" />
+                      <v-checkbox
+                        :input-value="active"
+                        color="deep-purple accent-4"
+                      />
                     </v-list-item-action>
                   </template>
                 </v-list-item>
@@ -58,7 +72,12 @@
           <!-- <v-card-text> -->
           <v-row>
             <v-col class="px-5 pt-0">
-              <v-switch class="ml-auto mb-4" height="10" v-model="disabled" label="Lọc" />
+              <v-switch
+                class="ml-auto mb-4"
+                height="10"
+                v-model="disabled"
+                label="Lọc"
+              />
               <v-range-slider
                 v-model="range"
                 :max="max"
@@ -71,8 +90,8 @@
                 :disabled="!disabled"
               />
               <v-row class="justify-center align-center">
-                <v-subheader>{{min}} tr</v-subheader>
-                <v-subheader class="ml-auto">{{max}} tr</v-subheader>
+                <v-subheader>{{ min }} tr</v-subheader>
+                <v-subheader class="ml-auto">{{ max }} tr</v-subheader>
                 <v-btn
                   icon
                   color="indigo"
@@ -108,7 +127,8 @@
         class="mt-6"
         color="amber"
         @click="filterSubmit()"
-      >ÁP DỤNG</v-btn>
+        >ÁP DỤNG</v-btn
+      >
     </div>
   </v-sheet>
 </template>

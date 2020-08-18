@@ -8,27 +8,27 @@
       >
         <!-- eslint-enable -->
         <v-col cols="12" class="d-flex justify-start top-item" style="padding: 0px !important;">
-          <v-col cols="4" class="item-classic-left left" style="background: #F3F4F9">
+          <v-col cols="4" class="item-classic-left left" style="background: #f3f4f9;">
             <div class="item-classic-media" style="padding-right: 0px !important;">
               <v-img
                 :src="type.typeImages[0].resourceUrl"
                 v-if="type.typeImages.length !== 0"
-                style="height:180px; width: '100%'"
+                style="height: 180px; width: '100%';"
                 class="image-box"
               >
                 <div class="top">
                   Top
-                  <v-icon right color="yellow">{{numberIcons[index-1]}}</v-icon>
+                  <v-icon right color="yellow">{{ numberIcons[index - 1] }}</v-icon>
                 </div>
               </v-img>
-              <v-img src="@/assets/image-error.png" v-else style="height:180px" class="image-box">
+              <v-img src="@/assets/image-error.png" v-else style="height: 180px;" class="image-box">
                 <div class="top">
                   Top
-                  <v-icon right color="yellow">{{numberIcons[index-1]}}</v-icon>
+                  <v-icon right color="yellow">{{ numberIcons[index - 1] }}</v-icon>
                 </div>
               </v-img>
               <div class="item-classic-price text-body-1 white--text">
-                <span>{{type.price}} {{type.priceUnit}}</span>
+                <span>{{ type.price }} {{ type.priceUnit }}</span>
               </div>
             </div>
           </v-col>
@@ -37,20 +37,32 @@
               <span
                 class="item-address"
                 v-if="!isLoadingProvinces"
-                style="display: block; display: -webkit-box;-webkit-line-clamp: 1;
-                  -webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
+                style="
+                  display: block;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
               >
-                {{group.street}},
-                {{ward.wardName}},
-                {{district.districtName}},
-                {{province.provinceName}}
+                {{ group.street }}, {{ ward.wardName }}, {{ district.districtName }},
+                {{ province.provinceName }}
               </span>
-              <div class="type-name mt-2" style="height: 40px">
+              <div class="type-name mt-2" style="height: 40px;">
                 <p
-                  style="display: block; display: -webkit-box;-webkit-line-clamp: 1;
-                  -webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
+                  style="
+                    display: block;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  "
                   class="font-weight-bold mb-0"
-                >{{type.title}}</p>
+                >
+                  {{ type.title }}
+                </p>
               </div>
               <div class="align-center justify-center">
                 <div class="mt-3 d-flex align-center">
@@ -62,7 +74,7 @@
                     max-height="15"
                   />
                   <span class="item-text">
-                    {{type.superficiality}}
+                    {{ type.superficiality }}
                     m
                     <sup>2</sup>
                   </span>
@@ -74,11 +86,11 @@
                       max-width="15"
                       max-height="15"
                     />
-                    <span class="item-text">{{type.capacity}} người</span>
+                    <span class="item-text">{{ type.capacity }} người</span>
                   </div>
                   <div
                     class="ml-auto d-flex align-center"
-                    v-if="type.facilities.filter(f => f.facilityName.includes('WC')).length !== 0"
+                    v-if="type.facilities.filter((f) => f.facilityName.includes('WC')).length !== 0"
                   >
                     <v-img
                       src="@/assets/home/toilet.png"
@@ -88,8 +100,17 @@
                       max-height="15"
                     />
                     <span class="item-text">
+                      <<<<<<< HEAD
                       <!-- eslint-disable max-len -->
-                      {{type.facilities.filter(f => f.facilityName.includes("WC"))[0].facilityName}}
+                      {{
+                        type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
+                      }}
+                      =======
+                      <!-- eslint-enable -->
+                      {{
+                        type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
+                      }}
+                      >>>>>>> discovery
                     </span>
                   </div>
                 </div>
@@ -130,10 +151,10 @@
                 </div>
               </div>-->
               <div class="mt-3 d-flex align-center">
-                <span class="item-text" style="color: #656565">Giới nghiêm:</span>
+                <span class="item-text" style="color: #656565;">Giới nghiêm:</span>
                 <div class="d-flex ml-1 left">
                   <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
-                  <span class="item-text">{{group.curfewTime}}</span>
+                  <span class="item-text">{{ group.curfewTime }}</span>
                 </div>
                 <div class="ml-auto d-flex">
                   <span class="item-text" v-if="group.ownerJoin == false">Không chung chủ</span>
@@ -147,12 +168,12 @@
       <v-col
         cols="12"
         class="pr-0 pb-0 pt-0"
-        style="background: #F3F4F9; padding-left: 7px !important;"
+        style="background: #f3f4f9; padding-left: 7px !important;"
       >
-        <v-col cols="12" class="flex d-flex" style="background-color: #E7E9F0 !important">
+        <v-col cols="12" class="flex d-flex" style="background-color: #e7e9f0 !important;">
           <v-col cols="3" style="padding: 0 !important;">
             <v-icon class="ml-2" color="#ABB4C0">visibility</v-icon>
-            <span class="text-caption ml-2">{{type.view}} lượt xem</span>
+            <span class="text-caption ml-2">{{ type.view }} lượt xem</span>
           </v-col>
           <!-- <v-col cols="6" style="padding: 0 !important;" v-if="school !== ''"> -->
           <v-col
@@ -165,12 +186,12 @@
             <div class="text-caption ml-2">
               <span>20 người học</span>
               <br />
-              <span>{{school}}</span>
+              <span>{{ school }}</span>
             </div>
           </v-col>
           <v-col cols="4" style="padding: 0 !important;" v-if="hometown !== ''">
             <v-icon color="#ABB4C0">supervisor_account</v-icon>
-            <span class="text-caption ml-2">3 người quê {{hometown}}</span>
+            <span class="text-caption ml-2">3 người quê {{ hometown }}</span>
           </v-col>
         </v-col>
       </v-col>
@@ -232,8 +253,8 @@
   padding-right: 20px;
 }
 .v-sheet.v-card:not(.v-sheet--outlined) {
-  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.14),
-    0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.14),
+    0px 0px 0px 0px rgba(0, 0, 0, 0.12);
 }
 .v-img {
   background-size: contain, cover !important;
@@ -394,9 +415,7 @@ export default {
         const id = this.type.groupId;
         let data = this.$store.getters['renter/home/getHostelGroupById'](id);
         if (!data) {
-          data = this.$store.getters['renter/filterResult/getHostelGroupById'](
-            id,
-          );
+          data = this.$store.getters['renter/filterResult/getHostelGroupById'](id);
         }
         return data;
       },
@@ -411,9 +430,7 @@ export default {
     },
     province() {
       const { districtId } = this.district;
-      return this.$store.getters['renter/common/getProvinceByDistrictId'](
-        districtId,
-      );
+      return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
     },
   },
 };

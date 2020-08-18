@@ -4,16 +4,16 @@
       name="custom-classes-transition"
       enter-active-class="animated tada"
       leave-active-class="animated bounceOutRight"
-      :duration="{leave: 500}"
+      :duration="{ leave: 500 }"
     >
       <div
         class="banner-left flex-column align-center px-10 py-5"
         v-bind:style="banner.left.style"
         v-if="banner.left.show"
       >
-        <div class="d-flex justify-end align-center" :style="{width: '100%'}">
+        <div class="d-flex justify-end align-center" :style="{ width: '100%' }">
           <v-tooltip left>
-            <template v-slot:activator="{on, attrs}">
+            <template v-slot:activator="{ on, attrs }">
               <v-btn @click="closeLeftBanner()" color="amber" icon v-on="on" v-bind="attrs">
                 <v-icon>far fa-times-circle</v-icon>
               </v-btn>
@@ -24,9 +24,11 @@
         <p
           class="font-weight-medium white--text transition-swing text-h5"
           style="letter-spacing: 0.001em !important;"
-        >HỖ TRỢ TÌM KIẾM ĐỂ ĐỀ XUẤT PHÒNG TRỌ PHÙ HỢP NHẤT</p>
-        <v-row style="height: 80px">
-          <v-col cols="7" style="height: 50px">
+        >
+          HỖ TRỢ TÌM KIẾM ĐỂ ĐỀ XUẤT PHÒNG TRỌ PHÙ HỢP NHẤT
+        </p>
+        <v-row style="height: 80px;">
+          <v-col cols="7" style="height: 50px;">
             <v-autocomplete
               v-model="banner.left.select.school"
               :items="banner.left.schools"
@@ -58,16 +60,18 @@
             ></v-autocomplete>
           </v-col>
         </v-row>
-        <v-col cols="12" class="mt-2" style="padding: 0px !important">
-          <div class="d-flex justify-center align-center" :style="{width: '100%'}">
+        <v-col cols="12" class="mt-2" style="padding: 0px !important;">
+          <div class="d-flex justify-center align-center" :style="{ width: '100%' }">
             <div
               class="d-flex justify-center align-center white"
-              :style="{width: '100%',
-            borderTopLeftRadius: '4px',
-            borderTopRightRadius: '4px',
-            border: '1px solid #F3E5',
-            margin: '0px 0px 4px',
-            height: '50px'}"
+              :style="{
+                width: '100%',
+                borderTopLeftRadius: '4px',
+                borderTopRightRadius: '4px',
+                border: '1px solid #F3E5',
+                margin: '0px 0px 4px',
+                height: '50px',
+              }"
             >
               <gmap-autocomplete
                 placeholder="Địa điểm, khu vực bạn muốn ở gần"
@@ -117,12 +121,11 @@
           <v-col cols="4" class="ml-auto">
             <v-btn
               class="white--text text-button"
-              :style="{width: '100%', height: '50px',
-                borderRadius: '0px',
-                boxShadow: 'none'}"
+              :style="{ width: '100%', height: '50px', borderRadius: '0px', boxShadow: 'none' }"
               color="amber"
               @click="searchByCoordinates"
-            >TÌM KIẾM</v-btn>
+              >TÌM KIẾM</v-btn
+            >
           </v-col>
         </v-row>
       </div>
@@ -136,7 +139,9 @@
       <p
         class="white--text px-2 font-weight-bold slogan"
         v-bind:style="{ visibility: visibleSearchOptional }"
-      >HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT</p>
+      >
+        HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT
+      </p>
       <v-btn
         color="#F9B707"
         class="white--text"
@@ -145,7 +150,8 @@
         width="300"
         @click="openLeftBanner()"
         v-bind:style="{ visibility: visibleSearchOptional }"
-      >TÌM KIẾM NÂNG CAO</v-btn>
+        >TÌM KIẾM NÂNG CAO</v-btn
+      >
     </div>
   </div>
 </template>
@@ -171,10 +177,7 @@
   text-align: center;
 }
 .banner-left {
-  background-image: linear-gradient(
-    rgba(96, 138, 206, 0.95),
-    rgba(96, 138, 206, 0.95)
-  );
+  background-image: linear-gradient(rgba(96, 138, 206, 0.95), rgba(96, 138, 206, 0.95));
   /* url('https://livedemo00.template-help.com/wt_prod-3844/images/bg-shape-1.svg'); */
   background-position: right;
   background-size: cover;

@@ -1,6 +1,7 @@
 <template>
   <v-card
-    height="100%" class="overflow-hidden rounded-0 d-flex align-strench"
+    height="100%"
+    class="overflow-hidden rounded-0 d-flex align-strench"
     v-if="!user.isLoading"
   >
     <v-list nav class="py-0 rounded-1" height="100%">
@@ -23,23 +24,38 @@
 
       <div class="text-display mt-3 mb-3 ml-7">Danh mục</div>
 
-      <v-list-item v-for="item in itemsplus" :key="item.title" link :to="item.link">
+      <v-list-item
+        v-for="item in itemsplus"
+        :key="item.title"
+        link
+        :to="item.link"
+      >
         <v-list-item-icon class="ml-5">
-          <v-img :src="require('@/assets/'+ item.icon + '.png')" max-height="30" max-width="30" />
+          <v-img
+            :src="require('@/assets/' + item.icon + '.png')"
+            max-height="30"
+            max-width="30"
+          />
         </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title
             class="item-text-display flex-1 px-4 py-2 m-2 text-h6 font-weight-regular"
-          >{{ item.title }}</v-list-item-title>
+            >{{ item.title }}</v-list-item-title
+          >
         </v-list-item-content>
       </v-list-item>
 
       <div class="text-display mt-3 mb-3 ml-7">Mở rộng</div>
 
-      <v-list-item v-for="itemadd in itemadds" :key="itemadd.title" link :to="itemadd.link">
+      <v-list-item
+        v-for="itemadd in itemadds"
+        :key="itemadd.title"
+        link
+        :to="itemadd.link"
+      >
         <v-list-item-icon class="ml-5">
           <v-img
-            :src="require('@/assets/'+ itemadd.icon + '.png')"
+            :src="require('@/assets/' + itemadd.icon + '.png')"
             max-height="30p"
             max-width="30"
           />
@@ -48,7 +64,8 @@
         <v-list-item-content>
           <v-list-item-title
             class="item-text-display flex-1 px-4 py-2 m-2 text-h6 font-weight-regular"
-          >{{ itemadd.title }}</v-list-item-title>
+            >{{ itemadd.title }}</v-list-item-title
+          >
         </v-list-item-content>
       </v-list-item>
 
@@ -60,8 +77,9 @@
           <v-list-item-content>
             <v-list-item-title
               @click="logout"
-              class="item-text-display text-h6">
-                Đăng xuất
+              class="item-text-display text-h6"
+            >
+              Đăng xuất
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -85,7 +103,11 @@ export default {
         { title: 'Tổng quan', icon: 'menu_dashboard', link: '/vendor' },
         { title: 'Lịch xem phòng', icon: 'menu_calendar', link: '/vendor' },
         { title: 'Thống kê', icon: 'menu_chart', link: '/vendor' },
-        { title: 'Quản lý nhà trọ', icon: 'menu_room', link: '/vendor/management' },
+        {
+          title: 'Quản lý nhà trọ',
+          icon: 'menu_room',
+          link: '/vendor/management',
+        },
       ],
 
       itemadds: [

@@ -4,8 +4,10 @@ import checkIfTokenNeedsRefresh from '../utils/utils';
 import checkForUpdates from '../utils/updates';
 import constant from '../config/constant';
 
-axios.defaults.baseURL = process.env.VUE_APP_API_URL || constant.VUE_APP_API_URL;
-axios.defaults.headers.common['Accept-Language'] = JSON.parse(localStorage.getItem('locale')) || 'en';
+axios.defaults.baseURL =
+  process.env.VUE_APP_API_URL || constant.VUE_APP_API_URL;
+axios.defaults.headers.common['Accept-Language'] =
+  JSON.parse(localStorage.getItem('locale')) || 'en';
 
 axios.interceptors.request.use(
   (config) => {
@@ -19,7 +21,9 @@ axios.interceptors.request.use(
       `${window.location.origin}/version.json`,
     ];
     if (urlsExcludedForBearerHeader.indexOf(myConfig.url) === -1) {
-      myConfig.headers.Authorization = `Bearer ${window.$cookies.get('firebaseIdToken')}`;
+      myConfig.headers.Authorization = `Bearer ${window.$cookies.get(
+        'firebaseIdToken',
+      )}`;
     }
     return myConfig;
   },

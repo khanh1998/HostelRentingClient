@@ -5,16 +5,16 @@
     </v-overlay>
     <v-container v-if="!isLoading">
       <v-dialog width="350" v-model="chatBox.show">
-        <chatBox v-if="renter" v-on:close="chatBox.show=false" :info="info" :group="group" />
+        <chatBox v-if="renter" v-on:close="chatBox.show = false" :info="info" :group="group" />
         <v-card v-if="!renter">
           <v-card-title>Đăng nhập để nhắn tin</v-card-title>
-          <v-card-actions >
+          <v-card-actions>
             <v-btn :to="registerRouteObject" dark class="green lighten-3">
-              <v-icon>create</v-icon> Tạo tài khoản mới
+              <v-icon>create</v-icon>Tạo tài khoản mới
             </v-btn>
-            <v-spacer/>
+            <v-spacer />
             <v-btn :to="loginRouteObject" dark class="blue lighten-3">
-              <v-icon>login</v-icon> Đăng nhập
+              <v-icon>login</v-icon>Đăng nhập
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -23,30 +23,28 @@
         <v-col cols="12" md="8">
           <div class="d-flex flex-column justify-sm-center">
             <p class="text-h5 font-weight-medium text-sm-center">
-              {{info.title}}
+              {{ info.title }}
             </p>
             <p class="grey--text" v-if="!isLoadingProvinces">
               <v-icon>location_on</v-icon>
-              {{group.street}},
-              {{ward.wardName}},
-              {{district.districtName}},
-              {{province.provinceName}}
+              {{ group.street }}, {{ ward.wardName }}, {{ district.districtName }},
+              {{ province.provinceName }}
             </p>
           </div>
         </v-col>
         <v-col cols="12" md="4">
           <div class="d-flex flex-column justify-end">
-            <p
-              class="font-weight-medium text-h5 blue--text text-center"
-            >{{info.price}} {{info.priceUnit}}/tháng</p>
+            <p class="font-weight-medium text-h5 blue--text text-center">
+              {{ info.price }} {{ info.priceUnit }}/tháng
+            </p>
             <div class="d-flex align-center justify-center">
               <p class="font-weight-medium grey--text mr-3">
                 <v-icon>crop</v-icon>
-                {{info.superficiality}} m2
+                {{ info.superficiality }} m2
               </p>
               <p class="font-weight-medium grey--text">
                 <v-icon>supervisor_account</v-icon>
-                {{info.capacity}} người
+                {{ info.capacity }} người
               </p>
             </div>
           </div>
@@ -75,7 +73,7 @@
         <v-col cols="12" sm="4" md="4" lg="4">
           <dateTimePickerBox
             :name="group.groupName"
-            :rating="{average: 3.5, total: 30}"
+            :rating="{ average: 3.5, total: 30 }"
             :groupId="group.groupId"
             :typeId="info.typeId"
             :vendorId="group.vendorId"
@@ -86,26 +84,42 @@
       <v-row>
         <v-col cols="12" md="4">
           <v-card class="pa-3">
-            <v-card-title>
-              <v-icon class="mr-2">weekend</v-icon>
-              Tiện nghi
-            </v-card-title>
+            <v-card-title> <v-icon class="mr-2">weekend</v-icon>Tiện nghi </v-card-title>
             <v-divider />
             <facilitiesBox :facilities="info.facilities" />
+          </v-card>
+          <v-card class="mt-2" v-if="!isLoadingProvinces">
+            <v-card-title><v-icon>trending_up</v-icon> Giá trung bình</v-card-title>
+            <v-card-text>
+              <p>
+                {{ district.districtName }} :
+                <span class="font-weight-bold">{{ districtAverage.price }} triệu / tháng</span>
+              </p>
+              <p>
+                {{ ward.wardName }} :
+                <span class="font-weight-bold">{{ wardAverage.price }} triệu / tháng</span>
+              </p>
+              <p>
+                {{ group.street }} :
+                <span class="font-weight-bold">{{ streetAverage.price }} triệu / tháng</span>
+              </p>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn dark color="amber" :to="`/discovery/${this.district.districtId}`">
+                <v-icon>read_more</v-icon> Xem thêm</v-btn
+              >
+            </v-card-actions>
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
           <v-card class="pa-3">
-            <v-card-title>
-              <v-icon class="mr-2">cleaning_services</v-icon>
-              Dịch vụ
-            </v-card-title>
+            <v-card-title> <v-icon class="mr-2">cleaning_services</v-icon>Dịch vụ </v-card-title>
             <v-divider />
             <servicesBox :services="info.services" />
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
-          <v-card  class="pa-3">
+          <v-card class="pa-3">
             <div class="d-flex justify-space-between align-center">
               <v-card-title>Tiện nghi xung quanh</v-card-title>
               <v-btn color="success" class="ml-1" depressed tile>
@@ -125,7 +139,7 @@
 import dateTimePickerBox from '@/components/hostel_type/dateTimePickerBox.vue';
 import treeView from '@/components/hostel_type/treeView.vue';
 import chatBox from '@/components/hostel_type/chatBox.vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import facilitiesBox from '../../components/hostel_type/facilitiesBox.vue';
 import servicesBox from '../../components/hostel_type/servicesBox.vue';
 
@@ -147,9 +161,13 @@ export default {
     ...mapActions({
       getTypeAndGroup: 'renter/hostelType/getTypeAndGroup',
       getProvinces: 'renter/common/getProvinces',
+      getStreetStats: 'renter/discovery/getStreetStats',
     }),
   },
   computed: {
+    ...mapGetters({
+      getAverage: 'renter/discovery/getAverage',
+    }),
     typeId() {
       return this.$route.params.typeId;
     },
@@ -161,11 +179,27 @@ export default {
       const { wardId } = this.group;
       return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
     },
+    allStreetIds() {
+      const { wards } = this.district;
+      const streets = wards.map((ward) => ward.streets);
+      const streetIds = streets.flat().map((street) => street.streetId);
+      return streetIds;
+    },
+    districtAverage() {
+      return this.getAverage(this.allStreetIds);
+    },
+    wardAverage() {
+      const { streets } = this.ward;
+      const streetIds = streets.map((street) => street.streetId);
+      return this.getAverage(streetIds);
+    },
+    streetAverage() {
+      const { streetId } = this.group;
+      return this.getAverage([streetId]);
+    },
     province() {
       const { districtId } = this.district;
-      return this.$store.getters['renter/common/getProvinceByDistrictId'](
-        districtId,
-      );
+      return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
     },
     images: {
       get() {
@@ -181,21 +215,16 @@ export default {
       },
     },
     isLoading() {
-      if (this.info && this.group) {
-        return false;
-      }
-      // return this.$store.getters['renter/hostelType/isLoading'];
       const type = this.$store.state.renter.hostelType.hostelType.isLoading;
       const group = this.$store.state.renter.hostelType.hostelGroup.isLoading;
-      return type || group;
+      const street = this.$store.state.renter.discovery.stats.streets.isLoading;
+      return type || group || street;
     },
     isLoadingProvinces() {
       return this.$store.state.renter.common.provinces.isLoading;
     },
     info() {
-      let data = this.$store.getters['renter/home/getHostelTypeById'](
-        this.typeId,
-      );
+      let data = this.$store.getters['renter/home/getHostelTypeById'](this.typeId);
       if (data === null) {
         data = this.$store.state.renter.hostelType.hostelType.data;
       }
@@ -234,7 +263,7 @@ export default {
   },
   created() {
     this.getTypeAndGroup(this.typeId); // if home.js store is empty then start to call api
-    this.getProvinces();
+    this.getProvinces().then(() => this.getStreetStats(this.allStreetIds));
   },
 };
 </script>

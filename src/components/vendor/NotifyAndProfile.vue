@@ -3,9 +3,12 @@
     <v-menu left :offset-y="true" :offset-x="true" @blur="this.notifications = []">
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs" v-on="on" icon>
-          <v-badge color="red"
+          <v-badge
+            color="red"
             :content="notifications.length"
-            bordered overlap v-bind="attrs"
+            bordered
+            overlap
+            v-bind="attrs"
             v-on="on"
           >
             <v-img :src="require('@/assets/notification.svg')" height="30" width="30"></v-img>
@@ -18,24 +21,24 @@
         :nav="true"
         :avatar="true"
         class="rounded-l"
-        style="height: 405px; width: 300px"
+        style="height: 405px; width: 300px;"
       >
         <v-list-item-group color="primary">
           <v-list-item
             v-for="(item, i) in notifications"
             :key="i"
             class="mb-2 pt-2"
-            style="backgroundColor: #F2F2F2"
+            style="backgroundcolor: #f2f2f2;"
             @click="$emit('clickedItem', getItemSelected(item))"
           >
             <v-list-item-avatar>
               <v-img :src="item.avatar"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title style="fontSize:16px" class="py-1">
-                {{item.title}}
+              <v-list-item-title style="fontsize: 16px;" class="py-1">
+                {{ item.title }}
               </v-list-item-title>
-              <v-list-item-subtitle>Đã đặt lịch hẹn ngày {{item.message}}</v-list-item-subtitle>
+              <v-list-item-subtitle>Đã đặt lịch hẹn ngày {{ item.message }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -48,17 +51,15 @@
             <v-avatar>
               <v-img :src="user.avatar"></v-img>
             </v-avatar>
-            <p class="font-weight-medium mb-0 ml-2">{{user.username}}</p>
+            <p class="font-weight-medium mb-0 ml-2">{{ user.username }}</p>
           </v-btn>
         </template>
         <v-list two-line>
           <template v-for="(item, index) in infoMenu">
             <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
-            <v-list-item v-else :key="item.title" :to= "item.url">
+            <v-list-item v-else :key="item.title" :to="item.url">
               <v-list-item-content>
-                <v-list-item-title
-                  style="color:#1F17FF; fontSize:18px"
-                >
+                <v-list-item-title style="color: #1f17ff; fontsize: 18px;">
                   {{ item.title }}
                 </v-list-item-title>
               </v-list-item-content>
@@ -89,17 +90,13 @@ export default {
         .getToken()
         .then(async (token) => {
           if (token) {
-            const currentMessageToken = window.localStorage.getItem(
-              'messagingToken',
-            );
+            const currentMessageToken = window.localStorage.getItem('messagingToken');
             console.log('token will be updated', currentMessageToken !== token);
             if (currentMessageToken !== token) {
               await this.saveToken(token);
             }
           } else {
-            console.log(
-              'No Instance ID token available. Request permission to generate one.',
-            );
+            console.log('No Instance ID token available. Request permission to generate one.');
             this.notificationsPermisionRequest();
           }
         })
@@ -120,10 +117,7 @@ export default {
     saveToken(token) {
       console.log('tokens', token);
       window.axios
-        .post(
-          'https://us-central1-cropchien.cloudfunctions.net/GeneralSubscription',
-          { token },
-        )
+        .post('https://us-central1-cropchien.cloudfunctions.net/GeneralSubscription', { token })
         .then((response) => {
           window.localStorage.setItem('messagingToken', token);
           console.log(response);
@@ -163,9 +157,7 @@ export default {
       this.getNewCommingBooking(payload.data.bookingId);
       this.addNewNotificaton(payload);
     },
-    changePage() {
-
-    },
+    changePage() {},
   },
   mounted() {
     messaging.onMessage(this.receivePayload);
