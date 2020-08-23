@@ -5,7 +5,7 @@
       <v-col v-for="group in groups.data" :key="group.groupId" cols="6">
         <v-card>
           <v-card-title>{{ group.groupName }}</v-card-title>
-          <v-card-subtitle>{{ group.street }}</v-card-subtitle>
+          <v-card-subtitle>{{ group.street.streetName }}</v-card-subtitle>
           <v-card-text>
             <p>
               Tổng số:

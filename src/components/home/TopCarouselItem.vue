@@ -57,7 +57,7 @@
             max-height="20px"
           />
           <span class="item-text" v-if="!isLoadingProvinces">
-            {{ group.street }}, {{ ward.wardName }}, {{ district.districtName }},
+            {{ group.street.streetName }}, {{ ward.wardName }}, {{ district.districtName }},
             {{ province.provinceName }}
           </span>
         </div>
@@ -123,12 +123,12 @@ export default {
       },
     },
     ward() {
-      const { wardId } = this.group;
-      const res = this.$store.getters['renter/common/getWardById'](wardId);
+      const { streetId } = this.group.street;
+      const res = this.$store.getters['renter/common/getWardByStreetId'](streetId);
       return res;
     },
     district() {
-      const { wardId } = this.group;
+      const { wardId } = this.ward;
       return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
     },
     province() {

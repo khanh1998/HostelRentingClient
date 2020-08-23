@@ -59,7 +59,7 @@
                 <v-icon>attach_money</v-icon>{{ type.price }}
                 {{ type.priceUnit }}
               </p>
-              <p><v-icon>room</v-icon>{{ group.street }}</p>
+              <p><v-icon>room</v-icon>{{ group.street.streetName }}</p>
             </v-list-item-content>
           </v-list-item-content>
         </v-list-item>
@@ -149,7 +149,7 @@
                 <br />
                 Địa chỉ:
                 <span class="font-weight-bold">
-                  {{ group.street }}
+                  {{ group.street.streetName }}
                 </span>
                 <span v-if="item.book.cancel">
                   <v-divider class="my-1"></v-divider>

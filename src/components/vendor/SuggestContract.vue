@@ -10,7 +10,10 @@
           <v-list-item-title style="color: #1f17ff; fontsize: 18px;">
             {{ group.groupName }}
           </v-list-item-title>
-          <v-list-item-subtitle v-html="group.street" class="pb-1"></v-list-item-subtitle>
+          <v-list-item-subtitle
+            v-html="group.street.streetName"
+            class="pb-1"
+          ></v-list-item-subtitle>
           <div
             class="d-flex justify-space-between mt-5"
             v-for="contract in contractByGroups[group.groupId]"

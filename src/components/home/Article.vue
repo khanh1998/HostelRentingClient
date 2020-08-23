@@ -46,7 +46,7 @@
                   text-overflow: ellipsis;
                 "
               >
-                {{ group.street }}, {{ ward.wardName }}, {{ district.districtName }},
+                {{ group.street.streetName }}, {{ ward.wardName }}, {{ district.districtName }},
                 {{ province.provinceName }}
               </span>
               <div class="type-name mt-2" style="height: 40px;">
@@ -413,11 +413,12 @@ export default {
       },
     },
     ward() {
-      const { wardId } = this.group;
-      return this.$store.getters['renter/common/getWardById'](wardId);
+      const { streetId } = this.group.street;
+      const res = this.$store.getters['renter/common/getWardByStreetId'](streetId);
+      return res;
     },
     district() {
-      const { wardId } = this.group;
+      const { wardId } = this.ward;
       return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
     },
     province() {
