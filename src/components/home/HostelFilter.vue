@@ -100,9 +100,15 @@
       dense
     ></v-select>
     <div class="d-flex justify-center align-center">
-      <v-btn tile min-width="100%" dark depressed class="mt-6" color="amber" @click="filterSubmit()"
-        >ÁP DỤNG</v-btn
-      >
+      <v-btn
+        tile
+        min-width="100%"
+        dark
+        depressed
+        class="mt-6"
+        color="amber"
+        @click="filterSubmit()"
+      >ÁP DỤNG</v-btn>
     </div>
   </v-sheet>
 </template>
@@ -127,9 +133,9 @@ export default {
     serviceIds: [],
     min: 0,
     max: 15,
-    slider: 3,
     range: [0, 2.5],
     disabled: false,
+    slider: 3,
     minSuperficiality: 0,
   }),
   methods: {
