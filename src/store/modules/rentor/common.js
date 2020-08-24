@@ -9,6 +9,9 @@ const myState = () => ({
   wards: {
     data: [],
   },
+  streets: {
+    data: [],
+  },
   categories: {
     data: [],
     isLoading: false,
@@ -19,17 +22,23 @@ const getters = {
     const result = state.categories.data.find((category) => category.categoryId === Number(id));
     return result;
   },
-  getWardById: (state) => (id) => state.wards.data.find((ward) => ward.wardId === Number(id)),
-  // eslint-disable-next-line arrow-body-style
+  getStreetById: (state) => (id) => {
+    return state.streets.data.find((street) => street.streetId === Number(id));
+  },
+  getWardByStreetId: (state) => (id) => {
+    return state.wards.data.find((ward) => {
+      return ward.streets.find((street) => street.streetId === Number(id));
+    });
+  },
+  getWardById: (state) => (id) => {
+    return state.wards.data.find((ward) => ward.wardId === Number(id));
+  },
   getDistrictByWardId: (state) => (id) => {
-    // eslint-disable-next-line arrow-body-style
     return state.districts.data.find((district) => {
       return district.wards.find((ward) => ward.wardId === Number(id));
     });
   },
-  // eslint-disable-next-line arrow-body-style
   getProvinceByDistrictId: (state) => (id) => {
-    // eslint-disable-next-line arrow-body-style
     return state.provinces.data.find((province) => {
       return province.districts.find((district) => district.districtId === Number(id));
     });
@@ -65,10 +74,14 @@ const mutations = {
     // get all wards from districts
     let wards = districts.map((district) => district.wards);
     wards = wards.flat();
+    // get all streets from wards
+    let streets = wards.map((ward) => ward.streets);
+    streets = streets.flat();
     // set data
     state.provinces.data = provinces;
     state.districts.data = districts;
     state.wards.data = wards;
+    state.streets.data = streets;
     state.provinces.isLoading = false;
   },
   GET_PROVINCES_FAILURE(state) {

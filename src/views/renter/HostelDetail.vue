@@ -27,7 +27,7 @@
             </p>
             <p class="grey--text" v-if="!isLoadingProvinces">
               <v-icon>location_on</v-icon>
-              {{ group.street }}, {{ ward.wardName }}, {{ district.districtName }},
+              {{ group.street.streetName }}, {{ ward.wardName }}, {{ district.districtName }},
               {{ province.provinceName }}
             </p>
           </div>
@@ -100,7 +100,7 @@
                 <span class="font-weight-bold">{{ wardAverage.price }} triệu / tháng</span>
               </p>
               <p>
-                {{ group.street }} :
+                {{ group.street.streetName }} :
                 <span class="font-weight-bold">{{ streetAverage.price }} triệu / tháng</span>
               </p>
             </v-card-text>
@@ -172,11 +172,12 @@ export default {
       return this.$route.params.typeId;
     },
     ward() {
-      const { wardId } = this.group;
-      return this.$store.getters['renter/common/getWardById'](wardId);
+      const { streetId } = this.group.street;
+      const res = this.$store.getters['renter/common/getWardByStreetId'](streetId);
+      return res;
     },
     district() {
-      const { wardId } = this.group;
+      const { wardId } = this.ward;
       return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
     },
     allStreetIds() {
