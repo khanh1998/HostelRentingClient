@@ -21,8 +21,7 @@
               overlay.show = false;
               search();
             "
-            >Search</v-btn
-          >
+          >Search</v-btn>
         </template>
       </v-text-field>
     </v-overlay>
@@ -102,8 +101,7 @@
             dark
             class="hidden-xs-only"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
-            >Lịch hẹn của bạn</v-btn
-          >
+          >Lịch hẹn của bạn</v-btn>
           <v-btn
             to="/vendor"
             depressed
