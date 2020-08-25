@@ -3,6 +3,7 @@ import ChatDetail from '../../views/vendor/ChatDetail.vue';
 import Overview from '../../views/vendor/Overview.vue';
 import HostelManagement from '../../views/vendor/HostelManagement.vue';
 import QRGeneration from '../../components/vendor/QRGeneration.vue';
+import VendorBooking from '../../views/vendor/Booking.vue';
 
 const routes = [
   {
@@ -33,6 +34,12 @@ const routes = [
         name: 'QRGeneration',
         component: QRGeneration,
         meta: { requiresAuth: true },
+      },
+      {
+        path: 'booking',
+        name: 'VendorBooking',
+        component: VendorBooking,
+        meta: { requiresAuth: true, is_vendor: true },
       },
     ],
   },
