@@ -107,7 +107,9 @@
         </v-card-title>
       </v-card>
       <div class="d-flex justify-end" v-if="bookings.length > 0">
-        <v-card-text style="color: #818286;">Xem thêm >></v-card-text>
+        <v-card-text style="color: #818286;">
+          <router-link to="vendor/booking" class="text-decoration-none">Xem thêm >></router-link>
+        </v-card-text>
       </div>
     </v-sheet>
   </div>

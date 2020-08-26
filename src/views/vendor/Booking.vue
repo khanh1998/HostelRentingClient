@@ -3,12 +3,31 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
+    <v-dialog v-model="cancelDialog.show" max-width="290">
+      <v-card>
+        <v-card-title class="headline">Bạn mốn hủy hẹn?</v-card-title>
+        <v-card-text>
+          <p>Hãy cho chúng tôi biết lý do bạn muốn hủy cuộc hẹn này.</p>
+          <v-textarea outlined name="input-7-4" label="Lý do hủy hẹn"></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" dark @click="unshowCancelDialog">
+            <v-icon>close</v-icon>
+          </v-btn>
+          <v-btn color="red darken-1" dark @click="doCancelBooking">
+            <v-icon>done</v-icon>
+            Hủy hẹn ngay
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-row v-if="!isLoading">
-      <v-col cols="6">
+      <v-col>
         <v-sheet height="64">
           <v-toolbar flat color="white">
             <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
-              Today
+              Hôm nay
             </v-btn>
             <v-btn fab text small color="grey darken-2" @click="prev">
               <v-icon small>mdi-chevron-left</v-icon>
@@ -29,23 +48,24 @@
               </template>
               <v-list>
                 <v-list-item @click="type = 'day'">
-                  <v-list-item-title>Day</v-list-item-title>
+                  <v-list-item-title>Ngày</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="type = 'week'">
-                  <v-list-item-title>Week</v-list-item-title>
+                  <v-list-item-title>Tuần</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="type = 'month'">
-                  <v-list-item-title>Month</v-list-item-title>
+                  <v-list-item-title>Tháng</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="type = '4day'">
-                  <v-list-item-title>4 days</v-list-item-title>
+                  <v-list-item-title>4 Ngày</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
           </v-toolbar>
         </v-sheet>
-        <v-sheet height="600">
+        <v-sheet height="500">
           <v-calendar
+            locale="vi-vn"
             ref="calendar"
             v-model="focus"
             color="primary"
@@ -68,18 +88,45 @@
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               </v-toolbar>
               <v-card-text v-if="selectedEvent && selectedEvent.data">
-                <v-avatar size="30">
-                  <v-img :src="selectedEvent.data.renter.avatar" />
-                </v-avatar>
-                <span class="text-h6"> {{ selectedEvent.data.renter.username }} </span>
-                <p>{{ selectedEvent.data.renter.phone }}</p>
-                <p>{{ new Date(selectedEvent.start).toLocaleDateString('vn') }}</p>
-                <p>{{ new Date(selectedEvent.start).toLocaleTimeString('vn') }}</p>
-                <p>{{ selectedEvent.data.group.street.streetName }}</p>
+                <p class="text-center">
+                  <v-avatar>
+                    <v-img
+                      :src="
+                        selectedEvent.data.renter.avartar || require('@/assets/suzy-avatar.jpg')
+                      "
+                    />
+                  </v-avatar>
+                  <span class="text-h6 blue--text"> {{ selectedEvent.data.renter.username }} </span>
+                </p>
+                <p><v-icon>call</v-icon> {{ selectedEvent.data.renter.phone }}</p>
+                <p>
+                  <span class="font-weight-bold">
+                    <v-icon>today</v-icon>
+                    {{ new Date(selectedEvent.start).toLocaleDateString('vi-vn') }}
+                  </span>
+                  <span class="font-weight-bold">
+                    <v-icon>schedule</v-icon>
+                    {{ new Date(selectedEvent.start).toLocaleTimeString('vi-vn') }}
+                  </span>
+                </p>
+                <p><v-icon>category</v-icon> {{ selectedEvent.data.type.title }}</p>
+                <p>
+                  <v-icon>room</v-icon>
+                  <span class="font-weight-bold">{{ selectedEvent.data.group.groupName }}</span>
+                  , đường
+                  <span class="font-weight-bold">{{
+                    selectedEvent.data.group.street.streetName
+                  }}</span>
+                </p>
               </v-card-text>
-              <v-card-actions>
-                <v-btn text color="secondary" @click="selectedOpen = false">
-                  Cancel
+              <v-card-actions v-if="selectedEvent && selectedEvent.data">
+                <v-btn
+                  v-if="selectedEvent.data.status === 'INCOMING'"
+                  dark
+                  color="red"
+                  @click="showCancelDialog(selectedEvent.data.bookingId)"
+                >
+                  Hủy hẹn
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -98,10 +145,10 @@ export default {
     focus: '',
     type: 'month',
     typeToLabel: {
-      month: 'Month',
-      week: 'Week',
-      day: 'Day',
-      '4day': '4 Days',
+      month: 'Tháng',
+      week: 'Tuần',
+      day: 'Ngày',
+      '4day': '4 ngày',
     },
     selectedEvent: {},
     selectedElement: null,
@@ -109,6 +156,10 @@ export default {
     events: [],
     colors: ['green', 'amber', 'red'],
     names: ['Sắp tới', 'Hoàn tất', 'Đã hủy'],
+    cancelDialog: {
+      show: false,
+      bookingId: undefined,
+    },
   }),
   computed: {
     ...mapState({
@@ -125,6 +176,7 @@ export default {
     ...mapActions({
       getBookings: 'user/getBookings',
       getUser: 'user/getUser',
+      cancelBooking: 'user/cancelBooking',
     }),
     getEvents({ start, end }) {
       const events = [];
@@ -207,6 +259,17 @@ export default {
       }
 
       nativeEvent.stopPropagation();
+    },
+    showCancelDialog(bookingId) {
+      this.cancelDialog.show = true;
+      this.cancelDialog.bookingId = bookingId;
+    },
+    unshowCancelDialog() {
+      this.cancelDialog.show = false;
+      this.cancelDialog.bookingId = undefined;
+    },
+    doCancelBooking() {
+      this.cancelBooking(this.cancelDialog.bookingId).then(this.unshowCancelDialog());
     },
   },
   created() {
