@@ -52,7 +52,7 @@
                     class="col-11 gmap-input text-body-2 blue-grey--text"
                     @place_changed="setPlace"
                     @change="changeSearchValue"
-                    :value="searchValue"
+                    :value="address"
                   ></gmap-autocomplete>
                   <v-btn
                     icon
@@ -278,6 +278,9 @@ export default {
           long: coordinates.lng,
           coordinator: coordinates,
         });
+        this.coordinator.latitude = coordinates.lat;
+        this.coordinator.longitude = coordinates.lng;
+        this.coordinator.address = this.address;
         this.setSearchValue(this.coordinates);
         this.nameAddress = this.searchValue.split('-');
         this.$router.push('/filter');
@@ -316,6 +319,9 @@ export default {
       set(value) {
         this.setIsSearchOptional(value);
       },
+    },
+    coordinator() {
+      return this.$store.state.renter.filterResult.coordinator;
     },
     searchValue: {
       get() {

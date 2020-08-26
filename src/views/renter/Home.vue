@@ -43,16 +43,7 @@
                 </v-col>
               </v-row>
             </v-col>
-            <v-col cols="4">
-              <v-row>
-                <v-col cols="11 ml-auto pt-0 mt-0">
-                  <v-sheet class="pt-5">
-                    <p class="text-h6 text-center">Lọc nâng cao</p>
-                    <HostelFilter />
-                  </v-sheet>
-                </v-col>
-              </v-row>
-            </v-col>
+            <v-col cols="4"></v-col>
           </v-row>
           <v-row>
             <v-col cols="12" sm="12" md="7" xl="8" lg="8" class="mt-10">
@@ -102,7 +93,6 @@
 import Banner from '@/components/home/Banner.vue';
 import TopCarousel from '@/components/home/TopCarousel.vue';
 import ArticleList from '@/components/home/ArticleList.vue';
-import HostelFilter from '@/components/home/HostelFilter.vue';
 import { mapActions } from 'vuex';
 
 export default {
@@ -111,7 +101,6 @@ export default {
     Banner,
     TopCarousel,
     ArticleList,
-    HostelFilter,
   },
   data: () => ({
     overlay: false,

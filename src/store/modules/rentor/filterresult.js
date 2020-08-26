@@ -2,6 +2,11 @@ const myState = {
   search: {
     value: '',
   },
+  coordinator: {
+    latitude: '',
+    longitude: '',
+    address: '',
+  },
   filter: {
     distance: {
       select: '5km',

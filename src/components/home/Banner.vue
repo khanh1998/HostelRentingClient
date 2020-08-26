@@ -29,7 +29,7 @@
                     class="col-11 gmap-input text-body-2 blue-grey--text"
                     @place_changed="setPlace"
                     @change="changeSearchValue"
-                    :value="searchValue"
+                    :value="coordinator.address"
                     autofocus
                   ></gmap-autocomplete>
                   <v-btn
@@ -93,7 +93,7 @@
                   class="col-11 gmap-input text-body-2 blue-grey--text"
                   @place_changed="setPlace"
                   @change="changeSearchValue"
-                  :value="searchValue"
+                  :value="coordinator.address"
                   autofocus
                 ></gmap-autocomplete>
                 <v-btn icon @click="clearField()" v-bind:style="{ visibility: computedClearable }">
@@ -333,7 +333,7 @@
                 :style="{ width: '100%', height: '50px', borderRadius: '0px',
                   boxShadow: 'none', color: '#151515' }"
                 color="#fdde52"
-                @click="searchLikeFilter()"
+                @click="searchByCoordinates()"
               >TÌM KIẾM</v-btn>
             </v-col>
           </div>
@@ -428,8 +428,9 @@ export default {
     }),
     setPlace(place) {
       this.currentPlace = place;
-      this.address = `${place.name}-${place.formatted_address}`;
       this.searchValue = place.formatted_address;
+      this.address = `${place.name}-${place.formatted_address}`;
+      this.coordinator.address = `${place.name}-${place.formatted_address}`;
     },
     changeSearchValue() {
       this.visibleProperty = 'visible';
@@ -437,6 +438,7 @@ export default {
     clearField() {
       this.searchValue = '';
       this.address = '';
+      this.coordinator.address = '';
       this.visibleProperty = 'hidden';
       this.currentPlace = null;
     },
@@ -449,31 +451,24 @@ export default {
           lat: this.currentPlace.geometry.location.lat(),
           lng: this.currentPlace.geometry.location.lng(),
         };
-        this.searchByCoordinator({
-          lat: coordinates.lat,
-          long: coordinates.lng,
-          coordinator: coordinates,
-        });
+        if (this.advanceSearch) {
+          this.searchLikeFilter({
+            lat: coordinates.lat,
+            long: coordinates.lng,
+            coordinator: coordinates,
+            filterProperties: this.filter,
+          });
+        } else {
+          this.filter.price.disable = this.disabled;
+          this.searchByCoordinator({
+            lat: coordinates.lat,
+            long: coordinates.lng,
+            coordinator: coordinates,
+          });
+        }
         this.setSearchValue(this.coordinates);
-        this.nameAddress = this.searchValue.split('-');
-        this.isSearchOptional = true;
-        this.$router.push('/filter');
-      }
-    },
-    searchLikeFilter() {
-      if (this.currentPlace) {
-        const coordinates = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-        };
-        this.filter.price.disable = this.disabled;
-        this.searchLikeFilter({
-          lat: coordinates.lat,
-          long: coordinates.lng,
-          coordinator: coordinates,
-          filterProperties: this.filter,
-        });
-        this.setSearchValue(this.coordinates);
+        this.coordinator.latitude = coordinates.lat;
+        this.coordinator.longitude = coordinates.lng;
         this.nameAddress = this.searchValue.split('-');
         this.isSearchOptional = true;
         this.$router.push('/filter');
@@ -494,6 +489,9 @@ export default {
     },
     facilities() {
       return this.$store.state.renter.filterResult.filter.facility.data;
+    },
+    coordinator() {
+      return this.$store.state.renter.filterResult.coordinator;
     },
     categories() {
       return this.$store.state.renter.filterResult.filter.categories.data;
