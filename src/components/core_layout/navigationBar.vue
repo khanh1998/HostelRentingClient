@@ -44,7 +44,7 @@
             </v-col>
             <!-- </v-col>
             <v-col class="col-5">-->
-            <v-col class="col-10 pl-10" v-show="isSearchOptional">
+            <v-col class="col-10 pl-10" v-show="!isSearchOptional">
               <v-row class="px-0 d-flex align-center">
                 <v-col class="col-9 pl-2 searchBar d-flex align-center">
                   <gmap-autocomplete
@@ -279,6 +279,7 @@ export default {
           coordinator: coordinates,
         });
         this.setSearchValue(this.coordinates);
+        this.nameAddress = this.searchValue.split('-');
         this.$router.push('/filter');
       }
     },

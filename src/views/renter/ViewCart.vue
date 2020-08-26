@@ -68,9 +68,7 @@ export default {
     this.getUser().then(() => {
       this.getBookings().then(() => {
         const bookings = this.$store.state.user.bookings.data;
-        this.arrayEvents = bookings.map((booking) =>
-          new Date(booking.meetTime).toISOString().substr(0, 10),
-        );
+        this.arrayEvents = bookings.map((booking) => new Date(booking.meetTime).toISOString().substr(0, 10));
       });
     });
   },

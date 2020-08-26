@@ -1,6 +1,6 @@
 const myState = () => ({
   searchType: {
-    isOptional: true,
+    isOptional: false,
     nameAddress: '',
     school: '',
     hometown: '',
