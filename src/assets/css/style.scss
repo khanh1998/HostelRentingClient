@@ -1,11 +1,14 @@
 @font-face {
-    font-family: 'Lato';
-    src: url('../fonts/lato-regular.ttf'),
-        url('../fonts/lato-bold.ttf'),
-        url('../fonts/lato-italic.ttf');
-    
+  font-family: 'Lato';
+  src: url('../fonts/lato-regular.ttf'), url('../fonts/lato-bold.ttf'),
+    url('../fonts/lato-italic.ttf');
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('../fonts/Nunito/Nunito-Regular.ttf');
 }
 
 .v-application {
-    font-family: "Lato" !important;
+  font-family: 'Lato' !important;
 }

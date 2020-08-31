@@ -25,7 +25,14 @@
         </template>
       </v-text-field>
     </v-overlay>
-    <v-app-bar app color="#fff" light height="70" id="top-bar">
+    <v-app-bar
+      app
+      color="#fff"
+      light
+      height="80"
+      id="top-bar"
+      style="box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !important;"
+    >
       <v-row height="70 m-0" class="d-flex">
         <v-col cols="11" md="7">
           <v-row>

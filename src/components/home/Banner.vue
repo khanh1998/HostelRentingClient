@@ -7,9 +7,9 @@
         <div v-show="!advanceSearch">
           <div class="d-flex flex-column align-center justify-center mt-16">
             <p
-              class="font-weight-medium white--text transition-swing text-h5"
+              class="white--text px-2 font-weight-bold slogan"
               style="letter-spacing: 0.001em !important;"
-            >HỖ TRỢ TÌM KIẾM ĐỀ XUẤT PHÒNG TRỌ PHÙ HỢP NHẤT</p>
+            >HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT</p>
             <p class="white--text text-h2">TD HOSTEL</p>
             <div class="flex d-flex px-10" :style="{ width: '100%' }">
               <v-col cols="9">
@@ -253,7 +253,7 @@
                     <v-icon>{{ showMoreFacilities ? 'remove_circle' : 'add_circle' }}</v-icon>
                   </v-btn>
                 </div>
-                <div v-show="showMoreFacilities">
+                <div v-show="showMoreFacilities" class="banner">
                   <div>
                     <v-list>
                       <v-list-item-group
@@ -301,7 +301,7 @@
                     <v-icon>{{ showMoreAround ? 'remove_circle' : 'add_circle' }}</v-icon>
                   </v-btn>
                 </div>
-                <div v-show="showMoreAround">
+                <div v-show="showMoreAround" class="banner">
                   <div>
                     <v-list shaped>
                       <v-list-item-group v-model="filter.around.selects" multiple>
@@ -349,6 +349,9 @@
     url(../../assets/home/blue-thumnail.png);
   /* background-image: linear-gradient(rgba(49, 94, 154, 0.85), rgba(49, 94, 154, 0.85)),
     url(../../assets/home/blue-thumnail.png); */
+  /* background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
+    url('http://thicongnhadanang.com/uploads/image/images/thiet%20ke%20can%20ho%20mini-dep-da-nang%20(2).jpg');
+  background-position: center; */
   background-size: cover;
   height: 550px;
   overflow: hidden;
@@ -385,7 +388,7 @@
 .v-application--is-ltr .v-text-field .v-label {
   font-size: revert !important;
 }
-.v-list {
+.banner .v-list {
   height: 130px;
   overflow-y: auto;
 }

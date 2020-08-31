@@ -1,5 +1,9 @@
 <template>
-  <div class="info-card d-flex flex-column" v-if="!isLoading">
+  <div
+    class="d-flex flex-column justify-center align-center"
+    v-if="!isLoading"
+    style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%;"
+  >
     <v-dialog v-model="dateTimePicker.isOpenPicker" width="350">
       <v-card v-if="!userState.data" color="white" light>
         <v-card-title>Đăng nhập để đặt lịch xem phòng</v-card-title>
@@ -20,38 +24,48 @@
         :groupId="groupId"
       />
     </v-dialog>
-    <div
-      class="above d-flex flex-column justify-center align-center rounded-lg"
-      style="background-color: #fff;"
-    >
-      <v-sheet
-        class="ma-6 pa-2 d-flex align-center justify-center rounded-pill"
-        color="#F6F7F9"
-        rounded
-      >
-        <v-avatar height="64" width="64" left>
-          <v-img max-height="64" max-width="64" src="../../assets/logo.png" />
-        </v-avatar>
-        <p class="text-h6 font-weight-thin text-center ma-2">{{ name }}</p>
-      </v-sheet>
-      <div class="d-flex flex-wrap align-center">
+    <!-- <v-row class="d-flex justify-end" :style="{width: '100%'}">
+      <v-btn class="ma-2 text-caption font-nunito x-small" outlined color="indigo">
+        <v-icon>share</v-icon>
+        Chia Sẽ
+      </v-btn>
+      <v-btn class="ma-2 text-subtitle-2" outlined color="indigo">
+        <v-icon>report_problem</v-icon>Báo Xấu
+      </v-btn>
+    </v-row>-->
+    <div class="d-flex flex-column justify-center align-center">
+      <v-avatar height="90" width="90">
+        <v-img max-height="90" max-width="90" src="../../assets/home/thumnail.png" />
+      </v-avatar>
+      <!-- eslint-disable max-len -->
+      <p
+        class="text-body-1 font-weight-bold text-center font-nunito mx-2 my-3"
+        style="color: #222"
+      >{{ name }}</p>
+      <div class="d-flex flex-wrap align-center mb-2">
         <v-icon color="yellow" x-small>fas fa-star</v-icon>
-        <span class="white--text">{{ '_' }}</span>
         <p class="grey--text mb-0">{{ ` ${rating.average}/5 ` }}</p>
-        <span class="white--text">{{ '_' }}</span>
         <p class="mb-0">({{ rating.total }})</p>
       </div>
       <div class="d-flex">
-        <v-btn
-          color="orange"
-          outlined
-          @click="$emit('openMessage')"
-          rounded
-          class="my-2 mx-1"
-          :disabled="userState.data && isVendor"
-        >
-          <v-icon>fas fa-comment-dots</v-icon>Nhắn tin ngay!
-        </v-btn>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="#F9BD1A"
+              outlined
+              @click="$emit('openMessage')"
+              rounded
+              class="my-3"
+              :disabled="userState.data && isVendor"
+              v-bind="attrs"
+              v-on="on"
+              _title="Hãy nhắn tin để thỏa thuận giá!"
+            >
+              <v-icon class="mx-1">fas fa-comment-dots</v-icon>Nhắn tin ngay!
+            </v-btn>
+          </template>
+          <span>Hãy nhắn tin để thỏa thuận giá!</span>
+        </v-tooltip>
       </div>
     </div>
     <div class="below d-flex justify-center align-center">
@@ -59,14 +73,15 @@
         <template v-slot:activator="{ attrs }">
           <v-btn
             v-bind="attrs"
-            color="primary"
+            color="rgb(108, 152, 198)"
             width="80%"
-            class="ma-6"
+            class="mx-7 my-6 text-subtitle-2 white--text py-5"
             depressed
+            tile
             @click="dateTimePicker.isOpenPicker = true"
             :disabled="hasPendingBooking || isVendor"
           >
-            <v-icon left>fas fa-paper-plane</v-icon>ĐẶT LỊCH XEM PHÒNG
+            <v-icon left>event_available</v-icon>ĐẶT LỊCH XEM PHÒNG
           </v-btn>
         </template>
         <v-card>
@@ -213,4 +228,8 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped></style>
+<style scoped>
+.font-nunito {
+  font-family: 'Nunito', sans-serif !important;
+}
+</style>

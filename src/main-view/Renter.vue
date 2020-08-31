@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <myAppBar />
+    <myAppBar style="box-shadow: 0 10px 20px rgba(0, 0, 0, .06) !import;" />
     <v-main>
       <router-view></router-view>
     </v-main>
