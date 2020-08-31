@@ -258,9 +258,9 @@
 import { mapActions, mapGetters } from 'vuex';
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
 import firebase from '../../config/firebase';
-import utils from '../../utils/firebaseNotification';
+// import utils from '../../utils/firebaseNotification';
 
-const { sendBookingNotification } = utils;
+// const { sendBookingNotification } = utils;
 const { store } = firebase;
 const chatCollectionRef = store.collection('chat');
 
@@ -319,7 +319,7 @@ export default {
       };
       console.log(bookingToApi);
       this.createBooking(bookingToApi).then(() => {
-        sendBookingNotification(this.newlyCreatedBooking);
+        // sendBookingNotification(this.newlyCreatedBooking);
         newContent.book.bookingId = this.newlyCreatedBooking.bookingId;
         this.messCollectionRef.add(newContent);
         this.messCollectionRef.parent.update({
@@ -414,7 +414,7 @@ export default {
     },
     getSimpleFormatDate(date) {
       return `${date.getDate()}/
-            ${date.getMonth()}/
+            ${date.getMonth() + 1}/
             ${date.getFullYear()}`;
     },
     doCancelDeal(dealId) {
