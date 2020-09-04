@@ -21,21 +21,21 @@
         :nav="true"
         :avatar="true"
         class="rounded-l"
-        style="height: 405px; width: 300px;"
+        style="height: 405px; width: 300px"
       >
         <v-list-item-group color="primary">
           <v-list-item
             v-for="(item, i) in notifications"
             :key="i"
             class="mb-2 pt-2"
-            style="backgroundcolor: #f2f2f2;"
+            style="backgroundcolor: #f2f2f2"
             @click="$emit('clickedItem', getItemSelected(item))"
           >
             <v-list-item-avatar>
               <v-img :src="item.avatar"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title style="fontsize: 16px;" class="py-1">
+              <v-list-item-title style="fontsize: 16px" class="py-1">
                 {{ item.title }}
               </v-list-item-title>
               <v-list-item-subtitle>Đã đặt lịch hẹn ngày {{ item.message }}</v-list-item-subtitle>
@@ -59,7 +59,7 @@
             <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
             <v-list-item v-else :key="item.title" :to="item.url">
               <v-list-item-content>
-                <v-list-item-title style="color: #1f17ff; fontsize: 18px;">
+                <v-list-item-title style="color: #1f17ff; fontsize: 18px">
                   {{ item.title }}
                 </v-list-item-title>
               </v-list-item-content>

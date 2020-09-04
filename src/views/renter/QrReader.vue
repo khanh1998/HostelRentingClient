@@ -6,7 +6,7 @@
       </v-btn> -->
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
-          <v-card style="height: 90%;" class="mt-5">
+          <v-card style="height: 90%" class="mt-5">
             <p></p>
             <p class="error text-center">{{ error }}</p>
             <!-- <p class="decode-result">Last result: <b>{{ result }}</b></p> -->
@@ -15,7 +15,7 @@
               @init="logErrors"
               v-on="on"
               v-bind="attrs"
-              style="height: 100%;"
+              style="height: 100%"
             >
               <qrcode-stream @decode="onDecode" @init="onInit" />
             </qrcode-drop-zone>
@@ -24,21 +24,17 @@
         </template>
 
         <v-card>
-          <v-card-title class="headline" style="background-color: #98b7d7; color: white;">
+          <v-card-title class="headline" style="background-color: #98b7d7; color: white">
             Xác nhận
           </v-card-title>
 
-          <v-card-text class="d-flex justify-center mt-5">
-            Xác nhận quét thành công !
-          </v-card-text>
+          <v-card-text class="d-flex justify-center mt-5"> Xác nhận quét thành công ! </v-card-text>
 
           <v-divider></v-divider>
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="doUpdateBookingStatus()">
-              Đóng
-            </v-btn>
+            <v-btn color="primary" text @click="doUpdateBookingStatus()"> Đóng </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

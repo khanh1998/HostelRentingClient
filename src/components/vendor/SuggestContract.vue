@@ -1,13 +1,13 @@
 <template>
   <v-card v-if="!isLoadingContracts && !groups.isLoading">
-    <div style="font-size: 20px; fontweight: bold;" class="pt-3 pl-2 pb-6">
+    <div style="font-size: 20px; fontweight: bold" class="pt-3 pl-2 pb-6">
       Các phòng sắp hết hạn hợp đồng
     </div>
     <v-list two-line>
       <v-divider></v-divider>
       <v-list-item v-for="group in groups.data" :key="group.groupId">
         <v-list-item-content>
-          <v-list-item-title style="color: #1f17ff; fontsize: 18px;">
+          <v-list-item-title style="color: #1f17ff; fontsize: 18px">
             {{ group.groupName }}
           </v-list-item-title>
           <v-list-item-subtitle
@@ -19,15 +19,15 @@
             v-for="contract in contractByGroups[group.groupId]"
             :key="contract.contractId"
           >
-            <div style="fontweight: bold;">{{ contract.room.roomName }}</div>
-            <div style="fontweight: bold;">
+            <div style="fontweight: bold">{{ contract.room.roomName }}</div>
+            <div style="fontweight: bold">
               {{ expiredDate(contract.startTime, contract.duration) }}
             </div>
           </div>
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-card-text style="color: #818286;" class="d-flex justify-end">Xem thêm >></v-card-text>
+    <v-card-text style="color: #818286" class="d-flex justify-end">Xem thêm >></v-card-text>
   </v-card>
 </template>
 
@@ -52,7 +52,7 @@ export default {
       return this.convertDateToString(date);
     },
     convertDateToString(d) {
-      const month = d.getMonth();
+      const month = d.getMonth() + 1;
       const year = d.getFullYear();
       const date = d.getDate();
       return `${date}/${month}/${year}`;

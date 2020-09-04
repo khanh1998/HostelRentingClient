@@ -17,7 +17,7 @@
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title style="fontsize: 20px;">Loại phòng</v-toolbar-title>
+          <v-toolbar-title style="fontsize: 20px">Loại phòng</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-card-title>
             <v-text-field
@@ -71,12 +71,8 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-icon @click="editItem(item)">
-          mdi-pencil
-        </v-icon>
-        <v-icon class="ml-5" @click="deleteItem(item)">
-          mdi-delete
-        </v-icon>
+        <v-icon @click="editItem(item)"> mdi-pencil </v-icon>
+        <v-icon class="ml-5" @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">More info about {{ item.typeName }}</td> </template

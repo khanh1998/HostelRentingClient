@@ -13,7 +13,7 @@
     </v-card-title>
     <v-divider />
     <div
-      style="max-height: 300px; min-height: 300px;"
+      style="max-height: 300px; min-height: 300px"
       class="overflow-y-auto"
       id="chatbox"
       ref="chatbox"
@@ -120,7 +120,7 @@
               <p
                 v-if="item.bargain"
                 v-ripple
-                style="width: 75%;"
+                style="width: 75%"
                 class="blue lighten-5 pa-2 rounded"
               >
                 <v-icon color="amber">attach_money</v-icon>
@@ -154,7 +154,7 @@
               <p
                 v-else-if="item.book"
                 v-ripple
-                style="width: 75%;"
+                style="width: 75%"
                 class="blue lighten-5 pa-2 rounded max-w-3/4"
               >
                 <v-icon color="pink">event</v-icon>
@@ -180,21 +180,21 @@
               <span
                 v-else
                 v-ripple
-                style="width: 75%;"
+                style="width: 75%"
                 class="blue lighten-5 pa-2 rounded max-w-3/4"
                 >{{ item.message }}</span
               >
             </div>
             <div v-if="item.sender === 'vendor'" class="d-flex justify-start">
               <span
-                style="width: 75%;"
+                style="width: 75%"
                 v-ripple
                 class="green lighten-5 pa-2 rounded max-w-3/4"
                 v-if="!item.book && !item.bargain"
                 >{{ item.message }}</span
               >
               <span
-                style="width: 75%;"
+                style="width: 75%"
                 v-ripple
                 class="green lighten-5 pa-2 rounded max-w-3/4"
                 v-if="item.bargain && item.bargain.dealId"
@@ -203,7 +203,7 @@
                 <!-- <v-btn small color="amber" class="mt-2">Hủy thỏa thuận</v-btn> -->
               </span>
               <span
-                style="width: 75%;"
+                style="width: 75%"
                 v-ripple
                 class="red lighten-5 pa-2 rounded max-w-3/4"
                 v-if="item.bargain && !item.bargain.dealId"

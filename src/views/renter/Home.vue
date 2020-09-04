@@ -1,9 +1,6 @@
 <template>
   <div>
-    <v-overlay
-      :value="(isLoadingTopView && isLoadingTopSuggestion && isLoadingCategories)"
-      absolute
-    >
+    <v-overlay :value="isLoadingTopView && isLoadingTopSuggestion && isLoadingCategories" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container fluid v-if="!(isLoadingTopView || isLoadingTopSuggestion || isLoadingCategories)">

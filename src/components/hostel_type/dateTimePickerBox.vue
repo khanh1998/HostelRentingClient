@@ -22,7 +22,7 @@
     </v-dialog>
     <div
       class="above d-flex flex-column justify-center align-center rounded-lg"
-      style="background-color: #fff;"
+      style="background-color: #fff"
     >
       <v-sheet
         class="ma-6 pa-2 d-flex align-center justify-center rounded-pill"

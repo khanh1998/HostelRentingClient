@@ -4,6 +4,7 @@ import Overview from '../../views/vendor/Overview.vue';
 import HostelManagement from '../../views/vendor/HostelManagement.vue';
 import QRGeneration from '../../components/vendor/QRGeneration.vue';
 import VendorBooking from '../../views/vendor/Booking.vue';
+import VendorSchedule from '../../views/vendor/Schedule.vue';
 
 const routes = [
   {
@@ -39,6 +40,12 @@ const routes = [
         path: 'booking',
         name: 'VendorBooking',
         component: VendorBooking,
+        meta: { requiresAuth: true, is_vendor: true },
+      },
+      {
+        path: 'schedule',
+        name: 'VendorSchedule',
+        component: VendorSchedule,
         meta: { requiresAuth: true, is_vendor: true },
       },
     ],

@@ -26,9 +26,7 @@
       <v-col>
         <v-sheet height="64">
           <v-toolbar flat color="white">
-            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
-              Hôm nay
-            </v-btn>
+            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday"> Hôm nay </v-btn>
             <v-btn fab text small color="grey darken-2" @click="prev">
               <v-icon small>mdi-chevron-left</v-icon>
             </v-btn>

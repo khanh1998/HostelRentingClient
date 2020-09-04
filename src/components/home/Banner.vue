@@ -23,12 +23,12 @@
         </div>
         <p
           class="font-weight-medium white--text transition-swing text-h5"
-          style="letter-spacing: 0.001em !important;"
+          style="letter-spacing: 0.001em !important"
         >
           HỖ TRỢ TÌM KIẾM ĐỂ ĐỀ XUẤT PHÒNG TRỌ PHÙ HỢP NHẤT
         </p>
-        <v-row style="height: 80px;">
-          <v-col cols="7" style="height: 50px;">
+        <v-row style="height: 80px">
+          <v-col cols="7" style="height: 50px">
             <v-autocomplete
               v-model="banner.left.select.school"
               :items="banner.left.schools"
@@ -60,7 +60,7 @@
             ></v-autocomplete>
           </v-col>
         </v-row>
-        <v-col cols="12" class="mt-2" style="padding: 0px !important;">
+        <v-col cols="12" class="mt-2" style="padding: 0px !important">
           <div class="d-flex justify-center align-center" :style="{ width: '100%' }">
             <div
               class="d-flex justify-center align-center white"
@@ -134,7 +134,7 @@
       class="banner-right d-flex flex-column justify-center align-center"
       :style="banner.right.style"
     >
-      <div class="mb-10" style="width: 150px; border: 1px solid #f5b507;" />
+      <div class="mb-10" style="width: 150px; border: 1px solid #f5b507" />
       <p class="white--text text-h2">TD HOSTEL</p>
       <p
         class="white--text px-2 font-weight-bold slogan"

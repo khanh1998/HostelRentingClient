@@ -11,12 +11,12 @@
     <v-row>
       <v-col cols="12">
         <v-list :dense="dense" :two-line="twoLine" :nav="nav" :avatar="avatar">
-          <v-container id="scroll-target" style="max-height: 700px;" class="overflow-y-auto">
+          <v-container id="scroll-target" style="max-height: 700px" class="overflow-y-auto">
             <v-row
               v-scroll:#scroll-target="onScroll"
               align="center"
               justify="center"
-              style="height: 670px rounded-l;"
+              style="height: 670px rounded-l"
             >
               <v-list-item-group v-model="item" color="primary">
                 <v-list-item v-for="(item, i) in items" :key="i" class="mb-2 pt-2">
@@ -25,7 +25,7 @@
                     <v-img :src="item.avatar"></v-img>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title style="fontsize: 16px;" class="py-1">
+                    <v-list-item-title style="fontsize: 16px" class="py-1">
                       {{ item.title }}</v-list-item-title
                     >
                     <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>

@@ -6,6 +6,7 @@ import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 import './plugins/axios';
+import './plugins/element';
 
 Vue.use(VueCookies);
 Vue.$cookies.config('7d');
