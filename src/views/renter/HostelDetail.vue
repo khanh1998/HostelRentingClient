@@ -456,3 +456,8 @@ export default {
   background-color: #eeeeee;
 }
 </style>
+<style>
+.font-nunito {
+  font-family: 'Nunito', sans-serif !important;
+}
+</style>

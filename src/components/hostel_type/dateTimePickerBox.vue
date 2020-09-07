@@ -33,40 +33,40 @@
         <v-icon>report_problem</v-icon>Báo Xấu
       </v-btn>
     </v-row>-->
-    <div class="d-flex flex-column justify-center align-center">
-      <v-avatar height="90" width="90">
-        <v-img max-height="90" max-width="90" src="../../assets/home/thumnail.png" />
+    <v-btn icon :to="'/group/' + groupId">
+      <v-avatar height="80" width="80">
+        <v-img max-height="80" max-width="80" src="../../assets/home/thumnail.png" />
       </v-avatar>
-      <!-- eslint-disable max-len -->
-      <p
-        class="text-body-1 font-weight-bold text-center font-nunito mx-2 my-3"
-        style="color: #222"
-      >{{ name }}</p>
-      <div class="d-flex flex-wrap align-center mb-2">
-        <v-icon color="yellow" x-small>fas fa-star</v-icon>
-        <p class="grey--text mb-0">{{ ` ${rating.average}/5 ` }}</p>
-        <p class="mb-0">({{ rating.total }})</p>
-      </div>
-      <div class="d-flex">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="#F9BD1A"
-              outlined
-              @click="$emit('openMessage')"
-              rounded
-              class="my-3"
-              :disabled="userState.data && isVendor"
-              v-bind="attrs"
-              v-on="on"
-              _title="Hãy nhắn tin để thỏa thuận giá!"
-            >
-              <v-icon class="mx-1">fas fa-comment-dots</v-icon>Nhắn tin ngay!
-            </v-btn>
-          </template>
-          <span>Hãy nhắn tin để thỏa thuận giá!</span>
-        </v-tooltip>
-      </div>
+    </v-btn>
+    <!-- eslint-disable max-len -->
+    <span
+      class="text-body-1 font-weight-bold text-center font-nunito"
+      style="color: #222"
+    >{{ name }}</span>
+    <div class="d-flex flex-wrap align-center mb-2">
+      <v-icon color="yellow" x-small>fas fa-star</v-icon>
+      <p class="grey--text mb-0">{{ ` ${rating.average}/5 ` }}</p>
+      <p class="mb-0">({{ rating.total }})</p>
+    </div>
+    <div class="d-flex">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="#F9BD1A"
+            outlined
+            @click="$emit('openMessage')"
+            rounded
+            class="my-3"
+            :disabled="userState.data && isVendor"
+            v-bind="attrs"
+            v-on="on"
+            _title="Hãy nhắn tin để thỏa thuận giá!"
+          >
+            <v-icon class="mx-1">fas fa-comment-dots</v-icon>Nhắn tin ngay!
+          </v-btn>
+        </template>
+        <span>Hãy nhắn tin để thỏa thuận giá!</span>
+      </v-tooltip>
     </div>
     <div class="below d-flex justify-center align-center">
       <v-dialog v-model="dialog.booking" persistent max-width="290">

@@ -20,7 +20,8 @@ const myState = () => ({
 });
 
 const getters = {
-  isLoading: (state) => state.hostelGroup.isLoading || state.hostelType.isLoading || state.schedules.isLoading,
+  isLoading: (state) =>
+    state.hostelGroup.isLoading || state.hostelType.isLoading || state.schedules.isLoading,
 };
 
 const mutationTypes = {
