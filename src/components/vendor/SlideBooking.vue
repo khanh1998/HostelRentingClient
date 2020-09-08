@@ -2,9 +2,7 @@
   <div>
     <v-sheet class="mx-auto rounded" elevation="1" max-width="100%">
       <div class="d-flex justify-space-between text-center" v-if="bookings.length > 0">
-        <div style="font-size: 20px; fontweight: bold;" class="pt-3 pl-2">
-          Lịch hẹn xem phòng
-        </div>
+        <div style="font-size: 20px; fontweight: bold" class="pt-3 pl-2">Lịch hẹn xem phòng</div>
         <div>
           <v-chip-group mandatory active-class="primary--text">
             <v-chip v-for="tag in chipItems" :key="tag">{{ tag }}</v-chip>
@@ -27,14 +25,14 @@
           >
             <v-col
               cols="12"
-              style="background-color: #98b7d7; height: 28%; width: 100%;"
+              style="background-color: #98b7d7; height: 28%; width: 100%"
               class="d-flex justify-end"
             >
-              <p style="fontweight: bold; color: white;">
+              <p style="fontweight: bold; color: white">
                 {{ getDateString(Number(booking.meetTime)) }}
               </p>
               <v-divider vertical class="mx-3"></v-divider>
-              <p style="fontweight: bold; color: white;">
+              <p style="fontweight: bold; color: white">
                 {{ getTimeString(Number(booking.meetTime)) }}
               </p>
             </v-col>
@@ -44,11 +42,11 @@
               </v-list-item-avatar>
               <v-list-item-content class="pl-4">
                 <v-list-item-title
-                  style="fontsize: 16px; fontweight: bold; color: #1f17ff;"
+                  style="fontsize: 16px; fontweight: bold; color: #1f17ff"
                   class="py-1"
                   >{{ booking.renter.username }}</v-list-item-title
                 >
-                <v-list-item-subtitle style="color: coral; fontsize: 18px;">
+                <v-list-item-subtitle style="color: coral; fontsize: 18px">
                   {{ booking.renter.phone }}</v-list-item-subtitle
                 >
               </v-list-item-content>
@@ -61,14 +59,12 @@
                 <v-dialog v-model="dialog" width="500">
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn icon v-bind="attrs" v-on="on" @click="changeToString(booking.bookingId)">
-                      <v-icon>
-                        mdi-qrcode
-                      </v-icon>
+                      <v-icon> mdi-qrcode </v-icon>
                     </v-btn>
                   </template>
 
                   <v-card>
-                    <v-card-title class="headline" style="background-color: #98b7d7; color: white;">
+                    <v-card-title class="headline" style="background-color: #98b7d7; color: white">
                       Mã quét
                     </v-card-title>
 
@@ -86,9 +82,7 @@
 
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="primary" text @click="dialog = false">
-                        Đóng
-                      </v-btn>
+                      <v-btn color="primary" text @click="dialog = false"> Đóng </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -96,18 +90,18 @@
             </v-list-item>
             <div>
               <v-icon class="px-3 pl-7">home</v-icon>
-              <span style="fontweight: bold;">{{ booking.group.groupName }}</span>
+              <span style="fontweight: bold">{{ booking.group.groupName }}</span>
             </div>
           </v-card>
         </v-slide-item>
       </v-slide-group>
       <v-card v-if="bookings.length === 0">
-        <v-card-title>
-          Bạn không có lịch hẹn nào
-        </v-card-title>
+        <v-card-title> Bạn không có lịch hẹn nào </v-card-title>
       </v-card>
       <div class="d-flex justify-end" v-if="bookings.length > 0">
-        <v-card-text style="color: #818286;">Xem thêm >></v-card-text>
+        <v-card-text style="color: #818286">
+          <router-link to="vendor/booking" class="text-decoration-none">Xem thêm >></router-link>
+        </v-card-text>
       </div>
     </v-sheet>
   </div>
@@ -127,7 +121,7 @@ export default {
     }),
     getDateString(milisecond) {
       const d = new Date(milisecond);
-      return `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}`;
+      return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
     },
     getTimeString(milisecond) {
       const d = new Date(milisecond);

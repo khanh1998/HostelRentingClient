@@ -20,9 +20,7 @@
         <div class="text-color">Phòng trọ gác lửng có máy lạnh</div>
 
         <div class="my-4 subtitle-1">Địa chỉ</div>
-        <div class="text-color my-4">
-          939 Kha Vạn Cân, phường Linh Tây, quận Thủ Đức
-        </div>
+        <div class="text-color my-4">939 Kha Vạn Cân, phường Linh Tây, quận Thủ Đức</div>
 
         <div class="my-4 subtitle-1">Giá</div>
         <div class="text-color my-4">1.900.000 Đ</div>

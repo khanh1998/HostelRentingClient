@@ -195,7 +195,7 @@
               <p
                 v-else-if="item.book"
                 v-ripple
-                style="width: 75%;"
+                style="width: 75%"
                 class="blue lighten-5 pa-2 rounded max-w-3/4"
               >
                 <v-icon color="pink">event</v-icon>
@@ -226,13 +226,13 @@
             </div>
             <div v-if="item.sender === 'vendor'" class="d-flex justify-start">
               <span
-                style="width: 75%;"
+                style="width: 75%"
                 v-ripple
                 class="green lighten-5 pa-2 rounded max-w-3/4"
                 v-if="!item.book && !item.bargain"
               >{{ item.message }}</span>
               <span
-                style="width: 75%;"
+                style="width: 75%"
                 v-ripple
                 class="green lighten-5 pa-2 rounded max-w-3/4"
                 v-if="item.bargain && item.bargain.dealId"
@@ -241,7 +241,7 @@
                 <!-- <v-btn small color="amber" class="mt-2">Hủy thỏa thuận</v-btn> -->
               </span>
               <span
-                style="width: 75%;"
+                style="width: 75%"
                 v-ripple
                 class="red lighten-5 pa-2 rounded max-w-3/4"
                 v-if="item.bargain && !item.bargain.dealId"
@@ -295,9 +295,9 @@
 import { mapActions, mapGetters } from 'vuex';
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
 import firebase from '../../config/firebase';
-import utils from '../../utils/firebaseNotification';
+// import utils from '../../utils/firebaseNotification';
 
-const { sendBookingNotification } = utils;
+// const { sendBookingNotification } = utils;
 const { store } = firebase;
 const chatCollectionRef = store.collection('chat');
 
@@ -356,7 +356,7 @@ export default {
       };
       console.log(bookingToApi);
       this.createBooking(bookingToApi).then(() => {
-        sendBookingNotification(this.newlyCreatedBooking);
+        // sendBookingNotification(this.newlyCreatedBooking);
         newContent.book.bookingId = this.newlyCreatedBooking.bookingId;
         this.messCollectionRef.add(newContent);
         this.messCollectionRef.parent.update({
@@ -451,7 +451,7 @@ export default {
     },
     getSimpleFormatDate(date) {
       return `${date.getDate()}/
-            ${date.getMonth()}/
+            ${date.getMonth() + 1}/
             ${date.getFullYear()}`;
     },
     doCancelDeal(dealId) {

@@ -22,7 +22,7 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-card-text style="color: #818286;" class="d-flex justify-end">Xem thêm >></v-card-text>
+    <v-card-text style="color: #818286" class="d-flex justify-end">Xem thêm >></v-card-text>
   </v-card>
 </template>
 
@@ -47,7 +47,7 @@ export default {
       return this.convertDateToString(date);
     },
     convertDateToString(d) {
-      const month = d.getMonth();
+      const month = d.getMonth() + 1;
       const year = d.getFullYear();
       const date = d.getDate();
       return `${date}/${month}/${year}`;

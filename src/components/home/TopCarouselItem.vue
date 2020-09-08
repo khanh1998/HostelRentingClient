@@ -3,7 +3,7 @@
     <v-img
       :src="type.typeImages[0].resourceUrl"
       v-if="type.typeImages.length !== 0"
-      style="height: 180px;"
+      style="height: 180px"
     >
       <div class="category">
         <!-- eslint-disable max-len -->
@@ -17,7 +17,7 @@
         <span class="transition-swing text-caption">{{ type.category.categoryName }}</span>
       </div>
     </v-img>
-    <v-img style="height: 180px;" src="@/assets/image-error.png" v-else>
+    <v-img style="height: 180px" src="@/assets/image-error.png" v-else>
       <div class="category">
         <!-- eslint-disable max-len -->
         <span
@@ -33,7 +33,7 @@
     <v-divider class="mx-4" />
     <v-row class="d-flex align-center justify-center">
       <v-col cols="10 pt-0">
-        <div class="type-name d-flex align-center py-3" style="height: 60px;">
+        <div class="type-name d-flex align-center py-3" style="height: 60px">
           <p
             style="
               display: block;
@@ -46,7 +46,7 @@
             class="font-weight-bold mb-0"
           >{{ type.title }}</p>
         </div>
-        <div class="mt-3 d-flex align-center" style="height: 30px;">
+        <div class="mt-3 d-flex align-center" style="height: 30px">
           <v-img
             class="shrink mr-3"
             src="@/assets/home/address.png"

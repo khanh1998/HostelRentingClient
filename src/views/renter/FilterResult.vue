@@ -1,10 +1,10 @@
 <template>
   <div class="px-0">
-    <v-overlay :value="(isLoadingTopView && isLoadingCategories)" absolute>
+    <v-overlay :value="isLoadingTopView && isLoadingCategories" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container fluid v-if="!(isLoadingTopView || isLoadingCategories)" class="px-0">
-      <v-row justify="center" style="background-color: #f3f4f9;">
+      <v-row justify="center" style="background-color: #f3f4f9">
         <v-col cols="12" sm="12" md="10" lg="10" xl="10">
           <div
             class="d-flex flex-column justify-center align-center"

@@ -35,7 +35,7 @@
             <span class="font-italic" v-if="booking.deal"> (đã trả giá)</span>
           </p>
           <p class="grey--text font-italic">
-            {{ booking.group.street }}, {{ ward.wardName }}, {{ district.districtName }},
+            {{ booking.group.street.streetName }}, {{ ward.wardName }}, {{ district.districtName }},
             {{ province.provinceName }}
           </p>
           <v-btn color="success" outlined> <v-icon class="mr-1">near_me</v-icon>Bản đồ </v-btn>
@@ -89,12 +89,16 @@ export default {
     timestamp() {
       return new Date(Number(this.booking.meetTime));
     },
+    group() {
+      return this.booking.group;
+    },
     ward() {
-      const { wardId } = this.booking.group;
-      return this.$store.getters['renter/common/getWardById'](wardId);
+      const { streetId } = this.group.street;
+      const res = this.$store.getters['renter/common/getWardByStreetId'](streetId);
+      return res;
     },
     district() {
-      const { wardId } = this.booking.group;
+      const { wardId } = this.ward;
       return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
     },
     province() {

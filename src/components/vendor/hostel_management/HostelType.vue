@@ -17,7 +17,7 @@
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title style="fontsize: 20px; color: #6c98c6;">Loại phòng</v-toolbar-title>
+          <v-toolbar-title style="fontsize: 20px; color: #6c98c6">Loại phòng</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-card-title>
             <v-text-field
@@ -85,22 +85,16 @@
         <v-badge :content="6" class="ml-5" color="red lighten-2" overlap>
           <v-icon>mdi-cash-usd-outline</v-icon>
         </v-badge>
-        <v-icon class="ml-5" @click="editItem(item)">
-          mdi-pencil
-        </v-icon>
-        <v-icon class="ml-5" @click="deleteItem(item)">
-          mdi-delete
-        </v-icon>
+        <v-icon class="ml-5" @click="editItem(item)"> mdi-pencil </v-icon>
+        <v-icon class="ml-5" @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
           <v-row>
             <v-col cols="2">
-              <v-card-text style="fontsize: 20px;" class="text-center">
-                Phòng trống
-              </v-card-text>
+              <v-card-text style="fontsize: 20px" class="text-center"> Phòng trống </v-card-text>
             </v-col>
-            <v-col cols="7" style="max-height: 100px; overflow-y: auto;" class="mt-2" id="style-1">
+            <v-col cols="7" style="max-height: 100px; overflow-y: auto" class="mt-2" id="style-1">
               <v-chip
                 class="ml-2 mt-2"
                 color="green lighten-1"
@@ -115,9 +109,7 @@
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-card-text style="fontsize: 20px;" class="text-center">
-                Phòng đã thuê
-              </v-card-text>
+              <v-card-text style="fontsize: 20px" class="text-center"> Phòng đã thuê </v-card-text>
             </v-col>
             <v-col cols="7">
               <v-chip class="ml-2 mt-2" color="red lighten-2" v-for="tag in item.roomFu" :key="tag">

@@ -1,14 +1,17 @@
 module.exports = {
   transpileDependencies: ['vuetify'],
   pwa: {
-    // configure the workbox plugin
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
       swSrc: 'src/config/firebase-messaging-sw.js',
-      exclude: [/\.map$/, /_redirects/],
+      exclude: [
+        /\.map$/,
+        /_redirects/
+      ]
     },
     devServer: {
-      proxy: 'https://hostel-renting.herokuapp.com/',
+      proxy: 'https://hostel-renting.herokuapp.com/'
     },
+    name: 'Tìm Phòng Trọ'
   },
 };

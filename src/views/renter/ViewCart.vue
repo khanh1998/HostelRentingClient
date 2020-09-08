@@ -62,6 +62,7 @@ export default {
     ...mapActions({
       getBookings: 'user/getBookings',
       getUser: 'user/getUser',
+      getProvinces: 'renter/common/getProvinces',
     }),
   },
   created() {
@@ -77,7 +78,8 @@ export default {
       const loadingUser = this.$store.state.user.user.isLoading;
       const loadingBookings = this.$store.state.user.bookings.isLoading;
       const loadingDeals = this.$store.state.user.deals.isLoading;
-      return loadingUser || loadingBookings || loadingDeals;
+      const loadingProvinces = this.$store.state.renter.common.provinces.isLoading;
+      return loadingUser || loadingBookings || loadingDeals || loadingProvinces;
     },
     bookings() {
       const list = this.$store.state.user.bookings.data;

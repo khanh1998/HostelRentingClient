@@ -5,9 +5,21 @@
       :temporary="primaryDrawer.type === 'temporary'"
       app
       overflow
-      width="15%"
     >
       <side-menu-bar />
+
+      <template v-slot:append>
+        <v-list-item link>
+          <v-list-item-icon>
+            <v-icon>mdi-logout-variant</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title @click="logout" class="item-text-display text-h6">
+              Đăng xuất
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
     </v-navigation-drawer>
 
     <v-app-bar :clipped-left="primaryDrawer.clipped" app>
@@ -31,6 +43,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
 import notifyAndProfile from '../components/vendor/NotifyAndProfile.vue';
 
@@ -44,6 +57,7 @@ export default {
     primaryDrawer: {
       model: null,
       type: 'temporary',
+      clipped: true,
       items: [
         { title: 'Click Me' },
         { title: 'Click Me' },
@@ -52,5 +66,18 @@ export default {
       ],
     },
   }),
+  methods: {
+    ...mapActions({
+      clearUserData: 'user/clearUserData',
+      updateUser: 'user/updateUser',
+    }),
+    logout() {
+      this.$cookies.remove('role');
+      this.$cookies.remove('userId');
+      this.$cookies.remove('jwt');
+      this.clearUserData();
+      this.$router.push('/');
+    },
+  },
 };
 </script>

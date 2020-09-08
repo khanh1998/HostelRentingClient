@@ -11,17 +11,17 @@
       </v-btn>
     </v-card-title>
     <v-divider />
-    <div style="max-height: 300px; min-height: 300px;" class="overflow-y-auto" id="chatbox">
+    <div style="max-height: 300px; min-height: 300px" class="overflow-y-auto" id="chatbox">
       <v-list v-scroll.self="myOnScroll" align="center" justify="center">
         <v-list-item v-for="item in items" v-bind:key="item.createdAt">
           <v-list-item-content>
             <div v-if="item.renter" class="d-flex justify-end">
-              <span v-ripple style="width: 75%;" class="blue lighten-5 pa-2 rounded max-w-3/4">
+              <span v-ripple style="width: 75%" class="blue lighten-5 pa-2 rounded max-w-3/4">
                 {{ item.message }}
               </span>
             </div>
             <div v-if="!item.renter" class="d-flex justify-start">
-              <span style="width: 75%;" v-ripple class="green lighten-5 pa-2 rounded max-w-3/4">
+              <span style="width: 75%" v-ripple class="green lighten-5 pa-2 rounded max-w-3/4">
                 {{ item.message }}
               </span>
             </div>
@@ -46,9 +46,7 @@
         >
         </v-text-field>
         <v-btn color="blue" class="ma-1" depressed @click="sendMessage()">
-          <v-icon color="white">
-            far fa-paper-plane
-          </v-icon>
+          <v-icon color="white"> far fa-paper-plane </v-icon>
         </v-btn>
       </div>
     </div>
