@@ -33,11 +33,11 @@
         <v-icon>report_problem</v-icon>Báo Xấu
       </v-btn>
     </v-row>-->
-    <v-btn icon :to="'/group/' + groupId">
-      <v-avatar height="80" width="80">
-        <v-img max-height="80" max-width="80" src="../../assets/home/thumnail.png" />
-      </v-avatar>
-    </v-btn>
+    <!-- <v-btn icon :to="'/group/' + groupId"> -->
+    <v-avatar height="80" width="80">
+      <v-img max-height="80" max-width="80" src="../../assets/home/thumnail.png" />
+    </v-avatar>
+    <!-- </v-btn> -->
     <!-- eslint-disable max-len -->
     <span
       class="text-body-1 font-weight-bold text-center font-nunito"

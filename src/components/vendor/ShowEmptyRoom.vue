@@ -5,7 +5,7 @@
       <v-col v-for="group in groups.data" :key="group.groupId" cols="6">
         <v-card>
           <v-card-title>{{ group.groupName }}</v-card-title>
-          <v-card-subtitle>{{ group.street.streetName }}</v-card-subtitle>
+          <v-card-subtitle>{{ group.address.streetName }}</v-card-subtitle>
           <v-card-text>
             <p>
               Tổng số:
@@ -21,12 +21,12 @@
               Tỷ lệ lấp đầy:
               <span class="font-weight-bold">
                 {{
-                  Number(
-                    (
-                      100 -
-                      (groupStat[group.groupId].empty / groupStat[group.groupId].total) * 100
-                    ).toFixed(2),
-                  )
+                Number(
+                (
+                100 -
+                (groupStat[group.groupId].empty / groupStat[group.groupId].total) * 100
+                ).toFixed(2),
+                )
                 }}
               </span>
               %

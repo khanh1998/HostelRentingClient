@@ -1,11 +1,12 @@
 <template>
   <v-row no-gutters class="d-flex justify-center white">
     <v-col cols="12" md="11">
-      <v-overlay :value="(isLoading && isLoadingProvinces)" absolute>
+      <!-- <v-overlay :value="(isLoading && isLoadingProvinces)" absolute> -->
+      <v-overlay :value="isLoading" absolute>
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
       <v-container v-if="!isLoading">
-        <v-dialog width="350" v-model="chatBox.show">
+        <v-dialog width="400" v-model="chatBox.show">
           <chatBox v-if="renter" v-on:close="chatBox.show = false" :info="info" :group="group" />
           <v-card v-if="!renter">
             <v-card-title>Đăng nhập để nhắn tin</v-card-title>
@@ -31,11 +32,7 @@
               <span
                 class="text-body-2"
                 style="color: #9a9a9a; font-family: 'Lato' !important;"
-                v-if="!isLoadingProvinces"
-              >
-                {{ group.street.streetName }}, {{ ward.wardName }}, {{ district.districtName }},
-                {{ province.provinceName }}
-              </span>
+              >{{ group.address.streetName }}, {{group.address.districtName}}, {{group.address.provinceName}}</span>
             </div>
           </v-col>
           <v-col cols="12" md="4" class="pl-10">
@@ -169,7 +166,7 @@
               </v-col>
               <v-col cols="6">
                 <div class="average-item d-flex align-center">
-                  <v-col cols="7" class="d-flex average-infor">{{ group.street.streetName }}</v-col>
+                  <v-col cols="7" class="d-flex average-infor">{{ group.address.streetName }}</v-col>
                   <span class="font-weight-bold mx-auto">{{ streetAverage.price }} triệu / tháng</span>
                 </div>
               </v-col>
@@ -303,8 +300,9 @@ export default {
       return this.$route.params.typeId;
     },
     ward() {
-      const { streetId } = this.group.street;
-      const res = this.$store.getters['renter/common/getWardByStreetId'](streetId);
+      const res = this.$store.getters['renter/common/getWardByStreetId'](
+        this.group.address.streetId,
+      );
       return res;
     },
     district() {
@@ -377,6 +375,8 @@ export default {
       if (data === null) {
         data = this.$store.state.renter.hostelType.hostelGroup.data;
       }
+      console.log('group');
+      console.log(data);
       return data;
     },
     renter() {

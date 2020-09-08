@@ -1,28 +1,23 @@
 <template>
+  <!-- eslint-disable max-len -->
   <v-card v-if="!isLoadingContracts && !groups.isLoading">
-    <div style="font-size: 20px; fontweight: bold;" class="pt-3 pl-2 pb-6">
-      Các phòng sắp hết hạn hợp đồng
-    </div>
+    <div
+      style="font-size: 20px; fontweight: bold;"
+      class="pt-3 pl-2 pb-6"
+    >Các phòng sắp hết hạn hợp đồng</div>
     <v-list two-line>
       <v-divider></v-divider>
       <v-list-item v-for="group in groups.data" :key="group.groupId">
         <v-list-item-content>
-          <v-list-item-title style="color: #1f17ff; fontsize: 18px;">
-            {{ group.groupName }}
-          </v-list-item-title>
-          <v-list-item-subtitle
-            v-html="group.street.streetName"
-            class="pb-1"
-          ></v-list-item-subtitle>
+          <v-list-item-title style="color: #1f17ff; fontsize: 18px;">{{ group.groupName }}</v-list-item-title>
+          <v-list-item-subtitle v-html="group.address.streetName" class="pb-1"></v-list-item-subtitle>
           <div
             class="d-flex justify-space-between mt-5"
             v-for="contract in contractByGroups[group.groupId]"
             :key="contract.contractId"
           >
             <div style="fontweight: bold;">{{ contract.room.roomName }}</div>
-            <div style="fontweight: bold;">
-              {{ expiredDate(contract.startTime, contract.duration) }}
-            </div>
+            <div style="fontweight: bold;">{{ expiredDate(contract.startTime, contract.duration) }}</div>
           </div>
         </v-list-item-content>
       </v-list-item>

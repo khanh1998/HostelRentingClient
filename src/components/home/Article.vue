@@ -46,7 +46,7 @@
                   text-overflow: ellipsis;
                 "
               >
-                {{ group.street.streetName }}, {{ ward.wardName }}, {{ district.districtName }},
+                {{ group.address.streetName }}, {{ ward.wardName }}, {{ district.districtName }},
                 {{ province.provinceName }}
               </span>
               <div class="type-name mt-2" style="height: 40px;">
@@ -60,9 +60,7 @@
                     text-overflow: ellipsis;
                   "
                   class="font-weight-bold mb-0"
-                >
-                  {{ type.title }}
-                </p>
+                >{{ type.title }}</p>
               </div>
               <div class="align-center justify-center">
                 <div class="mt-3 d-flex align-center">
@@ -101,7 +99,7 @@
                     />
                     <span class="item-text">
                       {{
-                        type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
+                      type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
                       }}
                     </span>
                   </div>
