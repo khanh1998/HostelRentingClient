@@ -131,6 +131,7 @@ export default {
   methods: {
     ...mapActions({
       createBooking: 'user/createBooking',
+      clearNewlyCreatedBooking: 'user/clearNewlyCreatedBooking',
     }),
     showSnackbar(color, message) {
       this.snackbar.message = message;
@@ -152,10 +153,12 @@ export default {
         dealId: null,
         meetTime: this.dateTimePicker.date.getTime(),
       };
-      const success = await this.createBooking(bookingObj);
+      await this.createBooking(bookingObj);
+      const success = this.newlyCreated;
       if (success) {
         this.showSnackbar('success', 'Bạn đã đặt lịch hẹn xem phòng thành công!!!');
-        sendBookingNotification(this.newlyCreated);
+        await sendBookingNotification(this.newlyCreated);
+        this.clearNewlyCreatedBooking();
       } else {
         this.showSnackbar('red', 'Đặt lịch xem phòng thất bại');
       }
