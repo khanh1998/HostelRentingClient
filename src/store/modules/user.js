@@ -111,9 +111,12 @@ const mutationTypes = {
   CANCEL_BOOKING_REQUEST: 'CANCEL_BOOKING_REQUEST',
   CANCEL_BOOKING_SUCCESS: 'CANCEL_BOOKING_SUCCESS',
   CANCEL_BOOKING_FAILURE: 'CANCEL_BOOKING_FAILURE',
+
   DONE_BOOKING_REQUEST: 'DONE_BOOKING_REQUEST',
   DONE_BOOKING_SUCCESS: 'DONE_BOOKING_SUCCESS',
   DONE_BOOKING_FAILURE: 'DONE_BOOKING_FAILURE',
+
+  CLEAR_NEWLY_CREATED_BOOKING: 'CLEAR_NEWLY_CREATED_BOOKING',
 };
 const mutations = {
   CLEAR_USER_DATA(state) {
@@ -278,6 +281,9 @@ const mutations = {
     state.user.error = error;
     state.user.success = false;
     state.user.isLoading = false;
+  },
+  CLEAR_NEWLY_CREATED_BOOKING(state) {
+    state.bookings.newlyCreated = null;
   },
 };
 
@@ -571,6 +577,9 @@ const actions = {
     } else {
       throw new Error('you are not loged in');
     }
+  },
+  clearNewlyCreatedBooking({ commit }) {
+    commit(mutationTypes.CLEAR_NEWLY_CREATED_BOOKING);
   },
 };
 

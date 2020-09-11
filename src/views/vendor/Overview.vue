@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%;">
+  <div style="width: 100%">
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -7,31 +7,31 @@
       <v-col cols="8">
         <v-row no-gutters>
           <v-col cols="12">
-            <div style="width: 100%;" class="px-2">
+            <div style="width: 100%" class="px-2">
               <SlideBooking />
             </div>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="4">
-            <div style="width: 100%;" class="ml-2">
+            <div style="width: 100%" class="ml-2">
               <SuggestContract />
             </div>
           </v-col>
           <v-col cols="8">
-            <div style="width: 100%;" class="pr-2">
+            <div style="width: 100%" class="pr-2">
               <ShowEmptyRoom />
             </div>
           </v-col>
         </v-row>
       </v-col>
       <v-col cols="4">
-        <div style="width: 95%;">
+        <div style="width: 95%">
           <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
         </div>
       </v-col>
     </v-row>
-    <v-card style="position: absolute; right: 20px; bottom: 10px; height: auto; width: 350px;">
+    <v-card style="position: absolute; right: 20px; bottom: 10px; height: auto; width: 350px">
       <Chatbox
         v-if="this.docs.doc1"
         :doc="this.docs.doc1"
@@ -39,7 +39,7 @@
         v-on:closeChat="closeChatBox($event)"
       />
     </v-card>
-    <v-card style="position: absolute; right: 370px; bottom: 10px; height: auto; width: 350px;">
+    <v-card style="position: absolute; right: 370px; bottom: 10px; height: auto; width: 350px">
       <Chatbox
         v-if="this.docs.doc2"
         :doc="this.docs.doc2"
@@ -47,7 +47,7 @@
         v-on:closeChat="closeChatBox($event)"
       />
     </v-card>
-    <v-card style="position: absolute; right: 720px; bottom: 10px; height: auto; width: 350px;">
+    <v-card style="position: absolute; right: 720px; bottom: 10px; height: auto; width: 350px">
       <Chatbox
         v-if="this.docs.doc3"
         :doc="this.docs.doc3"

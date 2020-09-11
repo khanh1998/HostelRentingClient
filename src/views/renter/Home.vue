@@ -1,9 +1,6 @@
 <template>
   <div>
-    <v-overlay
-      :value="(isLoadingTopView && isLoadingTopSuggestion && isLoadingCategories)"
-      absolute
-    >
+    <v-overlay :value="isLoadingTopView && isLoadingTopSuggestion && isLoadingCategories" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container fluid v-if="!(isLoadingTopView || isLoadingTopSuggestion || isLoadingCategories)">
@@ -38,44 +35,12 @@
           <v-row class="d-flex flex-direction: row px-5">
             <v-col cols="8">
               <v-row>
-                <v-col
-                  cols="7"
-                  sm="7"
-                  md="12"
-                  lg="12"
-                  xl="12"
-                  class="pl-5 pr-0 pt-7 pb-7 white d-flex mb-4"
-                >
-                  <v-sheet class="ml-4">
-                    <v-select
-                      v-bind:items="categories"
-                      item-text="categoryName"
-                      item-value="categoryName"
-                      _v-model="categories[0].categoryName"
-                      light
-                      outlined
-                      hide-details
-                      dense
-                      label="Loại phòng"
-                      :style="'width: 350px'"
-                    ></v-select>
-                  </v-sheet>
-                </v-col>
                 <v-col cols="12">
                   <ArticleList :list="hostelTypes" />
                 </v-col>
               </v-row>
             </v-col>
-            <v-col cols="4">
-              <v-row>
-                <v-col cols="11 ml-auto pt-0 mt-0">
-                  <v-sheet class="pt-5">
-                    <p class="text-h6 text-center">Lọc nâng cao</p>
-                    <HostelFilter />
-                  </v-sheet>
-                </v-col>
-              </v-row>
-            </v-col>
+            <v-col cols="4"></v-col>
           </v-row>
           <v-row>
             <v-col cols="12" sm="12" md="7" xl="8" lg="8" class="mt-10">
@@ -125,7 +90,6 @@
 import Banner from '@/components/home/Banner.vue';
 import TopCarousel from '@/components/home/TopCarousel.vue';
 import ArticleList from '@/components/home/ArticleList.vue';
-import HostelFilter from '@/components/home/HostelFilter.vue';
 import { mapActions } from 'vuex';
 
 export default {
@@ -134,7 +98,6 @@ export default {
     Banner,
     TopCarousel,
     ArticleList,
-    HostelFilter,
   },
   data: () => ({
     overlay: false,

@@ -1,24 +1,27 @@
 @font-face {
   font-family: 'Lato';
-  src: url("../fonts/Lato/lato-regular.ttf"), url("../fonts/Lato/lato-bold.ttf"), url("../fonts/Lato/lato-italic.ttf");
+  src: url('../fonts/Lato/lato-regular.ttf'), url('../fonts/Lato/lato-bold.ttf'),
+    url('../fonts/Lato/lato-italic.ttf');
 }
 
 @font-face {
   font-family: 'Montserrat';
-  src: url("../fonts/Montserrat/Montserrat-Bold.ttf"), url("../fonts/Montserrat/Montserrat-Light.ttf"), url("../fonts/Montserrat/Montserrat-Regular.ttf");
+  src: url('../fonts/Montserrat/Montserrat-Bold.ttf'),
+    url('../fonts/Montserrat/Montserrat-Light.ttf'),
+    url('../fonts/Montserrat/Montserrat-Regular.ttf');
 }
 
 @font-face {
   font-family: 'Oswald';
-  src: url("../fonts/Oswald/Oswald-Medium.ttf");
+  src: url('../fonts/Oswald/Oswald-Medium.ttf');
 }
 
 @font-face {
   font-family: 'Nunito';
-  src: url("../fonts/Nunito/Nunito-Regular.ttf");
+  src: url('../fonts/Nunito/Nunito-Regular.ttf');
 }
 
 .v-application {
-  font-family: "Lato" !important;
+  font-family: 'Lato' !important;
 }
 /*# sourceMappingURL=style.css.map */

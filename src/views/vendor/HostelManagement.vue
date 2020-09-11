@@ -10,7 +10,7 @@
       >
         <HostelGroup :groups="groups" :groupId="groupId" @getIdSelected="groupId = $event" />
       </v-navigation-drawer>
-      <v-card style="min-height: 836px; max-height: 836px;" class="ml-15">
+      <v-card style="min-height: 836px; max-height: 836px" class="ml-15">
         <HostelType
           :groups="groups"
           :groupId="groupId"

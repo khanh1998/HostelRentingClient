@@ -25,7 +25,14 @@
         </template>
       </v-text-field>
     </v-overlay>
-    <v-app-bar app color="#fff" light height="70" id="top-bar">
+    <v-app-bar
+      app
+      color="#fff"
+      light
+      height="80"
+      id="top-bar"
+      style="box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !important;"
+    >
       <v-row height="70 m-0" class="d-flex">
         <v-col cols="11" md="7">
           <v-row>
@@ -44,7 +51,7 @@
             </v-col>
             <!-- </v-col>
             <v-col class="col-5">-->
-            <v-col class="col-10 pl-10" v-show="isSearchOptional">
+            <v-col class="col-10 pl-10" v-show="!isSearchOptional">
               <v-row class="px-0 d-flex align-center">
                 <v-col class="col-9 pl-2 searchBar d-flex align-center">
                   <gmap-autocomplete
@@ -52,7 +59,7 @@
                     class="col-11 gmap-input text-body-2 blue-grey--text"
                     @place_changed="setPlace"
                     @change="changeSearchValue"
-                    :value="searchValue"
+                    :value="address"
                   ></gmap-autocomplete>
                   <v-btn
                     icon
@@ -278,7 +285,11 @@ export default {
           long: coordinates.lng,
           coordinator: coordinates,
         });
+        this.coordinator.latitude = coordinates.lat;
+        this.coordinator.longitude = coordinates.lng;
+        this.coordinator.address = this.address;
         this.setSearchValue(this.coordinates);
+        this.nameAddress = this.searchValue.split('-');
         this.$router.push('/filter');
       }
     },
@@ -315,6 +326,9 @@ export default {
       set(value) {
         this.setIsSearchOptional(value);
       },
+    },
+    coordinator() {
+      return this.$store.state.renter.filterResult.coordinator;
     },
     searchValue: {
       get() {

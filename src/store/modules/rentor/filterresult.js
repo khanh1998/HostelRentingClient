@@ -2,7 +2,16 @@ const myState = {
   search: {
     value: '',
   },
+  coordinator: {
+    latitude: '',
+    longitude: '',
+    address: '',
+  },
   filter: {
+    distance: {
+      select: '5km',
+      items: ['3km', '5km', '7km', '10km'],
+    },
     around: {
       selects: [],
       items: [
@@ -12,30 +21,128 @@ const myState = {
         'Ngân hàng',
       ],
     },
+    categories: {
+      data: [],
+      select: '',
+      isLoading: false,
+    },
     facility: {
       selects: [],
       data: [],
       isLoading: false,
     },
-
     price: {
-      select: '1 triệu',
+      min: 0,
+      max: 15,
+      range: [0, 2.5],
+      disable: false,
+    },
+    minArea: {
+      select: '',
+      items: ['10 m2', '15 m2', '20 m2', '25 m2', '30 m2', '40 m2', '50 m2', '70 m2', '100 m2'],
+    },
+    schools: {
+      select: '',
       items: [
-        '1 triệu',
-        '2 triệu',
-        '3 triệu',
-        '4 triệu',
-        '5 triệu',
-        '6 triệu',
-        '7 triệu',
-        '8 triệu',
-        '9 triệu',
-        '10 triệu',
+        'Trường Đại học Bách khoa, Đại học Quốc gia Thành phố Hồ Chí Minh',
+        'Trường Đại học Khoa học Tự nhiên, Đại học Quốc gia Thành phố Hồ Chí Minh',
+        'Trường Đại học Sư phạm Kỹ thuật Thành phố Hồ Chí Minh',
+        'Trường Đại học Quốc tế, Đại học Quốc gia Thành phố Hồ Chí Minh',
+        'Trường Đại học Công nghệ Thông tin, Đại học Quốc gia Thành phố Hồ Chí Minh',
+        'Trường Đại học Trần Đại Nghĩa',
+        'Trường Đại học Thông tin Liên lạc',
+        'Trường Đại học Tôn Đức Thắng',
+        'Trường Đại học Công nghiệp Thành phố Hồ Chí Minh',
+        'Trường Đại học Công nghiệp Thực phẩm Thành phố Hồ Chí Minh',
+        'Trường Đại học Giao thông vận tải Thành phố Hồ Chí Minh',
+        'Trường Đại học Nông Lâm Thành phố Hồ Chí Minh',
+        'Trường Đại học Sài Gòn',
+        'Trường Đại học Sư phạm Thành phố Hồ Chí Minh',
+        'Trường Đại học Mở Thành phố Hồ Chí Minh',
+        'Trường Đại học Công nghệ Sài Gòn',
+        'Trường Đại học Quốc tế Hồng Bàng',
+        'Trường Đại học Hùng Vương',
+        'Trường Đại học Kỹ thuật - Công nghệ Thành phố Hồ Chí Minh',
+        'Trường Đại học Ngoại ngữ - Tin học Thành phố Hồ Chí Minh',
+        'Trường Đại học Văn Hiến',
+        'Trường Đại học Văn Lang',
+        'Trường Đại học Kinh tế - Tài chính Thành phố Hồ Chí Minh',
+        'Trường Đại học Hoa Sen',
+        'Trường Đại học Công nghệ thông tin Gia Định',
+        'Trường Đại học Quốc tế Sài Gòn',
+        'Trường Cao đẳng BC Công nghệ và Quản trị doanh nghiệp',
+        'Trường Cao đẳng Công nghệ Thủ Đức',
+        'Trường Cao đẳng Kinh tế - Kỹ thuật Vinatex TP.HCM',
+        'Trường Đại học FPT',
       ],
     },
-    area: {
-      select: '20 m2',
-      items: ['10 m2', '15 m2', '20 m2', '25 m2', '30 m2', '40 m2', '50 m2', '70 m2', '100 m2'],
+    hometown: {
+      select: '',
+      items: [
+        'An Giang',
+        'Bà rịa – Vũng tàu',
+        'Bắc Giang',
+        'Bắc Kạn',
+        'Bạc Liêu',
+        'Bắc Ninh',
+        'Bến Tre',
+        'Bình Định',
+        'Bình Dương',
+        'Bình Phước',
+        'Bình Thuận',
+        'Cà Mau',
+        'Cần Thơ',
+        'Cao Bằng',
+        'Đà Nẵng',
+        'Đắk Lắk',
+        'Đắk Nông',
+        'Điện Biên',
+        'Đồng Nai',
+        'Đồng Tháp',
+        'Gia Lai',
+        'Hà Giang',
+        'Hà Nam',
+        'Hà Nội',
+        'Hà Tĩnh',
+        'Hải Dương',
+        'Hải Phòng',
+        'Hậu Giang',
+        'Hòa Bình',
+        'Hưng Yên',
+        'Khánh Hòa',
+        'Kiên Giang',
+        'Kon Tum',
+        'Lai Châu',
+        'Lâm Đồng',
+        'Lạng Sơn',
+        'Lào Cai',
+        'Long An',
+        'Nam Định',
+        'Nghệ An',
+        'Ninh Bình',
+        'Ninh Thuận',
+        'Phú Thọ',
+        'Phú Yên',
+        'Quảng Bình',
+        'Quảng Nam',
+        'Quảng Ngãi',
+        'Quảng Ninh',
+        'Quảng Trị',
+        'Sóc Trăng',
+        'Sơn La',
+        'Tây Ninh',
+        'Thái Bình',
+        'Thái Nguyên',
+        'Thanh Hóa',
+        'Thừa Thiên Huế',
+        'Tiền Giang',
+        'Thành phố Hồ Chí Minh',
+        'Trà Vinh',
+        'Tuyên Quang',
+        'Vĩnh Long',
+        'Vĩnh Phúc',
+        'Yên Bái',
+      ],
     },
   },
   results: {
@@ -52,6 +159,10 @@ const mutationTypes = {
   GET_FILTER_RESULT_REQUEST: 'GET_FILTER_RESULT_REQUEST',
   GET_FILTER_RESULT_SUCCESS: 'GET_FILTER_RESULT_SUCCESS',
   GET_FILTER_RESULT_FAILURE: 'GET_FILTER_RESULT_FAILURE',
+  // categories
+  GET_CATEGORIES_SUCCESS: 'GET_CATEGORIES_SUCCESS',
+  GET_CATEGORIES_FAILURE: 'GET_CATEGORIES_FAILURE',
+  GET_CATEGORIES_REQUEST: 'GET_CATEGORIES_REQUEST',
   // facilities
   GET_FACILITIES_SUCCESS: 'GET_FACILITIES_SUCCESS',
   GET_FACILITIES_FAILURE: 'GET_FACILITIES_FAILURE',
@@ -74,7 +185,17 @@ const mutations = {
   GET_FILTER_RESULT_FAILURE: (state) => {
     state.results.isLoading = false;
   },
-
+  // categories
+  GET_CATEGORIES_SUCCESS(state, inputData) {
+    state.filter.categories.data = inputData;
+    state.filter.isLoading = false;
+  },
+  GET_CATEGORIES_FAILURE(state) {
+    state.filter.categories.isLoading = false;
+  },
+  GET_CATEGORIES_REQUEST(state) {
+    state.filter.categories.isLoading = true;
+  },
   // facilities
   GET_FACILITIES_SUCCESS(state, inputData) {
     state.filter.facility.data = inputData;
@@ -156,38 +277,43 @@ const actions = {
     // params = {lat, long}
     try {
       commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
-      const url = `/api/v1/types?distance=5&latitude=${params.lat}&longitude=${params.long}&page=1&size=5`;
+      const url = `/api/v1/types?asc=false&distance=5&latitude=${params.coordinator.lat}&longitude=${params.coordinator.lng}&page=1&size=5&sortBy=score`;
       const res = await window.axios.get(url);
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
-        commit(mutationTypes.SET_SEARCH_VALUE, params.coordinator);
       }
     } catch (error) {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
     }
   },
   async filterSearchByCoordinatorResult({ commit }, params) {
-    // params = facilityId
+    // params = {lat, long, filterProperties}
     try {
-      let facilitiesStr = '';
-      params.facilitiesIds.forEach((element) => {
-        facilitiesStr += `&facilityIds=${element}`;
-      });
+      // coordinator
       let coordinatorStr = '';
       if (params.coordinator !== '') {
-        console.log(params.coordinator);
         coordinatorStr = `&latitude=${params.coordinator.lat}&longitude=${params.coordinator.lng}`;
       }
+      // distance
+      let distanceStr = '';
+      const distance = params.filterProperties.distance.select.split('km')[0];
+      distanceStr = `&distance=${distance}`;
+      let facilitiesStr = '';
+      params.filterProperties.facility.selects.forEach((element) => {
+        facilitiesStr += `&facilityIds=${element}`;
+      });
+      // price
       let priceStr = '';
-      if (params.disabledPrice) {
-        priceStr = `&maxPrice=${params.rangePirce[1]}&minPrice=${params.rangePirce[0]}`;
+      if (params.filterProperties.price.disable) {
+        priceStr = `&maxPrice=${params.filterProperties.price.range[1]}&minPrice=${params.filterProperties.price.range[0]}`;
       }
+      // min area
       let minSuperficialityStr = '';
-      if (params.minSuperficiality !== 0) {
-        const minSuperficiality = params.minSuperficiality.split(' ')[0];
+      if (params.filterProperties.minArea.select !== '') {
+        const minSuperficiality = params.filterProperties.minArea.select.split(' ')[0];
         minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
       }
-      const url = `/api/v1/types?asc=false&distance=5${facilitiesStr}${coordinatorStr}${priceStr}${minSuperficialityStr}&page=1&size=5&sortBy=score`;
+      const url = `/api/v1/types?asc=false&${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${minSuperficialityStr}&page=1&size=5&sortBy=score`;
       const res = await window.axios.get(url);
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
@@ -206,6 +332,18 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_FACILITIES_FAILURE);
+    }
+  },
+  async getAllCategories({ commit }) {
+    // no param
+    try {
+      commit(mutationTypes.GET_CATEGORIES_REQUEST);
+      const response = await window.axios.get('/api/v1/categories');
+      if (response.status >= 200 && response.status <= 299) {
+        commit(mutationTypes.GET_CATEGORIES_SUCCESS, response.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_CATEGORIES_FAILURE);
     }
   },
 };
