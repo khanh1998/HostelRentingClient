@@ -375,8 +375,6 @@ export default {
       if (data === null) {
         data = this.$store.state.renter.hostelType.hostelGroup.data;
       }
-      console.log('group');
-      console.log(data);
       return data;
     },
     renter() {

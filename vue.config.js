@@ -6,12 +6,12 @@ module.exports = {
       swSrc: 'src/config/firebase-messaging-sw.js',
       exclude: [
         /\.map$/,
-        /_redirects/
-      ]
+        /_redirects/,
+      ],
     },
     devServer: {
-      proxy: 'https://hostel-renting.herokuapp.com/'
+      proxy: 'https://hostel-renting.herokuapp.com/',
     },
-    name: 'Tìm Phòng Trọ'
+    name: 'Tìm Phòng Trọ',
   },
 };

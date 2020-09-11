@@ -2,13 +2,12 @@
   <!-- eslint-disable max-len -->
   <v-card v-if="!isLoading">
     <v-card-title class="px-2 py-3">
-      <!-- <v-icon color="blue">message</v-icon> -->
-      <v-avatar color="#6C98C6" height="30" width="30" min-width="30">
+      <v-avatar color="#4F60C9" height="30" width="30" min-width="30">
         <span class="text-overline white--text">{{getAvatarTitle()}}</span>
         <!-- toDo -->
         <!-- <v-img max-height="80" max-width="80" src="../../assets/home/thumnail.png" /> -->
       </v-avatar>
-      <span class="text-subtitle-2 ml-2" :style="{color:'#6C98C6'}">{{ group.groupName }}</span>
+      <span class="text-subtitle-2 ml-2" :style="{color:'#4F60C9'}">{{ group.groupName }}</span>
       <v-spacer />
       <v-btn small icon color="#6C98C6" @click="$emit('close')">
         <v-icon>clear</v-icon>
@@ -30,79 +29,146 @@
         />
       </v-overlay>
       <v-overlay :value="bookingCancel.show" absolute opacity="0.8">
-        <v-card>
-          <v-card-title>Bạn có muốn hủy lịch hẹn?</v-card-title>
+        <v-card class="white d-flex flex-column justify-center align-center py-3" width="400">
+          <v-card-title
+            class="font-weight-bold text-body-1"
+            style="color: #171e8d"
+          >Bạn có muốn hủy lịch hẹn?</v-card-title>
           <v-card-actions>
-            <v-btn color="green" @click="doCancelBooking">Có</v-btn>
-            <v-btn color="red" @click="bookingCancel.show = false">Không</v-btn>
+            <!-- toDo: tai sao huy lich hen -->
+            <v-btn
+              small
+              color="#eb3518"
+              class="text-caption px-4 py-2 mx-2 white--text"
+              depressed
+              @click="doCancelBooking"
+            >Có</v-btn>
+            <v-btn
+              small
+              color="#4F60C9"
+              class="text-caption px-4 py-2 mx-2 white--text"
+              depressed
+              @click="bookingCancel.show = false"
+            >Không</v-btn>
           </v-card-actions>
         </v-card>
       </v-overlay>
       <v-overlay :value="bargainCancel.show" absolute opacity="0.8">
-        <v-card>
-          <v-card-title>Bạn có muốn hủy trả giả này?</v-card-title>
+        <v-card class="white d-flex flex-column justify-center align-center py-3" width="400">
+          <v-card-title
+            class="font-weight-bold text-body-1"
+            style="color: #171e8d"
+          >Bạn có muốn hủy trả giả này?</v-card-title>
           <v-card-actions>
-            <v-btn color="green" @click="doCancelBargain">Có</v-btn>
-            <v-btn color="red" @click="resetBargainCancel">Không</v-btn>
+            <v-btn
+              small
+              color="#eb3518"
+              class="text-caption px-4 py-2 mx-2 white--text"
+              depressed
+              @click="doCancelBargain"
+            >Có</v-btn>
+            <v-btn
+              small
+              color="#4F60C9"
+              class="text-caption px-4 py-2 mx-2 white--text"
+              depressed
+              @click="resetBargainCancel"
+            >Không</v-btn>
           </v-card-actions>
         </v-card>
       </v-overlay>
-      <v-overlay :value="bargainOverlay.show" absolute opacity="0.8">
+      <v-overlay
+        :value="bargainOverlay.show"
+        absolute
+        opacity="0.8"
+        class="justify-center align-center"
+      >
         <v-card
           color="white"
-          class="d-flex flex-column justify-center align-center pa-1"
+          class="d-flex flex-column justify-center align-center pa-2"
           v-if="bargainOverlay.step === 1"
+          min-width="400"
         >
-          <v-card-text class="black--text">
-            <div class="d-flex flex-column justify-space-between">
-              <p>{{ info.title }}</p>
-              <p class="font-weight-medium">
-                Giá gốc:
-                <span>{{ info.price }} {{ info.priceUnit }}/tháng</span>
+          <v-card-text>
+            <span class="text-h6" :style="{color:'#5a669f', textAlign: 'center'}">{{ info.title }}</span>
+          </v-card-text>
+          <v-list-item>
+            <v-list-item-content class="pa-0">
+              <span class="text-caption" style="color: #B4B6D1;">Giá gốc</span>
+              <p class="d-flex align-center mt-1">
+                <v-img max-height="30" max-width="30" src="@/assets/typeDetail/price.png" />
+                <!-- toDo unit -->
+                <span
+                  class="text-body-1 ml-2"
+                  style="color: #101526"
+                >{{ info.price }} {{ info.priceUnit }} phòng/tháng</span>
               </p>
-            </div>
-            <v-text-field
-              type="number"
+              <span class="text-caption mt-3" style="color: #B4B6D1;">Giá bạn muốn đề xuất</span>
+              <v-text-field
+                class="mt-1 text-body-2"
+                type="number"
+                outlined
+                dense
+                light
+                hide-details
+                v-model="bargainOverlay.price"
+                suffix="Triệu"
+                step="0.1"
+                min="0"
+                :max="`${info.price}`"
+              />
+            </v-list-item-content>
+          </v-list-item>
+          <v-card-actions class="mt-6">
+            <v-btn
+              small
+              color="#4F60C9"
+              class="text-caption px-4 py-2 mx-2 white--text"
+              depressed
+              @click="bargainOverlay.step += 1"
+            >Tiếp tục</v-btn>
+            <v-btn
+              small
               outlined
-              dense
-              light
-              hide-details
-              v-model="bargainOverlay.price"
-              label="Nhập giá bạn đưa ra"
-              suffix="Triệu"
-            />
-            <p>phòng/tháng</p>
-            <div class="d-flex align-center justify-space-around pb-1">
-              <v-btn color="green" class="mr-1" depressed @click="bargainOverlay.step += 1">Tiếp tục</v-btn>
-              <v-btn
-                color="red"
-                class="ml-1"
-                depressed
-                @click="
+              color="#9e9fa7"
+              class="text-caption px-4 py-2 mx-2"
+              depressed
+              @click="
                   bargainOverlay.show = false;
                   bargainOverlay.step = 1;
                 "
-              >Hủy</v-btn>
-            </div>
-          </v-card-text>
+            >Hủy</v-btn>
+          </v-card-actions>
         </v-card>
         <v-card
           v-if="bargainOverlay.step === 2"
           color="white"
           class="d-flex flex-column justify-center align-center pa-1"
         >
-          <v-card-text class="black--text">
-            Bạn đồng ý trả giá
-            <span class="font-weight-bold">{{ bargainOverlay.price }}</span>
-            triệu đồng?
+          <v-card-text>
+            <span class="text-subtitle-1" style="color: #101526;">
+              Bạn đồng ý trả giá
+              <span
+                class="font-weight-bold"
+                style="color: #171c8b;"
+              >{{ bargainOverlay.price }}</span>
+              triệu đồng?
+            </span>
           </v-card-text>
           <v-card-actions>
             <div class="d-flex align-center justify-space-around pb-1">
-              <v-btn color="green" class="mr-1" depressed @click="sendMessage('bargain')">Có</v-btn>
               <v-btn
-                color="red"
-                class="ml-1"
+                small
+                color="#4F60C9"
+                class="text-caption px-4 py-2 mx-2"
                 depressed
+                @click="sendMessage('bargain')"
+              >Có</v-btn>
+              <v-btn
+                small
+                outlined
+                color="#9e9fa7"
+                class="text-caption px-4 py-2 mx-2"
                 @click="
                   bargainOverlay.show = false;
                   bargainOverlay.step = 1;
@@ -113,9 +179,14 @@
         </v-card>
       </v-overlay>
       <v-list v-scroll.self="myOnScroll" justify="center">
+        <!-- type information -->
         <div class="d-flex justify-start ml-4 vendorChatMessage" :style="{width: '70%'}">
           <v-col cols="4">
-            <v-img :src="info.typeImages[0].resourceUrl" v-if="info.typeImages.length !== 0"></v-img>
+            <v-img
+              :src="info.typeImages[0].resourceUrl"
+              v-if="info.typeImages.length !== 0"
+              max-height="50"
+            />
           </v-col>
           <v-col cols="8" class="flex px-0">
             <span
@@ -136,87 +207,131 @@
             >₫ {{info.price}} {{info.priceUnit}}</span>
           </v-col>
         </div>
+        <!-- all message -->
         <v-list-item v-for="item in filteredMessage" v-bind:key="item.createdAt">
           <v-list-item-content>
             <div v-if="item.sender === 'renter'" class="d-flex justify-end">
-              <p
-                v-if="item.bargain"
-                v-ripple
-                style="max-width: 75%;"
-                class="lighten-5 renterChatMessage text-subtitle-2 py-2 px-5 max-w-3/4"
-              >
-                Đề xuất với giá
-                <span
-                  class="yellow--text"
-                >{{ item.bargain.newPrice }} {{ info.priceUnit }}</span> đồng phòng / tháng
-                <!-- <span v-if="item.bargain.status === 'wait'">
-                  <v-divider class="my-1"></v-divider>
-                  <v-icon>fas fa-spinner fa-spin</v-icon>Đang chờ phản hồi của chủ trọ
-                </span>
-                <span v-if="item.bargain.status === 'deny'">
-                  <v-divider class="my-1"></v-divider>
-                  <v-icon color="red">thumb_down</v-icon>Chủ trọ không đồng ý với mức giá của bạn
-                </span>
-                <span v-if="item.bargain.status === 'accept'">
-                  <v-divider class="my-1"></v-divider>
-                  <v-icon color="green">thumb_up</v-icon>Chủ trọ đã đồng ý với mức giá của bạn
-                </span>
-                <span v-if="item.bargain.status === 'cancel'">
-                  <v-divider class="my-1"></v-divider>
-                  <v-icon color="red">clear</v-icon>Bạn đã hủy trả giá này
-                </span>-->
-                <span v-if="item.bargain.status === 'wait'">
-                  <v-divider class="my-2" />
-                  <v-btn
-                    class="red lighten-3"
+              <div class="d-flex justify-center" v-if="item.bargain" style="width: 100%;">
+                <div
+                  v-ripple
+                  style="width: 85%; color: #050505"
+                  class="d-flex flex-column justify-center align-center renterEvent lighten-5 pa-3 max-w-3/4"
+                >
+                  <span class="font-weight-bold text-button amber--text">TRẢ GIÁ</span>
+                  <v-divider dark style="width: 90%; border-color: rgba(0, 0, 0, 0.12);" />
+                  <span
+                    class="text-body-2 mt-3"
+                    style="
+                  display: block;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  color: #4F60C9;
+                  width: 90%;
+                "
+                  >{{info.title}}</span>
+                  <div class="d-flex justify-space-between align-center my-4" style="width: 90%;">
+                    <div class="d-flex flex-column">
+                      <span class="text-caption" style="color: #B4B6D1;">Giá gốc</span>
+                      <span class="text-subtitle-2" style="color: #101526">
+                        <v-icon class="mr-1" color="amber">money_off</v-icon>
+                        {{ info.price }} {{ info.priceUnit }}
+                      </span>
+                      <!-- <span class="text-caption" style="color: #555;">Giá gốc</span> -->
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="text-caption ml-auto" style="color: #B4B6D1;">Giá đề nghị</span>
+                      <span class="ml-2 text-subtitle-2" style="color: #101526">
+                        <v-icon class="mr-1" color="amber">attach_money</v-icon>
+                        {{ item.bargain.newPrice }} {{ info.priceUnit }}
+                      </span>
+                    </div>
+                  </div>
+                  <v-divider
+                    v-if="(item.bargain.status === 'wait' || item.bargain.status === 'deny' || item.bargain.status === 'accept')"
                     dark
+                    style="width: 90%; border-color: rgba(0, 0, 0, 0.12);"
+                  />
+                  <span
+                    v-if="item.bargain.status === 'wait'"
+                    class="my-3 text-subtitle-2 font-italic"
+                    style="color: #4a4c62"
+                  >
+                    <v-icon small color="#4a4c62" class="mr-2">fas fa-spinner fa-spin</v-icon>Đang chờ phản hồi của chủ trọ
+                  </span>
+                  <span
+                    v-if="item.bargain.status === 'deny'"
+                    class="my-3 text-subtitle-2 font-italic"
+                    style="color: #4a4c62"
+                  >
+                    <v-icon small color="#4a4c62" class="mr-2">thumb_down</v-icon>Chủ trọ không đồng ý với mức giá của bạn
+                  </span>
+                  <span
+                    v-if="item.bargain.status === 'accept'"
+                    class="my-3 text-subtitle-2 font-italic"
+                    style="color: #4a4c62"
+                  >
+                    <v-icon small color="#4a4c62" class="mr-2">thumb_up</v-icon>Chủ trọ đã đồng ý với mức giá của bạn
+                  </span>
+                  <v-btn
+                    min-width="90%"
+                    class="mb-3 py-5 text-subtitle-2"
                     depressed
+                    color="#e4e6eb"
+                    small
+                    v-if="item.bargain.status === 'cancel'"
+                  >Bạn đã hủy trả giá này</v-btn>
+                  <v-btn
+                    min-width="90%"
+                    class="mb-3 py-5 text-subtitle-2"
+                    depressed
+                    color="#e4e6eb"
+                    small
+                    v-if="item.bargain.status === 'wait'"
                     @click="showBargainCancel(item.id)"
                   >Hủy trả giá này</v-btn>
-                </span>
-              </p>
-              <!-- <span v-if="item.bargain.status === 'wait'">
-                  <v-divider class="my-1"></v-divider>
-                  <v-icon>fas fa-spinner fa-spin</v-icon>Đang chờ phản hồi của chủ trọ
-                </span>
-                <span v-if="item.bargain.status === 'deny'">
-                  <v-divider class="my-1"></v-divider>
-                  <v-icon color="red">thumb_down</v-icon>Chủ trọ không đồng ý với mức giá của bạn
-                </span>
-                <span v-if="item.bargain.status === 'accept'">
-                  <v-divider class="my-1"></v-divider>
-                  <v-icon color="green">thumb_up</v-icon>Chủ trọ đã đồng ý với mức giá của bạn
-                </span>
-                <span v-if="item.bargain.status === 'cancel'">
-                  <v-divider class="my-1"></v-divider>
-                  <v-icon color="red">clear</v-icon>Bạn đã hủy trả giá này
-              </span>-->
+                </div>
+              </div>
 
-              <p
-                v-else-if="item.book"
-                v-ripple
-                style="width: 75%"
-                class="blue lighten-5 pa-2 rounded max-w-3/4"
-              >
-                <v-icon color="pink">event</v-icon>
-                <span class="font-weight-bold">Bạn đã tạo một lịch hẹn mới</span>
-                <v-divider class="my-2" />Ngày:
-                <span class="font-weight-bold">{{ item.book.date }}</span>
-                <br />Giờ:
-                <span class="font-weight-bold">{{ item.book.time }}</span>
-                <br />
-                <v-divider class="my-2" />
-                <v-btn
-                  v-if="!item.book.cancel"
-                  depressed
-                  color="amber"
-                  small
-                  @click="showBookingCancel(item.book.bookingId, item.id)"
-                >Hủy hẹn</v-btn>
-                <span v-if="item.book.cancel">
-                  <v-icon color="red">clear</v-icon>Lịch hẹn đã bị hủy
-                </span>
-              </p>
+              <div class="d-flex justify-center" v-else-if="item.book" style="width: 100%;">
+                <div
+                  v-ripple
+                  style="width: 85%; color: #050505"
+                  class="d-flex flex-column justify-center align-center renterEvent lighten-5 pa-2 max-w-3/4"
+                >
+                  <span class="font-weight-bold text-button success--text">LỊCH HẸN</span>
+                  <v-divider dark style="width: 90%; border-color: rgba(0, 0, 0, 0.12);" />
+                  <div class="d-flex justify-space-between align-center my-4" style="width: 90%;">
+                    <span class="text-subtitle-2" style="color: #101526">
+                      <v-icon class="mr-1" color="success">event_available</v-icon>
+                      {{ item.book.date }}
+                    </span>
+                    <span class="ml-2 text-subtitle-2" style="color: #101526">
+                      <v-icon class="mr-1" color="success">schedule</v-icon>
+                      {{ item.book.time }}
+                    </span>
+                  </div>
+                  <v-btn
+                    min-width="90%"
+                    class="mb-3 py-5 text-subtitle-2"
+                    depressed
+                    color="#e4e6eb"
+                    small
+                    v-if="!item.book.cancel"
+                    @click="showBookingCancel(item.book.bookingId, item.id)"
+                  >Hủy lịch hẹn này</v-btn>
+                  <v-btn
+                    min-width="90%"
+                    class="mb-3 py-5 text-subtitle-2"
+                    depressed
+                    color="#e4e6eb"
+                    small
+                    v-if="item.book.cancel"
+                  >Lịch hẹn đã bị bạn hủy</v-btn>
+                </div>
+              </div>
               <!-- inbox chat normal -->
               <span
                 v-else
@@ -224,7 +339,7 @@
                 class="lighten-5 py-2 px-5 max-w-3/4 text-subtitle-2 renterChatMessage"
               >{{ item.message }}</span>
             </div>
-            <div v-if="item.sender === 'vendor'" class="d-flex justify-start">
+            <div v-if="item.sender === 'vendor'" class="d-flex justify-start vendorChatMessage">
               <span
                 style="width: 75%"
                 v-ripple
@@ -251,42 +366,48 @@
         </v-list-item>
       </v-list>
     </div>
-    <v-divider />
     <div class="input">
-      <div class="d-flex flex-no-wrap mt-1">
+      <div class="d-flex flex-no-wrap mt-1 mx-2">
         <v-text-field
           autofocus
           clearable
           dense
-          flat
           outlined
-          placeholder="Nội dung tin nhắn..."
+          flat
+          placeholder="Aa"
           v-model="inputChat.text"
-          class="ma-1"
+          class="ma-1 text-body-2"
           hide-details
           v-on:keyup.enter="sendMessage()"
+          :outline="{color: 'red'}"
         ></v-text-field>
-        <v-btn color="blue" class="ma-1" depressed @click="sendMessage()">
-          <v-icon color="white">far fa-paper-plane</v-icon>
+        <v-btn icon class="ma-1" depressed @click="sendMessage()">
+          <v-icon color="#4F60C9">send</v-icon>
         </v-btn>
       </div>
-      <div class="d-flex flex-no-wrap pl-1">
-        <v-chip-group>
-          <v-chip
-            color="amber"
-            @click="bargainOverlay.show = true"
-            v-if="!hasPendingDeal && !hasPendingBooking && !hasUnreplyBargain"
-          >
-            <v-icon color="white" class="mr-1">monetization_on</v-icon>Trả giá
-          </v-chip>
-          <v-chip
-            v-if="!hasPendingBooking && !hasUnreplyBargain"
-            color="green"
-            @click="dateTimeOverlay.show = true"
-          >
-            <v-icon color="white" class="mr-1">schedule</v-icon>Đặt lịch
-          </v-chip>
-        </v-chip-group>
+      <div class="d-flex flex-no-wrap justify-center align-center" style="height: 65px;">
+        <v-btn
+          small
+          rounded
+          outlined
+          color="success"
+          class="ma-2"
+          v-if="!hasPendingBooking && !hasUnreplyBargain"
+          @click="dateTimeOverlay.show = true"
+        >
+          <v-icon left>mdi-clock</v-icon>ĐẶT LỊCH
+        </v-btn>
+        <v-btn
+          small
+          rounded
+          outlined
+          color="amber"
+          class="ma-2"
+          @click="bargainOverlay.show = true"
+          v-if="!hasPendingDeal && !hasPendingBooking && !hasUnreplyBargain"
+        >
+          <v-icon left>monetization_on</v-icon>TRẢ GIÁ
+        </v-btn>
       </div>
     </div>
   </v-card>
@@ -323,7 +444,7 @@ export default {
         newPrice: this.bargainOverlay.price,
         status: 'wait',
         typeName: this.info.title,
-        groupAdd: this.group.street,
+        groups: this.group,
       };
       this.messCollectionRef.add(newContent);
       this.messCollectionRef.parent.update({
@@ -382,6 +503,8 @@ export default {
         } else if (type === 'book') {
           this.book(content);
         } else if (type === 'bargain') {
+          console.log('bargain');
+          console.log(content);
           this.bargain(content);
           this.bargainOverlay.step = 1;
         }
@@ -532,8 +655,6 @@ export default {
       this.fetchMessages();
     });
     this.bargainOverlay.price = this.info.price;
-    console.log('thuy');
-    console.log(this.info);
   },
   mounted() {},
   computed: {
@@ -603,14 +724,25 @@ export default {
   font-family: 'Nunito', sans-serif !important;
 }
 .renterChatMessage {
-  background-color: #98b7d7;
+  background-color: #6c98c6;
+  /* background-color: #98b7d7; */
+  /* background-color: #4f60c9; */
   border-radius: 20px;
   color: white;
   font-family: 'Nunito', sans-serif !important;
 }
+.renterEvent {
+  /* border: 1px solid #6c98c6; */
+  border-radius: 15px;
+  background-color: #f0f2f5;
+}
 .vendorChatMessage {
-  background-color: #f2f3f5;
+  background-color: #f0f2f5;
+  /* background-color: #f2f3f5; */
   border-radius: 20px;
   font-family: 'Nunito', sans-serif !important;
+}
+.v-text-field--outlined >>> fieldset {
+  border-color: #98b7d7;
 }
 </style>

@@ -20,8 +20,8 @@ const myState = () => ({
 });
 
 const getters = {
-  isLoading: (state) =>
-    state.hostelGroup.isLoading || state.hostelType.isLoading || state.schedules.isLoading,
+  // eslint-disable max-len -->
+  isLoading: (state) => state.hostelGroup.isLoading || state.hostelType.isLoading || state.schedules.isLoading,
 };
 
 const mutationTypes = {

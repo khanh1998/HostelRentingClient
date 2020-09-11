@@ -31,7 +31,7 @@
       <v-col cols="10 pt-2">
         <span
           class="text-body-2 font-nunito"
-          v-if="!isLoadingProvinces"
+          _v-if="!isLoadingProvinces"
           style="
                   display: block;
                   display: -webkit-box;
@@ -41,10 +41,7 @@
                   text-overflow: ellipsis;
                   color: #484848;
                 "
-        >
-          {{ ward.wardName }}, {{ district.districtName }},
-          {{ province.provinceName }}
-        </span>
+        >{{group.address.districtName}}, {{group.address.provinceName}}</span>
         <div class="d-flex align-center py-3" style="height: 60px;">
           <p
             style="

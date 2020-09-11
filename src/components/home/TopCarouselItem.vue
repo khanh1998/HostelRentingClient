@@ -54,10 +54,10 @@
             max-width="20px"
             max-height="20px"
           />
-          <span class="item-text" v-if="!isLoadingProvinces">
-            {{ group.address.streetName }}, {{ ward.wardName }}, {{ district.districtName }},
-            {{ province.provinceName }}
-          </span>
+          <span
+            class="item-text"
+            _v-if="!isLoadingProvinces"
+          >{{ group.address.streetName }}, {{group.address.districtName}}, {{group.address.provinceName}}</span>
         </div>
         <div class="mt-3 d-flex align-center">
           <v-img
