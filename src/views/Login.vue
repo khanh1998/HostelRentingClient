@@ -90,7 +90,7 @@ export default {
         return idToken;
       } catch (error) {
         console.log('firebase login error: ', error);
-        alert(`error when login with firebase: ${error}`);
+        // alert(`error when login with firebase: ${error}`);
       }
       return null;
     },

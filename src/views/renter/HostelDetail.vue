@@ -124,7 +124,7 @@
             <facilitiesBox :facilities="info.facilities" />
           </v-col>
           <v-col cols="12" md="4">
-            <servicesBox :services="info.services" />
+            <servicesBox :services="group.services" />
           </v-col>
           <!-- tien nghi xung quanh -->
           <v-col cols="12" md="4" class="pl-10">
@@ -376,6 +376,7 @@ export default {
       if (data === null) {
         data = this.$store.state.renter.hostelType.hostelGroup.data;
       }
+      console.log(data);
       return data;
     },
     renter() {

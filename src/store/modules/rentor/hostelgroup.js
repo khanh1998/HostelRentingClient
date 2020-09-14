@@ -59,6 +59,7 @@ const mutations = {
   GET_HOSTEL_GROUP_SUCCESS(state, hostelGroup) {
     state.hostelGroup.data = hostelGroup;
     state.hostelGroup.isLoading = false;
+    console.log(state.hostelGroup);
     state.hostelGroup.success = true;
   },
   GET_HOSTEL_GROUP_FAILURE(state, error) {

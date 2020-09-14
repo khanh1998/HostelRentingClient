@@ -36,7 +36,6 @@
             <v-col cols="12" class="px-6">
               <span
                 class="item-address"
-                v-if="!isLoadingProvinces"
                 style="
                   display: block;
                   display: -webkit-box;
@@ -46,8 +45,8 @@
                   text-overflow: ellipsis;
                 "
               >
-                {{ group.address.streetName }}, {{ ward.wardName }}, {{ district.districtName }},
-                {{ province.provinceName }}
+                {{ group.address.streetName }}, {{group.address.districtName}},
+                {{group.address.provinceName}}
               </span>
               <div class="type-name mt-2" style="height: 40px">
                 <p

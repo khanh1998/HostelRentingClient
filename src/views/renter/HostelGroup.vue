@@ -105,8 +105,6 @@ export default {
       const group = this.$store.state.renter.hostelGroup.hostelGroup.isLoading;
       const types = this.$store.state.renter.hostelGroup.hostelTypes.isLoading;
       const filterResult = this.$store.state.renter.hostelGroup.filterResult.isLoading;
-      console.log(types);
-      console.log(group || types || filterResult);
       return group || types || filterResult;
     },
     groupId() {
@@ -120,7 +118,6 @@ export default {
       return data;
     },
     types() {
-      // this.initFilter(this.$store.state.renter.hostelGroup.hostelTypes.data);
       return this.$store.state.renter.hostelGroup.hostelTypes.data;
     },
     filterResult() {

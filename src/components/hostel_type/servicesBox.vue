@@ -10,19 +10,19 @@
       <v-list-item
         dense
         v-for="item in services"
-        v-bind:key="item.serviceId"
+        :key="item.serviceId"
         style="border-bottom: 1px dashed rgba(0, 0, 0, 0.1);"
         class="px-0"
       >
         <!-- <v-icon color="#78A0CA">fa-caret-right</v-icon> -->
         <v-list-item-title class="font-weight-bold">
           {{
-          item.service.serviceName
+          item.serviceName
           }}
         </v-list-item-title>
         <v-list-item-subtitle class="text-right">
-          <div v-if="item.servicePrice > 0">
-            <span style="color: #78A0CA" class="font-weight-bold">{{ item.servicePrice }}</span>
+          <div v-if="item.price > 0">
+            <span style="color: #78A0CA" class="font-weight-bold">{{ item.price }}</span>
             {{ item.priceUnit }}/{{ item.userUnit }}
           </div>
           <div v-else>
