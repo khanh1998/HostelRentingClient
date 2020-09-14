@@ -31,7 +31,7 @@
       light
       height="80"
       id="top-bar"
-      style="box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !important;"
+      style="box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
     >
       <v-row height="70 m-0" class="d-flex">
         <v-col cols="11" md="7">

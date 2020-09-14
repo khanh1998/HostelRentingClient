@@ -102,6 +102,7 @@
           <v-col cols="12" sm="4" md="4" lg="4" class="pl-10">
             <dateTimePickerBox
               :name="group.groupName"
+              :avatar="group.imgUrl"
               :rating="{ average: 3.5, total: 30 }"
               :groupId="group.groupId"
               :typeId="info.typeId"

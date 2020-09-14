@@ -1,6 +1,6 @@
 <template>
   <div
-    class="d-flex flex-column justify-center align-center"
+    class="d-flex flex-column align-center justify-space-between py-16"
     v-if="!isLoading"
     style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%;"
   >
@@ -24,26 +24,17 @@
         :groupId="groupId"
       />
     </v-dialog>
-    <!-- <v-row class="d-flex justify-end" :style="{width: '100%'}">
-      <v-btn class="ma-2 text-caption font-nunito x-small" outlined color="indigo">
-        <v-icon>share</v-icon>
-        Chia Sẽ
-      </v-btn>
-      <v-btn class="ma-2 text-subtitle-2" outlined color="indigo">
-        <v-icon>report_problem</v-icon>Báo Xấu
-      </v-btn>
-    </v-row>-->
-    <!-- <v-btn icon :to="'/group/' + groupId"> -->
-    <v-avatar height="80" width="80">
-      <v-img max-height="80" max-width="80" src="../../assets/home/thumnail.png" />
-    </v-avatar>
-    <!-- </v-btn> -->
-    <!-- eslint-disable max-len -->
+    <v-btn icon :to="'/group/' + groupId">
+      <v-avatar height="70" width="70" color="#4F60C9">
+        <v-img v-if="avatar" max-height="70" max-width="70" :src="avatar" />
+        <span v-else class="text-h4 white--text">{{getAvatarTitle()}}</span>
+      </v-avatar>
+    </v-btn>
     <span
       class="text-body-1 font-weight-bold text-center font-nunito"
       style="color: #222"
     >{{ name }}</span>
-    <div class="d-flex flex-wrap align-center mb-2">
+    <div class="d-flex flex-wrap align-center mt-n7">
       <v-icon color="yellow" x-small>fas fa-star</v-icon>
       <p class="grey--text mb-0">{{ ` ${rating.average}/5 ` }}</p>
       <p class="mb-0">({{ rating.total }})</p>
@@ -56,7 +47,6 @@
             outlined
             @click="$emit('openMessage')"
             rounded
-            class="my-3"
             :disabled="userState.data && isVendor"
             v-bind="attrs"
             v-on="on"
@@ -73,9 +63,9 @@
         <template v-slot:activator="{ attrs }">
           <v-btn
             v-bind="attrs"
-            color="rgb(108, 152, 198)"
+            color="#4F60C9"
             width="80%"
-            class="mx-7 my-6 text-subtitle-2 white--text py-5"
+            class="mx-7 text-subtitle-2 white--text py-5"
             depressed
             tile
             @click="dateTimePicker.isOpenPicker = true"
@@ -122,6 +112,7 @@ export default {
   components: { dateTimePickerStepper },
   props: {
     name: String,
+    avatar: String,
     rating: Object,
     groupId: Number,
     typeId: Number,
@@ -184,6 +175,9 @@ export default {
       this.dateTimePicker.date = event.date;
       this.dateTimePicker.time = event.time;
       await this.sendBooking();
+    },
+    getAvatarTitle() {
+      return this.name.substring(this.name.lastIndexOf(' ') + 1).substring(0, 1);
     },
   },
   computed: {
