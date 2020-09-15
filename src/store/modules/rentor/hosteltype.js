@@ -98,7 +98,7 @@ const actions = {
   async getSchedules({ commit }, groupId) {
     try {
       commit(mutationTypes.GET_SCHEDULES_REQUEST);
-      const response = await window.axios.get(`/api/v1/schedules?groupId=${groupId}`);
+      const response = await window.axios.get(`/api/v1/groups/${groupId}/schedules`);
       if (response.status >= 200 && response.status <= 299) {
         commit(mutationTypes.GET_SCHEDULES_SUCCESS, response.data.data);
       } else {

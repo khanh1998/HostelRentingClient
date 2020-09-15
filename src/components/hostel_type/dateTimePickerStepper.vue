@@ -18,7 +18,7 @@
               outlined
               active-class="red--text red"
               link
-              @click="getTimesForDate(i - 1)"
+              @click="getTimesForDate(dates[i - 1].getDay())"
             >
               <v-sheet class="d-flex flex-column justify-center align-center pa-1 flex-wrap" light>
                 <p class="ma-0">{{ daysOfWeek[dates[i - 1].getDay()] }}</p>
@@ -37,6 +37,18 @@
       <div v-if="stepper.step == 2">
         <v-card class="mb-1 pa-1" color="white" width="300" elevation="0">
           <v-card-title class="grey--text">Chọn giờ</v-card-title>
+          <span v-for="time in timesForDate" v-bind:key="time">
+            {{ time }}
+          </span>
+          <el-time-picker
+            v-model="pickedTime"
+            :picker-options="{
+              selectableRange: timesForDate,
+              step: '00:15:00',
+            }"
+            placeholder="Arbitrary time"
+          >
+          </el-time-picker>
           <v-chip-group v-model="selectedTime" light column center-active show-arrows>
             <v-chip
               light
@@ -65,14 +77,12 @@
           <v-card-text class="grey--text">
             Bạn muốn đặt lịch hẹn vào ngày
             <p class="font-weight-bold green--text">
-              {{
-                `${dates[pickedDate].getDate()}/
-              ${dates[pickedDate].getMonth()}/
-              ${dates[pickedDate].getFullYear()}`
-              }}
+              {{ `${dates[pickedDate].toLocaleDateString('vi-vn')}` }}
             </p>
             vào lúc
-            <p class="font-weight-bold green--text">{{ pickedTime }}</p>
+            <p class="font-weight-bold green--text">
+              {{ `${pickedTime.getHours()} : ${pickedTime.getMinutes()}` }}
+            </p>
           </v-card-text>
           <v-card-actions>
             <v-btn color="amber" @click="$emit('cancel')">Hủy</v-btn>
@@ -101,7 +111,7 @@ export default {
     stepper: {
       step: 1,
     },
-    daysOfWeekEn: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    daysOfWeekEn: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
     daysOfWeek: ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'],
     dates: [],
     timesForDate: null,
@@ -133,7 +143,7 @@ export default {
     pickDateAndTime() {
       return {
         date: this.dates[this.pickedDate],
-        time: this.pickedTime,
+        time: `${this.pickedTime.getHours()} : ${this.pickedTime.getMinutes()}`,
       };
     },
     cancelPickDateAndTime() {
@@ -163,8 +173,10 @@ export default {
       return `${date.getHours()}:${date.getMinutes()}${date.getMinutes() < 10 ? '0' : ''}`;
     },
     makeListTimes(schedule) {
-      // schedule contains startTime and endTime Date object
-      const { startTime, endTime } = schedule;
+      // schedule contains a string startTime - endTime
+      let [startTime, endTime] = schedule.split('-');
+      startTime = new Date(Date(startTime));
+      endTime = new Date(Date(endTime));
       const result = [];
       let current = new Date(startTime.getTime());
       while (current < endTime) {
@@ -184,16 +196,19 @@ export default {
   },
   computed: {
     rawSchedule() {
-      return this.$store.state.renter.hostelType.schedules.data;
+      return this.$store.state.renter.hostelType.schedules.data.schedules;
     },
     isLoading() {
       return this.$store.state.renter.hostelType.schedules.isLoading;
     },
     times() {
       const arr = [];
-      this.daysOfWeek.forEach((day) => {
-        let result = this.rawSchedule.filter((item) => item.dayOfWeek === day.toLowerCase());
-        result = result.map((item) => this.createScheduleObject(item));
+      this.daysOfWeekEn.forEach((day) => {
+        let result = this.rawSchedule.find((item) => item.code.toUpperCase() === day.toUpperCase());
+        result = result.timeRange.map((range) => {
+          const [start, end] = range.split('-');
+          return `${start.trim()}:00 - ${end.trim()}:00`;
+        });
         arr.push(result);
       });
       return arr;

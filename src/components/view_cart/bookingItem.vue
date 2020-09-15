@@ -35,8 +35,9 @@
             <span class="font-italic" v-if="booking.deal"> (đã trả giá)</span>
           </p>
           <p class="grey--text font-italic">
-            {{ booking.group.street.streetName }}, {{ ward.wardName }}, {{ district.districtName }},
-            {{ province.provinceName }}
+            {{ booking.group.address.streetName }}, {{ booking.group.address.wardName }},
+            {{ booking.group.address.districtName }},
+            {{ booking.group.address.provinceName }}
           </p>
           <v-btn color="success" outlined> <v-icon class="mr-1">near_me</v-icon>Bản đồ </v-btn>
         </div>

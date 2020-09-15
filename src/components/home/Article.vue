@@ -46,8 +46,9 @@
                   text-overflow: ellipsis;
                 "
               >
-                {{ group.street.streetName }}, {{ ward.wardName }}, {{ district.districtName }},
-                {{ province.provinceName }}
+                {{ group.address.streetName }}, {{ group.address.wardName }},
+                {{ group.address.districtName }},
+                {{ group.address.provinceName }}
               </span>
               <div class="type-name mt-2" style="height: 40px">
                 <p
