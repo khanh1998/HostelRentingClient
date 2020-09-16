@@ -9,8 +9,8 @@
     <v-list-item-group>
       <v-list-item
         dense
-        v-for="item in services"
-        :key="item.serviceId"
+        v-for="(item,i) in services"
+        :key="i"
         style="border-bottom: 1px dashed rgba(0, 0, 0, 0.1);"
         class="px-0"
       >

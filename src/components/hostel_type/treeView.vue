@@ -8,6 +8,7 @@
       <div class="line-after" :style="{width: '30%'}"></div>
       <div class="line-before" :style="{width: '90%'}"></div>
     </div>
+    {{utitlities.length}}
     <!-- <v-treeview :items="items" activatable dense hoverable>
       <template v-slot:prepend="{ item }">
         <v-icon v-if="!item.icon">{{ open ? 'mdi-folder-open' : 'fas fa-map-marker-alt' }}</v-icon>
@@ -68,21 +69,8 @@ export default {
     text:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
   }),
-  computed: {
-    items() {
-      return this.utitlities.map((u) => ({
-        name: u.name,
-        icon: u.code,
-        children: u.utilityTypes.map((c) => ({
-          name: c.name,
-          children: c.utilities,
-        })),
-      }));
-    },
-  },
-  created() {
-    console.log(this.items);
-  },
+  computed: {},
+  created() {},
 };
 </script>
 <style scoped>

@@ -136,11 +136,7 @@ export default {
   created() {
     // if home.js store is empty then start to call api
     this.getHostelGroup(this.groupId);
-    if (this.types.length === 0) {
-      this.getAllHostelTypes(this.groupId);
-    }
-    this.initFilter();
-    // this.initFilter(this.types);
+    this.getAllHostelTypes(this.groupId).then(() => this.initFilter());
   },
 };
 </script>
