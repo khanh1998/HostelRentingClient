@@ -1,5 +1,9 @@
 <template>
-  <div class="info-card d-flex flex-column" v-if="!isLoading">
+  <div
+    class="d-flex flex-column align-center justify-space-between py-16"
+    v-if="!isLoading"
+    style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%"
+  >
     <v-dialog v-model="dateTimePicker.isOpenPicker" width="350">
       <v-card v-if="!userState.data" color="white" light>
         <v-card-title>Đăng nhập để đặt lịch xem phòng</v-card-title>
@@ -20,53 +24,53 @@
         :groupId="groupId"
       />
     </v-dialog>
-    <div
-      class="above d-flex flex-column justify-center align-center rounded-lg"
-      style="background-color: #fff"
-    >
-      <v-sheet
-        class="ma-6 pa-2 d-flex align-center justify-center rounded-pill"
-        color="#F6F7F9"
-        rounded
-      >
-        <v-avatar height="64" width="64" left>
-          <v-img max-height="64" max-width="64" src="../../assets/logo.png" />
-        </v-avatar>
-        <p class="text-h6 font-weight-thin text-center ma-2">{{ name }}</p>
-      </v-sheet>
-      <div class="d-flex flex-wrap align-center">
-        <v-icon color="yellow" x-small>fas fa-star</v-icon>
-        <span class="white--text">{{ '_' }}</span>
-        <p class="grey--text mb-0">{{ ` ${rating.average}/5 ` }}</p>
-        <span class="white--text">{{ '_' }}</span>
-        <p class="mb-0">({{ rating.total }})</p>
-      </div>
-      <div class="d-flex">
-        <v-btn
-          color="orange"
-          outlined
-          @click="$emit('openMessage')"
-          rounded
-          class="my-2 mx-1"
-          :disabled="userState.data && isVendor"
-        >
-          <v-icon>fas fa-comment-dots</v-icon>Nhắn tin ngay!
-        </v-btn>
-      </div>
+    <v-btn icon :to="'/group/' + groupId">
+      <v-avatar height="70" width="70" color="#4F60C9">
+        <v-img v-if="avatar" max-height="70" max-width="70" :src="avatar" />
+        <span v-else class="text-h4 white--text">{{ getAvatarTitle() }}</span>
+      </v-avatar>
+    </v-btn>
+    <span class="text-body-1 font-weight-bold text-center font-nunito" style="color: #222">{{
+      name
+    }}</span>
+    <div class="d-flex flex-wrap align-center mt-n7">
+      <v-icon color="yellow" x-small>fas fa-star</v-icon>
+      <p class="grey--text mb-0">{{ ` ${rating.average}/5 ` }}</p>
+      <p class="mb-0">({{ rating.total }})</p>
+    </div>
+    <div class="d-flex">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="#F9BD1A"
+            outlined
+            @click="$emit('openMessage')"
+            rounded
+            :disabled="userState.data && isVendor"
+            v-bind="attrs"
+            v-on="on"
+            _title="Hãy nhắn tin để thỏa thuận giá!"
+          >
+            <v-icon class="mx-1">fas fa-comment-dots</v-icon>Nhắn tin ngay!
+          </v-btn>
+        </template>
+        <span>Hãy nhắn tin để thỏa thuận giá!</span>
+      </v-tooltip>
     </div>
     <div class="below d-flex justify-center align-center">
       <v-dialog v-model="dialog.booking" persistent max-width="290">
         <template v-slot:activator="{ attrs }">
           <v-btn
             v-bind="attrs"
-            color="primary"
+            color="#4F60C9"
             width="80%"
-            class="ma-6"
+            class="mx-7 text-subtitle-2 white--text py-5"
             depressed
+            tile
             @click="dateTimePicker.isOpenPicker = true"
             :disabled="hasPendingBooking || isVendor"
           >
-            <v-icon left>fas fa-paper-plane</v-icon>ĐẶT LỊCH XEM PHÒNG
+            <v-icon left>event_available</v-icon>ĐẶT LỊCH XEM PHÒNG
           </v-btn>
         </template>
         <v-card>
@@ -107,6 +111,7 @@ export default {
   components: { dateTimePickerStepper },
   props: {
     name: String,
+    avatar: String,
     rating: Object,
     groupId: Number,
     typeId: Number,
@@ -170,6 +175,9 @@ export default {
       this.dateTimePicker.time = event.time;
       await this.sendBooking();
     },
+    getAvatarTitle() {
+      return this.name.substring(this.name.lastIndexOf(' ') + 1).substring(0, 1);
+    },
   },
   computed: {
     isLoading() {
@@ -216,4 +224,8 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped></style>
+<style scoped>
+.font-nunito {
+  font-family: 'Nunito', sans-serif !important;
+}
+</style>

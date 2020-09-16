@@ -20,6 +20,7 @@ const myState = () => ({
 });
 
 const getters = {
+  // eslint-disable max-len -->
   isLoading: (state) =>
     state.hostelGroup.isLoading || state.hostelType.isLoading || state.schedules.isLoading,
 };

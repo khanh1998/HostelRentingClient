@@ -1,13 +1,28 @@
 <template>
   <div>
+    <!-- eslint-disable max-len -->
+    <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
+      >DỊCH VỤ</span
+    >
+    <div class="d-flex mt-3" :style="{ width: '100%' }">
+      <div class="line-after" :style="{ width: '30%' }"></div>
+      <div class="line-before" :style="{ width: '90%' }"></div>
+    </div>
     <v-list-item-group>
-      <v-list-item dense v-for="item in services" v-bind:key="item.serviceId">
-        <v-list-item-title class="font-weight-bold">{{
-          item.service.serviceName
-        }}</v-list-item-title>
-        <v-list-item-subtitle>
+      <v-list-item
+        dense
+        v-for="item in services"
+        v-bind:key="item.serviceId"
+        style="border-bottom: 1px dashed rgba(0, 0, 0, 0.1)"
+        class="px-0"
+      >
+        <!-- <v-icon color="#78A0CA">fa-caret-right</v-icon> -->
+        <v-list-item-title class="font-weight-bold">
+          {{ item.service.serviceName }}
+        </v-list-item-title>
+        <v-list-item-subtitle class="text-right">
           <div v-if="item.servicePrice > 0">
-            <span class="primary--text font-weight-bold">{{ item.servicePrice }}</span>
+            <span style="color: #78a0ca" class="font-weight-bold">{{ item.servicePrice }}</span>
             {{ item.priceUnit }}/{{ item.userUnit }}
           </div>
           <div v-else>
@@ -27,3 +42,16 @@ export default {
   props: ['services'],
 };
 </script>
+<style scoped>
+.font-nunito {
+  font-family: 'Nunito', sans-serif !important;
+}
+.line-before {
+  height: 2px;
+  background-color: #eee;
+}
+.line-after {
+  height: 2px;
+  background-color: #2c92d5;
+}
+</style>

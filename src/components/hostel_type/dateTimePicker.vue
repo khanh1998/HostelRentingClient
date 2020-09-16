@@ -3,7 +3,7 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <div v-if="!isLoading" class="above d-flex justify-center flex-column pa-1 flex-wrap">
+    <div v-if="!isLoading" class="above d-flex justify-center flex-column pa-1 flex-wrap red">
       <p class="h6-text text-center">CHỌN NGÀY</p>
       <v-chip-group mandatory light v-model="pickedDate" center-active show-arrows>
         <v-chip
@@ -20,9 +20,7 @@
         >
           <v-sheet class="d-flex flex-column justify-center align-center ma-1 pa-1 flex-wrap" light>
             <p class="ma-0">{{ daysOfWeek[dates[i - 1].getDay()] }}</p>
-            <p class="ma-0 text-h5 font-weight-bold">
-              {{ dates[i - 1].getDate() }}
-            </p>
+            <p class="ma-0 text-h5 font-weight-bold">{{ dates[i - 1].getDate() }}</p>
           </v-sheet>
         </v-chip>
       </v-chip-group>
@@ -41,8 +39,7 @@
             outlined
             active-class="amber--text amber"
             link
-            >{{ timesForDate[j - 1] }}</v-chip
-          >
+          >{{ timesForDate[j - 1] }}</v-chip>
         </v-chip-group>
       </div>
     </div>
@@ -52,8 +49,7 @@
         color="success"
         v-if="pickedDate != null && pickedTime != null"
         @click="$emit('ok', pickDateAndTime())"
-        >CHỌN</v-btn
-      >
+      >CHỌN</v-btn>
     </div>
   </v-sheet>
 </template>

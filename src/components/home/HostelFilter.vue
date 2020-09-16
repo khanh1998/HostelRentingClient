@@ -127,9 +127,9 @@ export default {
     serviceIds: [],
     min: 0,
     max: 15,
-    slider: 3,
     range: [0, 2.5],
     disabled: false,
+    slider: 3,
     minSuperficiality: 0,
   }),
   methods: {

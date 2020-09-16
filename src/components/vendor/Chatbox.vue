@@ -1,10 +1,11 @@
 <template>
-  <div v-if="chatShow && !userState.isLoading">
+  <!-- eslint-disable max-len -->
+  <div v-if="chatShow">
     <v-overlay v-model="dialogAccept" width="350" absolute>
       <v-card>
         <v-card-title style="backgroundcolor: #98b7d7; color: white">Xác nhận</v-card-title>
-        <v-card-text class="text-center mt-3" style="fontsize: 20px">
-          Bạn sẽ chấp nhận trả giá này ?</v-card-text
+        <v-card-text class="text-center mt-3" style="fontsize: 20px"
+          >Bạn sẽ chấp nhận trả giá này ?</v-card-text
         >
         <v-divider></v-divider>
         <v-card-actions>
@@ -17,8 +18,8 @@
     <v-overlay v-model="dialogDeny" width="350" absolute>
       <v-card>
         <v-card-title style="backgroundcolor: #98b7d7; color: white">Xác nhận</v-card-title>
-        <v-card-text class="text-center mt-3" style="fontsize: 20px">
-          Bạn sẽ từ chối trả giá này ?</v-card-text
+        <v-card-text class="text-center mt-3" style="fontsize: 20px"
+          >Bạn sẽ từ chối trả giá này ?</v-card-text
         >
         <v-divider></v-divider>
         <v-card-actions>
@@ -56,10 +57,14 @@
             <v-list-item-title>{{ type.title }}</v-list-item-title>
             <v-list-item-content>
               <p>
-                <v-icon>attach_money</v-icon>{{ type.price }}
+                <v-icon>attach_money</v-icon>
+                {{ type.price }}
                 {{ type.priceUnit }}
               </p>
-              <p><v-icon>room</v-icon>{{ group.address.streetName }}</p>
+              <p>
+                <v-icon>room</v-icon>
+                {{ group.address.streetName }}
+              </p>
             </v-list-item-content>
           </v-list-item-content>
         </v-list-item>
@@ -71,24 +76,24 @@
                 <v-row>
                   <v-col cols="12">
                     <v-icon color="amber">attach_money</v-icon>
-                    <span class="font-weight-bold"> Trả giá mới </span>
+                    <span class="font-weight-bold">Trả giá mới</span>
                   </v-col>
                 </v-row>
                 <v-divider />
                 <v-row>
                   <v-col cols="12">
                     Loại phòng:
-                    <span class="mx-2 blue--text font-weight-bold">{{
-                      item.bargain.typeName
-                    }}</span>
+                    <span class="mx-2 blue--text font-weight-bold">
+                      {{ item.bargain.typeName }}
+                    </span>
                     <br />
-                    <span style="color: #98b7d7">Giá gốc: </span>
-                    <span style="color: red" class="font-weight-bold">
-                      {{ item.bargain.originalPrice }} Triệu</span
+                    <span style="color: #98b7d7">Giá gốc:</span>
+                    <span style="color: red" class="font-weight-bold"
+                      >{{ item.bargain.originalPrice }} Triệu</span
                     >
                     <br />
-                    <span style="color: #98b7d7">Trả giá: </span>
-                    <span class="font-weight-bold"> {{ item.bargain.newPrice }} Triệu</span>
+                    <span style="color: #98b7d7">Trả giá:</span>
+                    <span class="font-weight-bold">{{ item.bargain.newPrice }} Triệu</span>
                   </v-col>
                 </v-row>
                 <v-divider />
@@ -112,17 +117,15 @@
                       >
                     </div>
                     <span v-if="item.bargain.status === 'accept'">
-                      <v-icon color="green">thumb_up</v-icon>
-                      Bạn đã đồng ý</span
-                    >
+                      <v-icon color="green">thumb_up</v-icon>Bạn đã đồng ý
+                    </span>
                     <span v-if="item.bargain.status === 'deny'">
-                      <v-icon color="red">thumb_down</v-icon>
-                      Bạn đã không đồng ý</span
-                    >
+                      <v-icon color="red">thumb_down</v-icon>Bạn đã không đồng ý
+                    </span>
                     <span v-if="item.bargain.status === 'cancel'">
                       <v-icon color="red">clear</v-icon>
-                      {{ renter.username }} đã hủy trả giá này</span
-                    >
+                      {{ renter.username }} đã hủy trả giá này
+                    </span>
                   </v-col>
                 </v-row>
               </div>
@@ -134,25 +137,15 @@
               >
                 <v-icon color="pink">event</v-icon>
                 <span class="font-weight-bold">Lịch hẹn mới</span>
-                <v-divider class="my-1"></v-divider>
-                Ngày:
-                <span class="font-weight-bold">
-                  {{ item.book.date }}
-                </span>
-                <br />
-                Giờ:
-                <span class="font-weight-bold">
-                  {{ item.book.time }}
-                </span>
-                <br />
-                Địa chỉ:
-                <span class="font-weight-bold">
-                  {{ group.address.streetName }}
-                </span>
+                <v-divider class="my-1"></v-divider>Ngày:
+                <span class="font-weight-bold">{{ item.book.date }}</span>
+                <br />Giờ:
+                <span class="font-weight-bold">{{ item.book.time }}</span>
+                <br />Địa chỉ:
+                <span class="font-weight-bold">{{ group.address.streetName }}</span>
                 <span v-if="item.book.cancel">
                   <v-divider class="my-1"></v-divider>
-                  <v-icon color="red">clear</v-icon>
-                  Lịch hẹn đã hủy
+                  <v-icon color="red">clear</v-icon>Lịch hẹn đã hủy
                 </span>
               </p>
               <span

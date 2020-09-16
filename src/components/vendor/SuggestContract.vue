@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable max-len -->
   <v-card v-if="!isLoadingContracts && !groups.isLoading">
     <div style="font-size: 20px; fontweight: bold" class="pt-3 pl-2 pb-6">
       Các phòng sắp hết hạn hợp đồng

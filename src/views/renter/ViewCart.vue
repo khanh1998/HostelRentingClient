@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div>
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
@@ -67,12 +68,11 @@ export default {
   },
   created() {
     this.getUser().then(() => {
-      this.getBookings().then(() => {
-        const bookings = this.$store.state.user.bookings.data;
-        this.arrayEvents = bookings.map((booking) =>
-          new Date(booking.meetTime).toISOString().substr(0, 10),
-        );
-      });
+      // this.getBookings().then(() => {
+      //   // const bookings = this.$store.state.user.bookings.data;
+      //   // this.arrayEvents = bookings.map((booking) =>
+      // new Date(booking.meetTime).toISOString().substr(0, 10),);
+      // });
     });
   },
   computed: {
