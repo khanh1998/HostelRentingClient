@@ -1,5 +1,5 @@
 <template>
-  <div v-if="chatShow">
+  <div v-if="chatShow && !userState.isLoading">
     <v-overlay v-model="dialogAccept" width="350" absolute>
       <v-card>
         <v-card-title style="backgroundcolor: #98b7d7; color: white">Xác nhận</v-card-title>
@@ -59,7 +59,7 @@
                 <v-icon>attach_money</v-icon>{{ type.price }}
                 {{ type.priceUnit }}
               </p>
-              <p><v-icon>room</v-icon>{{ group.street.streetName }}</p>
+              <p><v-icon>room</v-icon>{{ group.address.streetName }}</p>
             </v-list-item-content>
           </v-list-item-content>
         </v-list-item>
@@ -147,7 +147,7 @@
                 <br />
                 Địa chỉ:
                 <span class="font-weight-bold">
-                  {{ group.street.streetName }}
+                  {{ group.address.streetName }}
                 </span>
                 <span v-if="item.book.cancel">
                   <v-divider class="my-1"></v-divider>
@@ -337,7 +337,11 @@ export default {
     },
   },
   created() {
-    this.fetchMessages();
+    if (!this.userState) {
+      Promise.all([this.getUser]).then(() => this.fetchMessages());
+    } else {
+      this.fetchMessages();
+    }
   },
   computed: {
     ...mapGetters({
@@ -380,11 +384,7 @@ export default {
       });
     },
   },
-  mounted() {
-    if (!this.userState) {
-      this.getUser();
-    }
-  },
+  mounted() {},
 };
 </script>
 <style>

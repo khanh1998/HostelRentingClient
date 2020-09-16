@@ -113,7 +113,7 @@
                   <span class="font-weight-bold">{{ selectedEvent.data.group.groupName }}</span>
                   , đường
                   <span class="font-weight-bold">{{
-                    selectedEvent.data.group.street.streetName
+                    selectedEvent.data.group.address.streetName
                   }}</span>
                 </p>
               </v-card-text>
