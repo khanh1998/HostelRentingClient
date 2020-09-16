@@ -90,12 +90,9 @@ export default {
         .substring(this.group.groupName.lastIndexOf(' ') + 1)
         .substring(0, 1);
     },
-    initFilter(list) {
-      console.log('thuy');
-      console.log(this.types);
-      console.log(list);
+    initFilter() {
       this.filterTypes({
-        types: list,
+        types: this.types,
         filterParam: null,
       });
     },
@@ -139,12 +136,10 @@ export default {
   created() {
     // if home.js store is empty then start to call api
     this.getHostelGroup(this.groupId);
-    console.log('thuy');
-    console.log(this.types);
     if (this.types.length === 0) {
       this.getAllHostelTypes(this.groupId);
-      console.log(this.types);
     }
+    this.initFilter();
     // this.initFilter(this.types);
   },
 };

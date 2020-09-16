@@ -24,6 +24,12 @@ const myState = () => ({
     success: null,
     error: null,
   },
+  utilities: {
+    data: [],
+    isLoading: false,
+    success: null,
+    error: null,
+  },
 });
 const mutationTypes = {
   GET_HOSTEL_GROUP_REQUEST: 'GET_HOSTEL_GROUP_REQUEST',
@@ -37,6 +43,10 @@ const mutationTypes = {
   GET_FILTER_RESULT_SUCCESS: 'GET_FILTER_RESULT_SUCCESS',
   GET_FILTER_RESULT_FAILURE: 'GET_FILTER_RESULT_FAILURE',
   GET_FILTER_RESULT_REQUEST: 'GET_FILTER_RESULT_REQUEST',
+
+  GET_UTILITES_REQUEST: 'GET_UTILITES_REQUEST',
+  GET_UTILITES_SUCCESS: 'GET_UTILITES_SUCCESS',
+  GET_UTILITES_FAILURE: 'GET_UTILITES_FAILURE',
 
   SET_FILTER_VALUES: 'SET_FILTER_VALUES',
 };
@@ -59,7 +69,6 @@ const mutations = {
   GET_HOSTEL_GROUP_SUCCESS(state, hostelGroup) {
     state.hostelGroup.data = hostelGroup;
     state.hostelGroup.isLoading = false;
-    console.log(state.hostelGroup);
     state.hostelGroup.success = true;
   },
   GET_HOSTEL_GROUP_FAILURE(state, error) {
@@ -69,10 +78,13 @@ const mutations = {
   // get all hostel types of group
   GET_HOSTEL_TYPES_REQUEST(state) {
     state.hostelTypes.isLoading = true;
+    console.log('thuy dien');
+    console.log(state.hostelTypes.isLoading);
   },
   GET_HOSTEL_TYPES_SUCCESS(state, hostelGroup) {
     state.hostelTypes.data = hostelGroup;
     state.hostelTypes.isLoading = false;
+    console.log(state.hostelTypes);
     state.hostelTypes.success = true;
   },
   GET_HOSTEL_TYPES_FAILURE(state, error) {
@@ -91,6 +103,19 @@ const mutations = {
   GET_FILTER_RESULT_FAILURE(state, error) {
     state.filterResult.isLoading = false;
     state.filterResult.error = error;
+  },
+  // get nearby utilities
+  GET_UTILITES_REQUEST(state) {
+    state.utilities.isLoading = true;
+  },
+  GET_UTILITES_SUCCESS(state, utilities) {
+    state.utilities.data = utilities;
+    state.utilities.isLoading = false;
+    state.utilities.success = true;
+  },
+  GET_UTILITES_FAILURE(state, error) {
+    state.utilities.isLoading = false;
+    state.utilities.error = error;
   },
   // setter
   SET_FILTER_VALUES: (state, filterValues) => {
@@ -128,11 +153,24 @@ const actions = {
       commit(mutationTypes.GET_HOSTEL_TYPES_FAILURE, error);
     }
   },
+  async getNearByUtilities({ commit }, param) {
+    // param: longitude, latitude, distance
+    try {
+      commit(mutationTypes.GET_UTILITES_REQUEST);
+      const response = await window.axios.get(
+        `/api/v1/utilities?distance=${param.distance}&latitude=${param.latitude}&longitude=${param.longitude}`,
+      );
+      if (response.status >= 200 && response.status <= 299) {
+        commit(mutationTypes.GET_UTILITES_SUCCESS, response.data.data);
+      } else {
+        commit(mutationTypes.GET_UTILITES_FAILURE);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_UTILITES_FAILURE, error);
+    }
+  },
   // eslint-disable max-len
   filterHostelType({ commit }, param) {
-    console.log('vao');
-    console.log(param.types.length);
-    console.log(param.filterParam);
     try {
       commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
       const { filterParam } = param;
@@ -158,7 +196,6 @@ const actions = {
           result = result.filter((p) => p.superficiality >= minSuperficiality);
         }
       }
-      console.log(result);
       commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, result);
     } catch (error) {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE, error);
