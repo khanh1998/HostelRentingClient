@@ -78,8 +78,6 @@ const mutations = {
   // get all hostel types of group
   GET_HOSTEL_TYPES_REQUEST(state) {
     state.hostelTypes.isLoading = true;
-    console.log('thuy dien');
-    console.log(state.hostelTypes.isLoading);
   },
   GET_HOSTEL_TYPES_SUCCESS(state, hostelGroup) {
     state.hostelTypes.data = hostelGroup;

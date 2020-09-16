@@ -1,9 +1,12 @@
 <template>
   <div>
-    <v-overlay :value="isLoadingTopView && isLoadingTopSuggestion && isLoadingCategories" absolute>
+    <!-- eslint-disable max-len -->
+    <!-- <v-overlay :value="isLoadingTopView && isLoadingTopSuggestion && isLoadingCategories" absolute> -->
+    <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-container fluid v-if="!(isLoadingTopView || isLoadingTopSuggestion || isLoadingCategories)">
+    <!-- <v-container fluid v-if="!(isLoadingTopView || isLoadingTopSuggestion || isLoadingCategories)"> -->
+    <v-container fluid v-if="!isLoading">
       <v-row>
         <v-col cols="12">
           <Banner />
@@ -101,10 +104,6 @@ export default {
   },
   data: () => ({
     overlay: false,
-    roomType: {
-      select: 'Phòng trọ',
-      items: ['Phòng trọ', 'Ký túc xá', 'Nhà nguyên căn', 'thuy'],
-    },
     bottomSheet: {
       show: false,
     },
@@ -172,6 +171,14 @@ export default {
       get() {
         return this.$store.state.renter.home.categories.isLoading;
       },
+    },
+    isLoading() {
+      const facilities = this.$store.state.renter.filterResult.filter.facility.isLoading;
+      const schools = this.$store.state.renter.filterResult.filter.schools.isLoading;
+      const categories = this.$store.state.renter.filterResult.filter.categories.isLoading;
+      const topSuggestion = this.$store.state.renter.home.hostelTypes.isLoading;
+      const topView = this.$store.state.renter.home.topView.isLoading;
+      return facilities || categories || schools || topSuggestion || topView;
     },
   },
   created() {
