@@ -21,12 +21,12 @@
               Tỷ lệ lấp đầy:
               <span class="font-weight-bold">
                 {{
-                Number(
-                (
-                100 -
-                (groupStat[group.groupId].empty / groupStat[group.groupId].total) * 100
-                ).toFixed(2),
-                )
+                  Number(
+                    (
+                      100 -
+                      (groupStat[group.groupId].empty / groupStat[group.groupId].total) * 100
+                    ).toFixed(2),
+                  )
                 }}
               </span>
               %

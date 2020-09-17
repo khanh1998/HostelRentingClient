@@ -17,6 +17,12 @@ const myState = () => ({
     success: null,
     error: null,
   },
+  schedules: {
+    data: {},
+    isLoading: false,
+    success: null,
+    error: null,
+  },
 });
 
 const myGetters = {
@@ -45,6 +51,9 @@ const mutationTypes = {
   GET_ROOMS_REQUEST: 'GET_ROOMS_REQUEST',
   GET_ROOMS_SUCCESS: 'GET_ROOMS_SUCCESS',
   GET_ROOMS_FAILURE: 'GET_ROOMS_FAILURE',
+  GET_GROUP_SCHEDULES_REQUEST: 'GET_GROUP_SCHEDULES_REQUEST',
+  GET_GROUP_SCHEDULES_SUCCESS: 'GET_GROUP_SCHEDULES_SUCCESS',
+  GET_GROUP_SCHEDULES_FAILURE: 'GET_GROUP_SCHEDULES_FAILURE',
 };
 const mutations = {
   GET_GROUPS_REQUEST(state) {
@@ -85,6 +94,19 @@ const mutations = {
     state.rooms.isLoading = false;
     state.rooms.success = false;
     state.types.error = error;
+  },
+  GET_GROUP_SCHEDULES_REQUEST(state) {
+    state.schedules.isLoading = true;
+  },
+  GET_GROUP_SCHEDULES_SUCCESS(state, schedules, hostelGroupId) {
+    state.schedules.isLoading = false;
+    state.schedules.success = true;
+    state.schedules.data[hostelGroupId] = schedules;
+  },
+  GET_GROUP_SCHEDULES_FAILURE(state, error) {
+    state.schedules.isLoading = false;
+    state.schedules.error = error;
+    state.schedules.success = false;
   },
 };
 
@@ -155,6 +177,22 @@ const actions = {
       }
     } else {
       throw new Error('cookies userId and role are null');
+    }
+  },
+  async getSchedules({ commit, state }, hostelGroupId) {
+    const currentSchedules = state.schedules[hostelGroupId];
+    if (!currentSchedules) {
+      try {
+        commit(mutationTypes.GET_GROUP_SCHEDULES_REQUEST);
+        const res = await window.axios.get(`/api/v1/groups/${hostelGroupId}/schedules`);
+        if (res.status === 200) {
+          commit(mutationTypes.GET_GROUP_SCHEDULES_SUCCESS, res.data.data);
+        } else {
+          commit(mutationTypes.GET_GROUP_SCHEDULES_FAILURE);
+        }
+      } catch (error) {
+        commit(mutationTypes.GET_GROUP_SCHEDULES_FAILURE, error);
+      }
     }
   },
 };

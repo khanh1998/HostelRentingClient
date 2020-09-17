@@ -1,10 +1,12 @@
 <template>
   <div>
     <!-- eslint-disable max-len -->
-    <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{color: '#484848'}">DỊCH VỤ</span>
-    <div class="d-flex mt-3" :style="{width: '100%'}">
-      <div class="line-after" :style="{width: '30%'}"></div>
-      <div class="line-before" :style="{width: '90%'}"></div>
+    <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
+      >DỊCH VỤ</span
+    >
+    <div class="d-flex mt-3" :style="{ width: '100%' }">
+      <div class="line-after" :style="{ width: '30%' }"></div>
+      <div class="line-before" :style="{ width: '90%' }"></div>
     </div>
     <v-list-item-group>
       <v-list-item

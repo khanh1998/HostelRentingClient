@@ -10,18 +10,18 @@
           <v-card class="bg-primary pa-7" style="width: 100%">
             <v-row no-gutters>
               <v-col cols="12" md="7" class="d-flex align-center">
-                <v-avatar height="100" width="100" color="#4F60C9" style="border: 5px solid #fff;">
-                  <span
-                    v-if="group.imgUrl === null"
-                    class="text-h4 white--text"
-                  >{{getAvatarTitle()}}</span>
+                <v-avatar height="100" width="100" color="#4F60C9" style="border: 5px solid #fff">
+                  <span v-if="group.imgUrl === null" class="text-h4 white--text">{{
+                    getAvatarTitle()
+                  }}</span>
                   <v-img v-else max-height="100" max-width="100" :src="group.imgUrl" />
                 </v-avatar>
                 <div class="d-flex flex-column ml-7">
-                  <span class="white--text text-h5 font-nunito">{{group.groupName}}</span>
+                  <span class="white--text text-h5 font-nunito">{{ group.groupName }}</span>
                   <span class="text-white-50 font-nunito d-flex align-center text-subtitle-2">
                     <!-- <v-icon class="text-white-50 mr-1" small>location_on</v-icon> -->
-                    {{group.address.streetName}} {{group.address.districtName}} {{group.address.provinceName}}
+                    {{ group.address.streetName }} {{ group.address.districtName }}
+                    {{ group.address.provinceName }}
                   </span>
                   <span class="d-flex align-center mt-5 font-nunito white--text font-weight-medium">
                     <v-icon class="mr-2" color="amber">grade</v-icon>3.5 / 5
@@ -32,7 +32,7 @@
               <v-col cols="12" md="5" class="d-flex flex-wrap align-center">
                 <span class="white--text text-body-2 mx-5">
                   Loại phòng:
-                  <span class="ml-3 black--text">{{types.length}}</span>
+                  <span class="ml-3 black--text">{{ types.length }}</span>
                 </span>
                 <span class="white--text text-body-2 mx-5">
                   Số lượt thuê:

@@ -1,8 +1,10 @@
 <template>
   <div
-    :style="{width: '100%',
-  backgroundColor: '#fff',
-  backgroundImage: 'linear-gradient(#fff, #F3F4F9)',}"
+    :style="{
+      width: '100%',
+      backgroundColor: '#fff',
+      backgroundImage: 'linear-gradient(#fff, #F3F4F9)',
+    }"
   >
     <v-row>
       <v-col cols="12">

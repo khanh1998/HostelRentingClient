@@ -27,19 +27,21 @@
             <div class="d-flex flex-column justify-sm-center">
               <h2
                 class="font-weight-bold font-nunito"
-                :style="{color: '#656565',fontSize: '28px'}"
-              >{{ info.title }}</h2>
-              <span
-                class="text-body-2"
-                style="color: #9a9a9a; font-family: 'Lato' !important;"
-              >{{ group.address.streetName }}, {{group.address.districtName}}, {{group.address.provinceName}}</span>
+                :style="{ color: '#656565', fontSize: '28px' }"
+              >
+                {{ info.title }}
+              </h2>
+              <span class="text-body-2" style="color: #9a9a9a; font-family: 'Lato' !important"
+                >{{ group.address.streetName }}, {{ group.address.districtName }},
+                {{ group.address.provinceName }}</span
+              >
             </div>
           </v-col>
           <v-col cols="12" md="4" class="pl-10">
             <div class="d-flex flex-column justify-end">
-              <span
-                class="font-weight-medium text-h5 blue--text text-center"
-              >{{ info.price }} {{ info.priceUnit }}/tháng</span>
+              <span class="font-weight-medium text-h5 blue--text text-center"
+                >{{ info.price }} {{ info.priceUnit }}/tháng</span
+              >
               <div class="d-flex rounded-0 d-flex justify-space-between mt-3 px-10">
                 <div>
                   <div class="d-flex justify-center align-center">
@@ -55,7 +57,7 @@
                       <sup>2</sup>
                     </span>
                   </div>
-                  <span class="text-caption" style="color: #555;">Diện tích</span>
+                  <span class="text-caption" style="color: #555">Diện tích</span>
                 </div>
                 <div>
                   <div class="d-flex justify-center align-center">
@@ -66,13 +68,13 @@
                       max-width="25"
                       max-height="25"
                     />
-                    <span class="text-body-1 ml-2" style="color: #444">{{ info.capacity }} người</span>
+                    <span class="text-body-1 ml-2" style="color: #444"
+                      >{{ info.capacity }} người</span
+                    >
                   </div>
-                  <span
-                    class="text-caption ml-auto"
-                    style="color: #555"
-                    :style="{float: 'right'}"
-                  >Sức chứa</span>
+                  <span class="text-caption ml-auto" style="color: #555" :style="{ float: 'right' }"
+                    >Sức chứa</span
+                  >
                 </div>
               </div>
             </div>
@@ -90,9 +92,9 @@
               <v-carousel-item v-for="(image, i) in images" :key="i" :src="images[i]">
                 <div class="category">
                   <!-- eslint-disable max-len -->
-                  <span
-                    class="font-weight-bold text-body-1 yellow--text"
-                  >{{ info.category.categoryName }}</span>
+                  <span class="font-weight-bold text-body-1 yellow--text">{{
+                    info.category.categoryName
+                  }}</span>
                   <br />
                   <span class="text-caption">{{ info.view }} lượt xem</span>
                 </div>
@@ -113,13 +115,12 @@
         </v-row>
         <v-row class="mt-3">
           <v-col cols="12" md="4">
-            <span
-              class="text-subtitle-1 font-nunito font-weight-bold"
-              :style="{color: '#484848'}"
-            >TIỆN ÍCH</span>
-            <div class="d-flex mt-3" :style="{width: '100%'}">
-              <div class="line-after" :style="{width: '30%'}"></div>
-              <div class="line-before" :style="{width: '90%'}"></div>
+            <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
+              >TIỆN ÍCH</span
+            >
+            <div class="d-flex mt-3" :style="{ width: '100%' }">
+              <div class="line-after" :style="{ width: '30%' }"></div>
+              <div class="line-before" :style="{ width: '90%' }"></div>
             </div>
             <facilitiesBox :facilities="info.facilities" />
           </v-col>
@@ -138,31 +139,38 @@
         </v-row>
         <v-row v-if="!isLoadingProvinces" class="mt-5">
           <v-col cols="12" md="8">
-            <span
-              class="text-subtitle-1 font-nunito font-weight-bold"
-              :style="{color: '#484848'}"
-            >GIÁ TRUNG BÌNH</span>
-            <div class="d-flex mt-3" :style="{width: '100%'}">
-              <div class="line-after" :style="{width: '15%'}" />
-              <div class="line-before" :style="{width: '85%'}" />
+            <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
+              >GIÁ TRUNG BÌNH</span
+            >
+            <div class="d-flex mt-3" :style="{ width: '100%' }">
+              <div class="line-after" :style="{ width: '15%' }" />
+              <div class="line-before" :style="{ width: '85%' }" />
             </div>
             <v-row class="d-flex flex-wrap mx-0 font-nunito text-subtitle-2">
               <v-col cols="6">
                 <div class="average-item d-flex align-center">
                   <v-col cols="7" class="d-flex average-infor">{{ district.districtName }}</v-col>
-                  <span class="font-weight-bold mx-auto">{{ wardAverage.price }} triệu / tháng</span>
+                  <span class="font-weight-bold mx-auto"
+                    >{{ wardAverage.price }} triệu / tháng</span
+                  >
                 </div>
               </v-col>
               <v-col cols="6">
                 <div class="average-item d-flex align-center">
                   <v-col cols="7" class="d-flex average-infor">{{ ward.wardName }}</v-col>
-                  <span class="font-weight-bold mx-auto">{{ districtAverage.price }} triệu / tháng</span>
+                  <span class="font-weight-bold mx-auto"
+                    >{{ districtAverage.price }} triệu / tháng</span
+                  >
                 </div>
               </v-col>
               <v-col cols="6">
                 <div class="average-item d-flex align-center">
-                  <v-col cols="7" class="d-flex average-infor">{{ group.address.streetName }}</v-col>
-                  <span class="font-weight-bold mx-auto">{{ streetAverage.price }} triệu / tháng</span>
+                  <v-col cols="7" class="d-flex average-infor">{{
+                    group.address.streetName
+                  }}</v-col>
+                  <span class="font-weight-bold mx-auto"
+                    >{{ streetAverage.price }} triệu / tháng</span
+                  >
                 </div>
               </v-col>
               <v-col cols="6">
@@ -182,13 +190,12 @@
         </v-row>
         <v-row class="mt-10">
           <v-col cols="12" md="8">
-            <span
-              class="text-subtitle-1 font-nunito font-weight-bold"
-              :style="{color: '#484848'}"
-            >ĐÁNH GIÁ PHÒNG TRỌ</span>
-            <div class="d-flex mt-3" :style="{width: '100%'}">
-              <div class="line-after" :style="{width: '15%'}" />
-              <div class="line-before" :style="{width: '85%'}" />
+            <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
+              >ĐÁNH GIÁ PHÒNG TRỌ</span
+            >
+            <div class="d-flex mt-3" :style="{ width: '100%' }">
+              <div class="line-after" :style="{ width: '15%' }" />
+              <div class="line-before" :style="{ width: '85%' }" />
             </div>
             <ratingBox class="mt-5" :rating="{ average: 3.5, total: 30 }" />
           </v-col>
@@ -198,8 +205,9 @@
             <div class="d-flex">
               <span
                 class="text-subtitle-1 font-nunito font-weight-bold"
-                :style="{color: '#484848'}"
-              >CÓ THỂ BẠN SẼ THÍCH</span>
+                :style="{ color: '#484848' }"
+                >CÓ THỂ BẠN SẼ THÍCH</span
+              >
               <v-btn
                 class="align-end font-weight-medium ml-auto"
                 text
@@ -211,9 +219,9 @@
                 <!-- <v-icon>double_arrow</v-icon> -->
               </v-btn>
             </div>
-            <div class="d-flex mt-3" :style="{width: '100%'}">
-              <div class="line-after" :style="{width: '15%'}" />
-              <div class="line-before" :style="{width: '85%'}" />
+            <div class="d-flex mt-3" :style="{ width: '100%' }">
+              <div class="line-after" :style="{ width: '15%' }" />
+              <div class="line-before" :style="{ width: '85%' }" />
             </div>
             <SuggestionList :list="topView" class="mt-5" />
           </v-col>
@@ -223,10 +231,10 @@
             <div class="d-flex">
               <span
                 class="text-subtitle-1 font-nunito font-weight-bold"
-                :style="{color: '#484848'}"
+                :style="{ color: '#484848' }"
               >
                 CÁC LOẠI PHÒNG KHÁC CỦA
-                <span class="text-uppercase">{{group.groupName}}</span>
+                <span class="text-uppercase">{{ group.groupName }}</span>
               </span>
               <v-btn
                 class="align-end font-weight-medium ml-auto"
@@ -239,9 +247,9 @@
                 <!-- <v-icon>double_arrow</v-icon> -->
               </v-btn>
             </div>
-            <div class="d-flex mt-3" :style="{width: '100%'}">
-              <div class="line-after" :style="{width: '15%'}" />
-              <div class="line-before" :style="{width: '85%'}" />
+            <div class="d-flex mt-3" :style="{ width: '100%' }">
+              <div class="line-after" :style="{ width: '15%' }" />
+              <div class="line-before" :style="{ width: '85%' }" />
             </div>
             <GroupHostelTypes :list="topView" class="mt-5" />
           </v-col>

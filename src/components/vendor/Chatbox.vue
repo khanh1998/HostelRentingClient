@@ -3,8 +3,10 @@
   <div v-if="chatShow">
     <v-overlay v-model="dialogAccept" width="350" absolute>
       <v-card>
-        <v-card-title style="backgroundcolor: #98b7d7; color: white;">Xác nhận</v-card-title>
-        <v-card-text class="text-center mt-3" style="fontsize: 20px;">Bạn sẽ chấp nhận trả giá này ?</v-card-text>
+        <v-card-title style="backgroundcolor: #98b7d7; color: white">Xác nhận</v-card-title>
+        <v-card-text class="text-center mt-3" style="fontsize: 20px"
+          >Bạn sẽ chấp nhận trả giá này ?</v-card-text
+        >
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -15,8 +17,10 @@
     </v-overlay>
     <v-overlay v-model="dialogDeny" width="350" absolute>
       <v-card>
-        <v-card-title style="backgroundcolor: #98b7d7; color: white;">Xác nhận</v-card-title>
-        <v-card-text class="text-center mt-3" style="fontsize: 20px;">Bạn sẽ từ chối trả giá này ?</v-card-text>
+        <v-card-title style="backgroundcolor: #98b7d7; color: white">Xác nhận</v-card-title>
+        <v-card-text class="text-center mt-3" style="fontsize: 20px"
+          >Bạn sẽ từ chối trả giá này ?</v-card-text
+        >
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -80,18 +84,15 @@
                   <v-col cols="12">
                     Loại phòng:
                     <span class="mx-2 blue--text font-weight-bold">
-                      {{
-                      item.bargain.typeName
-                      }}
+                      {{ item.bargain.typeName }}
                     </span>
                     <br />
-                    <span style="color: #98b7d7;">Giá gốc:</span>
-                    <span
-                      style="color: red;"
-                      class="font-weight-bold"
-                    >{{ item.bargain.originalPrice }} Triệu</span>
+                    <span style="color: #98b7d7">Giá gốc:</span>
+                    <span style="color: red" class="font-weight-bold"
+                      >{{ item.bargain.originalPrice }} Triệu</span
+                    >
                     <br />
-                    <span style="color: #98b7d7;">Trả giá:</span>
+                    <span style="color: #98b7d7">Trả giá:</span>
                     <span class="font-weight-bold">{{ item.bargain.newPrice }} Triệu</span>
                   </v-col>
                 </v-row>
@@ -104,14 +105,16 @@
                         color="#F3F3F3"
                         class="mx-1"
                         @click="showBargainReplyOverlay(item.id, 'deny')"
-                      >Từ chối</v-btn>
+                        >Từ chối</v-btn
+                      >
                       <v-btn
                         small
                         color="#EF7239"
                         dark
                         class="mx-1"
                         @click="showBargainReplyOverlay(item.id, 'accept')"
-                      >Chấp nhận</v-btn>
+                        >Chấp nhận</v-btn
+                      >
                     </div>
                     <span v-if="item.bargain.status === 'accept'">
                       <v-icon color="green">thumb_up</v-icon>Bạn đã đồng ý
@@ -150,7 +153,8 @@
                 v-ripple
                 style="width: 75%"
                 class="blue lighten-5 pa-2 rounded"
-              >{{ item.message }}</span>
+                >{{ item.message }}</span
+              >
             </div>
             <div v-if="item.sender === 'vendor'" class="d-flex justify-end">
               <span
@@ -158,13 +162,15 @@
                 v-ripple
                 class="green lighten-5 pa-2 rounded"
                 v-if="!item.book && !item.bargain"
-              >{{ item.message }}</span>
+                >{{ item.message }}</span
+              >
               <span
                 style="width: auto; max-width: 75%"
                 v-ripple
                 class="red lighten-5 pa-2 rounded"
                 v-if="item.bargain && !item.bargain.dealId"
-              >Bạn đã không đồng ý với mức giá trên</span>
+                >Bạn đã không đồng ý với mức giá trên</span
+              >
             </div>
           </v-list-item-content>
         </v-list-item>
@@ -262,12 +268,9 @@ export default {
         vendorId,
       };
       await this.createDeal(deal);
-      this.doc.ref
-        .collection('messages')
-        .doc(this.bargainDocId)
-        .update({
-          'bargain.status': 'accept',
-        });
+      this.doc.ref.collection('messages').doc(this.bargainDocId).update({
+        'bargain.status': 'accept',
+      });
       this.doc.ref.collection('messages').add({
         sender: 'vendor',
         message: 'Chấp nhận trả giá của bạn',
@@ -284,12 +287,9 @@ export default {
 
     denyMessage() {
       console.log(this.bargainDocId);
-      this.doc.ref
-        .collection('messages')
-        .doc(this.bargainDocId)
-        .update({
-          'bargain.status': 'deny',
-        });
+      this.doc.ref.collection('messages').doc(this.bargainDocId).update({
+        'bargain.status': 'deny',
+      });
       this.doc.ref.collection('messages').add({
         sender: 'vendor',
         message: 'Từ chối trả giá của bạn',
@@ -330,7 +330,11 @@ export default {
     },
   },
   created() {
-    this.fetchMessages();
+    if (!this.userState) {
+      Promise.all([this.getUser]).then(() => this.fetchMessages());
+    } else {
+      this.fetchMessages();
+    }
   },
   computed: {
     ...mapGetters({
@@ -373,11 +377,7 @@ export default {
       });
     },
   },
-  mounted() {
-    if (!this.userState) {
-      this.getUser();
-    }
-  },
+  mounted() {},
 };
 </script>
 <style>

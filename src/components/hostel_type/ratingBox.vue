@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- eslint-disable max-len -->
-    <div class="d-flex" style="border: 1px solid #ccc !important; background: #F7F7F7 !important;">
+    <div class="d-flex" style="border: 1px solid #ccc !important; background: #f7f7f7 !important">
       <v-col cols="3" class="flex justify-center">
-        <span class="text-h5 font-nunito font-weight-bold" :style="{color:'#F9A825'}">
+        <span class="text-h5 font-nunito font-weight-bold" :style="{ color: '#F9A825' }">
           {{ rating.average }}
           <span class="text-subtitle-1 font-weight-regular">trên 5</span>
         </span>
         <v-rating
-          v-model=" rating.average"
+          v-model="rating.average"
           color="yellow darken-3"
           background-color="grey darken-1"
           _empty-icon="$ratingFull"
@@ -16,7 +16,7 @@
           small
           class="px-0 rating"
         ></v-rating>
-        <span class="text-body-2 font-nunito gray--text">({{rating.total}} đánh giá)</span>
+        <span class="text-body-2 font-nunito gray--text">({{ rating.total }} đánh giá)</span>
       </v-col>
       <v-col cols="9" class="d-flexd-flex flex-wrap">
         <v-btn small class="ma-2 font-weight-bold" tile color="primary">Tất cả</v-btn>
@@ -25,14 +25,12 @@
         <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary">3 sao (3)</v-btn>
         <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary">2 sao (3)</v-btn>
         <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary">1 sao (1)</v-btn>
-        <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary">Có bình luận (12)</v-btn>
-        <v-btn
-          small
-          class="ma-2 font-weight-bold"
-          tile
-          outlined
-          color="primary"
-        >Có hình ảnh / video (10)</v-btn>
+        <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary"
+          >Có bình luận (12)</v-btn
+        >
+        <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary"
+          >Có hình ảnh / video (10)</v-btn
+        >
       </v-col>
     </div>
     <ratingItem class="py-3" />

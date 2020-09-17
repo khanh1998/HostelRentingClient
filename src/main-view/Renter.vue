@@ -1,10 +1,11 @@
 <template>
   <v-app>
-    <myAppBar style="box-shadow: 0 10px 20px rgba(0, 0, 0, .06) !import;" />
+    <myAppBar style="box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !import" />
     <v-main
-      :style="{width: '100%',
-      backgroundColor: '#F3F5F8',
-      _backgroundImage: 'linear-gradient(#fff, #F3F5F8)',
+      :style="{
+        width: '100%',
+        backgroundColor: '#F3F5F8',
+        _backgroundImage: 'linear-gradient(#fff, #F3F5F8)',
       }"
     >
       <router-view></router-view>

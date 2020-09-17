@@ -21,7 +21,8 @@
               overlay.show = false;
               search();
             "
-          >Search</v-btn>
+            >Search</v-btn
+          >
         </template>
       </v-text-field>
     </v-overlay>
@@ -31,7 +32,7 @@
       light
       height="80"
       id="top-bar"
-      style="box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
+      style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
     >
       <v-row height="70 m-0" class="d-flex">
         <v-col cols="11" md="7">
@@ -108,7 +109,8 @@
             dark
             class="hidden-xs-only"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
-          >Lịch hẹn của bạn</v-btn>
+            >Lịch hẹn của bạn</v-btn
+          >
           <v-btn
             to="/vendor"
             depressed

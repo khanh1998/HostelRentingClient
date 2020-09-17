@@ -2,9 +2,10 @@
   <!-- eslint-disable max-len -->
   <v-card style="width: 100%" outlined>
     <v-card-title
-      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);"
+      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
       class="d-flex align-center justify-center text-uppercase"
-    >Bộ lọc</v-card-title>
+      >Bộ lọc</v-card-title
+    >
     <v-expansion-panels focusable multiple accordion>
       <v-expansion-panel>
         <v-expansion-panel-header>Loại</v-expansion-panel-header>
@@ -17,9 +18,7 @@
               :key="`item-${i}`"
               :value="item.categoryId"
             >
-              {{
-              item.categoryName
-              }}
+              {{ item.categoryName }}
             </v-chip>
           </v-chip-group>
         </v-expansion-panel-content>
@@ -34,7 +33,8 @@
               v-for="(item, i) in facilities"
               :key="`item-${i}`"
               :value="item.facilityId"
-            >{{item.facilityName}}</v-chip>
+              >{{ item.facilityName }}</v-chip
+            >
           </v-chip-group>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -88,13 +88,16 @@
               v-for="(item, i) in filter.minArea.items"
               :key="`item-${i}`"
               :value="item"
-            >{{item}}</v-chip>
+              >{{ item }}</v-chip
+            >
           </v-chip-group>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-card-actions class="pa-4" style="border-top: 1px solid rgba(0, 0, 0, 0.12);">
-      <v-btn color="#727cf5" class="white--text" width="100%" @click="filterSubmit()">Áp dụng</v-btn>
+    <v-card-actions class="pa-4" style="border-top: 1px solid rgba(0, 0, 0, 0.12)">
+      <v-btn color="#727cf5" class="white--text" width="100%" @click="filterSubmit()"
+        >Áp dụng</v-btn
+      >
     </v-card-actions>
   </v-card>
 </template>
@@ -189,4 +192,5 @@ export default {
 .v-expansion-panel::before {
   box-shadow: none !important;
 }
-</style>>
+</style>
+>

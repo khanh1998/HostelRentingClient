@@ -2,7 +2,7 @@
   <div
     class="d-flex flex-column align-center justify-space-between py-16"
     v-if="!isLoading"
-    style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%;"
+    style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%"
   >
     <v-dialog v-model="dateTimePicker.isOpenPicker" width="350">
       <v-card v-if="!userState.data" color="white" light>
@@ -27,13 +27,12 @@
     <v-btn icon :to="'/group/' + groupId">
       <v-avatar height="70" width="70" color="#4F60C9">
         <v-img v-if="avatar" max-height="70" max-width="70" :src="avatar" />
-        <span v-else class="text-h4 white--text">{{getAvatarTitle()}}</span>
+        <span v-else class="text-h4 white--text">{{ getAvatarTitle() }}</span>
       </v-avatar>
     </v-btn>
-    <span
-      class="text-body-1 font-weight-bold text-center font-nunito"
-      style="color: #222"
-    >{{ name }}</span>
+    <span class="text-body-1 font-weight-bold text-center font-nunito" style="color: #222">{{
+      name
+    }}</span>
     <div class="d-flex flex-wrap align-center mt-n7">
       <v-icon color="yellow" x-small>fas fa-star</v-icon>
       <p class="grey--text mb-0">{{ ` ${rating.average}/5 ` }}</p>

@@ -3,9 +3,7 @@
     <v-chip-group column>
       <v-icon>flaticon-air-conditioner</v-icon>
       <v-chip v-for="item in facilities" v-bind:key="item.facilityId">
-        {{
-        item.facilityName
-        }}
+        {{ item.facilityName }}
       </v-chip>
     </v-chip-group>
   </div>

@@ -1,28 +1,30 @@
 <template>
   <div class="d-flex">
     <!-- main thumnail -->
-    <div class="banner-right d-flex justify-center" :style="{width: '100%'}">
+    <div class="banner-right d-flex justify-center" :style="{ width: '100%' }">
       <v-col cols="8">
         <!-- search by location -->
         <div v-show="!advanceSearch">
           <div class="d-flex flex-column align-center justify-center mt-16">
             <p
               class="white--text px-2 font-weight-bold slogan"
-              style="letter-spacing: 0.001em !important;"
-            >HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT</p>
+              style="letter-spacing: 0.001em !important"
+            >
+              HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT
+            </p>
             <p class="white--text text-h2">TD HOSTEL</p>
             <div class="flex d-flex px-10" :style="{ width: '100%' }">
               <v-col cols="9">
                 <div
                   class="d-flex justify-center align-center white"
                   :style="{
-                width: '100%',
-                _borderTopLeftRadius: '4px',
-                _borderTopRightRadius: '4px',
-                border: '1px solid #F3E5',
-                margin: '0px 0px 4px',
-                height: '50px',
-              }"
+                    width: '100%',
+                    _borderTopLeftRadius: '4px',
+                    _borderTopRightRadius: '4px',
+                    border: '1px solid #F3E5',
+                    margin: '0px 0px 4px',
+                    height: '50px',
+                  }"
                 >
                   <gmap-autocomplete
                     placeholder="Địa điểm, khu vực bạn muốn ở gần"
@@ -44,49 +46,59 @@
               <v-col cols="3" class="ml-auto">
                 <v-btn
                   class="text-button"
-                  :style="{ width: '100%', height: '50px', borderRadius: '0px',
-                  boxShadow: 'none', color: '#151515' }"
+                  :style="{
+                    width: '100%',
+                    height: '50px',
+                    borderRadius: '0px',
+                    boxShadow: 'none',
+                    color: '#151515',
+                  }"
                   color="#fdde52"
                   @click="searchByCoordinates()"
-                >TÌM KIẾM</v-btn>
+                  >TÌM KIẾM</v-btn
+                >
               </v-col>
             </div>
           </div>
-          <div class="flex d-flex justify-end align-center px-10" :style="{ width: '100%'}">
+          <div class="flex d-flex justify-end align-center px-10" :style="{ width: '100%' }">
             <!-- eslint-disable max-len -->
-            <v-subheader
-              class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
-            >Tùy chọn nâng cao</v-subheader>
+            <v-subheader class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
+              >Tùy chọn nâng cao</v-subheader
+            >
             <v-btn icon @click="advanceSearch = !advanceSearch">
-              <v-icon color="white">{{ advanceSearch ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+              <v-icon color="white">{{
+                advanceSearch ? 'mdi-chevron-up' : 'mdi-chevron-down'
+              }}</v-icon>
             </v-btn>
           </div>
         </div>
         <!-- search like filter -->
         <div v-show="advanceSearch">
-          <div class="flex d-flex justify-end align-center" :style="{ width: '100%'}">
+          <div class="flex d-flex justify-end align-center" :style="{ width: '100%' }">
             <!-- eslint-disable max-len -->
             <p></p>
-            <v-subheader
-              class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
-            >Tùy chọn nâng cao</v-subheader>
+            <v-subheader class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
+              >Tùy chọn nâng cao</v-subheader
+            >
             <v-btn icon @click="advanceSearch = !advanceSearch">
-              <v-icon color="white">{{ advanceSearch ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+              <v-icon color="white">{{
+                advanceSearch ? 'mdi-chevron-up' : 'mdi-chevron-down'
+              }}</v-icon>
             </v-btn>
           </div>
           <!-- address -->
           <div class="flex d-flex" :style="{ width: '100%', height: '76px' }">
-            <v-col cols="9" :style="{height: '100%'}">
+            <v-col cols="9" :style="{ height: '100%' }">
               <div
                 class="d-flex justify-center align-center white"
                 :style="{
-                width: '100%',
-                _borderTopLeftRadius: '4px',
-                _borderTopRightRadius: '4px',
-                border: '1px solid #F3E5',
-                margin: '0px 0px 4px',
-                height: '100%',
-              }"
+                  width: '100%',
+                  _borderTopLeftRadius: '4px',
+                  _borderTopRightRadius: '4px',
+                  border: '1px solid #F3E5',
+                  margin: '0px 0px 4px',
+                  height: '100%',
+                }"
               >
                 <gmap-autocomplete
                   placeholder="Địa điểm, khu vực bạn muốn ở gần"
@@ -101,7 +113,7 @@
                 </v-btn>
               </div>
             </v-col>
-            <v-col cols="3" :style="{height: '100%'}">
+            <v-col cols="3" :style="{ height: '100%' }">
               <v-select
                 v-model="filter.distance.select"
                 :items="filter.distance.items"
@@ -114,8 +126,9 @@
                 _clearable
                 background-color="white"
                 :style="{
-                borderTopLeftRadius: '0px',
-                borderTopRightRadius: '0px',}"
+                  borderTopLeftRadius: '0px',
+                  borderTopRightRadius: '0px',
+                }"
               ></v-select>
             </v-col>
           </div>
@@ -170,15 +183,16 @@
                 background-color="white"
                 no-data-text="Không có kết quả phù hợp"
                 :style="{
-                borderTopLeftRadius: '0px',
-                borderTopRightRadius: '0px'}"
+                  borderTopLeftRadius: '0px',
+                  borderTopRightRadius: '0px',
+                }"
               ></v-autocomplete>
             </v-col>
           </div>
           <!-- category & price & area -->
-          <div class="flex d-flex" :style="{ width: '100%'}">
-            <v-col cols="7" class="flex d-flex" :style="{height: '76px' }">
-              <div :style="{width: '30%'}">
+          <div class="flex d-flex" :style="{ width: '100%' }">
+            <v-col cols="7" class="flex d-flex" :style="{ height: '76px' }">
+              <div :style="{ width: '30%' }">
                 <v-select
                   v-model="filter.categories.select"
                   :items="filter.categories.data"
@@ -192,12 +206,12 @@
                   color="indigo"
                   background-color="white"
                   :style="{
-                borderTopLeftRadius: '0px',
-                borderTopRightRadius: '0px',
-                }"
+                    borderTopLeftRadius: '0px',
+                    borderTopRightRadius: '0px',
+                  }"
                 ></v-select>
               </div>
-              <div :style="{width: '40%'}">
+              <div :style="{ width: '40%' }">
                 <v-select
                   v-model="filter.minArea.select"
                   :items="filter.minArea.items"
@@ -210,17 +224,18 @@
                   clearable
                   background-color="white"
                   :style="{
-                borderTopLeftRadius: '0px',
-                borderTopRightRadius: '0px',
-                }"
+                    borderTopLeftRadius: '0px',
+                    borderTopRightRadius: '0px',
+                  }"
                 ></v-select>
               </div>
-              <div :style="{width: '30%'}" class="d-flex align-end">
+              <div :style="{ width: '30%' }" class="d-flex align-end">
                 <v-switch class="ml-auto" hide-details v-model="disabled" />
                 <span
                   class="text-body-1 font-weight-medium px-0"
-                  style="line-height: normal; color: #FFFF00"
-                >Giá thuê</span>
+                  style="line-height: normal; color: #ffff00"
+                  >Giá thuê</span
+                >
               </div>
             </v-col>
             <v-col cols="5" class="pt-0 mt-10 pl-3">
@@ -237,11 +252,12 @@
               />
               <v-row class="justify-center align-center">
                 <!-- eslint-disable max-len -->
-                <v-subheader class="subtitle-2" :style="{height:'20px'}">{{filter.price.min}} triệu</v-subheader>
-                <v-subheader
-                  class="ml-auto subtitle-2"
-                  :style="{height:'20px'}"
-                >{{filter.price.max}} triệu</v-subheader>
+                <v-subheader class="subtitle-2" :style="{ height: '20px' }"
+                  >{{ filter.price.min }} triệu</v-subheader
+                >
+                <v-subheader class="ml-auto subtitle-2" :style="{ height: '20px' }"
+                  >{{ filter.price.max }} triệu</v-subheader
+                >
                 <v-btn
                   icon
                   color="indigo"
@@ -256,16 +272,18 @@
             </v-col>
           </div>
           <!-- utility & facility -->
-          <div class="d-flex" :style="{width: '100%'}">
+          <div class="d-flex" :style="{ width: '100%' }">
             <v-col cols="3">
-              <div :style="{width: '100%',border: '2px solid #b2ccf7' }">
+              <div :style="{ width: '100%', border: '2px solid #b2ccf7' }">
                 <div class="flex d-flex justify-center align-center">
-                  <v-subheader class="white--text text-subtitle-1 font-weight-regular">Tiện nghi</v-subheader>
+                  <v-subheader class="white--text text-subtitle-1 font-weight-regular"
+                    >Tiện nghi</v-subheader
+                  >
                   <v-btn
                     color="white"
                     icon
                     class="ml-auto mr-2"
-                    @click="showMoreFacilities = ! showMoreFacilities"
+                    @click="showMoreFacilities = !showMoreFacilities"
                   >
                     <v-icon>{{ showMoreFacilities ? 'remove_circle' : 'add_circle' }}</v-icon>
                   </v-btn>
@@ -274,7 +292,7 @@
                   <div>
                     <v-list>
                       <v-list-item-group
-                        :style="{width: '100%'}"
+                        :style="{ width: '100%' }"
                         v-model="filter.facility.selects"
                         multiple
                       >
@@ -304,16 +322,16 @@
               </div>
             </v-col>
             <v-col cols="6">
-              <div :style="{width: '100%',border: '2px solid #b2ccf7' }">
+              <div :style="{ width: '100%', border: '2px solid #b2ccf7' }">
                 <div class="flex d-flex justify-center align-center">
-                  <v-subheader
-                    class="white--text text-subtitle-1 font-weight-regular"
-                  >Tiện ích xung quanh</v-subheader>
+                  <v-subheader class="white--text text-subtitle-1 font-weight-regular"
+                    >Tiện ích xung quanh</v-subheader
+                  >
                   <v-btn
                     color="white"
                     icon
                     class="ml-auto mr-2"
-                    @click="showMoreAround = ! showMoreAround"
+                    @click="showMoreAround = !showMoreAround"
                   >
                     <v-icon>{{ showMoreAround ? 'remove_circle' : 'add_circle' }}</v-icon>
                   </v-btn>
@@ -347,11 +365,17 @@
             <v-col cols="3" class="ml-auto">
               <v-btn
                 class="text-button"
-                :style="{ width: '100%', height: '50px', borderRadius: '0px',
-                  boxShadow: 'none', color: '#151515' }"
+                :style="{
+                  width: '100%',
+                  height: '50px',
+                  borderRadius: '0px',
+                  boxShadow: 'none',
+                  color: '#151515',
+                }"
                 color="#fdde52"
                 @click="searchByCoordinates()"
-              >TÌM KIẾM</v-btn>
+                >TÌM KIẾM</v-btn
+              >
             </v-col>
           </div>
         </div>

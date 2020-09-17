@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="d-flex" style="border-bottom: 1px dashed rgba(0, 0, 0, 0.1);">
+  <div class="d-flex" style="border-bottom: 1px dashed rgba(0, 0, 0, 0.1)">
     <v-avatar height="45" width="45">
       <v-img max-height="45" max-width="45" src="../../assets/home/thumnail.png" />
     </v-avatar>
@@ -14,9 +14,7 @@
         class="pa-0 rating"
       ></v-rating>
       <span class="text-body-2 font-italic">
-        Phòng trọ sạch sẽ, thoáng mát.
-        An ninh tốt.
-        Nhưng xung quanh còn ồn.
+        Phòng trọ sạch sẽ, thoáng mát. An ninh tốt. Nhưng xung quanh còn ồn.
       </span>
     </div>
   </div>

@@ -7,9 +7,9 @@
     >
       <div class="category">
         <!-- eslint-disable max-len -->
-        <span
-          class="font-weight-bold text-body-1 yellow--text"
-        >{{ type.price }} {{ type.priceUnit }}</span>
+        <span class="font-weight-bold text-body-1 yellow--text"
+          >{{ type.price }} {{ type.priceUnit }}</span
+        >
         <br />
         <span class="text-caption">{{ type.view }} lượt xem</span>
       </div>
@@ -20,9 +20,9 @@
     <v-img style="height: 180px" src="@/assets/image-error.png" v-else>
       <div class="category">
         <!-- eslint-disable max-len -->
-        <span
-          class="font-weight-bold text-body-1 yellow--text"
-        >{{ type.price }} {{ type.priceUnit }}</span>
+        <span class="font-weight-bold text-body-1 yellow--text"
+          >{{ type.price }} {{ type.priceUnit }}</span
+        >
         <br />
         <span class="text-caption">{{ type.view }} lượt xem</span>
       </div>
@@ -44,7 +44,9 @@
               text-overflow: ellipsis;
             "
             class="font-weight-bold mb-0"
-          >{{ type.title }}</p>
+          >
+            {{ type.title }}
+          </p>
         </div>
         <div class="mt-3 d-flex align-center" style="height: 30px">
           <v-img
@@ -54,10 +56,10 @@
             max-width="20px"
             max-height="20px"
           />
-          <span
-            class="item-text"
-            _v-if="!isLoadingProvinces"
-          >{{ group.address.streetName }}, {{group.address.districtName}}, {{group.address.provinceName}}</span>
+          <span class="item-text" _v-if="!isLoadingProvinces"
+            >{{ group.address.streetName }}, {{ group.address.districtName }},
+            {{ group.address.provinceName }}</span
+          >
         </div>
         <div class="mt-3 d-flex align-center">
           <v-img
@@ -94,7 +96,9 @@
         </div>
         <v-card-actions class="px-0 mt-3" md="auto">
           <!-- eslint-disable -->
-          <v-btn color="#484848" class="btnDetail pl-3 pr-3" :to="'/detail/' + type.typeId">CHI TIẾT</v-btn>
+          <v-btn color="#484848" class="btnDetail pl-3 pr-3" :to="'/detail/' + type.typeId"
+            >CHI TIẾT</v-btn
+          >
         </v-card-actions>
       </v-col>
     </v-row>

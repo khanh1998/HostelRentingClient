@@ -21,10 +21,9 @@
                   :src="type.typeImages[i].resourceUrl"
                 >
                   <div class="top">
-                    <span
-                      class="text-body-2 amber--text"
-                      _style="color: #3476b2"
-                    >{{ type.category.categoryName }}</span>
+                    <span class="text-body-2 amber--text" _style="color: #3476b2">{{
+                      type.category.categoryName
+                    }}</span>
                     <br />
                     <span class="text-caption">{{ type.view }} lượt xem</span>
                   </div>
@@ -33,10 +32,9 @@
               </v-carousel>
               <v-img src="@/assets/image-error.png" v-else style="height: 180px" class="image-box">
                 <div class="top">
-                  <span
-                    class="text-body-2 amber--text"
-                    _style="color: #3476b2"
-                  >{{ type.category.categoryName }}</span>
+                  <span class="text-body-2 amber--text" _style="color: #3476b2">{{
+                    type.category.categoryName
+                  }}</span>
                   <br />
                   <span class="text-caption">{{ type.view }} lượt xem</span>
                 </div>
@@ -63,7 +61,9 @@
                     text-overflow: ellipsis;
                   "
                   class="font-weight-bold mb-0"
-                >{{ type.title }}</p>
+                >
+                  {{ type.title }}
+                </p>
               </div>
               <div class="align-center justify-center">
                 <div class="mt-3 d-flex align-center">
@@ -102,7 +102,7 @@
                     />
                     <span class="item-text">
                       {{
-                      type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
+                        type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
                       }}
                     </span>
                   </div>

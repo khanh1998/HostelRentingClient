@@ -42,11 +42,11 @@
           </v-row>
           <v-row class="d-flex mt-10">
             <v-col cols="12" lg="6">
-              <v-card class="flex" outlined width="100%" style="height: 100%;">
-                <v-card-title class="d-flex justify-center" :style="{backgroundColor: '#f4f4f4'}">
-                  <span
-                    class="text-body-1 txt-dark text-capitalize font-nunito font-weight-medium"
-                  >THEO PHƯỜNG</span>
+              <v-card class="flex" outlined width="100%" style="height: 100%">
+                <v-card-title class="d-flex justify-center" :style="{ backgroundColor: '#f4f4f4' }">
+                  <span class="text-body-1 txt-dark text-capitalize font-nunito font-weight-medium"
+                    >THEO PHƯỜNG</span
+                  >
                   <v-spacer></v-spacer>
                   <v-text-field
                     v-model="searchWard"
@@ -63,19 +63,22 @@
                   :items-per-page="5"
                   class="elevation-1"
                   :search="searchWard"
-                  :footer-props="{itemsPerPageAllText: 'Tất cả',itemsPerPageText:'Số lượng phường hiển thị'}"
+                  :footer-props="{
+                    itemsPerPageAllText: 'Tất cả',
+                    itemsPerPageText: 'Số lượng phường hiển thị',
+                  }"
                 ></v-data-table>
               </v-card>
             </v-col>
             <v-col cols="12" lg="6">
-              <v-card width="100%" style="height: 100%;" outlined>
+              <v-card width="100%" style="height: 100%" outlined>
                 <v-card-title
                   class="d-flex justify-space-between"
-                  :style="{backgroundColor: '#f4f4f4'}"
+                  :style="{ backgroundColor: '#f4f4f4' }"
                 >
-                  <span
-                    class="text-body-1 txt-dark text-capitalize font-nunito font-weight-medium"
-                  >THEO ĐƯỜNG</span>
+                  <span class="text-body-1 txt-dark text-capitalize font-nunito font-weight-medium"
+                    >THEO ĐƯỜNG</span
+                  >
                   <v-spacer></v-spacer>
                   <v-text-field
                     v-model="searchStreet"
@@ -92,7 +95,10 @@
                   :items-per-page="5"
                   class="elevation-1"
                   :search="searchStreet"
-                  :footer-props="{itemsPerPageAllText: 'Tất cả',itemsPerPageText:'Số lượng đường hiển thị'}"
+                  :footer-props="{
+                    itemsPerPageAllText: 'Tất cả',
+                    itemsPerPageText: 'Số lượng đường hiển thị',
+                  }"
                 ></v-data-table>
               </v-card>
             </v-col>

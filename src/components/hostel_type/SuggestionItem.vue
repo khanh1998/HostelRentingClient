@@ -17,7 +17,7 @@
         </div>
       </v-carousel-item>
     </v-carousel>
-    <v-img style="height: 170px;" src="@/assets/image-error.png" v-else>
+    <v-img style="height: 170px" src="@/assets/image-error.png" v-else>
       <div class="category">
         <span class="text-body-2 white--text">{{ type.category.categoryName }}</span>
         <br />
@@ -33,16 +33,17 @@
           class="text-body-2 font-nunito"
           _v-if="!isLoadingProvinces"
           style="
-                  display: block;
-                  display: -webkit-box;
-                  -webkit-line-clamp: 1;
-                  -webkit-box-orient: vertical;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  color: #484848;
-                "
-        >{{group.address.districtName}}, {{group.address.provinceName}}</span>
-        <div class="d-flex align-center py-3" style="height: 60px;">
+            display: block;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #484848;
+          "
+          >{{ group.address.districtName }}, {{ group.address.provinceName }}</span
+        >
+        <div class="d-flex align-center py-3" style="height: 60px">
           <p
             style="
               display: block;
@@ -55,7 +56,9 @@
               border-bottom: 1px solid #e2e6ed;
             "
             class="text-body-1 font-weight-medium mb-0"
-          >{{ type.title }}</p>
+          >
+            {{ type.title }}
+          </p>
         </div>
         <div class="d-flex rounded-0 d-flex justify-space-between mt-2 font-nunito">
           <div>
@@ -69,16 +72,13 @@
               />
               <span class="text-body-1 font-weight-bold" style="color: #656565">
                 {{ type.superficiality }}
-                <span
-                  class="text-body-2 font-weight-medium"
-                  style="color: #656565"
-                >
+                <span class="text-body-2 font-weight-medium" style="color: #656565">
                   m
                   <sup>2</sup>
                 </span>
               </span>
             </div>
-            <span class="text-caption" style="color: #656565;">Diện tích</span>
+            <span class="text-caption" style="color: #656565">Diện tích</span>
           </div>
           <div>
             <div class="d-flex justify-center align-center">
@@ -91,10 +91,7 @@
               />
               <span class="text-body-1 font-weight-bold ml-auto" style="color: #656565">
                 {{ type.capacity }}
-                <span
-                  class="text-body-2 font-weight-medium"
-                  style="color: #656565"
-                >người</span>
+                <span class="text-body-2 font-weight-medium" style="color: #656565">người</span>
               </span>
             </div>
             <span class="text-caption" style="color: #656565; float: right">Sức chứa</span>
@@ -113,24 +110,24 @@
                 max-width="23"
                 max-height="23"
               />
-              <span class="text-body-1 font-weight-bold" style="color: #656565;">
+              <span class="text-body-1 font-weight-bold" style="color: #656565">
                 {{ type.capacity }}
-                <span
-                  class="text-body-2 font-weight-medium"
-                  style="color: #656565"
-                >người</span>
+                <span class="text-body-2 font-weight-medium" style="color: #656565">người</span>
               </span>
             </div>
             <span
               class="text-caption"
-              style="color: #656565;
-                  display: block;
-                  display: -webkit-box;
-                  -webkit-line-clamp: 2;
-                  -webkit-box-orient: vertical;
-                  overflow: hidden;
-                  text-overflow: ellipsis;"
-            >Đại học FPT</span>
+              style="
+                color: #656565;
+                display: block;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+              >Đại học FPT</span
+            >
           </div>
           <div>
             <div class="d-flex justify-center align-center">
@@ -143,10 +140,7 @@
               />
               <span class="text-body-1 font-weight-bold ml-auto" style="color: #656565">
                 {{ type.capacity }}
-                <span
-                  class="text-body-2 font-weight-medium"
-                  style="color: #656565"
-                >người</span>
+                <span class="text-body-2 font-weight-medium" style="color: #656565">người</span>
               </span>
             </div>
             <span class="text-caption" style="color: #656565; float: right">Lâm Đồng</span>
