@@ -3,6 +3,16 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
+    <v-dialog width="400" v-model="overlay.show" overlay-opacity="0.9">
+      <v-card>
+        <Chatbox
+          v-if="overlay.doc"
+          :doc="overlay.doc"
+          :index="1"
+          v-on:closeChat="closeMobileChatBox"
+        />
+      </v-card>
+    </v-dialog>
     <v-row v-if="!isLoading">
       <v-col cols="12" md="8">
         <v-row no-gutters>
@@ -73,6 +83,10 @@ export default {
       doc2: null,
       doc3: null,
     },
+    overlay: {
+      show: false,
+      doc: null,
+    },
   }),
   computed: {
     isLoading() {
@@ -86,6 +100,16 @@ export default {
     user() {
       return this.$store.state.user.user.data;
     },
+    isOnMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+          return true;
+        case 'sm':
+          return true;
+        default:
+          return false;
+      }
+    },
   },
   methods: {
     ...mapActions({
@@ -94,7 +118,19 @@ export default {
       getRooms: 'vendor/group/getRooms',
       getUser: 'user/getUser',
     }),
+    showMobileChatBox(event) {
+      this.overlay.doc = event;
+      this.overlay.show = true;
+    },
+    closeMobileChatBox() {
+      this.overlay.doc = null;
+      this.overlay.show = false;
+    },
     showChatBox(event) {
+      if (this.isOnMobile) {
+        this.showMobileChatBox(event);
+        return;
+      }
       // event is index of chatbox
       // eslint-disable-next-line
       for (const [key, value] of Object.entries(this.docs)) {

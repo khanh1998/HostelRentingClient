@@ -1,23 +1,24 @@
 <template>
   <v-sheet v-if="!groups.isLoading" class="pa-2">
-    <p class="text-h5 font-weight-medium">Thống kê</p>
+    <div class="text-h5 font-weight-medium">Thống kê</div>
     <v-row>
-      <v-col v-for="group in groups.data" :key="group.groupId" cols="6">
+      <v-col v-for="group in groups.data" :key="group.groupId" cols="12" md="6">
         <v-card>
           <v-card-title>{{ group.groupName }}</v-card-title>
           <v-card-subtitle>{{ group.address.streetName }}</v-card-subtitle>
+          <v-divider />
           <v-card-text>
-            <p>
+            <div>
               Tổng số:
               <span class="font-weight-bold">{{ groupStat[group.groupId].total }}</span>
               phòng
-            </p>
-            <p>
+            </div>
+            <div>
               Trống:
               <span class="font-weight-bold">{{ groupStat[group.groupId].empty }}</span>
               phòng
-            </p>
-            <p>
+            </div>
+            <div>
               Tỷ lệ lấp đầy:
               <span class="font-weight-bold">
                 {{
@@ -30,7 +31,7 @@
                 }}
               </span>
               %
-            </p>
+            </div>
           </v-card-text>
         </v-card>
       </v-col>

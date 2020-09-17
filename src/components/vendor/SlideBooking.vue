@@ -1,26 +1,29 @@
 <template>
   <div>
     <v-sheet class="mx-auto rounded" elevation="1" max-width="100%">
-      <div class="d-flex justify-space-between text-center" v-if="bookings.length > 0">
-        <div style="font-size: 20px; fontweight: bold" class="pt-3 pl-2">Lịch hẹn xem phòng</div>
-        <div>
+      <div
+        class="d-flex justify-md-space-between flex-column flex-md-row"
+        v-if="bookings.length > 0"
+      >
+        <div class="pt-3 pl-2 font-weight-medium text-h6 text-center">Lịch hẹn xem phòng</div>
+        <div class="d-flex justify-center">
           <v-chip-group mandatory active-class="primary--text">
             <v-chip v-for="tag in chipItems" :key="tag">{{ tag }}</v-chip>
           </v-chip-group>
         </div>
       </div>
       <v-divider />
-      <v-slide-group v-if="bookings.length > 0">
+      <v-slide-group v-if="bookings.length > 0" center-active show-arrows>
         <v-slide-item
           v-for="booking in incommingBookings"
           :key="booking.bookingId"
           v-slot:default="{ active, toggle }"
         >
           <v-card
-            class="ma-3 rounded-xl"
+            class="ma-3 rounded-l"
             height="180"
-            width="319"
-            :color="active ? 'grey lighten-1' : 'white'"
+            width="250"
+            :color="active ? 'indigo lighten-5' : 'white'"
             @click="toggle"
           >
             <v-col
