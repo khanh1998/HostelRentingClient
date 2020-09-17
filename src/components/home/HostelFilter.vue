@@ -92,7 +92,7 @@
     </v-expansion-panels>
     <v-select
       v-model="minSuperficiality"
-      :items="filter.area.items"
+      :items="filter.minArea.items"
       light
       outlined
       label="Diện tích tối thiểu"

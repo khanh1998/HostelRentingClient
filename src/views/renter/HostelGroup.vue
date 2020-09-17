@@ -90,12 +90,9 @@ export default {
         .substring(this.group.groupName.lastIndexOf(' ') + 1)
         .substring(0, 1);
     },
-    initFilter(list) {
-      console.log('thuy');
-      console.log(this.types);
-      console.log(list);
+    initFilter() {
       this.filterTypes({
-        types: list,
+        types: this.types,
         filterParam: null,
       });
     },
@@ -105,8 +102,6 @@ export default {
       const group = this.$store.state.renter.hostelGroup.hostelGroup.isLoading;
       const types = this.$store.state.renter.hostelGroup.hostelTypes.isLoading;
       const filterResult = this.$store.state.renter.hostelGroup.filterResult.isLoading;
-      console.log(types);
-      console.log(group || types || filterResult);
       return group || types || filterResult;
     },
     groupId() {
@@ -120,7 +115,6 @@ export default {
       return data;
     },
     types() {
-      // this.initFilter(this.$store.state.renter.hostelGroup.hostelTypes.data);
       return this.$store.state.renter.hostelGroup.hostelTypes.data;
     },
     filterResult() {
@@ -142,13 +136,7 @@ export default {
   created() {
     // if home.js store is empty then start to call api
     this.getHostelGroup(this.groupId);
-    console.log('thuy');
-    console.log(this.types);
-    if (this.types.length === 0) {
-      this.getAllHostelTypes(this.groupId);
-      console.log(this.types);
-    }
-    // this.initFilter(this.types);
+    this.getAllHostelTypes(this.groupId).then(() => this.initFilter());
   },
 };
 </script>

@@ -20,7 +20,7 @@ const myState = () => ({
 });
 
 const getters = {
-  // eslint-disable max-len -->
+  // eslint-disable-next-line
   isLoading: (state) =>
     state.hostelGroup.isLoading || state.hostelType.isLoading || state.schedules.isLoading,
 };
@@ -85,8 +85,8 @@ const actions = {
       commit(mutationTypes.GET_HOSTEL_GROUP_REQUEST);
       const response = await window.axios.get(`/api/v1/types?typeId=${typeId}`);
       if (response.status >= 200 && response.status <= 299) {
-        commit(mutationTypes.GET_HOSTEL_TYPE_SUCCESS, response.data.data.types[0]);
-        commit(mutationTypes.GET_HOSTEL_GROUP_SUCCESS, response.data.data.groups[0]);
+        commit(mutationTypes.GET_HOSTEL_TYPE_SUCCESS, response.data.data.type);
+        commit(mutationTypes.GET_HOSTEL_GROUP_SUCCESS, response.data.data.groupDTOFull);
       } else {
         commit(mutationTypes.GET_HOSTEL_TYPE_FAILURE);
         commit(mutationTypes.GET_HOSTEL_GROUP_FAILURE);

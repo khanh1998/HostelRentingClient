@@ -43,106 +43,13 @@ const myState = {
     },
     schools: {
       select: '',
-      items: [
-        'Trường Đại học Bách khoa, Đại học Quốc gia Thành phố Hồ Chí Minh',
-        'Trường Đại học Khoa học Tự nhiên, Đại học Quốc gia Thành phố Hồ Chí Minh',
-        'Trường Đại học Sư phạm Kỹ thuật Thành phố Hồ Chí Minh',
-        'Trường Đại học Quốc tế, Đại học Quốc gia Thành phố Hồ Chí Minh',
-        'Trường Đại học Công nghệ Thông tin, Đại học Quốc gia Thành phố Hồ Chí Minh',
-        'Trường Đại học Trần Đại Nghĩa',
-        'Trường Đại học Thông tin Liên lạc',
-        'Trường Đại học Tôn Đức Thắng',
-        'Trường Đại học Công nghiệp Thành phố Hồ Chí Minh',
-        'Trường Đại học Công nghiệp Thực phẩm Thành phố Hồ Chí Minh',
-        'Trường Đại học Giao thông vận tải Thành phố Hồ Chí Minh',
-        'Trường Đại học Nông Lâm Thành phố Hồ Chí Minh',
-        'Trường Đại học Sài Gòn',
-        'Trường Đại học Sư phạm Thành phố Hồ Chí Minh',
-        'Trường Đại học Mở Thành phố Hồ Chí Minh',
-        'Trường Đại học Công nghệ Sài Gòn',
-        'Trường Đại học Quốc tế Hồng Bàng',
-        'Trường Đại học Hùng Vương',
-        'Trường Đại học Kỹ thuật - Công nghệ Thành phố Hồ Chí Minh',
-        'Trường Đại học Ngoại ngữ - Tin học Thành phố Hồ Chí Minh',
-        'Trường Đại học Văn Hiến',
-        'Trường Đại học Văn Lang',
-        'Trường Đại học Kinh tế - Tài chính Thành phố Hồ Chí Minh',
-        'Trường Đại học Hoa Sen',
-        'Trường Đại học Công nghệ thông tin Gia Định',
-        'Trường Đại học Quốc tế Sài Gòn',
-        'Trường Cao đẳng BC Công nghệ và Quản trị doanh nghiệp',
-        'Trường Cao đẳng Công nghệ Thủ Đức',
-        'Trường Cao đẳng Kinh tế - Kỹ thuật Vinatex TP.HCM',
-        'Trường Đại học FPT',
-      ],
+      items: [],
+      isLoading: false,
     },
     hometown: {
       select: '',
-      items: [
-        'An Giang',
-        'Bà rịa – Vũng tàu',
-        'Bắc Giang',
-        'Bắc Kạn',
-        'Bạc Liêu',
-        'Bắc Ninh',
-        'Bến Tre',
-        'Bình Định',
-        'Bình Dương',
-        'Bình Phước',
-        'Bình Thuận',
-        'Cà Mau',
-        'Cần Thơ',
-        'Cao Bằng',
-        'Đà Nẵng',
-        'Đắk Lắk',
-        'Đắk Nông',
-        'Điện Biên',
-        'Đồng Nai',
-        'Đồng Tháp',
-        'Gia Lai',
-        'Hà Giang',
-        'Hà Nam',
-        'Hà Nội',
-        'Hà Tĩnh',
-        'Hải Dương',
-        'Hải Phòng',
-        'Hậu Giang',
-        'Hòa Bình',
-        'Hưng Yên',
-        'Khánh Hòa',
-        'Kiên Giang',
-        'Kon Tum',
-        'Lai Châu',
-        'Lâm Đồng',
-        'Lạng Sơn',
-        'Lào Cai',
-        'Long An',
-        'Nam Định',
-        'Nghệ An',
-        'Ninh Bình',
-        'Ninh Thuận',
-        'Phú Thọ',
-        'Phú Yên',
-        'Quảng Bình',
-        'Quảng Nam',
-        'Quảng Ngãi',
-        'Quảng Ninh',
-        'Quảng Trị',
-        'Sóc Trăng',
-        'Sơn La',
-        'Tây Ninh',
-        'Thái Bình',
-        'Thái Nguyên',
-        'Thanh Hóa',
-        'Thừa Thiên Huế',
-        'Tiền Giang',
-        'Thành phố Hồ Chí Minh',
-        'Trà Vinh',
-        'Tuyên Quang',
-        'Vĩnh Long',
-        'Vĩnh Phúc',
-        'Yên Bái',
-      ],
+      items: [],
+      isLoading: false,
     },
   },
   results: {
@@ -167,6 +74,14 @@ const mutationTypes = {
   GET_FACILITIES_SUCCESS: 'GET_FACILITIES_SUCCESS',
   GET_FACILITIES_FAILURE: 'GET_FACILITIES_FAILURE',
   GET_FACILITIES_REQUEST: 'GET_FACILITIES_REQUEST',
+  // school
+  GET_SCHOOLS_SUCCESS: 'GET_SCHOOLS_SUCCESS',
+  GET_SCHOOLS_FAILURE: 'GET_SCHOOLS_FAILURE',
+  GET_SCHOOLS_REQUEST: 'GET_SCHOOLS_REQUEST',
+  // provinces
+  GET_PROVINCES_SUCCESS: 'GET_PROVINCES_SUCCESS',
+  GET_PROVINCES_FAILURE: 'GET_PROVINCES_FAILURE',
+  GET_PROVINCES_REQUEST: 'GET_PROVINCES_REQUEST',
 };
 const mutations = {
   SET_FILTER_VALUES: (state, filterValues) => {
@@ -188,7 +103,7 @@ const mutations = {
   // categories
   GET_CATEGORIES_SUCCESS(state, inputData) {
     state.filter.categories.data = inputData;
-    state.filter.isLoading = false;
+    state.filter.categories.isLoading = false;
   },
   GET_CATEGORIES_FAILURE(state) {
     state.filter.categories.isLoading = false;
@@ -206,6 +121,28 @@ const mutations = {
   },
   GET_FACILITIES_REQUEST(state) {
     state.filter.facility.isLoading = true;
+  },
+  // get all school
+  GET_SCHOOLS_SUCCESS(state, inputData) {
+    state.filter.schools.items = inputData;
+    state.filter.schools.isLoading = false;
+  },
+  GET_SCHOOLS_FAILURE(state) {
+    state.filter.schools.isLoading = false;
+  },
+  GET_SCHOOLS_REQUEST(state) {
+    state.filter.schools.isLoading = true;
+  },
+  // get all provinces
+  GET_PROVINCES_SUCCESS(state, inputData) {
+    state.filter.hometown.items = inputData;
+    state.filter.hometown.isLoading = false;
+  },
+  GET_PROVINCES_FAILURE(state) {
+    state.filter.hometown.isLoading = false;
+  },
+  GET_PROVINCES_REQUEST(state) {
+    state.filter.hometown.isLoading = true;
   },
 };
 const getters = {
@@ -302,6 +239,16 @@ const actions = {
       params.filterProperties.facility.selects.forEach((element) => {
         facilitiesStr += `&facilityIds=${element}`;
       });
+      // school
+      let schoolStr = '';
+      if (params.filterProperties.schools.select) {
+        schoolStr = `&schoolId=${params.filterProperties.schools.select}`;
+      }
+      // hometown
+      let hometownStr = '';
+      if (params.filterProperties.hometown.select) {
+        hometownStr = `&provinceId=${params.filterProperties.hometown.select}`;
+      }
       // price
       let priceStr = '';
       if (params.filterProperties.price.disable) {
@@ -313,7 +260,7 @@ const actions = {
         const minSuperficiality = params.filterProperties.minArea.select.split(' ')[0];
         minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
       }
-      const url = `/api/v1/types?asc=false&${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${minSuperficialityStr}&page=1&size=5&sortBy=score`;
+      const url = `/api/v1/types?asc=false&${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=1&size=5&sortBy=score`;
       const res = await window.axios.get(url);
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
@@ -332,6 +279,34 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_FACILITIES_FAILURE);
+    }
+  },
+  async getAllSchools({ commit }) {
+    // no param
+    try {
+      commit(mutationTypes.GET_SCHOOLS_REQUEST);
+      const res = await window.axios.get('/api/v1/schools');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_SCHOOLS_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.GET_SCHOOLS_FAILURE);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_SCHOOLS_FAILURE);
+    }
+  },
+  async getAllProvinces({ commit }) {
+    // no param
+    try {
+      commit(mutationTypes.GET_PROVINCES_REQUEST);
+      const res = await window.axios.get('/api/v1/provinces?short=true');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_PROVINCES_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.GET_PROVINCES_FAILURE);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_PROVINCES_FAILURE);
     }
   },
   async getAllCategories({ commit }) {

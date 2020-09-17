@@ -54,29 +54,6 @@
           <v-row class="d-flex flex-direction: row">
             <v-col cols="8">
               <v-row>
-                <v-col
-                  cols="7"
-                  sm="7"
-                  md="12"
-                  lg="12"
-                  xl="12"
-                  class="pl-5 pr-0 pt-7 pb-7 white d-flex mb-4"
-                >
-                  <v-sheet class="ml-4">
-                    <v-select
-                      v-bind:items="categories"
-                      item-text="categoryName"
-                      item-value="categoryName"
-                      _v-model="categories[0].categoryName"
-                      light
-                      outlined
-                      hide-details
-                      dense
-                      label="Loại phòng"
-                      :style="'width: 350px'"
-                    ></v-select>
-                  </v-sheet>
-                </v-col>
                 <v-col cols="12">
                   <ArticleList :list="list" />
                 </v-col>

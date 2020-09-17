@@ -138,6 +138,8 @@
               <v-autocomplete
                 v-model="filter.schools.select"
                 :items="filter.schools.items"
+                item-text="schoolName"
+                item-value="schoolId"
                 label="Bạn học trường"
                 class="text-body-2"
                 filled
@@ -148,16 +150,30 @@
                 background-color="white"
                 no-data-text="Không có kết quả phù hợp"
                 :style="{
-                  borderTopLeftRadius: '0px',
-                  borderTopRightRadius: '0px',
-                }"
-              ></v-autocomplete>
+                borderTopLeftRadius: '0px',
+                borderTopRightRadius: '0px'}"
+              >
+                <template slot="selection" slot-scope="{ item }">
+                  <span class="font-nunito font-weight-medium text-body-2">{{ item.schoolName }}</span>
+                  <span
+                    class="font-nunito font-italic text-body-2"
+                  >- {{ item.address.districtName }}, {{item.address.province.provinceName}}</span>
+                </template>
+                <template slot="item" slot-scope="{ item }">
+                  <span class="font-nunito font-weight-medium text-body-2">{{ item.schoolName }}</span>
+                  <span
+                    class="font-nunito font-italic text-body-2"
+                  >- {{ item.address.districtName }}, {{item.address.province.provinceName}}</span>
+                </template>
+              </v-autocomplete>
             </v-col>
             <v-col cols="5" style="padding-right: 0px !important, height: 50px">
               <v-autocomplete
                 v-model="filter.hometown.select"
                 :items="filter.hometown.items"
                 label="Quê ở"
+                item-text="provinceName"
+                item-value="provinceId"
                 class="text-body-2"
                 filled
                 cache-items
@@ -453,6 +469,8 @@ export default {
       searchLikeFilter: 'renter/filterResult/filterSearchByCoordinatorResult',
       getAllFacilities: 'renter/filterResult/getAllFacilities',
       getAllCategories: 'renter/filterResult/getAllCategories',
+      getAllSchools: 'renter/filterResult/getAllSchools',
+      getAllProvinces: 'renter/filterResult/getAllProvinces',
     }),
     setPlace(place) {
       this.currentPlace = place;
@@ -518,6 +536,9 @@ export default {
     facilities() {
       return this.$store.state.renter.filterResult.filter.facility.data;
     },
+    schools() {
+      return this.$store.state.renter.filterResult.filter.schools.items;
+    },
     coordinator() {
       return this.$store.state.renter.filterResult.coordinator;
     },
@@ -575,6 +596,12 @@ export default {
     }
     if (this.categories.length === 0) {
       this.getAllCategories();
+    }
+    if (this.filter.schools.items.length === 0) {
+      this.getAllSchools();
+    }
+    if (this.filter.hometown.items.length === 0) {
+      this.getAllProvinces();
     }
   },
   destroyed() {

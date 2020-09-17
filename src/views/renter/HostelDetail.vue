@@ -125,21 +125,16 @@
             <facilitiesBox :facilities="info.facilities" />
           </v-col>
           <v-col cols="12" md="4">
-            <servicesBox :services="info.services" />
+            <servicesBox :services="group.services" />
           </v-col>
+        </v-row>
+        <v-row>
           <!-- tien nghi xung quanh -->
-          <v-col cols="12" md="4" class="pl-10">
-            <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
-              >TIỆN NGHI XUNG QUANH</span
-            >
-            <div class="d-flex mt-3" :style="{ width: '100%' }">
-              <div class="line-after" :style="{ width: '30%' }"></div>
-              <div class="line-before" :style="{ width: '90%' }"></div>
-            </div>
+          <v-col cols="12" md="8">
             <!-- <v-btn color="success" class="ml-1" depressed tile>
                   <v-icon small>fas fa-map-signs</v-icon>Bản đồ
             </v-btn>-->
-            <treeView />
+            <treeView :utitlities="utilities" />
           </v-col>
         </v-row>
         <v-row v-if="!isLoadingProvinces" class="mt-5">
@@ -298,7 +293,16 @@ export default {
       getProvinces: 'renter/common/getProvinces',
       getStreetStats: 'renter/discovery/getStreetStats',
       getTopView: 'renter/home/getTopViewHostelTypes',
+      getHostelGroup: 'renter/hostelGroup/getHostelGroup',
+      getUtilities: 'renter/hostelGroup/getNearByUtilities',
     }),
+    getNearByUtilities() {
+      this.getUtilities({
+        distance: '10',
+        longitude: this.group.longitude,
+        latitude: this.group.latitude,
+      });
+    },
   },
   computed: {
     ...mapGetters({
@@ -361,8 +365,9 @@ export default {
       const type = this.$store.state.renter.hostelType.hostelType.isLoading;
       const group = this.$store.state.renter.hostelType.hostelGroup.isLoading;
       const street = this.$store.state.renter.discovery.stats.streets.isLoading;
-      const suggestionList = this.$store.state.renter.home.topView.isLoading;
-      return (type || group || street) && suggestionList;
+      const utilities = this.$store.state.renter.discovery.stats.streets.isLoading;
+      const suggestionList = this.$store.state.renter.hostelGroup.utilities.isLoading;
+      return type || group || street || suggestionList || utilities;
     },
     isLoadingProvinces() {
       return this.$store.state.renter.common.provinces.isLoading;
@@ -404,9 +409,13 @@ export default {
         },
       };
     },
+    utilities() {
+      return this.$store.state.renter.hostelGroup.utilities.data;
+    },
   },
   created() {
-    this.getTypeAndGroup(this.typeId); // if home.js store is empty then start to call api
+    // if home.js store is empty then start to call api
+    this.getTypeAndGroup(this.typeId).then(() => this.getNearByUtilities());
     this.getProvinces().then(() => this.getStreetStats(this.allStreetIds));
     if (this.topView.length === 0) {
       this.getTopView({ size: 10 });
@@ -449,11 +458,11 @@ export default {
 }
 .line-before {
   height: 2px;
-  background-color: #eee;
+  background-color: rgba(152, 166, 173, 0.2);
 }
 .line-after {
   height: 2px;
-  background-color: #2c92d5;
+  background-color: #727cf5;
 }
 .average-item {
   border: solid 1px #eeeeee;
@@ -465,5 +474,13 @@ export default {
 <style>
 .font-nunito {
   font-family: 'Nunito', sans-serif !important;
+}
+.line-before {
+  height: 2px;
+  background-color: rgba(152, 166, 173, 0.2);
+}
+.line-after {
+  height: 2px;
+  background-color: #727cf5;
 }
 </style>

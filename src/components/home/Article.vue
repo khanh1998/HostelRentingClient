@@ -36,7 +36,6 @@
             <v-col cols="12" class="px-6">
               <span
                 class="item-address"
-                v-if="!isLoadingProvinces"
                 style="
                   display: block;
                   display: -webkit-box;
@@ -173,18 +172,24 @@
             cols="5"
             style="padding: 0 !important"
             class="d-flex align-start justify-center"
-            v-if="school !== ''"
+            v-if="school.select && type.schoolMate !== 0"
           >
             <v-icon color="#ABB4C0">school</v-icon>
             <div class="text-caption ml-2">
-              <span>20 người học</span>
+              <span>{{type.schoolMate}} người học</span>
               <br />
-              <span>{{ school }}</span>
+              <span>{{ schoolSelected[0].schoolName }}</span>
             </div>
           </v-col>
-          <v-col cols="4" style="padding: 0 !important" v-if="hometown !== ''">
+          <v-col
+            cols="4"
+            style="padding: 0 !important"
+            v-if="hometown.select && type.compatriot !== 0"
+          >
             <v-icon color="#ABB4C0">supervisor_account</v-icon>
-            <span class="text-caption ml-2">3 người quê {{ hometown }}</span>
+            <span
+              class="text-caption ml-2"
+            >{{type.compatriot}} người quê {{ hometownSelected[0].provinceName }}</span>
           </v-col>
         </v-col>
       </v-col>
@@ -350,10 +355,18 @@ export default {
       return this.$store.state.renter.home.searchType.nameAddress;
     },
     school() {
-      return this.$store.state.renter.home.searchType.school;
+      return this.$store.state.renter.filterResult.filter.schools;
+    },
+    schoolSelected() {
+      const schoolIdSelected = this.school.select;
+      return this.school.items.filter((i) => i.schoolId === schoolIdSelected);
     },
     hometown() {
-      return this.$store.state.renter.home.searchType.hometown;
+      return this.$store.state.renter.filterResult.filter.hometown;
+    },
+    hometownSelected() {
+      const hometownIdSelectd = this.hometown.select;
+      return this.hometown.items.filter((p) => p.provinceId === hometownIdSelectd);
     },
     isLoadingProvinces() {
       return this.$store.state.renter.common.provinces.isLoading;
