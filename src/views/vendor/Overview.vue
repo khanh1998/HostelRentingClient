@@ -1,34 +1,26 @@
 <template>
-  <div style="width: 100%">
+  <div>
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-row v-if="!isLoading">
-      <v-col cols="8">
+      <v-col cols="12" md="8">
         <v-row no-gutters>
           <v-col cols="12">
-            <div style="width: 100%" class="px-2">
-              <SlideBooking />
-            </div>
+            <SlideBooking />
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="4">
-            <div style="width: 100%" class="ml-2">
-              <SuggestContract />
-            </div>
+          <v-col cols="12" lg="4">
+            <SuggestContract />
           </v-col>
-          <v-col cols="8">
-            <div style="width: 100%" class="pr-2">
-              <ShowEmptyRoom />
-            </div>
+          <v-col cols="12" lg="8">
+            <ShowEmptyRoom />
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="4">
-        <div style="width: 95%">
-          <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
-        </div>
+      <v-col cols="12" md="4" order="first" order-md="last">
+        <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
       </v-col>
     </v-row>
     <v-card style="position: absolute; right: 20px; bottom: 10px; height: auto; width: 350px">
