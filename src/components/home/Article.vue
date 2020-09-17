@@ -169,7 +169,7 @@
             cols="5"
             style="padding: 0 !important"
             class="d-flex align-start justify-center"
-            v-if="school.select"
+            v-if="school.select && type.schoolMate !== 0"
           >
             <v-icon color="#ABB4C0">school</v-icon>
             <div class="text-caption ml-2">
@@ -178,7 +178,11 @@
               <span>{{ schoolSelected[0].schoolName }}</span>
             </div>
           </v-col>
-          <v-col cols="4" style="padding: 0 !important" v-if="hometown.select">
+          <v-col
+            cols="4"
+            style="padding: 0 !important"
+            v-if="hometown.select && type.compatriot !== 0"
+          >
             <v-icon color="#ABB4C0">supervisor_account</v-icon>
             <span
               class="text-caption ml-2"

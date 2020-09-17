@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- eslint-disable max-len -->
     <span
       class="text-subtitle-1 font-nunito font-weight-bold"
       :style="{color: '#484848'}"
@@ -8,52 +9,52 @@
       <div class="line-after" :style="{width: '30%'}"></div>
       <div class="line-before" :style="{width: '90%'}"></div>
     </div>
-    {{utitlities.length}}
-    <!-- <v-treeview :items="items" activatable dense hoverable>
-      <template v-slot:prepend="{ item }">
-        <v-icon v-if="!item.icon">{{ open ? 'mdi-folder-open' : 'fas fa-map-marker-alt' }}</v-icon>
-      </template>
-      <template v-slot:append="{ item, leaf }">
-        <div class="blue--text font-weight-bold" v-if="leaf">{{ item.distance }}</div>
-        <div v-else class="green--text font-weight-bold">({{ item.children.length }})</div>
-      </template>
-    </v-treeview>-->
-    <v-card outlined style="100%" class="mt-3">
-      <v-tabs v-model="tabs" fixed-tabs>
-        <v-tabs-slider></v-tabs-slider>
+    <v-card class="mt-5" outlined>
+      <v-tabs background-color="#EEF2F7" slider-size="0">
         <v-tab
-          v-for="(item, i) in utitlities"
-          :key="`item-${i}`"
-          :value="i"
-          :href="'#tab' + item"
-          style="background-color: #eeeeee;"
-        >{{item.name}}</v-tab>
-      </v-tabs>
+          v-for="item in utitlities"
+          :key="item.categoryId"
+          style="color: #6c757d; font-weight: 600;"
+          :style="{width: getCategoryWidth()}"
+          class="text-subtitle-2 font-nunito text-capitalize category"
+        >
+          <span>{{item.name}}</span>
+        </v-tab>
 
-      <v-tabs-items v-model="tabs">
-        <v-tab-item v-for="(item, i) in utitlities" :key="`item-${i}`" :value="i">
-          <v-card flat>
-            <!-- <v-card-text>{{item.code}}</v-card-text> -->
-            <v-tabs v-model="childTabs" fixed-tabs>
-              <v-tabs-slider></v-tabs-slider>
+        <v-tab-item v-for="item in utitlities" :key="item.categoryId">
+          <v-card flat min-height="200">
+            <v-tabs vertical color="#727cf5">
               <v-tab
-                v-for="(child, j) in item.utilityTypes"
-                :key="`child-${j}`"
-                :value="'tab-' + item"
-                _style="background-color: #eeeeee;"
+                v-for="child in item.utilityTypes"
+                :key="child.name"
+                class="text-subtitle-2 font-nunito text-capitalize font-weight-black"
+                style="justify-content: left"
               >{{child.name}}</v-tab>
-            </v-tabs>
-
-            <!-- <v-tabs-items v-model="childTabs">
-              <v-tab-item v-for="(child, j) in item.utilityTypes" :key="`child-${j}`" :value="j">
-                <v-card flat>
-                  <v-card-text>{{j}}</v-card-text>
-                </v-card>
+              <v-tab-item v-for="child in item.utilityTypes" :key="child.name">
+                <v-virtual-scroll :items="child.utilities" :item-height="50" height="200">
+                  <template v-slot="{ item }">
+                    <v-list-item
+                      :key="item.id"
+                      class="pl-10"
+                      style="border-bottom: thin dashed rgba(0,0,0,.12);"
+                    >
+                      <span
+                        class="font-nunito"
+                        style="color: #27406d; font-size: .875rem; font-weight: 600;"
+                      >{{item.name}}</span>
+                      <v-spacer></v-spacer>
+                      <span class="font-nunito" style="font-size: .875rem;">
+                        <v-icon class="material-icons">place</v-icon>
+                        <span class="font-weight-bold">{{item.distance}}</span> km
+                      </span>
+                    </v-list-item>
+                  </template>
+                </v-virtual-scroll>
               </v-tab-item>
-            </v-tabs-items>-->
+            </v-tabs>
           </v-card>
         </v-tab-item>
-      </v-tabs-items>
+      </v-tabs>
     </v-card>
   </div>
 </template>
@@ -70,11 +71,25 @@ export default {
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
   }),
   computed: {},
+  methods: {
+    getCategoryWidth() {
+      return `${100 / this.utitlities.length}%`;
+    },
+  },
   created() {},
 };
 </script>
 <style scoped>
 .font-nunito {
   font-family: 'Nunito', sans-serif !important;
+}
+</style>
+<style>
+.v-tabs--vertical > .v-tabs-bar {
+  width: 20% !important;
+}
+.category.v-tab--active {
+  color: #fff !important;
+  background-color: #727cf5;
 }
 </style>
