@@ -47,19 +47,19 @@
     <div class="d-flex flex-nowrap align-center ml-3">
       <v-menu left :offset-y="true" v-if="!isLoadingUser">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" text>
-            <v-avatar>
+          <v-btn v-bind="attrs" v-on="on" x-large depressed>
+            <v-avatar size="45">
               <v-img :src="user.avatar"></v-img>
             </v-avatar>
             <p class="font-weight-medium mb-0 ml-2">{{ user.username }}</p>
           </v-btn>
         </template>
-        <v-list two-line>
+        <v-list>
           <template v-for="(item, index) in infoMenu">
             <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
             <v-list-item v-else :key="item.title" :to="item.url">
               <v-list-item-content>
-                <v-list-item-title style="color: #1f17ff; fontsize: 18px">
+                <v-list-item-title>
                   {{ item.title }}
                 </v-list-item-title>
               </v-list-item-content>
