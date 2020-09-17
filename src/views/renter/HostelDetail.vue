@@ -129,7 +129,7 @@
         </v-row>
         <v-row>
           <!-- tien nghi xung quanh -->
-          <v-col cols="12" md="8" class="pl-10">
+          <v-col cols="12" md="8">
             <!-- <v-btn color="success" class="ml-1" depressed tile>
                   <v-icon small>fas fa-map-signs</v-icon>Bản đồ
             </v-btn>-->
@@ -450,11 +450,11 @@ export default {
 }
 .line-before {
   height: 2px;
-  background-color: #eee;
+  background-color: rgba(152, 166, 173, 0.2);
 }
 .line-after {
   height: 2px;
-  background-color: #2c92d5;
+  background-color: #727cf5;
 }
 .average-item {
   border: solid 1px #eeeeee;
@@ -466,5 +466,13 @@ export default {
 <style>
 .font-nunito {
   font-family: 'Nunito', sans-serif !important;
+}
+.line-before {
+  height: 2px;
+  background-color: rgba(152, 166, 173, 0.2);
+}
+.line-after {
+  height: 2px;
+  background-color: #727cf5;
 }
 </style>

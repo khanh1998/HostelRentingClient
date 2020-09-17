@@ -48,10 +48,10 @@ export default {
 }
 .line-before {
   height: 2px;
-  background-color: #eee;
+  background-color: rgba(152, 166, 173, 0.2);
 }
 .line-after {
   height: 2px;
-  background-color: #2c92d5;
+  background-color: #727cf5;
 }
 </style>
