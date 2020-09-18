@@ -21,8 +21,7 @@ const myState = () => ({
 
 const getters = {
   // eslint-disable-next-line
-  isLoading: (state) =>
-    state.hostelGroup.isLoading || state.hostelType.isLoading || state.schedules.isLoading,
+  isLoading: (state) => state.hostelGroup.isLoading || state.hostelType.isLoading || state.schedules.isLoading,
 };
 
 const mutationTypes = {

@@ -30,6 +30,36 @@ export default {
 <style>
 .bg-primary {
   background-color: #727cf5 !important;
+  box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
+  border-radius: 0.15rem !important;
+}
+.btn-success {
+  color: #fff !important;
+  background-color: #0acf97 !important;
+  border-color: #0acf97 !important;
+  box-shadow: 0 2px 6px 0 rgba(10, 207, 151, 0.5) !important;
+  letter-spacing: 0.01rem !important;
+}
+.btn-warning {
+  color: #313a46 !important;
+  background-color: #ffbc00 !important;
+  border-color: #ffbc00 !important;
+  box-shadow: 0 2px 6px 0 rgba(255, 188, 0, 0.5) !important;
+  letter-spacing: 0.01rem !important;
+}
+.text-primary {
+  color: #727cf5 !important;
+}
+.text-gray {
+  color: #6c757d !important;
+}
+.text-warning {
+  color: #ffbc00 !important;
+}
+.bg-secondary {
+  color: #727cf5 !important;
+  background-color: rgba(114, 124, 245, 0.18) !important;
+  font-weight: 700 !important;
 }
 .font-nunito {
   font-family: 'Nunito', sans-serif !important;

@@ -7,7 +7,7 @@
     fixed
     bottom
     right
-    color="primary"
+    color="#727cf5"
     @click="toTop"
   >
     <v-icon>fas fa-chevron-up</v-icon>

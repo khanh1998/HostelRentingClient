@@ -25,14 +25,16 @@
       />
     </v-dialog>
     <v-btn icon :to="'/group/' + groupId">
-      <v-avatar height="70" width="70" color="#4F60C9">
+      <v-avatar height="70" width="70" color="#727cf5">
         <v-img v-if="avatar" max-height="70" max-width="70" :src="avatar" />
         <span v-else class="text-h4 white--text">{{ getAvatarTitle() }}</span>
       </v-avatar>
     </v-btn>
-    <span class="text-body-1 font-weight-bold text-center font-nunito" style="color: #222">{{
+    <span class="text-body-1 font-weight-bold text-center font-nunito" style="color: #222">
+      {{
       name
-    }}</span>
+      }}
+    </span>
     <div class="d-flex flex-wrap align-center mt-n7">
       <v-icon color="yellow" x-small>fas fa-star</v-icon>
       <p class="grey--text mb-0">{{ ` ${rating.average}/5 ` }}</p>
@@ -62,9 +64,9 @@
         <template v-slot:activator="{ attrs }">
           <v-btn
             v-bind="attrs"
-            color="#4F60C9"
+            _color="#4F60C9"
             width="80%"
-            class="mx-7 text-subtitle-2 white--text py-5"
+            class="mx-7 text-subtitle-2 white--text py-5 bg-primary"
             depressed
             tile
             @click="dateTimePicker.isOpenPicker = true"

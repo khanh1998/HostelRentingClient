@@ -10,13 +10,13 @@
       <div class="line-before" :style="{width: '90%'}"></div>
     </div>
     <v-card class="mt-5" outlined>
-      <v-tabs background-color="#EEF2F7" slider-size="0">
+      <v-tabs background-color="#eeeeee" slider-size="0">
         <v-tab
           v-for="item in utitlities"
           :key="item.categoryId"
           style="color: #6c757d; font-weight: 600;"
           :style="{width: getCategoryWidth()}"
-          class="text-subtitle-2 font-nunito text-capitalize category"
+          class="text-subtitle-2 font-nunito text-capitalize utilities-category"
         >
           <span>{{item.name}}</span>
         </v-tab>
@@ -88,7 +88,7 @@ export default {
 .v-tabs--vertical > .v-tabs-bar {
   width: 20% !important;
 }
-.category.v-tab--active {
+.utilities-category.v-tab--active {
   color: #fff !important;
   background-color: #727cf5;
 }
