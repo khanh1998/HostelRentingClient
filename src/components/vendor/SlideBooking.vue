@@ -5,7 +5,16 @@
         class="d-flex justify-md-space-between flex-column flex-md-row"
         v-if="bookings.length > 0"
       >
-        <div class="pt-3 pl-2 font-weight-medium text-h6 text-center">Lịch hẹn xem phòng</div>
+        <div class="d-flex">
+          <div class="pt-3 pl-2 font-weight-medium text-h6 text-center">Lịch hẹn xem phòng</div>
+          <div class="d-flex justify-end" v-if="bookings.length > 0">
+            <span style="color: #818286;">
+              <router-link to="vendor/booking" class="text-decoration-none"
+                >Xem thêm >></router-link
+              >
+            </span>
+          </div>
+        </div>
         <div class="d-flex justify-center">
           <v-chip-group mandatory active-class="primary--text">
             <v-chip v-for="tag in chipItems" :key="tag">{{ tag }}</v-chip>
@@ -28,14 +37,14 @@
           >
             <v-col
               cols="12"
-              style="background-color: #98b7d7; height: 28%; width: 100%"
+              style="background-color: #98b7d7; height: 28%; width: 100%;"
               class="d-flex justify-end"
             >
-              <p style="fontweight: bold; color: white">
+              <p style="fontweight: bold; color: white;">
                 {{ getDateString(Number(booking.meetTime)) }}
               </p>
               <v-divider vertical class="mx-3"></v-divider>
-              <p style="fontweight: bold; color: white">
+              <p style="fontweight: bold; color: white;">
                 {{ getTimeString(Number(booking.meetTime)) }}
               </p>
             </v-col>
@@ -45,11 +54,11 @@
               </v-list-item-avatar>
               <v-list-item-content class="pl-4">
                 <v-list-item-title
-                  style="fontsize: 16px; fontweight: bold; color: #1f17ff"
+                  style="fontsize: 16px; fontweight: bold; color: #1f17ff;"
                   class="py-1"
                   >{{ booking.renter.username }}</v-list-item-title
                 >
-                <v-list-item-subtitle style="color: coral; fontsize: 18px">
+                <v-list-item-subtitle style="color: coral; fontsize: 18px;">
                   {{ booking.renter.phone }}</v-list-item-subtitle
                 >
               </v-list-item-content>
@@ -67,7 +76,7 @@
                   </template>
 
                   <v-card>
-                    <v-card-title class="headline" style="background-color: #98b7d7; color: white">
+                    <v-card-title class="headline" style="background-color: #98b7d7; color: white;">
                       Mã quét
                     </v-card-title>
 
@@ -93,7 +102,7 @@
             </v-list-item>
             <div>
               <v-icon class="px-3 pl-7">home</v-icon>
-              <span style="fontweight: bold">{{ booking.group.groupName }}</span>
+              <span style="fontweight: bold;">{{ booking.group.groupName }}</span>
             </div>
           </v-card>
         </v-slide-item>
@@ -101,11 +110,6 @@
       <v-card v-if="bookings.length === 0">
         <v-card-title> Bạn không có lịch hẹn nào </v-card-title>
       </v-card>
-      <div class="d-flex justify-end" v-if="bookings.length > 0">
-        <v-card-text style="color: #818286">
-          <router-link to="vendor/booking" class="text-decoration-none">Xem thêm >></router-link>
-        </v-card-text>
-      </div>
     </v-sheet>
   </div>
 </template>
