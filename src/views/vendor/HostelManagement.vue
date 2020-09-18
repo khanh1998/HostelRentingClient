@@ -1,5 +1,5 @@
 <template>
-  <div height="836px" v-if="!isLoadingGroup">
+  <v-row no-gutters v-if="!isLoadingGroup">
     <v-card height="836px" class="overflow-hidden">
       <v-navigation-drawer
         v-model="drawer"
@@ -19,7 +19,7 @@
         />
       </v-card>
     </v-card>
-  </div>
+  </v-row>
 </template>
 <script>
 import HostelGroup from '@/components/vendor/hostel_management/HostelGroup.vue';

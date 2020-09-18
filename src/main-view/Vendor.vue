@@ -31,12 +31,8 @@
     </v-app-bar>
 
     <v-main>
-      <v-container fluid class="fill-height">
-        <v-row align="center" justify="center">
-          <v-col cols="11">
-            <router-view />
-          </v-col>
-        </v-row>
+      <v-container fluid>
+        <router-view />
       </v-container>
     </v-main>
   </v-app>

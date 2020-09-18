@@ -39,56 +39,45 @@
 
       <v-tabs-items v-model="tabs.tabName">
         <v-tab-item>
-          <v-card flat>
-            <v-list two-line nav avatar class="rounded-l" style="height: 705px">
-              <div id="scroll-target" style="max-height: 700px" class="overflow-y-auto">
-                <v-list>
-                  <v-list-item-group color="primary">
-                    <v-list-item
-                      v-for="item in docsHasMessage"
-                      :key="item.id"
-                      class="mb-2 pt-2"
-                      style="backgroundcolor: #f2f2f2"
-                      @click="$emit('clickChat', getDocRef(item.id))"
-                    >
-                      <v-list-item-avatar>
-                        <v-img :src="getUserById(item.renterId).avatar || '#'"></v-img>
-                      </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title style="fontsize: 16px" class="py-1">{{
-                          getUserById(item.renterId).username
-                        }}</v-list-item-title>
-                        <div>
-                          <v-list-item-subtitle v-if="item.lastedMessage.message">
-                            <p
-                              v-bind:class="{
-                                'font-weight-bold': !item.lastedMessage.seen,
-                              }"
-                            >
-                              {{ item.lastedMessage.message }}
-                            </p>
-                          </v-list-item-subtitle>
-                          <v-list-item-subtitle v-if="item.lastedMessage.book">
-                            Đặt lịch vào
-                            {{ item.lastedMessage.book.time }}
-                            {{ item.lastedMessage.book.date }}
-                          </v-list-item-subtitle>
-                          <v-list-item-subtitle v-if="item.lastedMessage.bargain"
-                            >Trả giá {{ item.lastedMessage.bargain.newPrice }} triệu
-                          </v-list-item-subtitle>
-                        </div>
-                      </v-list-item-content>
-                      <v-list-item-icon>
-                        <v-icon v-if="item.lastedMessage.book" color="pink"> event</v-icon>
-                        <v-icon v-if="item.lastedMessage.bargain" color="amber">
-                          attach_money</v-icon
-                        >
-                        <v-icon v-if="item.lastedMessage.message" color="green"> chat</v-icon>
-                      </v-list-item-icon>
-                    </v-list-item>
-                  </v-list-item-group>
-                </v-list>
-              </div>
+          <v-card flat :height="chatListHeight" class="overflow-y-auto">
+            <v-list two-line nav avatar class="rounded-l" v-scroll.self="myOnScroll">
+              <v-list-item-group color="primary">
+                <v-list-item
+                  dense
+                  v-for="item in docsHasMessage"
+                  :key="item.id"
+                  @click="$emit('clickChat', getDocRef(item.id))"
+                >
+                  <v-list-item-avatar>
+                    <v-img :src="getUserById(item.renterId).avatar || '#'"></v-img>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title>{{ getUserById(item.renterId).username }}</v-list-item-title>
+                    <v-list-item-subtitle v-if="item.lastedMessage.message">
+                      <span
+                        v-bind:class="{
+                          'font-weight-bold': !item.lastedMessage.seen,
+                        }"
+                      >
+                        {{ item.lastedMessage.message }}
+                      </span>
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle v-if="item.lastedMessage.book">
+                      Đặt lịch vào
+                      {{ item.lastedMessage.book.time }}
+                      {{ item.lastedMessage.book.date }}
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle v-if="item.lastedMessage.bargain"
+                      >Trả giá {{ item.lastedMessage.bargain.newPrice }} triệu
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-icon>
+                    <v-icon v-if="item.lastedMessage.book" color="pink"> event</v-icon>
+                    <v-icon v-if="item.lastedMessage.bargain" color="amber"> attach_money</v-icon>
+                    <v-icon v-if="item.lastedMessage.message" color="green"> chat</v-icon>
+                  </v-list-item-icon>
+                </v-list-item>
+              </v-list-item-group>
             </v-list>
           </v-card>
         </v-tab-item>
@@ -158,8 +147,25 @@ export default {
     isLoadingRenterList() {
       return this.$store.state.vendor.overview.usersChatList.isLoadings;
     },
+    chatListHeight() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+          return '400px';
+        case 'sm':
+          return '400px';
+        case 'md':
+          return '700px';
+        case 'lg':
+          return '700px';
+        case 'xl':
+          return '700px';
+        default:
+          return null;
+      }
+    },
   },
   methods: {
+    myOnScroll() {},
     ...mapActions({
       getUserByIds: 'vendor/overview/getUserByIds',
       addUserToListById: 'vendor/overview/addUserToListById',

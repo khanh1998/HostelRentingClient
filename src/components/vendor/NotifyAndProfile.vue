@@ -2,7 +2,7 @@
   <div class="d-flex flex-row justify-center align-center pa-2">
     <v-menu left :offset-y="true" :offset-x="true" @blur="this.notifications = []">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on" icon>
+        <v-btn v-bind="attrs" v-on="on" icon class="hidden-sm-and-down">
           <v-badge
             color="red"
             :content="notifications.length"
@@ -51,7 +51,7 @@
             <v-avatar size="45">
               <v-img :src="user.avatar"></v-img>
             </v-avatar>
-            <p class="font-weight-medium mb-0 ml-2">{{ user.username }}</p>
+            <p class="font-weight-medium mb-0 ml-2 hidden-sm-and-down">{{ user.username }}</p>
           </v-btn>
         </template>
         <v-list>
