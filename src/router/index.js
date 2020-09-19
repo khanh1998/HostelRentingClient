@@ -27,7 +27,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (window.$cookies.get('jwt') === null) {
+    // if (window.$cookies.get('jwt') === null) {
+    if (true) {
       // not logged in
       next({
         name: 'Login',

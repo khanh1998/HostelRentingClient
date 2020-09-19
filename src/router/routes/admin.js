@@ -5,9 +5,9 @@ const routes = [
     path: '/admin',
     name: 'AdminMainView',
     component: AdminView,
-    children: [],
+    // children: [],
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
       is_admin: true,
     },
   },
