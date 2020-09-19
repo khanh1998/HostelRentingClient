@@ -6,6 +6,9 @@ module.exports = {
       swSrc: 'src/config/firebase-messaging-sw.js',
       exclude: [/\.map$/, /_redirects/],
     },
+    manifestOptions: {
+      start_url: 'index.html',
+    },
     name: 'Tìm Phòng Trọ',
     appleMobileWebAppCapable: 'yes',
   },
