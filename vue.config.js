@@ -7,7 +7,7 @@ module.exports = {
       exclude: [/\.map$/, /_redirects/],
     },
     manifestOptions: {
-      start_url: 'index.html',
+      start_url: '/index.html',
     },
     name: 'Tìm Phòng Trọ',
     appleMobileWebAppCapable: 'yes',
