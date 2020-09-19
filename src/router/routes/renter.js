@@ -16,11 +16,11 @@ const routes = [
     component: RenterView,
     children: [
       {
-        path: '',
+        path: 'index.html',
         name: 'Home',
         component: Home,
         meta: { guest: true },
-        alias: 'index.html',
+        alias: '',
       },
       {
         path: 'detail/:typeId',
