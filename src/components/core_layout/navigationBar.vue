@@ -38,7 +38,7 @@
     >
       <v-row height="80" class="d-flex pa-0">
         <v-col cols="11" md="7" class="pa-0">
-          <v-row class="ma-0" style="height: 100%">
+          <v-row class="ma-0 d-flex align-center" style="height: 100%">
             <v-col cols="3" md="2" class="d-flex align-center">
               <router-link to="/">
                 <v-img
@@ -52,20 +52,15 @@
                 />
               </router-link>
             </v-col>
-            <v-col
-              cols="9"
-              md="7"
-              class="pl-10 pa-0 d-flex align-center"
-              v-show="!isSearchOptional"
-            >
+            <v-col cols="9" md="7" class="pl-10 pa-0" v-show="!isSearchOptional">
               <v-row class="pa-0 d-flex align-center">
-                <v-col class="col-10 pl-2 searchBar d-flex align-center">
+                <div class="col-10 pl-2 searchBar d-flex align-center">
                   <gmap-autocomplete
                     placeholder="Địa điểm, khu vực... bạn muốn ở gần"
                     class="col-11 gmap-input text-body-2 blue-grey--text"
                     @place_changed="setPlace"
                     @change="changeSearchValue"
-                    :value="address"
+                    :value="filter.coordinator.address"
                   ></gmap-autocomplete>
                   <v-btn
                     icon
@@ -74,7 +69,7 @@
                   >
                     <v-icon>clear</v-icon>
                   </v-btn>
-                </v-col>
+                </div>
                 <v-col class="col-2 px-0">
                   <v-btn
                     class="bg-primary"
@@ -276,6 +271,9 @@
   color: #adb5bd;
   font-weight: 300 !important;
 }
+.logo:hover {
+  cursor: pointer;
+}
 /* .navigation.v-icon:hover {
   color: #727cf5 !important;
 } */
@@ -296,10 +294,16 @@ export default {
     visibleProperty: 'hidden',
   }),
   methods: {
+    viewHomePage() {
+      this.$router.push('/');
+    },
     setPlace(place) {
       this.currentPlace = place;
       this.address = `${place.name}-${place.formatted_address}`;
       this.searchValue = place.formatted_address;
+      this.filter.coordinator.address = `${place.name}-${place.formatted_address}`;
+      this.filter.coordinator.latitude = place.geometry.location.lat();
+      this.filter.coordinator.longitude = place.geometry.location.lng();
     },
     changeSearchValue() {
       this.visibleProperty = 'visible';
@@ -309,21 +313,16 @@ export default {
       this.address = '';
       this.visibleProperty = 'hidden';
       this.currentPlace = null;
+      this.filter.coordinator.address = '';
+      this.filter.coordinator.latitude = '';
+      this.filter.coordinator.longitude = '';
     },
     searchByCoordinates() {
-      if (this.currentPlace) {
-        const coordinates = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-        };
+      if (this.filter.coordinator.latitude && this.filter.coordinator.longitude) {
         this.searchByCoordinator({
-          lat: coordinates.lat,
-          long: coordinates.lng,
-          coordinator: coordinates,
+          lat: this.filter.coordinator.latitude,
+          long: this.filter.coordinator.longitude,
         });
-        this.coordinator.latitude = coordinates.lat;
-        this.coordinator.longitude = coordinates.lng;
-        this.coordinator.address = this.address;
         this.setSearchValue(this.coordinates);
         this.nameAddress = this.searchValue.split('-');
         this.$router.push('/filter');
@@ -336,6 +335,7 @@ export default {
         lat: '',
         long: '',
       });
+      console.log(this.filter);
       this.$router.push('/filter');
     },
     ...mapActions({
@@ -362,6 +362,10 @@ export default {
       set(value) {
         this.setIsSearchOptional(value);
       },
+    },
+    filter() {
+      this.changeSearchValue();
+      return this.$store.state.renter.filterResult.filter;
     },
     coordinator() {
       return this.$store.state.renter.filterResult.coordinator;

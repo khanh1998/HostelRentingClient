@@ -35,25 +35,26 @@
       name
       }}
     </span>
-    <div class="d-flex flex-wrap align-center mt-n7">
-      <v-icon color="yellow" x-small>fas fa-star</v-icon>
-      <p class="grey--text mb-0">{{ ` ${rating.average}/5 ` }}</p>
-      <p class="mb-0">({{ rating.total }})</p>
+    <div class="d-flex flex-wrap align-center mt-n7 font-nunito">
+      <v-icon color="#ffbc00" class="mr-2" x-small>fas fa-star</v-icon>
+      <p class="grey--text mb-0">{{ ` ${rating.average} / 5` }}</p>
+      <p class="mb-0 ml-1">( {{ rating.total }} )</p>
     </div>
     <div class="d-flex">
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
-            color="#F9BD1A"
+            color="#ffbc00"
             outlined
             @click="$emit('openMessage')"
             rounded
             :disabled="userState.data && isVendor"
+            class="font-nunito font-weight-bold"
+            style="letter-spacing: 0.05rem !important; background-color: #fff"
             v-bind="attrs"
             v-on="on"
-            _title="Hãy nhắn tin để thỏa thuận giá!"
           >
-            <v-icon class="mx-1">fas fa-comment-dots</v-icon>Nhắn tin ngay!
+            <v-icon class="mr-3">fas fa-comment-dots</v-icon>Nhắn tin ngay!
           </v-btn>
         </template>
         <span>Hãy nhắn tin để thỏa thuận giá!</span>

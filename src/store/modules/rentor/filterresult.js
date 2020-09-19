@@ -8,6 +8,11 @@ const myState = {
     address: '',
   },
   filter: {
+    coordinator: {
+      latitude: '',
+      longitude: '',
+      address: '',
+    },
     distance: {
       select: '5km',
       items: ['3km', '5km', '7km', '10km'],
@@ -214,7 +219,7 @@ const actions = {
     // params = {lat, long}
     try {
       commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
-      const url = `/api/v1/types?asc=false&distance=5&latitude=${params.coordinator.lat}&longitude=${params.coordinator.lng}&page=1&size=5&sortBy=score`;
+      const url = `/api/v1/types?asc=false&distance=5&latitude=${params.lat}&longitude=${params.long}&page=1&size=5&sortBy=score`;
       const res = await window.axios.get(url);
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
@@ -228,8 +233,8 @@ const actions = {
     try {
       // coordinator
       let coordinatorStr = '';
-      if (params.coordinator !== '') {
-        coordinatorStr = `&latitude=${params.coordinator.lat}&longitude=${params.coordinator.lng}`;
+      if (params.filterProperties.coordinator !== '') {
+        coordinatorStr = `&latitude=${params.filterProperties.coordinator.latitude}&longitude=${params.filterProperties.coordinator.longitude}`;
       }
       // distance
       let distanceStr = '';
