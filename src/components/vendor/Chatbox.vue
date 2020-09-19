@@ -3,8 +3,8 @@
   <div v-if="chatShow">
     <v-overlay v-model="dialogAccept" width="350" absolute>
       <v-card>
-        <v-card-title style="backgroundcolor: #98b7d7; color: white">Xác nhận</v-card-title>
-        <v-card-text class="text-center mt-3" style="fontsize: 20px"
+        <v-card-title style="backgroundcolor: #98b7d7; color: white;">Xác nhận</v-card-title>
+        <v-card-text class="text-center mt-3" style="fontsize: 20px;"
           >Bạn sẽ chấp nhận trả giá này ?</v-card-text
         >
         <v-divider></v-divider>
@@ -17,8 +17,8 @@
     </v-overlay>
     <v-overlay v-model="dialogDeny" width="350" absolute>
       <v-card>
-        <v-card-title style="backgroundcolor: #98b7d7; color: white">Xác nhận</v-card-title>
-        <v-card-text class="text-center mt-3" style="fontsize: 20px"
+        <v-card-title style="backgroundcolor: #98b7d7; color: white;">Xác nhận</v-card-title>
+        <v-card-text class="text-center mt-3" style="fontsize: 20px;"
           >Bạn sẽ từ chối trả giá này ?</v-card-text
         >
         <v-divider></v-divider>
@@ -44,7 +44,7 @@
         <v-icon>clear</v-icon>
       </v-btn>
     </v-card>
-    <div class="chatbox rounded-l overflow-y-auto chatbox" style="max-height: 350px" id="chatbox">
+    <div class="chatbox rounded-l overflow-y-auto chatbox" style="max-height: 350px;" id="chatbox">
       <v-list
         v-scroll.self="myOnScroll"
         align="center"
@@ -72,7 +72,7 @@
         <v-list-item v-for="(item, i) in filteredMessage" v-bind:key="i">
           <v-list-item-content>
             <div v-if="item.sender === 'renter'" class="d-flex justify-start">
-              <div v-if="item.bargain" class="blue lighten-5 border-deal pa-1" style="width: 75%">
+              <div v-if="item.bargain" class="blue lighten-5 border-deal pa-1" style="width: 75%;">
                 <v-row>
                   <v-col cols="12">
                     <v-icon color="amber">attach_money</v-icon>
@@ -87,12 +87,12 @@
                       {{ item.bargain.typeName }}
                     </span>
                     <br />
-                    <span style="color: #98b7d7">Giá gốc:</span>
-                    <span style="color: red" class="font-weight-bold"
+                    <span style="color: #98b7d7;">Giá gốc:</span>
+                    <span style="color: red;" class="font-weight-bold"
                       >{{ item.bargain.originalPrice }} Triệu</span
                     >
                     <br />
-                    <span style="color: #98b7d7">Trả giá:</span>
+                    <span style="color: #98b7d7;">Trả giá:</span>
                     <span class="font-weight-bold">{{ item.bargain.newPrice }} Triệu</span>
                   </v-col>
                 </v-row>
@@ -132,7 +132,7 @@
               <p
                 v-if="item.book"
                 v-ripple
-                style="width: 75%"
+                style="width: 75%;"
                 class="blue lighten-5 pa-2 rounded border-deal"
               >
                 <v-icon color="pink">event</v-icon>
@@ -151,21 +151,21 @@
               <span
                 v-if="!item.book && !item.bargain"
                 v-ripple
-                style="width: 75%"
+                style="width: 75%;"
                 class="blue lighten-5 pa-2 rounded"
                 >{{ item.message }}</span
               >
             </div>
             <div v-if="item.sender === 'vendor'" class="d-flex justify-end">
               <span
-                style="width: auto; max-width: 75%"
+                style="width: auto; max-width: 75%;"
                 v-ripple
                 class="green lighten-5 pa-2 rounded"
                 v-if="!item.book && !item.bargain"
                 >{{ item.message }}</span
               >
               <span
-                style="width: auto; max-width: 75%"
+                style="width: auto; max-width: 75%;"
                 v-ripple
                 class="red lighten-5 pa-2 rounded"
                 v-if="item.bargain && !item.bargain.dealId"
@@ -242,12 +242,16 @@ export default {
     myOnScroll() {},
     sendMessage() {
       if (this.inputChat.model.length > 0) {
-        this.doc.ref.collection('messages').add({
+        const content = {
           sender: 'vendor',
           message: this.inputChat.model,
           bargain: null,
           booking: null,
           createdAt: Date.now(),
+        };
+        this.doc.ref.collection('messages').add(content);
+        this.doc.ref.update({
+          lastedMessage: content,
         });
         this.$nextTick(() => this.scrollToBottom());
         this.inputChat.model = '';

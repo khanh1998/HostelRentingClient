@@ -5,15 +5,11 @@
         class="d-flex justify-md-space-between flex-column flex-md-row"
         v-if="bookings.length > 0"
       >
-        <div class="d-flex">
-          <div class="pt-3 pl-2 font-weight-medium text-h6 text-center">Lịch hẹn xem phòng</div>
-          <div class="d-flex justify-end" v-if="bookings.length > 0">
-            <span style="color: #818286;">
-              <router-link to="vendor/booking" class="text-decoration-none"
-                >Xem thêm >></router-link
-              >
-            </span>
-          </div>
+        <div class="d-flex align-center justify-center justify-md-left">
+          <span class="font-weight-medium text-h6 text-center ml-2">Lịch hẹn xem phòng</span>
+          <span style="color: #818286;" v-if="bookings.length > 0" class="ml-2">
+            <router-link to="vendor/booking" class="text-decoration-none">Xem thêm >></router-link>
+          </span>
         </div>
         <div class="d-flex justify-center">
           <v-chip-group mandatory active-class="primary--text">

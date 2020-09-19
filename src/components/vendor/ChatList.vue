@@ -40,8 +40,8 @@
       <v-tabs-items v-model="tabs.tabName">
         <v-tab-item>
           <v-card :height="chatListHeight" class="overflow-y-hidden">
-            <vuescroll :ops="ops">
-              <v-list two-line nav avatar class="rounded-l" v-scroll.self="myOnScroll">
+            <vue-scroll>
+              <v-list two-line nav avatar class="rounded-l">
                 <v-list-item-group color="primary">
                   <v-list-item
                     dense
@@ -82,7 +82,7 @@
                   </v-list-item>
                 </v-list-item-group>
               </v-list>
-            </vuescroll>
+            </vue-scroll>
           </v-card>
         </v-tab-item>
       </v-tabs-items>
@@ -92,7 +92,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import vuescroll from 'vuescroll';
 import firebase from '../../config/firebase';
 
 const { store } = firebase;
@@ -105,7 +104,6 @@ export default {
     itemSelected: Object,
     vendorId: Number,
   },
-  components: { vuescroll },
   data() {
     return {
       tabs: [{ tabName: 'Tin nhắn' }],
@@ -116,23 +114,6 @@ export default {
       docRefs: [],
       docs: [],
       renterIds: [],
-      ops: {
-        vuescroll: {},
-        scrollPanel: {
-          initialScrollY: false,
-          initialScrollX: false,
-          scrollingX: false,
-          scrollingY: true,
-          speed: 300,
-          easing: undefined,
-          verticalNativeBarPos: 'right',
-        },
-        rail: {},
-        bar: {
-          keepShow: true,
-          background: '#c1c1c1',
-        },
-      },
     };
   },
   computed: {
