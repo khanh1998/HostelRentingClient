@@ -21,12 +21,14 @@ const routes = [...RenterRoutes, ...VendorRoutes, ...AdminRoutes, ...LoginRoutes
 
 const router = new VueRouter({
   mode: 'history',
+  base: process.env.BASE_URL,
   routes,
 });
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (window.$cookies.get('jwt') === null) {
+    // if (window.$cookies.get('jwt') === null) {
+    if (true) {
       // not logged in
       next({
         name: 'Login',

@@ -28,6 +28,7 @@
     "vue2-google-maps": "^0.10.7",
     "vuebar": "0.0.20",
     "vueperslides": "^2.9.2",
+    "vuescroll": "^4.16.1",
     "vuetify": "^2.2.11",
     "vuex": "^3.4.0"
   },

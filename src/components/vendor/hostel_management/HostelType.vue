@@ -13,11 +13,11 @@
       hide-default-footer
       @page-count="pageCount = $event"
       sort-by="status"
-      class="elevation-1"
+      class="ml-15"
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title style="fontsize: 20px; color: #6c98c6">Loại phòng</v-toolbar-title>
+          <v-toolbar-title style="fontsize: 20px; color: #6c98c6;">Loại phòng</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-card-title>
             <v-text-field
@@ -92,14 +92,14 @@
         <td :colspan="headers.length">
           <v-row>
             <v-col cols="2">
-              <v-card-text style="fontsize: 20px" class="text-center"> Phòng trống </v-card-text>
+              <v-card-text style="fontsize: 20px;" class="text-center"> Phòng trống </v-card-text>
             </v-col>
-            <v-col cols="7" style="max-height: 100px; overflow-y: auto" class="mt-2" id="style-1">
+            <v-col cols="7" style="max-height: 100px; overflow-y: auto;" class="mt-2" id="style-1">
               <v-chip
                 class="ml-2 mt-2"
                 color="green lighten-1"
                 v-for="tag in item.roomEm"
-                :key="tag"
+                :key="tag.roomId"
               >
                 <div v-if="tag.available">
                   {{ tag.roomName }}
@@ -109,10 +109,15 @@
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-card-text style="fontsize: 20px" class="text-center"> Phòng đã thuê </v-card-text>
+              <v-card-text style="fontsize: 20px;" class="text-center"> Phòng đã thuê </v-card-text>
             </v-col>
             <v-col cols="7">
-              <v-chip class="ml-2 mt-2" color="red lighten-2" v-for="tag in item.roomFu" :key="tag">
+              <v-chip
+                class="ml-2 mt-2"
+                color="red lighten-2"
+                v-for="tag in item.roomFu"
+                :key="tag.roomId"
+              >
                 <div v-if="!tag.available">
                   {{ tag.roomName }}
                 </div>

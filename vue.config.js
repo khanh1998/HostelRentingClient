@@ -4,14 +4,12 @@ module.exports = {
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
       swSrc: 'src/config/firebase-messaging-sw.js',
-      exclude: [
-        /\.map$/,
-        /_redirects/,
-      ],
+      exclude: [/\.map$/, /_redirects/],
     },
-    devServer: {
-      proxy: 'https://hostel-renting.herokuapp.com/',
+    manifestOptions: {
+      start_url: 'index.html',
     },
     name: 'Tìm Phòng Trọ',
+    appleMobileWebAppCapable: 'yes',
   },
 };

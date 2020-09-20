@@ -1,25 +1,36 @@
 <template>
-  <div height="836px" v-if="!isLoadingGroup">
-    <v-card height="836px" class="overflow-hidden">
+  <v-row no-gutters v-if="!isLoadingGroup" class="fill-height d-flex flex-row flex-nowrap">
+    <v-card width="auto" height="100%" class="overflow-hidden">
       <v-navigation-drawer
         v-model="drawer"
-        :expand-on-hover="expandOnHover"
         :mini-variant="miniVariant"
         absolute
         width="350"
+        permanent
+        mini-variant-width="70"
       >
-        <HostelGroup :groups="groups" :groupId="groupId" @getIdSelected="groupId = $event" />
-      </v-navigation-drawer>
-      <v-card style="min-height: 836px; max-height: 836px" class="ml-15">
-        <HostelType
+        <v-list-item>
+          <v-list-item-action>
+            <v-btn icon depressed color="primary" @click="miniVariant = !miniVariant">
+              <v-icon v-if="miniVariant">mdi-chevron-right</v-icon>
+              <v-icon v-if="!miniVariant">mdi-chevron-left</v-icon>
+            </v-btn>
+          </v-list-item-action>
+
+          <v-list-item-content>
+            <v-list-item-title style="fontsize: 22px; color: #6c98c6;">Khu trọ</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider></v-divider>
+        <HostelGroup
           :groups="groups"
-          :groupId="groupId"
-          :typeId="typeId"
-          @getTypeIdSelected="typeId = $event"
+          @getIdSelected="groupId = $event"
+          v-on:close-menu="mini = !mini"
         />
-      </v-card>
+      </v-navigation-drawer>
+      <HostelType :groups="groups" :groupId="groupId" @getTypeIdSelected="typeId = $event" />
     </v-card>
-  </div>
+  </v-row>
 </template>
 <script>
 import HostelGroup from '@/components/vendor/hostel_management/HostelGroup.vue';
@@ -43,7 +54,7 @@ export default {
       { title: 'Photos', icon: 'mdi-image' },
       { title: 'About', icon: 'mdi-help-box' },
     ],
-
+    mini: false,
     miniVariant: true,
     expandOnHover: true,
   }),
@@ -58,6 +69,16 @@ export default {
         this.$store.state.vendor.group.rooms.isLoading
       );
     },
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+          return true;
+        case 'sm':
+          return true;
+        default:
+          return false;
+      }
+    },
   },
   methods: {
     ...mapActions({
@@ -65,9 +86,15 @@ export default {
       getTypes: 'vendor/group/getTypes',
       getRooms: 'vendor/group/getRooms',
     }),
+    listener(event) {
+      console.log(event);
+    },
   },
   async created() {
     this.getGroups().then(() => {
+      if (this.groups.length > 0) {
+        this.groupId = this.groups[0].groupId;
+      }
       this.getTypes().then(() => this.getRooms());
     });
   },
