@@ -127,6 +127,8 @@ export default {
         result = result.map((item) => `${item.startTime} - ${item.endTime}`);
         arr.push(result);
       });
+      console.log('thuy');
+      console.log(arr);
       return arr;
     },
   },

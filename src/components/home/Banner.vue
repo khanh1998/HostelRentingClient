@@ -9,9 +9,7 @@
             <p
               class="white--text px-2 font-weight-bold slogan"
               style="letter-spacing: 0.001em !important"
-            >
-              HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT
-            </p>
+            >HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT</p>
             <p class="white--text text-h2">TD HOSTEL</p>
             <div class="flex d-flex px-10" :style="{ width: '100%' }">
               <v-col cols="9">
@@ -55,20 +53,21 @@
                   }"
                   color="#fdde52"
                   @click="searchByCoordinates()"
-                  >TÌM KIẾM</v-btn
-                >
+                >TÌM KIẾM</v-btn>
               </v-col>
             </div>
           </div>
           <div class="flex d-flex justify-end align-center px-10" :style="{ width: '100%' }">
             <!-- eslint-disable max-len -->
-            <v-subheader class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
-              >Tùy chọn nâng cao</v-subheader
-            >
+            <v-subheader
+              class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
+            >Tùy chọn nâng cao</v-subheader>
             <v-btn icon @click="advanceSearch = !advanceSearch">
-              <v-icon color="white">{{
+              <v-icon color="white">
+                {{
                 advanceSearch ? 'mdi-chevron-up' : 'mdi-chevron-down'
-              }}</v-icon>
+                }}
+              </v-icon>
             </v-btn>
           </div>
         </div>
@@ -77,13 +76,15 @@
           <div class="flex d-flex justify-end align-center" :style="{ width: '100%' }">
             <!-- eslint-disable max-len -->
             <p></p>
-            <v-subheader class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
-              >Tùy chọn nâng cao</v-subheader
-            >
+            <v-subheader
+              class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
+            >Tùy chọn nâng cao</v-subheader>
             <v-btn icon @click="advanceSearch = !advanceSearch">
-              <v-icon color="white">{{
+              <v-icon color="white">
+                {{
                 advanceSearch ? 'mdi-chevron-up' : 'mdi-chevron-down'
-              }}</v-icon>
+                }}
+              </v-icon>
             </v-btn>
           </div>
           <!-- address -->
@@ -105,7 +106,7 @@
                   class="col-11 gmap-input text-body-2 blue-grey--text"
                   @place_changed="setPlace"
                   @change="changeSearchValue"
-                  :value="coordinator.address"
+                  :value="filter.coordinator.address"
                   autofocus
                 ></gmap-autocomplete>
                 <v-btn icon @click="clearField()" v-bind:style="{ visibility: computedClearable }">
@@ -234,8 +235,7 @@
                 <span
                   class="text-body-1 font-weight-medium px-0"
                   style="line-height: normal; color: #ffff00"
-                  >Giá thuê</span
-                >
+                >Giá thuê</span>
               </div>
             </v-col>
             <v-col cols="5" class="pt-0 mt-10 pl-3">
@@ -252,12 +252,14 @@
               />
               <v-row class="justify-center align-center">
                 <!-- eslint-disable max-len -->
-                <v-subheader class="subtitle-2" :style="{ height: '20px' }"
-                  >{{ filter.price.min }} triệu</v-subheader
-                >
-                <v-subheader class="ml-auto subtitle-2" :style="{ height: '20px' }"
-                  >{{ filter.price.max }} triệu</v-subheader
-                >
+                <v-subheader
+                  class="subtitle-2"
+                  :style="{ height: '20px' }"
+                >{{ filter.price.min }} triệu</v-subheader>
+                <v-subheader
+                  class="ml-auto subtitle-2"
+                  :style="{ height: '20px' }"
+                >{{ filter.price.max }} triệu</v-subheader>
                 <v-btn
                   icon
                   color="indigo"
@@ -276,9 +278,7 @@
             <v-col cols="3">
               <div :style="{ width: '100%', border: '2px solid #b2ccf7' }">
                 <div class="flex d-flex justify-center align-center">
-                  <v-subheader class="white--text text-subtitle-1 font-weight-regular"
-                    >Tiện nghi</v-subheader
-                  >
+                  <v-subheader class="white--text text-subtitle-1 font-weight-regular">Tiện nghi</v-subheader>
                   <v-btn
                     color="white"
                     icon
@@ -324,9 +324,9 @@
             <v-col cols="6">
               <div :style="{ width: '100%', border: '2px solid #b2ccf7' }">
                 <div class="flex d-flex justify-center align-center">
-                  <v-subheader class="white--text text-subtitle-1 font-weight-regular"
-                    >Tiện ích xung quanh</v-subheader
-                  >
+                  <v-subheader
+                    class="white--text text-subtitle-1 font-weight-regular"
+                  >Tiện ích xung quanh</v-subheader>
                   <v-btn
                     color="white"
                     icon
@@ -374,8 +374,7 @@
                 }"
                 color="#fdde52"
                 @click="searchByCoordinates()"
-                >TÌM KIẾM</v-btn
-              >
+              >TÌM KIẾM</v-btn>
             </v-col>
           </div>
         </div>
@@ -477,48 +476,52 @@ export default {
       this.searchValue = place.formatted_address;
       this.address = `${place.name}-${place.formatted_address}`;
       this.coordinator.address = `${place.name}-${place.formatted_address}`;
+      this.filter.coordinator.address = `${place.name}-${place.formatted_address}`;
+      this.filter.coordinator.latitude = place.geometry.location.lat();
+      this.filter.coordinator.longitude = place.geometry.location.lng();
     },
     changeSearchValue() {
       this.visibleProperty = 'visible';
     },
+    checkSearchValue() {},
     clearField() {
       this.searchValue = '';
       this.address = '';
       this.coordinator.address = '';
       this.visibleProperty = 'hidden';
       this.currentPlace = null;
+      this.filter.coordinator.address = '';
+      this.filter.coordinator.latitude = '';
+      this.filter.coordinator.longitude = '';
     },
     changeMaxPrice() {
       if (this.filter.price.max < 50) this.filter.price.max += 5;
     },
     searchByCoordinates() {
-      if (this.currentPlace) {
-        const coordinates = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-        };
+      console.log('vao');
+      if (this.currentPlace || this.filter.coordinator.address) {
+        console.log('nua');
+        console.log(this.filter.coordinator);
         if (this.advanceSearch) {
+          console.log(this.filter);
           this.searchLikeFilter({
-            lat: coordinates.lat,
-            long: coordinates.lng,
-            coordinator: coordinates,
             filterProperties: this.filter,
           });
         } else {
           this.filter.price.disable = this.disabled;
           this.searchByCoordinator({
-            lat: coordinates.lat,
-            long: coordinates.lng,
-            coordinator: coordinates,
+            lat: this.filter.coordinator.latitude,
+            long: this.filter.coordinator.longitude,
           });
         }
         this.setSearchValue(this.coordinates);
-        this.coordinator.latitude = coordinates.lat;
-        this.coordinator.longitude = coordinates.lng;
+        this.coordinator.latitude = this.filter.coordinator.latitude.lat;
+        this.coordinator.longitude = this.filter.coordinator.latitude.lng;
         this.nameAddress = this.searchValue.split('-');
         this.isSearchOptional = true;
         this.$router.push('/filter');
       }
+      console.log(this.filter);
     },
   },
   computed: {
@@ -531,6 +534,7 @@ export default {
       },
     },
     filter() {
+      // this.changeSearchValue();
       return this.$store.state.renter.filterResult.filter;
     },
     facilities() {

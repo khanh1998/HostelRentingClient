@@ -1,9 +1,7 @@
 <template>
   <div>
     <!-- eslint-disable max-len -->
-    <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
-      >DỊCH VỤ</span
-    >
+    <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }">DỊCH VỤ</span>
     <div class="d-flex mt-3" :style="{ width: '100%' }">
       <div class="line-after" :style="{ width: '30%' }"></div>
       <div class="line-before" :style="{ width: '90%' }"></div>
@@ -24,7 +22,7 @@
         </v-list-item-title>
         <v-list-item-subtitle class="text-right">
           <div v-if="item.price > 0">
-            <span style="color: #78A0CA" class="font-weight-bold">{{ item.price }}</span>
+            <span style="color: #727cf5" class="font-weight-bold">{{ item.price }}</span>
             {{ item.priceUnit }}/{{ item.userUnit }}
           </div>
           <div v-else>

@@ -28,20 +28,18 @@
               <h2
                 class="font-weight-bold font-nunito"
                 :style="{ color: '#656565', fontSize: '28px' }"
-              >
-                {{ info.title }}
-              </h2>
-              <span class="text-body-2" style="color: #9a9a9a; font-family: 'Lato' !important"
-                >{{ group.address.streetName }}, {{ group.address.districtName }},
-                {{ group.address.provinceName }}</span
-              >
+              >{{ info.title }}</h2>
+              <span class="text-body-2" style="color: #9a9a9a; font-family: 'Lato' !important">
+                {{ group.address.streetName }}, {{ group.address.districtName }},
+                {{ group.address.provinceName }}
+              </span>
             </div>
           </v-col>
           <v-col cols="12" md="4" class="pl-10">
             <div class="d-flex flex-column justify-end">
-              <span class="font-weight-medium text-h5 blue--text text-center"
-                >{{ info.price }} {{ info.priceUnit }}/tháng</span
-              >
+              <span
+                class="font-weight-medium text-h5 text-primary text-center"
+              >{{ info.price }} {{ info.priceUnit }}/tháng</span>
               <div class="d-flex rounded-0 d-flex justify-space-between mt-3 px-10">
                 <div>
                   <div class="d-flex justify-center align-center">
@@ -68,13 +66,13 @@
                       max-width="25"
                       max-height="25"
                     />
-                    <span class="text-body-1 ml-2" style="color: #444"
-                      >{{ info.capacity }} người</span
-                    >
+                    <span class="text-body-1 ml-2" style="color: #444">{{ info.capacity }} người</span>
                   </div>
-                  <span class="text-caption ml-auto" style="color: #555" :style="{ float: 'right' }"
-                    >Sức chứa</span
-                  >
+                  <span
+                    class="text-caption ml-auto"
+                    style="color: #555"
+                    :style="{ float: 'right' }"
+                  >Sức chứa</span>
                 </div>
               </div>
             </div>
@@ -92,9 +90,11 @@
               <v-carousel-item v-for="(image, i) in images" :key="i" :src="images[i]">
                 <div class="category">
                   <!-- eslint-disable max-len -->
-                  <span class="font-weight-bold text-body-1 yellow--text">{{
+                  <span class="font-weight-bold text-body-1 yellow--text">
+                    {{
                     info.category.categoryName
-                  }}</span>
+                    }}
+                  </span>
                   <br />
                   <span class="text-caption">{{ info.view }} lượt xem</span>
                 </div>
@@ -115,9 +115,10 @@
         </v-row>
         <v-row class="mt-3">
           <v-col cols="12" md="4">
-            <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
-              >TIỆN ÍCH</span
-            >
+            <span
+              class="text-subtitle-1 font-nunito font-weight-bold"
+              :style="{ color: '#484848' }"
+            >TIỆN ÍCH</span>
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '30%' }"></div>
               <div class="line-before" :style="{ width: '90%' }"></div>
@@ -139,45 +140,42 @@
         </v-row>
         <v-row v-if="!isLoadingProvinces" class="mt-5">
           <v-col cols="12" md="8">
-            <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
-              >GIÁ TRUNG BÌNH</span
-            >
+            <span
+              class="text-subtitle-1 font-nunito font-weight-bold"
+              :style="{ color: '#484848' }"
+            >GIÁ TRUNG BÌNH</span>
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '15%' }" />
               <div class="line-before" :style="{ width: '85%' }" />
             </div>
             <v-row class="d-flex flex-wrap mx-0 font-nunito text-subtitle-2">
-              <v-col cols="6">
+              <v-col cols="6" class="pl-0">
                 <div class="average-item d-flex align-center">
                   <v-col cols="7" class="d-flex average-infor">{{ district.districtName }}</v-col>
-                  <span class="font-weight-bold mx-auto"
-                    >{{ wardAverage.price }} triệu / tháng</span
-                  >
+                  <span class="font-weight-bold mx-auto">{{ wardAverage.price }} triệu / tháng</span>
                 </div>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="6" class="pr-0">
                 <div class="average-item d-flex align-center">
                   <v-col cols="7" class="d-flex average-infor">{{ ward.wardName }}</v-col>
-                  <span class="font-weight-bold mx-auto"
-                    >{{ districtAverage.price }} triệu / tháng</span
-                  >
+                  <span class="font-weight-bold mx-auto">{{ districtAverage.price }} triệu / tháng</span>
                 </div>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="6" class="pl-0">
                 <div class="average-item d-flex align-center">
-                  <v-col cols="7" class="d-flex average-infor">{{
+                  <v-col cols="7" class="d-flex average-infor">
+                    {{
                     group.address.streetName
-                  }}</v-col>
-                  <span class="font-weight-bold mx-auto"
-                    >{{ streetAverage.price }} triệu / tháng</span
-                  >
+                    }}
+                  </v-col>
+                  <span class="font-weight-bold mx-auto">{{ streetAverage.price }} triệu / tháng</span>
                 </div>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="6" class="pl-0">
                 <v-btn
-                  class="align-end font-weight-medium"
+                  class="align-center font-weight-medium"
                   text
-                  _height="100%"
+                  height="100%"
                   color="primary"
                   :to="`/discovery/${this.district.districtId}`"
                 >
@@ -190,9 +188,10 @@
         </v-row>
         <v-row class="mt-10">
           <v-col cols="12" md="8">
-            <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
-              >ĐÁNH GIÁ PHÒNG TRỌ</span
-            >
+            <span
+              class="text-subtitle-1 font-nunito font-weight-bold"
+              :style="{ color: '#484848' }"
+            >ĐÁNH GIÁ PHÒNG TRỌ</span>
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '15%' }" />
               <div class="line-before" :style="{ width: '85%' }" />
@@ -206,8 +205,7 @@
               <span
                 class="text-subtitle-1 font-nunito font-weight-bold"
                 :style="{ color: '#484848' }"
-                >CÓ THỂ BẠN SẼ THÍCH</span
-              >
+              >CÓ THỂ BẠN SẼ THÍCH</span>
               <v-btn
                 class="align-end font-weight-medium ml-auto"
                 text
@@ -442,20 +440,6 @@ export default {
 .font-nunito {
   font-family: 'Nunito', sans-serif !important;
 }
-.category {
-  position: absolute;
-  right: 0;
-  top: 0;
-  display: block;
-  width: auto;
-  max-width: 80%;
-  padding: 8px 16px;
-  background: rgba(32, 112, 185, 0.66);
-  color: #fff;
-  text-align: center;
-  border-bottom-left-radius: 24px;
-  box-sizing: border-box;
-}
 .line-before {
   height: 2px;
   background-color: rgba(152, 166, 173, 0.2);
@@ -482,5 +466,21 @@ export default {
 .line-after {
   height: 2px;
   background-color: #727cf5;
+}
+</style>
+<style>
+.category {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: block;
+  width: auto;
+  max-width: 80%;
+  padding: 8px 16px;
+  background: rgba(32, 112, 185, 0.66);
+  color: #fff;
+  text-align: center;
+  border-bottom-left-radius: 24px;
+  box-sizing: border-box;
 }
 </style>
