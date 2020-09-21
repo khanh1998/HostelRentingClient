@@ -1,7 +1,8 @@
 <template>
   <div>
+    <!-- eslint-disable max-len -->
     <v-overlay :value="overlay.show" light opacity="0.6">
-      <v-text-field
+      <!-- <v-text-field
         color="#E5E5E5"
         background-color="#E5E5E5"
         flat
@@ -21,23 +22,24 @@
               overlay.show = false;
               search();
             "
-            >Search</v-btn
-          >
+          >Search</v-btn>
         </template>
-      </v-text-field>
+      </v-text-field>-->
     </v-overlay>
     <v-app-bar
       app
       color="#fff"
       light
       height="80"
+      min-height="80"
+      max-height="160"
       id="top-bar"
       style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
     >
-      <v-row height="70 m-0" class="d-flex">
-        <v-col cols="11" md="7">
-          <v-row>
-            <v-col class="col-2 hidden-sm-and-down">
+      <v-row height="80" class="d-flex pa-0">
+        <v-col cols="11" md="7" class="pa-0">
+          <v-row class="ma-0 d-flex align-center" style="height: 100%">
+            <v-col cols="3" md="2" class="d-flex align-center">
               <router-link to="/">
                 <v-img
                   alt="Hostel Renting"
@@ -50,35 +52,32 @@
                 />
               </router-link>
             </v-col>
-            <!-- </v-col>
-            <v-col class="col-5">-->
-            <v-col class="col-10 pl-10" v-show="!isSearchOptional">
-              <v-row class="px-0 d-flex align-center">
-                <v-col class="col-9 pl-2 searchBar d-flex align-center">
+            <v-col cols="9" md="7" class="pl-10 pa-0" v-show="!isSearchOptional">
+              <v-row class="pa-0 d-flex align-center">
+                <div class="col-10 pl-2 searchBar d-flex align-center">
                   <gmap-autocomplete
-                    placeholder="Tìm kiếm theo địa điểm, khu vực bạn muốn ở gần"
+                    placeholder="Địa điểm, khu vực... bạn muốn ở gần"
                     class="col-11 gmap-input text-body-2 blue-grey--text"
                     @place_changed="setPlace"
                     @change="changeSearchValue"
-                    :value="address"
+                    :value="filter.coordinator.address"
                   ></gmap-autocomplete>
                   <v-btn
                     icon
                     @click="clearField()"
                     v-bind:style="{ visibility: computedClearable }"
                   >
-                    <!-- eslint-disable max-len -->
                     <v-icon>clear</v-icon>
                   </v-btn>
-                </v-col>
-                <v-col class="col-3 px-0">
+                </div>
+                <v-col class="col-2 px-0">
                   <v-btn
-                    class="rounded-l-0"
+                    class="bg-primary"
                     depressed
                     @click="searchByCoordinates"
-                    color="#98B7D7"
                     height="40"
-                    width="50%"
+                    width="100%"
+                    style="border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important;"
                   >
                     <v-icon color="white">search</v-icon>
                   </v-btn>
@@ -88,14 +87,15 @@
           </v-row>
         </v-col>
 
-        <v-col cols="1" md="5" class="ml-auto d-flex justify-end items-center align-center pr-5">
+        <v-col cols="1" md="5" class="ml-auto d-flex justify-end align-center pr-5">
           <v-btn
-            color="#2C92D5"
+            color="#727cf5"
             light
             depressed
             outlined
             rounded
-            class="mr-5 hidden-xs-only font-weight-regular"
+            class="mr-5 hidden-xs-only font-weight-regular font-nunito"
+            style="letter-spacing: 0.01rem !important"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
           >
             <v-icon left>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
@@ -103,14 +103,32 @@
 
           <!-- eslint-disable -->
           <v-btn
-            color="#6C98C6"
             to="/cart"
             depressed
-            dark
-            class="hidden-xs-only"
+            icon
+            class="hidden-xs-only navigation"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
-            >Lịch hẹn của bạn</v-btn
           >
+            <v-icon
+              style="font-size: 30px;"
+              color="#98a6ad"
+              _color="#727cf5"
+              class="navigation"
+            >mdi mdi-table-eye</v-icon>
+          </v-btn>
+          <v-btn icon depressed class="hidden-xs-only">
+            <v-badge color="pink" dot overlap>
+              <v-icon style="font-size: 25px;" color="#98a6ad">mdi mdi-bell-outline</v-icon>
+            </v-badge>
+          </v-btn>
+          <!-- <v-btn
+            to="/cart"
+            depressed
+            _dark
+            class="hidden-xs-only bg-secondary font-nunito"
+            style="letter-spacing: 0.01rem !important"
+            v-if="!user || (user && user.role.roleName === 'Người thuê')"
+          >Lịch hẹn của bạn</v-btn>-->
           <v-btn
             to="/vendor"
             depressed
@@ -121,13 +139,14 @@
           >
             <v-icon left>settings</v-icon>Quản lý phòng trọ
           </v-btn>
+          <v-divider class="mx-3 hidden-xs-only" inset vertical style="height: 60px;"></v-divider>
           <v-menu>
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
-                <v-avatar size="32px" item v-if="isLoggedIn && !isLoadingUser">
+                <v-avatar size="35px" item v-if="isLoggedIn && !isLoadingUser">
                   <v-img :src="user.avatar" :alt="user.username"></v-img>
                 </v-avatar>
-                <v-avatar size="32px" item v-if="!isLoggedIn">
+                <v-avatar size="35px" item v-if="!isLoggedIn">
                   <v-icon>face</v-icon>
                 </v-avatar>
               </v-btn>
@@ -239,12 +258,25 @@
 }
 .searchBar {
   height: 40px;
-  border: 1px solid #e4e7ea;
+  /* border: 1px solid #e4e7ea; */
+  background-color: #f1f3fa;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
   width: 100%;
 }
 .gmap-input:focus {
   outline: none;
 }
+.gmap-input::placeholder {
+  color: #adb5bd;
+  font-weight: 300 !important;
+}
+.logo:hover {
+  cursor: pointer;
+}
+/* .navigation.v-icon:hover {
+  color: #727cf5 !important;
+} */
 </style>
 <script>
 import { mapActions } from 'vuex';
@@ -262,10 +294,16 @@ export default {
     visibleProperty: 'hidden',
   }),
   methods: {
+    viewHomePage() {
+      this.$router.push('/');
+    },
     setPlace(place) {
       this.currentPlace = place;
       this.address = `${place.name}-${place.formatted_address}`;
       this.searchValue = place.formatted_address;
+      this.filter.coordinator.address = `${place.name}-${place.formatted_address}`;
+      this.filter.coordinator.latitude = place.geometry.location.lat();
+      this.filter.coordinator.longitude = place.geometry.location.lng();
     },
     changeSearchValue() {
       this.visibleProperty = 'visible';
@@ -275,21 +313,16 @@ export default {
       this.address = '';
       this.visibleProperty = 'hidden';
       this.currentPlace = null;
+      this.filter.coordinator.address = '';
+      this.filter.coordinator.latitude = '';
+      this.filter.coordinator.longitude = '';
     },
     searchByCoordinates() {
-      if (this.currentPlace) {
-        const coordinates = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-        };
+      if (this.filter.coordinator.latitude && this.filter.coordinator.longitude) {
         this.searchByCoordinator({
-          lat: coordinates.lat,
-          long: coordinates.lng,
-          coordinator: coordinates,
+          lat: this.filter.coordinator.latitude,
+          long: this.filter.coordinator.longitude,
         });
-        this.coordinator.latitude = coordinates.lat;
-        this.coordinator.longitude = coordinates.lng;
-        this.coordinator.address = this.address;
         this.setSearchValue(this.coordinates);
         this.nameAddress = this.searchValue.split('-');
         this.$router.push('/filter');
@@ -302,6 +335,7 @@ export default {
         lat: '',
         long: '',
       });
+      console.log(this.filter);
       this.$router.push('/filter');
     },
     ...mapActions({
@@ -328,6 +362,10 @@ export default {
       set(value) {
         this.setIsSearchOptional(value);
       },
+    },
+    filter() {
+      this.changeSearchValue();
+      return this.$store.state.renter.filterResult.filter;
     },
     coordinator() {
       return this.$store.state.renter.filterResult.coordinator;

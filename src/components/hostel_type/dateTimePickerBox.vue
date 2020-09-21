@@ -25,33 +25,36 @@
       />
     </v-dialog>
     <v-btn icon :to="'/group/' + groupId">
-      <v-avatar height="70" width="70" color="#4F60C9">
+      <v-avatar height="70" width="70" color="#727cf5">
         <v-img v-if="avatar" max-height="70" max-width="70" :src="avatar" />
         <span v-else class="text-h4 white--text">{{ getAvatarTitle() }}</span>
       </v-avatar>
     </v-btn>
-    <span class="text-body-1 font-weight-bold text-center font-nunito" style="color: #222">{{
+    <span class="text-body-1 font-weight-bold text-center font-nunito" style="color: #222">
+      {{
       name
-    }}</span>
-    <div class="d-flex flex-wrap align-center mt-n7">
-      <v-icon color="yellow" x-small>fas fa-star</v-icon>
-      <p class="grey--text mb-0">{{ ` ${rating.average}/5 ` }}</p>
-      <p class="mb-0">({{ rating.total }})</p>
+      }}
+    </span>
+    <div class="d-flex flex-wrap align-center mt-n7 font-nunito">
+      <v-icon color="#ffbc00" class="mr-2" x-small>fas fa-star</v-icon>
+      <p class="grey--text mb-0">{{ ` ${rating.average} / 5` }}</p>
+      <p class="mb-0 ml-1">( {{ rating.total }} )</p>
     </div>
     <div class="d-flex">
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
-            color="#F9BD1A"
+            color="#ffbc00"
             outlined
             @click="$emit('openMessage')"
             rounded
             :disabled="userState.data && isVendor"
+            class="font-nunito font-weight-bold"
+            style="letter-spacing: 0.05rem !important; background-color: #fff"
             v-bind="attrs"
             v-on="on"
-            _title="Hãy nhắn tin để thỏa thuận giá!"
           >
-            <v-icon class="mx-1">fas fa-comment-dots</v-icon>Nhắn tin ngay!
+            <v-icon class="mr-3">fas fa-comment-dots</v-icon>Nhắn tin ngay!
           </v-btn>
         </template>
         <span>Hãy nhắn tin để thỏa thuận giá!</span>
@@ -62,9 +65,9 @@
         <template v-slot:activator="{ attrs }">
           <v-btn
             v-bind="attrs"
-            color="#4F60C9"
+            _color="#4F60C9"
             width="80%"
-            class="mx-7 text-subtitle-2 white--text py-5"
+            class="mx-7 text-subtitle-2 white--text py-5 bg-primary"
             depressed
             tile
             @click="dateTimePicker.isOpenPicker = true"

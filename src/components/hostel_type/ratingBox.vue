@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- eslint-disable max-len -->
-    <div class="d-flex" style="border: 1px solid #ccc !important; background: #f7f7f7 !important">
+    <div class="d-flex" style="border: 1px solid #ccc !important; background: #eeeeee !important">
       <v-col cols="3" class="flex justify-center">
         <span class="text-h5 font-nunito font-weight-bold" :style="{ color: '#F9A825' }">
           {{ rating.average }}
@@ -19,18 +19,20 @@
         <span class="text-body-2 font-nunito gray--text">({{ rating.total }} đánh giá)</span>
       </v-col>
       <v-col cols="9" class="d-flexd-flex flex-wrap">
-        <v-btn small class="ma-2 font-weight-bold" tile color="primary">Tất cả</v-btn>
-        <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary">5 sao (20)</v-btn>
-        <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary">4 sao (3)</v-btn>
-        <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary">3 sao (3)</v-btn>
-        <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary">2 sao (3)</v-btn>
-        <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary">1 sao (1)</v-btn>
-        <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary"
-          >Có bình luận (12)</v-btn
-        >
-        <v-btn small class="ma-2 font-weight-bold" tile outlined color="primary"
-          >Có hình ảnh / video (10)</v-btn
-        >
+        <v-btn small depressed class="ma-2 text-caption white--text" tile color="#727cf5">Tất cả</v-btn>
+        <v-btn small class="ma-2 font-weight-bold" tile outlined color="#727cf5">5 sao (20)</v-btn>
+        <v-btn small class="ma-2 font-weight-bold" tile outlined color="#727cf5">4 sao (3)</v-btn>
+        <v-btn small class="ma-2 font-weight-bold" tile outlined color="#727cf5">3 sao (3)</v-btn>
+        <v-btn small class="ma-2 font-weight-bold" tile outlined color="#727cf5">2 sao (3)</v-btn>
+        <v-btn small class="ma-2 font-weight-bold" tile outlined color="#727cf5">1 sao (1)</v-btn>
+        <v-btn small class="ma-2 font-weight-bold" tile outlined color="#727cf5">Có bình luận (12)</v-btn>
+        <v-btn
+          small
+          class="ma-2 font-weight-bold"
+          tile
+          outlined
+          color="#727cf5"
+        >Có hình ảnh / video (10)</v-btn>
       </v-col>
     </div>
     <ratingItem class="py-3" />
@@ -39,9 +41,11 @@
     <ratingItem class="py-3" />
     <v-row class="d-flex mt-5">
       <v-pagination
-        class="ml-auto"
+        class="ml-auto elevation-0"
         v-model="page"
         :length="4"
+        circle
+        color="#727cf5"
         prev-icon="mdi-menu-left"
         next-icon="mdi-menu-right"
       ></v-pagination>

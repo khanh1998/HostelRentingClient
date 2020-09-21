@@ -11,8 +11,7 @@
             <span
               class="font-weight-bold text-subtitle-2 py-0"
               :style="{ color: '#101526', textAlign: 'center' }"
-              >Chọn Ngày</span
-            >
+            >Chọn Ngày</span>
             <div :style="{ width: '30px', height: '2px', backgroundColor: '#4F60C9' }"></div>
           </v-card-text>
           <v-chip-group class="mt-3" mandatory light v-model="pickedDate" center-active show-arrows>
@@ -46,8 +45,7 @@
               class="text-caption px-4 py-2 mx-2 white--text"
               depressed
               @click="stepper.step += 1"
-              >Tiếp tục</v-btn
-            >
+            >Tiếp tục</v-btn>
             <v-btn
               small
               outlined
@@ -55,8 +53,7 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="$emit('cancel')"
-              >Hủy</v-btn
-            >
+            >Hủy</v-btn>
           </v-card-actions>
         </v-card>
       </div>
@@ -66,13 +63,10 @@
             <span
               class="font-weight-bold text-subtitle-2 py-0"
               :style="{ color: '#101526', textAlign: 'center' }"
-              >Chọn Giờ</span
-            >
+            >Chọn Giờ</span>
             <div :style="{ width: '30px', height: '2px', backgroundColor: '#4F60C9' }"></div>
           </v-card-text>
-          <span v-for="time in timesForDate" v-bind:key="time">
-            {{ time }}
-          </span>
+          <span v-for="time in timesForDate" v-bind:key="time">{{ time }}</span>
           <el-time-picker
             v-model="pickedTime"
             :picker-options="{
@@ -80,8 +74,7 @@
               step: '00:15:00',
             }"
             placeholder="Arbitrary time"
-          >
-          </el-time-picker>
+          ></el-time-picker>
           <v-chip-group v-model="selectedTime" light column center-active show-arrows>
             <v-chip
               light
@@ -93,8 +86,7 @@
               active-class="white--text"
               link
               @click="pickedTime = item"
-              >{{ item }}</v-chip
-            >
+            >{{ item }}</v-chip>
           </v-chip-group>
           <v-card-actions>
             <v-btn
@@ -104,8 +96,7 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="$emit('cancel')"
-              >Hủy</v-btn
-            >
+            >Hủy</v-btn>
             <v-btn
               small
               outlined
@@ -113,8 +104,7 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="stepper.step -= 1"
-              >Quay lại</v-btn
-            >
+            >Quay lại</v-btn>
             <v-btn
               v-if="pickedTime"
               small
@@ -122,8 +112,7 @@
               class="text-caption px-4 py-2 mx-2 white--text"
               depressed
               @click="stepper.step += 1"
-              >Tiếp tục</v-btn
-            >
+            >Tiếp tục</v-btn>
           </v-card-actions>
         </v-card>
       </div>
@@ -137,8 +126,7 @@
             <span
               class="text-subtitle-1 font-weight-medium"
               :style="{ color: '#5a669f', textAlign: 'center' }"
-              >Xác nhận bạn muốn đặt lịch hẹn xem phòng vào</span
-            >
+            >Xác nhận bạn muốn đặt lịch hẹn xem phòng vào</span>
             <div class="d-flex justify-space-between mt-6 px-4">
               <div class="d-flex align-center">
                 <div
@@ -147,9 +135,10 @@
                 >
                   <v-img max-height="15" max-width="15" src="../../assets/typeDetail/date.png" />
                 </div>
-                <span class="ml-2 text-subtitle-2" style="color: #101526">
-                  {{ `${dates[pickedDate].toLocaleDateString('vi-vn')}` }}
-                </span>
+                <span
+                  class="ml-2 text-subtitle-2"
+                  style="color: #101526"
+                >{{ `${dates[pickedDate].toLocaleDateString('vi-vn')}` }}</span>
               </div>
               <div class="d-flex align-center">
                 <div
@@ -158,9 +147,11 @@
                 >
                   <v-img max-height="15" max-width="15" src="../../assets/typeDetail/time.png" />
                 </div>
-                <span class="ml-2 text-subtitle-2" style="color: #101526">{{
+                <span class="ml-2 text-subtitle-2" style="color: #101526">
+                  {{
                   `${pickedTime.getHours()} : ${pickedTime.getMinutes()}`
-                }}</span>
+                  }}
+                </span>
               </div>
             </div>
           </v-card-text>
@@ -172,8 +163,7 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="$emit('cancel')"
-              >Hủy</v-btn
-            >
+            >Hủy</v-btn>
             <v-btn
               small
               outlined
@@ -181,16 +171,14 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="stepper.step -= 1"
-              >Quay lại</v-btn
-            >
+            >Quay lại</v-btn>
             <v-btn
               small
               color="#4F60C9"
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="$emit('ok', pickDateAndTime())"
-              >Đồng ý</v-btn
-            >
+            >Đồng ý</v-btn>
           </v-card-actions>
         </v-card>
       </div>
@@ -280,6 +268,7 @@ export default {
       let [startTime, endTime] = schedule.split('-');
       startTime = new Date(Date(startTime));
       endTime = new Date(Date(endTime));
+      console.log('thuy');
       const result = [];
       let current = new Date(startTime.getTime());
       while (current < endTime) {
