@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters v-if="!isLoading" class="fill-height d-flex flex-row flex-nowrap">
+  <v-row no-gutters v-if="!isLoading && groupId" class="fill-height d-flex flex-row flex-nowrap">
     <v-card width="auto" height="100%" class="overflow-hidden">
       <v-navigation-drawer
         v-model="drawer"
@@ -87,10 +87,7 @@ export default {
       getRooms: 'vendor/group/getRooms',
     }),
     getSelectedGroup() {
-      console.log('group list length', this.groups.length);
-      console.log('group id', this.groupId);
       const res = this.groups.find((groupItem) => groupItem.groupId === this.groupId);
-      console.log('result', JSON.stringify(res));
       return res;
     },
     getSelectedTypes() {
@@ -102,7 +99,6 @@ export default {
     this.getGroups().then(() => {
       this.getTypes().then(() => {
         this.getRooms().then(() => {
-          console.log('group - id', this.groups[0].groupId);
           if (this.groups.length > 0) {
             this.groupId = this.groups[0].groupId;
           }

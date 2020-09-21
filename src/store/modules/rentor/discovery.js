@@ -11,7 +11,10 @@ const myState = () => ({
 });
 
 const getters = {
-  getStatsByIds: (state) => (ids) => state.stats.streets.data.filter((street) => ids.includes(street.streetId)),
+  getStatsByIds: (state) => (ids) => {
+    const res = state.stats.streets.data.filter((street) => ids.includes(street.streetId));
+    return res;
+  },
   getAverage: (state) => (ids) => {
     const res = state.stats.streets.data.filter((street) => ids.includes(street.streetId));
     const init = {

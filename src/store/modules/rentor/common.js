@@ -36,11 +36,32 @@ const getters = {
     const result = state.categories.data.find((category) => category.categoryId === Number(id));
     return result;
   },
-  getStreetById: (state) => (id) => state.streets.data.find((street) => street.streetId === Number(id)),
-  getWardByStreetId: (state) => (id) => state.wards.data.find((ward) => ward.streets.find((street) => street.streetId === Number(id))),
+  getStreetById: (state) => (id) => {
+    const res = state.streets.data.find((street) => street.streetId === Number(id));
+    return res;
+  },
+  getWardByStreetId: (state) => (id) => {
+    const res = state.wards.data.find((ward) => {
+      const res1 = ward.streets.find((street) => street.streetId === Number(id));
+      return res1;
+    });
+    return res;
+  },
   getWardById: (state) => (id) => state.wards.data.find((ward) => ward.wardId === Number(id)),
-  getDistrictByWardId: (state) => (id) => state.districts.data.find((district) => district.wards.find((ward) => ward.wardId === Number(id))),
-  getProvinceByDistrictId: (state) => (id) => state.provinces.data.find((province) => province.districts.find((district) => district.districtId === Number(id))),
+  getDistrictByWardId: (state) => (id) => {
+    const res = state.districts.data.find((district) => {
+      const res1 = district.wards.find((ward) => ward.wardId === Number(id));
+      return res1;
+    });
+    return res;
+  },
+  getProvinceByDistrictId: (state) => (id) => {
+    const res = state.provinces.data.find((province) => {
+      const res1 = province.districts.find((district) => district.districtId === Number(id));
+      return res1;
+    });
+    return res;
+  },
 };
 const mutationTypes = {
   GET_PROVINCES_REQUEST: 'GET_PROVINCES_REQUEST',
