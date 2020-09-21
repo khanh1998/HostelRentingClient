@@ -2,6 +2,8 @@ const myState = () => ({
   provinces: {
     data: [],
     isLoading: false,
+    error: undefined,
+    success: undefined,
   },
   districts: {
     data: [],
@@ -15,6 +17,18 @@ const myState = () => ({
   categories: {
     data: [],
     isLoading: false,
+  },
+  facilities: {
+    data: [],
+    isLoading: false,
+    error: undefined,
+    success: undefined,
+  },
+  services: {
+    data: [],
+    isLoading: false,
+    error: undefined,
+    success: undefined,
   },
 });
 const getters = {
@@ -44,6 +58,14 @@ const mutationTypes = {
   GET_CATEGORIES_REQUEST: 'GET_CATEGORIES_REQUEST',
   GET_CATEGORIES_SUCCESS: 'GET_CATEGORIES_SUCCESS',
   GET_CATEGORIES_FAILURE: 'GET_CATEGORIES_FAILURE',
+
+  GET_SERVICES_REQUEST: 'GET_SERVICES_REQUEST',
+  GET_SERVICES_SUCCESS: 'GET_SERVICES_SUCCESS',
+  GET_SERVICES_FAILURE: 'GET_SERVICES_FAILURE',
+
+  GET_FACILITIES_REQUEST: 'GET_FACILITIES_REQUEST',
+  GET_FACILITIES_SUCCESS: 'GET_FACILITIES_SUCCESS',
+  GET_FACILITIES_FAILURE: 'GET_FACILITIES_FAILURE',
 };
 const mutations = {
   GET_CATEGORIES_REQUEST(state) {
@@ -56,6 +78,7 @@ const mutations = {
   GET_CATEGORIES_FAILURE(state) {
     state.categories.isLoading = false;
   },
+
   GET_PROVINCES_REQUEST(state) {
     state.provinces.isLoading = true;
   },
@@ -79,6 +102,34 @@ const mutations = {
   GET_PROVINCES_FAILURE(state) {
     state.provinces.isLoading = false;
   },
+
+  GET_FACILITIES_SUCCESS(state, inputData) {
+    state.facilities.data = inputData;
+    state.facilities.isLoading = false;
+    state.facilities.success = true;
+  },
+  GET_FACILITIES_FAILURE(state, error) {
+    state.facilities.isLoading = false;
+    state.facilities.error = error;
+    state.facilities.success = false;
+  },
+  GET_FACILITIES_REQUEST(state) {
+    state.facilities.isLoading = true;
+  },
+
+  GET_SERVICES_SUCCESS(state, inputData) {
+    state.services.data = inputData;
+    state.services.isLoading = false;
+    state.services.success = true;
+  },
+  GET_SERVICES_FAILURE(state, error) {
+    state.services.isLoading = false;
+    state.services.error = error;
+    state.services.success = false;
+  },
+  GET_SERVICES_REQUEST(state) {
+    state.services.isLoading = true;
+  },
 };
 const actions = {
   async getCategories({ commit, state }) {
@@ -101,6 +152,32 @@ const actions = {
       } else {
         commit(mutationTypes.GET_PROVINCES_FAILURE);
       }
+    }
+  },
+
+  async getAllFacilities1({ commit }) {
+    console.log('get all facilities');
+    try {
+      commit(mutationTypes.GET_FACILITIES_REQUEST);
+      const res = await window.axios.get('/api/v1/facilities');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_FACILITIES_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_FACILITIES_FAILURE, error);
+    }
+  },
+
+  async getAllServices1({ commit }) {
+    console.log('get all serverice');
+    try {
+      commit(mutationTypes.GET_SERVICES_REQUEST);
+      const res = await window.axios.get('/api/v1/services');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_SERVICES_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_SERVICES_FAILURE, error);
     }
   },
 };

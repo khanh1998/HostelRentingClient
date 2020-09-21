@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters v-if="!isLoadingGroup" class="fill-height d-flex flex-row flex-nowrap">
+  <v-row no-gutters v-if="!isLoading" class="fill-height d-flex flex-row flex-nowrap">
     <v-card width="auto" height="100%" class="overflow-hidden">
       <v-navigation-drawer
         v-model="drawer"
@@ -28,7 +28,7 @@
           v-on:close-menu="mini = !mini"
         />
       </v-navigation-drawer>
-      <HostelType :groups="groups" :groupId="groupId" @getTypeIdSelected="typeId = $event" />
+      <HostelType :typesData="getSelectedTypes()" @getTypeIdSelected="typeId = $event" />
     </v-card>
   </v-row>
 </template>
@@ -62,7 +62,7 @@ export default {
     groups() {
       return this.$store.state.vendor.group.groups.data;
     },
-    isLoadingGroup() {
+    isLoading() {
       return (
         this.$store.state.vendor.group.groups.isLoading ||
         this.$store.state.vendor.group.types.isLoading ||
@@ -86,16 +86,28 @@ export default {
       getTypes: 'vendor/group/getTypes',
       getRooms: 'vendor/group/getRooms',
     }),
-    listener(event) {
-      console.log(event);
+    getSelectedGroup() {
+      console.log('group list length', this.groups.length);
+      console.log('group id', this.groupId);
+      const res = this.groups.find((groupItem) => groupItem.groupId === this.groupId);
+      console.log('result', JSON.stringify(res));
+      return res;
+    },
+    getSelectedTypes() {
+      return this.getSelectedGroup().types;
     },
   },
+
   async created() {
     this.getGroups().then(() => {
-      if (this.groups.length > 0) {
-        this.groupId = this.groups[0].groupId;
-      }
-      this.getTypes().then(() => this.getRooms());
+      this.getTypes().then(() => {
+        this.getRooms().then(() => {
+          console.log('group - id', this.groups[0].groupId);
+          if (this.groups.length > 0) {
+            this.groupId = this.groups[0].groupId;
+          }
+        });
+      });
     });
   },
 };
