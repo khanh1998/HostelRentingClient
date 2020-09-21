@@ -1,8 +1,7 @@
 import VendorView from '../../main-view/Vendor.vue';
-import ChatDetail from '../../views/vendor/ChatDetail.vue';
 import Overview from '../../views/vendor/Overview.vue';
 import HostelManagement from '../../views/vendor/HostelManagement.vue';
-import QRGeneration from '../../components/vendor/QRGeneration.vue';
+import QRGeneration from '../../components/vendor/overview/QRGeneration.vue';
 import VendorBooking from '../../views/vendor/Booking.vue';
 import VendorSchedule from '../../views/vendor/Schedule.vue';
 
@@ -12,12 +11,6 @@ const routes = [
     name: 'VendorMainView',
     component: VendorView,
     children: [
-      {
-        path: 'chat',
-        name: 'ChatDetail',
-        component: ChatDetail,
-        meta: { requiresAuth: true, is_vendor: true },
-      },
       {
         path: '',
         name: 'Overview',

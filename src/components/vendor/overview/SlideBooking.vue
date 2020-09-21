@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-sheet class="mx-auto rounded" elevation="1" max-width="100%">
+    <v-sheet class="mx-auto rounded" elevation="0" max-width="100%">
       <div
         class="d-flex justify-md-space-between flex-column flex-md-row"
         v-if="bookings.length > 0"
       >
         <div class="d-flex align-center justify-center justify-md-left">
-          <span class="font-weight-medium text-h6 text-center ml-2">Lịch hẹn xem phòng</span>
+          <span class="font-weight-medium text-h6 text-center ml-3">Lịch hẹn xem phòng</span>
           <span style="color: #818286;" v-if="bookings.length > 0" class="ml-2">
             <router-link to="vendor/booking" class="text-decoration-none">Xem thêm >></router-link>
           </span>
@@ -26,7 +26,7 @@
         >
           <v-card
             class="ma-3 rounded-l"
-            height="180"
+            elevation="1"
             width="250"
             :color="active ? 'indigo lighten-5' : 'white'"
             @click="toggle"
@@ -36,15 +36,15 @@
               style="background-color: #98b7d7; height: 28%; width: 100%;"
               class="d-flex justify-end"
             >
-              <p style="fontweight: bold; color: white;">
+              <span style="fontweight: bold; color: white;">
                 {{ getDateString(Number(booking.meetTime)) }}
-              </p>
+              </span>
               <v-divider vertical class="mx-3"></v-divider>
-              <p style="fontweight: bold; color: white;">
+              <span style="fontweight: bold; color: white;">
                 {{ getTimeString(Number(booking.meetTime)) }}
-              </p>
+              </span>
             </v-col>
-            <v-list-item class="mb-2 pt-2">
+            <v-list-item dense class="mb-2 pt-2">
               <v-list-item-avatar>
                 <v-img :src="booking.renter.avatar"></v-img>
               </v-list-item-avatar>

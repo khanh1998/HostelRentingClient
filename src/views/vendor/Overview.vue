@@ -14,7 +14,7 @@
       </v-card>
     </v-dialog>
     <v-row v-if="!isLoading">
-      <v-col cols="12" md="8">
+      <v-col cols="12" md="9">
         <v-row no-gutters>
           <v-col cols="12">
             <SlideBooking />
@@ -29,11 +29,11 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="12" md="4" order="first" order-md="last">
+      <v-col cols="12" md="3" order="first" order-md="last">
         <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
       </v-col>
     </v-row>
-    <v-card style="position: absolute; right: 20px; bottom: 10px; height: auto; width: 350px">
+    <v-card style="position: absolute; right: 20px; bottom: 10px; height: auto; width: 350px;">
       <Chatbox
         v-if="this.docs.doc1"
         :doc="this.docs.doc1"
@@ -41,7 +41,7 @@
         v-on:closeChat="closeChatBox($event)"
       />
     </v-card>
-    <v-card style="position: absolute; right: 370px; bottom: 10px; height: auto; width: 350px">
+    <v-card style="position: absolute; right: 370px; bottom: 10px; height: auto; width: 350px;">
       <Chatbox
         v-if="this.docs.doc2"
         :doc="this.docs.doc2"
@@ -49,7 +49,7 @@
         v-on:closeChat="closeChatBox($event)"
       />
     </v-card>
-    <v-card style="position: absolute; right: 720px; bottom: 10px; height: auto; width: 350px">
+    <v-card style="position: absolute; right: 720px; bottom: 10px; height: auto; width: 350px;">
       <Chatbox
         v-if="this.docs.doc3"
         :doc="this.docs.doc3"
@@ -61,11 +61,11 @@
 </template>
 <script>
 import { mapActions } from 'vuex';
-import ChatList from '@/components/vendor/ChatList.vue';
-import SlideBooking from '@/components/vendor/SlideBooking.vue';
-import SuggestContract from '@/components/vendor/SuggestContract.vue';
-import Chatbox from '@/components/vendor/Chatbox.vue';
-import ShowEmptyRoom from '../../components/vendor/ShowEmptyRoom.vue';
+import ChatList from '@/components/vendor/overview/ChatList.vue';
+import SlideBooking from '@/components/vendor/overview/SlideBooking.vue';
+import SuggestContract from '@/components/vendor/overview/SuggestContract.vue';
+import Chatbox from '@/components/vendor/overview/Chatbox.vue';
+import ShowEmptyRoom from '../../components/vendor/overview/ShowEmptyRoom.vue';
 
 export default {
   name: 'Overview',

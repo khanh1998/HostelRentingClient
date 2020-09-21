@@ -49,18 +49,20 @@
               :headers="servicesBox.headers"
               :items="groupServiceDesserts"
               class="elevation-1"
+              dense
+              :items-per-page="5"
             >
               <template v-slot:item.price="{ item }">
-                <v-text-field v-model="item.price" hide-details></v-text-field>
+                <v-text-field v-model="item.price" hide-details suffix="Nghìn"></v-text-field>
               </template>
-              <template v-slot:item.unit="{ item }">
-                <v-text-field v-model="item.unit" hide-details></v-text-field>
+              <template v-slot:item.unit="{}">
                 <v-select
                   menu-props="auto"
                   label="Select"
                   hide-details
                   prepend-icon="map"
                   single-line
+                  :items="servicesBox.units"
                 ></v-select>
               </template>
             </v-data-table>
@@ -101,14 +103,15 @@ export default {
       servicesBox: {
         headers: [
           {
-            text: 'Service name',
+            text: 'Tên dịch vụ',
             align: 'start',
             sortable: false,
             value: 'name',
           },
-          { text: 'Price', value: 'price' },
-          { text: 'Unit', value: 'unit' },
+          { text: 'Giá', value: 'price' },
+          { text: 'Đơn vị đo', value: 'unit' },
         ],
+        units: ['/m3', '/KWh', '/Người/Tháng', '/Phòng/Tháng', '/Xe/Tháng'],
       },
       facilitiesBox: {},
       rules: {},

@@ -1,5 +1,9 @@
 <template>
-  <v-card v-if="!isLoadingRenterList || !isLoadingUser" :loading="isLoadingRenterList">
+  <v-card
+    v-if="!isLoadingRenterList || !isLoadingUser"
+    :loading="isLoadingRenterList"
+    height="100%"
+  >
     <v-card flat>
       <v-toolbar color="#6C98C6" dark flat>
         <v-text-field
@@ -92,7 +96,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import firebase from '../../config/firebase';
+import firebase from '../../../config/firebase';
 
 const { store } = firebase;
 const chatCollectionRef = store.collection('chat');

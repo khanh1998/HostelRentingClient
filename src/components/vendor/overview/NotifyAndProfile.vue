@@ -21,21 +21,21 @@
         :nav="true"
         :avatar="true"
         class="rounded-l"
-        style="height: 405px; width: 300px"
+        style="height: 405px; width: 300px;"
       >
         <v-list-item-group color="primary">
           <v-list-item
             v-for="(item, i) in notifications"
             :key="i"
             class="mb-2 pt-2"
-            style="backgroundcolor: #f2f2f2"
+            style="backgroundcolor: #f2f2f2;"
             @click="$emit('clickedItem', getItemSelected(item))"
           >
             <v-list-item-avatar>
               <v-img :src="item.avatar"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title style="fontsize: 16px" class="py-1">
+              <v-list-item-title style="fontsize: 16px;" class="py-1">
                 {{ item.title }}
               </v-list-item-title>
               <v-list-item-subtitle>Đã đặt lịch hẹn ngày {{ item.message }}</v-list-item-subtitle>
@@ -73,7 +73,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import firebase from '../../config/firebase';
+import firebase from '../../../config/firebase';
 
 const { messaging } = firebase;
 

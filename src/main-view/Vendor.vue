@@ -31,7 +31,7 @@
     </v-app-bar>
 
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="fill-height">
         <router-view />
       </v-container>
     </v-main>
@@ -41,7 +41,7 @@
 <script>
 import { mapActions } from 'vuex';
 import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
-import notifyAndProfile from '../components/vendor/NotifyAndProfile.vue';
+import notifyAndProfile from '../components/vendor/overview/NotifyAndProfile.vue';
 
 export default {
   name: 'VendorView',
