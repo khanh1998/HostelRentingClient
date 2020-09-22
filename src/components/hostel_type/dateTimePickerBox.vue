@@ -80,10 +80,7 @@
           <v-card-title class="headline">Xác nhận đặt lịch</v-card-title>
           <v-card-text v-if="dateTimePicker.date != null && dateTimePicker.time != null">
             Bạn muốn đặt lịch vào ngày
-            <span>
-              {{ dateTimePicker.date.getDate() }}/ {{ dateTimePicker.date.getMonth() }}/
-              {{ dateTimePicker.date.getFullYear() }},
-            </span>
+            <span>{{ dateTimePicker.date }}</span>
             vào lúc {{ dateTimePicker.time }} tại nhà trọ {{ name }}
           </v-card-text>
           <v-card-actions>
@@ -149,17 +146,14 @@ export default {
     async sendBooking() {
       this.dialog.booking = false;
       this.showSnackbar('yellow', 'Booking của bạn đang được tạo');
-      const [hours, minutes] = this.dateTimePicker.time.split(':');
-      this.dateTimePicker.date.setHours(hours);
-      this.dateTimePicker.date.setMinutes(minutes);
-      this.dateTimePicker.date.setSeconds(0);
+      console.log(this.dateTimePicker);
       const bookingObj = {
         renterId: this.userState.data.userId,
         vendorId: this.vendorId,
         typeId: this.typeId,
         status: 'INCOMING',
         dealId: null,
-        meetTime: this.dateTimePicker.date.getTime(),
+        meetTime: this.dateTimePicker.time,
       };
       await this.createBooking(bookingObj);
       const success = this.newlyCreated;

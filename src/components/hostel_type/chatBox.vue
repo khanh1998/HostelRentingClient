@@ -114,12 +114,13 @@
                 outlined
                 dense
                 light
-                hide-details
+                _hide-details
                 v-model="bargainOverlay.price"
                 suffix="Triệu"
                 step="0.1"
                 min="0"
-                :max="`${info.price}`"
+                :max="`${info.price - 0.1}`"
+                :rules="[rules.required,rules.max(bargainOverlay.price,info.price), rules.min(bargainOverlay.price)]"
               />
             </v-list-item-content>
           </v-list-item>
@@ -348,6 +349,7 @@
         </v-list-item>
       </v-list>
     </div>
+    <!-- chat -->
     <div class="input">
       <div class="d-flex flex-no-wrap mt-1 mx-2">
         <v-text-field
@@ -596,6 +598,15 @@ export default {
     },
   },
   data: () => ({
+    rules: {
+      required: (value) => !!value || 'Giá không hợp lệ',
+      max(value, max) {
+        return (value || 'Giá không hợp lệ') < max || `Giá thuê nên nhỏ hơn ${max}`;
+      },
+      min(value) {
+        return (value || 'Giá không hợp lệ') > 0 || 'Giá thuê nên lớn hơn 0';
+      },
+    },
     bookingCancel: {
       show: false,
       id: {

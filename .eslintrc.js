@@ -11,6 +11,7 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'operator-linebreak': ['error', 'after'],
+    'max-len': ['warn', { code: 200 }],
   },
   overrides: [
     {
