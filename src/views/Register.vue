@@ -5,8 +5,7 @@
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
       <v-container class="fill-height">
-        <!-- <div v-show="!showRenterInfor" style="width: 100%"> -->
-        <div v-show="false" style="width: 100%">
+        <div v-show="!showRenterInfor" style="width: 100%">
           <div v-show="!showRole" style="width: 100%">
             <v-row class="d-flex justify-center align-center">
               <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="flex pa-0">
@@ -201,6 +200,7 @@
                       <span class="font-nunito">Hỗ trợ trả giá và đặt lịch hẹn xem phòng</span>
                     </div>
                     <v-btn
+                      @click="chooseRenter()"
                       min-width="100%"
                       class="bg-primary white--text font-nunito align-self-center text-body-2 py-5 mt-auto bt-primary-hover d-flex align-center"
                     >XÁC NHẬN</v-btn>
@@ -252,11 +252,10 @@
           </div>
         </div>
         <!-- <div v-show="showRenterInfor" style="width: 100%"> -->
-        <div v-show="true" style="width: 100%" v-if="!isLoading">
+        <div v-show="showRenterInfor" style="width: 100%" v-if="!isLoading">
           <v-row class="d-flex justify-center align-center">
             <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="flex pa-0">
               <v-card
-                v-show="!vetify"
                 style="width: 100%; box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
                 class="pb-4"
               >
@@ -376,6 +375,9 @@ export default {
     },
     showRoleConfirmation() {
       this.showRole = true;
+    },
+    chooseRenter() {
+      this.showRenterInfor = true;
     },
   },
   computed: {
