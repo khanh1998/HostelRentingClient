@@ -1,4 +1,5 @@
 import Login from '../../views/Login.vue';
+import Register from '../../views/Register.vue';
 
 const routes = [
   {
@@ -7,6 +8,12 @@ const routes = [
     component: Login,
     children: [],
     props: true, // Pass route.params to props
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
+    children: [],
   },
 ];
 

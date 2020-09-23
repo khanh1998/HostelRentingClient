@@ -33,6 +33,11 @@ export default {
   box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
   border-radius: 0.15rem !important;
 }
+.bt-primary-hover:hover {
+  color: #fff;
+  background-color: #4250f2 !important;
+  border-color: #3645f1 !important;
+}
 .btn-success {
   color: #fff !important;
   background-color: #0acf97 !important;
@@ -55,6 +60,12 @@ export default {
 }
 .text-warning {
   color: #ffbc00 !important;
+}
+.text-muted {
+  color: #98a6ad !important;
+}
+.text-gray-dark {
+  color: #343a40;
 }
 .bg-secondary {
   color: #727cf5 !important;
