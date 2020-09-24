@@ -8,7 +8,7 @@
         <div v-show="!showRenterInfor" style="width: 100%">
           <div v-show="!showRole" style="width: 100%">
             <v-row class="d-flex justify-center align-center">
-              <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="flex pa-0">
+              <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
                 <v-card
                   v-show="!vetify"
                   style="width: 100%; box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
@@ -171,7 +171,7 @@
               </v-col>
             </v-row>
             <v-row class="d-flex justify-space-around align-center">
-              <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="flex pa-0">
+              <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
                 <v-card
                   style="width: 100%; box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
                   class="pb-4"
@@ -207,7 +207,7 @@
                   </v-card-text>
                 </v-card>
               </v-col>
-              <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="flex pa-0">
+              <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
                 <v-card
                   style="width: 100%; box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
                   class="pb-4"
@@ -251,14 +251,10 @@
             </v-row>
           </div>
         </div>
-        <!-- <div v-show="showRenterInfor" style="width: 100%"> -->
-        <div v-show="showRenterInfor" style="width: 100%" v-if="!isLoading">
-          <v-row class="d-flex justify-center align-center">
-            <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="flex pa-0">
-              <v-card
-                style="width: 100%; box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
-                class="pb-4"
-              >
+        <div v-show="showRenterInfor" style="width: 100%">
+          <v-row v-show="true" v-if="!isLoading" class="d-flex justify-center align-center">
+            <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
+              <v-card style="box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;" class="pb-4">
                 <div
                   class="py-4"
                   style="background-color: #727cf5!important; border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;"

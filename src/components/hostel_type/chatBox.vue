@@ -474,6 +474,7 @@ export default {
         createdAt: Date.now(),
         sender: 'renter',
       };
+      console.log(content);
       this.createDoc().then(() => {
         if (type === null) {
           console.log('content', content);
@@ -543,7 +544,6 @@ export default {
     scrollToBottom() {
       // eslint-disable-next-line
       const chatbox = this.$refs.chatbox;
-      console.log(chatbox);
       chatbox.scrollTop = chatbox.scrollHeight;
     },
     receiveDateTime(e) {

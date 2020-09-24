@@ -14,7 +14,6 @@
             >Chọn Ngày</span>
             <div :style="{ width: '30px', height: '2px', backgroundColor: '#4F60C9' }"></div>
           </v-card-text>
-          {{pickedDate}}
           <v-chip-group class="mt-3" mandatory light v-model="pickedDate" center-active show-arrows>
             <v-chip
               light
@@ -62,7 +61,6 @@
             >Chọn Giờ</span>
             <div :style="{ width: '30px', height: '2px', backgroundColor: '#4F60C9' }"></div>
           </v-card-text>
-          {{selectedTime}}
           <v-chip-group v-model="selectedTime" light column center-active show-arrows>
             <v-chip
               v-for="item in schedules[pickedDate].freeTimes"
@@ -297,8 +295,6 @@ export default {
           schedules.push(day);
         }
       }
-      console.log('thuy');
-      console.log(schedules);
       this.schedules = schedules;
     },
     pickDateAndTime() {

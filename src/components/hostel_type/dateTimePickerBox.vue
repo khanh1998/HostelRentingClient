@@ -147,14 +147,23 @@ export default {
       this.dialog.booking = false;
       this.showSnackbar('yellow', 'Booking của bạn đang được tạo');
       console.log(this.dateTimePicker);
+      const dateTime = this.dateTimePicker.date.split('/');
+      const timeTime = this.dateTimePicker.time.split(':');
       const bookingObj = {
         renterId: this.userState.data.userId,
         vendorId: this.vendorId,
         typeId: this.typeId,
         status: 'INCOMING',
         dealId: null,
-        meetTime: this.dateTimePicker.time,
+        meetTime: new Date(
+          dateTime[2],
+          dateTime[1],
+          dateTime[0],
+          timeTime[0],
+          timeTime[1],
+        ).getTime(),
       };
+      console.log(bookingObj);
       await this.createBooking(bookingObj);
       const success = this.newlyCreated;
       if (success) {
