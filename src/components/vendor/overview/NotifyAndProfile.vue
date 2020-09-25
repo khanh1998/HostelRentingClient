@@ -47,8 +47,8 @@
     <div class="d-flex flex-nowrap align-center ml-3">
       <v-menu left :offset-y="true" v-if="!isLoadingUser">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" x-large depressed>
-            <v-avatar size="45">
+          <v-btn v-bind="attrs" v-on="on" large depressed>
+            <v-avatar size="30">
               <v-img :src="user.avatar"></v-img>
             </v-avatar>
             <p class="font-weight-medium mb-0 ml-2 hidden-sm-and-down">{{ user.username }}</p>

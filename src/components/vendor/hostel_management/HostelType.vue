@@ -13,11 +13,11 @@
       hide-default-footer
       @page-count="pageCount = $event"
       sort-by="status"
-      class="ml-15"
+      class="ml-16"
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title style="fontsize: 20px; color: #6c98c6;">Loại phòng</v-toolbar-title>
+          <v-toolbar-title>Loại phòng</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-card-title>
             <v-text-field

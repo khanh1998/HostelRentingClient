@@ -5,7 +5,6 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
-    children: [],
     props: true, // Pass route.params to props
   },
 ];

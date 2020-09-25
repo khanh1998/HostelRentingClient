@@ -22,7 +22,7 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar :clipped-left="primaryDrawer.clipped" app>
+    <v-app-bar hide-on-scroll :clipped-left="primaryDrawer.clipped" app dense>
       <v-app-bar-nav-icon @click.stop="primaryDrawer.model = !primaryDrawer.model">
       </v-app-bar-nav-icon>
       <v-toolbar-title>TD Hostel</v-toolbar-title>
@@ -30,8 +30,8 @@
       <notify-and-profile />
     </v-app-bar>
 
-    <v-main>
-      <v-container fluid class="fill-height">
+    <v-main style="max-height: calc(100vh); overflow-y: hidden;">
+      <v-container fluid style="max-height: 100%;" class="d-flex flex-column">
         <router-view />
       </v-container>
     </v-main>
@@ -77,3 +77,11 @@ export default {
   },
 };
 </script>
+<style scoped>
+.full-height {
+  min-height: 100%;
+  max-height: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+</style>

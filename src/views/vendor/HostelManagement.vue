@@ -1,6 +1,6 @@
 <template>
   <v-row no-gutters v-if="!isLoading && groupId" class="fill-height d-flex flex-row flex-nowrap">
-    <v-card width="auto" height="100%" class="overflow-hidden">
+    <v-card width="100%" height="100%" class="overflow-hidden">
       <v-navigation-drawer
         v-model="drawer"
         :mini-variant="miniVariant"
@@ -28,6 +28,7 @@
           v-on:close-menu="mini = !mini"
         />
       </v-navigation-drawer>
+      <HostelGroupActions :groupData="getSelectedGroup()" />
       <HostelType :typesData="getSelectedTypes()" @getTypeIdSelected="typeId = $event" />
     </v-card>
   </v-row>
@@ -35,7 +36,7 @@
 <script>
 import HostelGroup from '@/components/vendor/hostel_management/HostelGroup.vue';
 import HostelType from '@/components/vendor/hostel_management/HostelType.vue';
-// import HostelRoom from '@/components/vendor/hostel_management/HostelRoom.vue';
+import HostelGroupActions from '@/components/vendor/hostel_management/HostelGroupActions.vue';
 import { mapActions } from 'vuex';
 
 export default {
@@ -43,7 +44,7 @@ export default {
   components: {
     HostelGroup,
     HostelType,
-    // HostelRoom,
+    HostelGroupActions,
   },
   data: () => ({
     groupId: null,

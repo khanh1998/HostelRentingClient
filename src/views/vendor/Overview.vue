@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="overflow-y: hidden; height: calc(100vh - 72px);" class="d-flex flex-column">
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -13,26 +13,28 @@
         />
       </v-card>
     </v-dialog>
-    <v-row v-if="!isLoading">
-      <v-col cols="12" md="9">
-        <v-row no-gutters>
-          <v-col cols="12">
-            <SlideBooking />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" lg="4">
+    <div
+      v-if="!isLoading"
+      class="d-flex flex-row flex-nowrap"
+      style="overflow-y: hidden; height: 100%;"
+    >
+      <div style="width: 70vw; height: 100%; overflow-y: hidden;" class="d-flex flex-column">
+        <div class="pa-2">
+          <SlideBooking />
+        </div>
+        <div class="d-flex flex-row" style="height: 100%; overflow-y: hidden;">
+          <div style="width: 50%; overflow: hidden; height: 100%;" class="pa-1">
             <SuggestContract />
-          </v-col>
-          <v-col cols="12" lg="8">
+          </div>
+          <div style="width: 50%; height: 100%; overflow: hidden;" class="pa-2">
             <ShowEmptyRoom />
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="12" md="3" order="first" order-md="last">
+          </div>
+        </div>
+      </div>
+      <div style="width: 30vw; height: 100%;" class="hidden-sm-and-down pa-2">
         <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
-      </v-col>
-    </v-row>
+      </div>
+    </div>
     <v-card style="position: absolute; right: 20px; bottom: 10px; height: auto; width: 350px;">
       <Chatbox
         v-if="this.docs.doc1"
@@ -186,4 +188,9 @@ export default {
   },
 };
 </script>
-<style></style>
+<style scoped>
+/* body {
+  max-height: calc(100vh);
+  overflow: hidden;
+} */
+</style>

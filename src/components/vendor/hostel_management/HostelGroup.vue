@@ -21,7 +21,6 @@
                 >
               </v-list-item-content>
               <v-list-item-action class="d-flex flex-row">
-                <HostelGroupEditor :groupData="item" />
                 <v-btn color="red" icon dark small @click="$emit('delete', item.groupId)">
                   <v-icon dark>mdi-delete</v-icon>
                 </v-btn>
@@ -35,12 +34,9 @@
 </template>
 
 <script>
-import HostelGroupEditor from './HostelGroupEditor.vue';
-
 export default {
   name: 'HostelGroup',
   props: ['groups'],
-  components: { HostelGroupEditor },
   methods: {
     getGroupItem(item) {
       this.groupItem = item;

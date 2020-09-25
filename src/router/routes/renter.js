@@ -12,7 +12,6 @@ import DiscoveryDistrict from '../../views/renter/DiscoveryDistrict.vue';
 const routes = [
   {
     path: '/',
-    name: 'RenterMainView',
     component: RenterView,
     children: [
       {

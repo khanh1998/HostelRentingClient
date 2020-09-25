@@ -8,7 +8,6 @@ import VendorSchedule from '../../views/vendor/Schedule.vue';
 const routes = [
   {
     path: '/vendor',
-    name: 'VendorMainView',
     component: VendorView,
     children: [
       {
