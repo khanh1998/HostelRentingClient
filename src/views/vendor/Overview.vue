@@ -22,13 +22,8 @@
         <div class="pa-2">
           <SlideBooking />
         </div>
-        <div class="d-flex flex-row" style="height: 100%; overflow-y: hidden;">
-          <div style="width: 50%; overflow: hidden; height: 100%;" class="pa-1">
-            <SuggestContract />
-          </div>
-          <div style="width: 50%; height: 100%; overflow: hidden;" class="pa-2">
-            <ShowEmptyRoom />
-          </div>
+        <div class="d-flex flex-column" style="height: 100%; overflow-y: hidden;">
+          <HostelGroupsOverview />
         </div>
       </div>
       <div style="width: 30vw; height: 100%;" class="hidden-sm-and-down pa-2">
@@ -65,18 +60,16 @@
 import { mapActions } from 'vuex';
 import ChatList from '@/components/vendor/overview/ChatList.vue';
 import SlideBooking from '@/components/vendor/overview/SlideBooking.vue';
-import SuggestContract from '@/components/vendor/overview/SuggestContract.vue';
 import Chatbox from '@/components/vendor/overview/Chatbox.vue';
-import ShowEmptyRoom from '../../components/vendor/overview/ShowEmptyRoom.vue';
+import HostelGroupsOverview from '../../components/vendor/overview/HostelGroupsOverview.vue';
 
 export default {
   name: 'Overview',
   components: {
     ChatList,
     SlideBooking,
-    SuggestContract,
     Chatbox,
-    ShowEmptyRoom,
+    HostelGroupsOverview,
   },
   data: () => ({
     docList: [],

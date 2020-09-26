@@ -1,11 +1,7 @@
 <template>
-  <div
-    v-if="!groups.isLoading"
-    class="d-flex flex-column"
-    style="height: 100%; overflow-y: scroll;"
-  >
+  <div v-if="!groups.isLoading" class="d-flex flex-column" style="height: 100%;">
     <div class="text-h6 font-weight-thin">Thống kê</div>
-    <div class="hidden-sm-and-down">
+    <div class="hidden-sm-and-down" style="overflow-y: auto;">
       <v-row>
         <v-col v-for="group in groups.data" :key="group.groupId" cols="12" md="6">
           <v-card>
@@ -50,7 +46,10 @@
 <script>
 export default {
   name: 'showEmptyRoom',
-  data: () => ({}),
+  props: ['group'],
+  data: () => ({
+    state: {},
+  }),
   methods: {},
   computed: {
     groups() {
@@ -81,6 +80,34 @@ export default {
         });
       }
       return count;
+    },
+  },
+  watch: {
+    group(newGroup) {
+      const { types } = newGroup;
+      let total = 0;
+      let empty = 0;
+      const count = {
+        total: 0,
+        count: 0,
+      };
+      // eslint-disable-next-line
+      for (const type of types) {
+        if (type.rooms) {
+          total += type.rooms.length;
+          empty += type.rooms.filter((room) => !room.available).length;
+        }
+      }
+      types.reduce((count, type) => {
+        if (type.rooms) {
+          count.total += type.rooms.length;
+          count.empty += type.rooms.filter((room) => !room.available).length;
+        }
+      });
+      this.stat = {
+        total,
+        empty,
+      };
     },
   },
 };

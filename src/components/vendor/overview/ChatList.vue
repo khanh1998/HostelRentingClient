@@ -4,7 +4,7 @@
     class="d-flex flex-column"
     style="height: 100%;"
   >
-    <v-toolbar color="#6C98C6" dark flat style="flex: 0 1 auto;">
+    <v-toolbar color="#6C98C6" dark flat>
       <v-text-field
         class="ma-3"
         flat
@@ -16,47 +16,47 @@
     </v-toolbar>
 
     <div style="height: 100%; overflow-y: auto;">
-      <!-- <vue-scroll> -->
-      <v-list two-line nav avatar class="rounded-l">
-        <v-list-item-group color="primary">
-          <v-list-item
-            dense
-            v-for="item in docsHasMessage"
-            :key="item.id"
-            @click="$emit('clickChat', getDocRef(item.id))"
-          >
-            <v-list-item-avatar>
-              <v-img :src="getUserById(item.renterId).avatar || '#'"></v-img>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>{{ getUserById(item.renterId).username }}</v-list-item-title>
-              <v-list-item-subtitle v-if="item.lastedMessage.message">
-                <span
-                  v-bind:class="{
-                    'font-weight-bold': !item.lastedMessage.seen,
-                  }"
-                >
-                  {{ item.lastedMessage.message }}
-                </span>
-              </v-list-item-subtitle>
-              <v-list-item-subtitle v-if="item.lastedMessage.book">
-                Đặt lịch vào
-                {{ item.lastedMessage.book.time }}
-                {{ item.lastedMessage.book.date }}
-              </v-list-item-subtitle>
-              <v-list-item-subtitle v-if="item.lastedMessage.bargain"
-                >Trả giá {{ item.lastedMessage.bargain.newPrice }} triệu
-              </v-list-item-subtitle>
-            </v-list-item-content>
-            <v-list-item-icon>
-              <v-icon v-if="item.lastedMessage.book" color="pink"> event</v-icon>
-              <v-icon v-if="item.lastedMessage.bargain" color="amber"> attach_money</v-icon>
-              <v-icon v-if="item.lastedMessage.message" color="green"> chat</v-icon>
-            </v-list-item-icon>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-      <!-- </vue-scroll> -->
+      <vue-scroll>
+        <v-list two-line nav avatar class="rounded-l">
+          <v-list-item-group color="primary">
+            <v-list-item
+              dense
+              v-for="item in docsHasMessage"
+              :key="item.id"
+              @click="$emit('clickChat', getDocRef(item.id))"
+            >
+              <v-list-item-avatar>
+                <v-img :src="getUserById(item.renterId).avatar || '#'"></v-img>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>{{ getUserById(item.renterId).username }}</v-list-item-title>
+                <v-list-item-subtitle v-if="item.lastedMessage.message">
+                  <span
+                    v-bind:class="{
+                      'font-weight-bold': !item.lastedMessage.seen,
+                    }"
+                  >
+                    {{ item.lastedMessage.message }}
+                  </span>
+                </v-list-item-subtitle>
+                <v-list-item-subtitle v-if="item.lastedMessage.book">
+                  Đặt lịch vào
+                  {{ item.lastedMessage.book.time }}
+                  {{ item.lastedMessage.book.date }}
+                </v-list-item-subtitle>
+                <v-list-item-subtitle v-if="item.lastedMessage.bargain"
+                  >Trả giá {{ item.lastedMessage.bargain.newPrice }} triệu
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-icon>
+                <v-icon v-if="item.lastedMessage.book" color="pink"> event</v-icon>
+                <v-icon v-if="item.lastedMessage.bargain" color="amber"> attach_money</v-icon>
+                <v-icon v-if="item.lastedMessage.message" color="green"> chat</v-icon>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </vue-scroll>
     </div>
   </div>
 </template>
