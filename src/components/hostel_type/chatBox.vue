@@ -435,24 +435,27 @@ export default {
     book(content) {
       this.bargainOverlay.show = false;
       const newContent = content;
-      const [hours, minutes] = this.dateTimeOverlay.time.split(':');
-      this.dateTimeOverlay.date.setHours(hours);
-      this.dateTimeOverlay.date.setMinutes(minutes);
-      this.dateTimeOverlay.date.setSeconds(0);
-      const { date } = this.dateTimeOverlay;
       newContent.book = {
-        date: this.getSimpleFormatDate(date),
+        date: this.dateTimeOverlay.date,
         time: this.dateTimeOverlay.time,
         cancel: false,
       };
       const renterId = this.userState.data.userId;
       const { vendorId, typeId } = this.id;
       const lastedDeal = this.findLastedDeal(renterId, vendorId, typeId);
+      const dateTime = this.dateTimeOverlay.date.split('/');
+      const timeTime = this.dateTimeOverlay.time.split(':');
       const bookingToApi = {
         renterId,
         vendorId,
         typeId,
-        meetTime: `${date.getTime()}`,
+        meetTime: new Date(
+          dateTime[2],
+          dateTime[1],
+          dateTime[0],
+          timeTime[0],
+          timeTime[1],
+        ).getTime(),
         dealId: lastedDeal ? lastedDeal.dealId : null,
         status: 'INCOMING',
       };
@@ -546,7 +549,8 @@ export default {
       const chatbox = this.$refs.chatbox;
       chatbox.scrollTop = chatbox.scrollHeight;
     },
-    receiveDateTime(e) {
+    receivedDateTime(e) {
+      console.log('thenag');
       this.dateTimeOverlay.show = false;
       this.dateTimeOverlay.date = e.date;
       this.dateTimeOverlay.time = e.time;

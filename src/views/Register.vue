@@ -441,7 +441,6 @@ export default {
           // ...
           // route to set password !
           this.showRole = true;
-          // vm.$router.push({ path: '/setPassword' });
         })
         .catch((error) => {
           console.log(error);
@@ -458,6 +457,7 @@ export default {
             // reCAPTCHA solved, allow signInWithPhoneNumber.
             // ...
           },
+          // eslint-disable-next-line
           'expired-callback': function () {
             // Response expired. Ask user to solve reCAPTCHA again.
             // ...

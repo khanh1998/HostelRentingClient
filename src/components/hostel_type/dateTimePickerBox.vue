@@ -163,9 +163,9 @@ export default {
           timeTime[1],
         ).getTime(),
       };
-      console.log(bookingObj);
       await this.createBooking(bookingObj);
       const success = this.newlyCreated;
+      console.log(this.newlyCreated);
       if (success) {
         this.showSnackbar('success', 'Bạn đã đặt lịch hẹn xem phòng thành công!!!');
         await sendBookingNotification(this.newlyCreated);
@@ -175,8 +175,8 @@ export default {
       }
     },
     async receivedDateTime(event) {
+      console.log('thuy');
       this.dateTimePicker.isOpenPicker = false;
-      console.log(event);
       this.dateTimePicker.date = event.date;
       this.dateTimePicker.time = event.time;
       await this.sendBooking();
