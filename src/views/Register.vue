@@ -9,6 +9,7 @@
           <div v-show="!showRole" style="width: 100%">
             <v-row class="d-flex justify-center align-center">
               <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
+                <!-- account -->
                 <v-card
                   v-show="!vetify"
                   style="width: 100%; box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
@@ -32,7 +33,12 @@
                       class="align-self-center font-weight-bold font-nunito brow-text"
                       style="font-size: 1.125rem;"
                     >ĐĂNG KÝ</span>
-                    <v-form class="pa-4 d-flex flex-column">
+                    <v-form
+                      ref="formUsernamePassword"
+                      v-model="valid.usernamePassword"
+                      :lazy-validation="lazy.usernamePassword"
+                      class="pa-4 d-flex flex-column"
+                    >
                       <v-text-field
                         class="register"
                         v-model="name"
@@ -40,7 +46,8 @@
                         label="Nhập họ tên của bạn"
                         prepend-icon="mdi mdi-account-outline"
                         color="#727cf5"
-                      ></v-text-field>
+                        :rules="[rules.required,]"
+                      />
                       <v-text-field
                         class="register py-0"
                         v-model="password"
@@ -51,6 +58,8 @@
                         :type="showPass ? 'text' : 'password'"
                         @click:append="showPass = !showPass"
                         color="#727cf5"
+                        :rules="[rules.required,rules.password.minLength]"
+                        hint="Ít nhất 6 kí tự"
                       ></v-text-field>
                       <v-text-field
                         class="register py-0"
@@ -59,9 +68,12 @@
                         label="Nhập số điện thoại"
                         prepend-icon="mdi mdi-phone"
                         color="#727cf5"
+                        :rules="[rules.phoneNumber]"
                       ></v-text-field>
+
                       <v-btn
                         min-width="100%"
+                        :disabled="!valid.usernamePassword"
                         class="bg-primary white--text font-nunito align-self-center text-body-2 py-5 bt-primary-hover d-flex align-center"
                         @click="verifyPhoneNumber()"
                       >
@@ -89,8 +101,10 @@
                     <v-btn text link color="#727cf5" _height="100%">Đăng nhập</v-btn>
                   </v-card-text>
                 </v-card>
+                <!-- vetify -->
                 <v-card
                   v-show="vetify"
+                  _v-show="true"
                   style="width: 100%; box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
                   class="pb-4"
                 >
@@ -116,7 +130,10 @@
                       class="font-nunito mt-3 align-self-center"
                       _style="font-size: 17px!important;"
                     >Mã xác nhận được gửi qua số điện thoại</span>
-                    <span class="align-self-center text-body-1 font-nunito text-primary">0378034064</span>
+                    {{vetifyCode}}
+                    <span
+                      class="align-self-center text-body-1 font-nunito text-primary"
+                    >{{phone}}</span>
                     <v-form class="d-flex flex-column mt-3">
                       <v-text-field
                         class="register"
@@ -155,8 +172,12 @@
                   </v-card-text>
                 </v-card>
               </v-col>
+              <v-col>
+                <div id="recaptcha-container"></div>
+              </v-col>
             </v-row>
           </div>
+          <!-- confirm role -->
           <div v-show="showRole" style="width: 100%">
             <v-row class="d-flex justify-center mb-4">
               <v-col cols="11" md="11" class="d-flex flex-column justify-center align-center">
@@ -251,6 +272,7 @@
             </v-row>
           </div>
         </div>
+        <!-- fill schoolmate and hometown -->
         <div v-show="showRenterInfor" style="width: 100%">
           <v-row v-show="true" v-if="!isLoading" class="d-flex justify-center align-center">
             <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
@@ -327,7 +349,6 @@
                     <v-btn
                       min-width="100%"
                       class="bg-primary white--text font-nunito align-self-center text-body-2 py-5 bt-primary-hover d-flex align-center"
-                      @click="verifyPhoneNumber()"
                     >
                       <v-icon small class="mr-2">mdi mdi-account-circle</v-icon>Đăng ký
                     </v-btn>
@@ -343,10 +364,12 @@
 </template>
 <script>
 import { mapActions } from 'vuex';
+import firebase from 'firebase';
 
 export default {
   name: 'register',
   data: () => ({
+    appVerifier: '',
     vetify: false,
     showRole: false,
     showRenterInfor: false,
@@ -357,6 +380,22 @@ export default {
     vetifyCode: '',
     school: '',
     hometown: '',
+    rules: {
+      required: (value) => !!value || 'Xin đừng để trống!',
+      password: {
+        minLength: (value) => value.length >= 6 || 'Ít nhất 6 kí tự',
+      },
+      phoneNumber: (value) => {
+        const pattern = /^[0]{1}[0-9]{8,10}$/;
+        return pattern.test(value) || 'Số điện thoại không hợp lệ';
+      },
+    },
+    valid: {
+      usernamePassword: true,
+    },
+    lazy: {
+      usernamePassword: false,
+    },
   }),
   methods: {
     ...mapActions({
@@ -364,16 +403,81 @@ export default {
       getAllProvinces: 'renter/filterResult/getAllProvinces',
     }),
     verifyPhoneNumber() {
-      this.vetify = true;
+      this.validateFormUsernamePassword();
+      // this.vetify = true;
+      this.sendOtp();
+    },
+    sendOtp() {
+      const countryCode = '+84'; // india
+      const phoneNumber = countryCode + this.phone.substring(1);
+      //
+      const { appVerifier } = this;
+      //
+      firebase
+        .auth()
+        .signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then((confirmationResult) => {
+          window.confirmationResult = confirmationResult;
+          this.vetify = true; // switch to the vetify code UI
+          // eslint-disable-next-line
+          alert('Đã gửi mã xác thực');
+        })
+        .catch((error) => {
+          console.log(error);
+          // eslint-disable-next-line
+          alert('Lỗi ! Mã xác thực không gửi được');
+        });
+    },
+    verifyOtp() {
+      // const vm = this;
+      const code = this.vetifyCode;
+      //
+      window.confirmationResult
+        .confirm(code)
+        .then((result) => {
+          // User signed in successfully.
+          const { user } = result;
+          console.log(user);
+          // ...
+          // route to set password !
+          this.showRole = true;
+          // vm.$router.push({ path: '/setPassword' });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    initReCaptcha() {
+      setTimeout(() => {
+        const vm = this;
+        console.log(vm);
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+          size: 'invisible',
+          callback(response) {
+            console.log(response);
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+            // ...
+          },
+          'expired-callback': function () {
+            // Response expired. Ask user to solve reCAPTCHA again.
+            // ...
+          },
+        });
+        //
+        this.appVerifier = window.recaptchaVerifier;
+      }, 1000);
     },
     rollback() {
       this.vetify = false;
     },
     showRoleConfirmation() {
-      this.showRole = true;
+      this.verifyOtp();
     },
     chooseRenter() {
       this.showRenterInfor = true;
+    },
+    validateFormUsernamePassword() {
+      this.$refs.formUsernamePassword.validate();
     },
   },
   computed: {
@@ -393,6 +497,7 @@ export default {
     if (this.filter.hometown.items.length === 0) {
       this.getAllProvinces();
     }
+    this.initReCaptcha();
   },
 };
 </script>
