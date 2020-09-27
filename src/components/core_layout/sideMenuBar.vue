@@ -60,7 +60,7 @@ export default {
       itemsplus: [
         { title: 'Tổng quan', icon: 'menu_dashboard', link: '/vendor' },
         { title: 'Lịch xem phòng', icon: 'menu_calendar', link: '/vendor/booking' },
-        { title: 'Thống kê', icon: 'menu_chart', link: '/vendor/stat' },
+        { title: 'Lịch rảnh', icon: 'menu_chart', link: '/vendor/schedule' },
         {
           title: 'Quản lý nhà trọ',
           icon: 'menu_room',

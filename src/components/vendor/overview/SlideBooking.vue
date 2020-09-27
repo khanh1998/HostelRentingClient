@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-sheet class="mx-auto rounded" elevation="0" height="30%" max-width="100%">
+    <v-sheet class="rounded" elevation="0" height="30%" max-width="100%">
       <div
         class="d-flex justify-md-space-between flex-column flex-md-row"
         v-if="bookings.length > 0"

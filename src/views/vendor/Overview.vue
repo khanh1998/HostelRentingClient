@@ -18,11 +18,11 @@
       class="d-flex flex-row flex-nowrap"
       style="overflow-y: hidden; height: 100%;"
     >
-      <div style="width: 70vw; height: 100%; overflow-y: hidden;" class="d-flex flex-column">
+      <div style="min-width: 70vw; height: 100%; overflow-y: hidden;" class="d-flex flex-column">
         <div class="pa-2">
           <SlideBooking />
         </div>
-        <div class="d-flex flex-column" style="height: 100%; overflow-y: hidden;">
+        <div class="d-flex flex-column pa-2" style="height: 100%; overflow-y: hidden;">
           <HostelGroupsOverview />
         </div>
       </div>
