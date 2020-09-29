@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <myAppBar style="box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !import" />
+    <myAppBar style="box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !import;" />
     <v-main
       :style="{
         width: '100%',
@@ -32,6 +32,9 @@ export default {
   background-color: #727cf5 !important;
   box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
   border-radius: 0.15rem !important;
+}
+.bg-danger {
+  background-color: #fa5c7c !important;
 }
 .bt-primary-hover:hover {
   color: #fff;

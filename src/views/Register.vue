@@ -1,23 +1,37 @@
 <template>
   <v-app>
-    <v-main style="background-color: #fafbfe !important">
+    <v-main style="background-color: #fafbfe !important;">
       <v-overlay :value="isLoading" absolute>
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
-      <v-container class="fill-height">
-        <div v-show="!showRenterInfor" style="width: 100%">
-          <div v-show="!showRole" style="width: 100%">
+      <v-container class="fill-height" v-if="!isLoading">
+        <v-dialog v-model="dialog" max-width="40%">
+          <v-card style="background-color: #fedee5 !important; border-color: #fed1da; !important">
+            <v-card-text
+              style="color: #823040 !important; font-family: 'Nunito', sans-serif !important;"
+              class="pa-4 d-flex justify-center text-subtitle-1"
+            >
+              <span class="font-weight-bold mr-1">Lỗi </span>
+              - Số điện thoại này đã được đăng kí</v-card-text
+            >
+          </v-card>
+        </v-dialog>
+        <div v-show="!showRenterInfor" style="width: 100%;">
+          <div v-show="!showRole" style="width: 100%;">
             <v-row class="d-flex justify-center align-center">
               <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
                 <!-- account -->
                 <v-card
                   v-show="!vetify"
-                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
+                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
                   class="pb-4"
                 >
                   <div
                     class="py-4"
-                    style="background-color: #727cf5!important; border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;"
+                    style="
+                      background-color: #727cf5 !important;
+                      border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+                    "
                   >
                     <v-img
                       alt="Hostel Renting"
@@ -32,7 +46,8 @@
                     <span
                       class="align-self-center font-weight-bold font-nunito brow-text"
                       style="font-size: 1.125rem;"
-                    >ĐĂNG KÝ</span>
+                      >ĐĂNG KÝ</span
+                    >
                     <v-form
                       ref="formUsernamePassword"
                       v-model="valid.usernamePassword"
@@ -46,7 +61,7 @@
                         label="Nhập họ tên của bạn"
                         prepend-icon="mdi mdi-account-outline"
                         color="#727cf5"
-                        :rules="[rules.required,]"
+                        :rules="[rules.required]"
                       />
                       <v-text-field
                         class="register py-0"
@@ -58,7 +73,7 @@
                         :type="showPass ? 'text' : 'password'"
                         @click:append="showPass = !showPass"
                         color="#727cf5"
-                        :rules="[rules.required,rules.password.minLength]"
+                        :rules="[rules.required, rules.password.minLength]"
                         hint="Ít nhất 6 kí tự"
                       ></v-text-field>
                       <v-text-field
@@ -77,13 +92,15 @@
                         class="bg-primary white--text font-nunito align-self-center text-body-2 py-5 bt-primary-hover d-flex align-center"
                         @click="verifyPhoneNumber()"
                       >
-                        <v-icon small class="mr-2">mdi mdi-account-arrow-right-outline</v-icon>Tiếp theo
+                        <v-icon small class="mr-2">mdi mdi-account-arrow-right-outline</v-icon>Tiếp
+                        theo
                       </v-btn>
                     </v-form>
                     <span
                       class="font-nunito text-gray align-self-center mt-1"
-                      style="font-size: 16px!important;"
-                    >Đăng ký bằng</span>
+                      style="font-size: 16px !important;"
+                      >Đăng ký bằng</span
+                    >
                   </v-card-text>
                   <v-card-actions class="d-flex justify-center mt-n2">
                     <v-btn outlined fab color="#39afd1" x-small class="register mx-2">
@@ -105,12 +122,15 @@
                 <v-card
                   v-show="vetify"
                   _v-show="true"
-                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
+                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
                   class="pb-4"
                 >
                   <div
                     class="py-4"
-                    style="background-color: #727cf5!important; border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;"
+                    style="
+                      background-color: #727cf5 !important;
+                      border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+                    "
                   >
                     <v-img
                       alt="Hostel Renting"
@@ -125,15 +145,16 @@
                     <span
                       class="align-self-center font-weight-bold font-nunito brow-text mt-4"
                       style="font-size: 1.125rem;"
-                    >Nhập mã xác nhận</span>
+                      >Nhập mã xác nhận</span
+                    >
                     <span
                       class="font-nunito mt-3 align-self-center"
                       _style="font-size: 17px!important;"
-                    >Mã xác nhận được gửi qua số điện thoại</span>
-                    {{vetifyCode}}
-                    <span
-                      class="align-self-center text-body-1 font-nunito text-primary"
-                    >{{phone}}</span>
+                      >Mã xác nhận được gửi qua số điện thoại</span
+                    >
+                    <span class="align-self-center text-body-1 font-nunito text-primary">{{
+                      phone
+                    }}</span>
                     <v-form class="d-flex flex-column mt-3">
                       <v-text-field
                         class="register"
@@ -143,31 +164,36 @@
                         color="#727cf5"
                       ></v-text-field>
                       <span class="text-gray-dark font-nunito">
-                        Gửi lại mã sau:
-                        <span class="font-weight-bold">80</span>s
+                        Gửi lại mã sau: <span class="font-weight-bold">{{ timeleft }}</span
+                        >s
                       </span>
                       <div class="d-flex justify-space-between">
                         <v-btn
-                          style="letter-spacing: 0.01rem !important"
+                          style="letter-spacing: 0.01rem !important;"
                           class="pl-0"
                           text
                           link
+                          :disabled="disableResendOTP"
                           color="#fa5c7c"
-                        >Gửi lại mã xác nhận</v-btn>
+                          @click="verifyPhoneNumber()"
+                          >Gửi lại mã xác nhận</v-btn
+                        >
                         <v-btn
                           @click="rollback()"
                           class="pr-0"
                           text
                           link
                           color="#727cf5"
-                          style="letter-spacing: 0.01rem !important"
-                        >Nhập lại số điện thoại</v-btn>
+                          style="letter-spacing: 0.01rem !important;"
+                          >Nhập lại số điện thoại</v-btn
+                        >
                       </div>
                       <v-btn
                         @click="showRoleConfirmation()"
                         min-width="100%"
                         class="bg-primary white--text font-nunito align-self-center text-body-2 py-5 mt-5 bt-primary-hover d-flex align-center"
-                      >XÁC NHẬN</v-btn>
+                        >XÁC NHẬN</v-btn
+                      >
                     </v-form>
                   </v-card-text>
                 </v-card>
@@ -178,29 +204,31 @@
             </v-row>
           </div>
           <!-- confirm role -->
-          <div v-show="showRole" style="width: 100%">
+          <div v-show="showRole" style="width: 100%;">
             <v-row class="d-flex justify-center mb-4">
               <v-col cols="11" md="11" class="d-flex flex-column justify-center align-center">
-                <span
-                  style="color: #4250f2; font-size: 2.125rem"
-                  class="font-nunito"
-                >Chào mừng bạn đến với tdHostel!</span>
-                <span
-                  class="font-nunito text-gray"
-                  style="font-size: 1.15rem"
-                >Để chúng tôi phục vụ nhu cầu của bạn hiệu quả nhất, vui lòng chọn mục đích sử dụng/vai trò của mình trong tdHostel!</span>
+                <span style="color: #4250f2; font-size: 2.125rem;" class="font-nunito"
+                  >Chào mừng bạn đến với tdHostel!</span
+                >
+                <span class="font-nunito text-gray" style="font-size: 1.15rem;"
+                  >Để chúng tôi phục vụ nhu cầu của bạn hiệu quả nhất, vui lòng chọn mục đích sử
+                  dụng/vai trò của mình trong tdHostel!</span
+                >
               </v-col>
             </v-row>
             <v-row class="d-flex justify-space-around align-center">
               <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
                 <v-card
-                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
+                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
                   class="pb-4"
                   min-height="300"
                 >
                   <div
                     class="py-4 d-flex justify-center align-center"
-                    style="background-color: #727cf5!important; border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;"
+                    style="
+                      background-color: #727cf5 !important;
+                      border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+                    "
                   >
                     <v-img
                       alt="Hostel Renting"
@@ -209,9 +237,11 @@
                       src="@/assets/renter.png"
                       max-height="40"
                     />
-                    <span class="white--text font-nunito" style="font-size: 1.3rem;">Khách thuê</span>
+                    <span class="white--text font-nunito" style="font-size: 1.3rem;"
+                      >Khách thuê</span
+                    >
                   </div>
-                  <v-card-text class="d-flex flex-column px-10 py-4" style="min-height: 250px">
+                  <v-card-text class="d-flex flex-column px-10 py-4" style="min-height: 250px;">
                     <div class="d-flex">
                       <v-icon class="mr-2" color="#727cf5">mdi mdi-check-bold</v-icon>
                       <span class="font-nunito">Tìm kiếm nhà trọ theo nhu cầu</span>
@@ -224,18 +254,22 @@
                       @click="chooseRenter()"
                       min-width="100%"
                       class="bg-primary white--text font-nunito align-self-center text-body-2 py-5 mt-auto bt-primary-hover d-flex align-center"
-                    >XÁC NHẬN</v-btn>
+                      >XÁC NHẬN</v-btn
+                    >
                   </v-card-text>
                 </v-card>
               </v-col>
               <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
                 <v-card
-                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;"
+                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
                   class="pb-4"
                 >
                   <div
                     class="py-4 d-flex justify-center align-center"
-                    style="background-color: #727cf5!important; border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;"
+                    style="
+                      background-color: #727cf5 !important;
+                      border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+                    "
                   >
                     <v-img
                       alt="Hostel Renting"
@@ -248,24 +282,27 @@
                   </div>
                   <v-card-text
                     class="d-flex flex-column align-end px-10 py-4"
-                    style="min-height: 250px"
+                    style="min-height: 250px;"
                   >
                     <div class="d-flex">
                       <v-icon class="mr-2" color="#727cf5">mdi mdi-check-bold</v-icon>
-                      <span
-                        class="font-nunito"
-                      >Đăng tin bán và thuê chuyên nghiệp, tăng khả năng tiếp cận tin đăng đến khách hàng</span>
+                      <span class="font-nunito"
+                        >Đăng tin bán và thuê chuyên nghiệp, tăng khả năng tiếp cận tin đăng đến
+                        khách hàng</span
+                      >
                     </div>
                     <div class="d-flex mt-1">
                       <v-icon class="mr-2" color="#727cf5">mdi mdi-check-bold</v-icon>
-                      <span
-                        class="font-nunito"
-                      >Công cụ quản lý phòng thuê dễ sử dụng và đạt hiệu quả cao</span>
+                      <span class="font-nunito"
+                        >Công cụ quản lý phòng thuê dễ sử dụng và đạt hiệu quả cao</span
+                      >
                     </div>
                     <v-btn
+                      @click="registerVendor()"
                       min-width="100%"
                       class="mt-auto bg-primary white--text font-nunito align-self-center text-body-2 py-5 bt-primary-hover d-flex align-center"
-                    >XÁC NHẬN</v-btn>
+                      >XÁC NHẬN</v-btn
+                    >
                   </v-card-text>
                 </v-card>
               </v-col>
@@ -273,13 +310,19 @@
           </div>
         </div>
         <!-- fill schoolmate and hometown -->
-        <div v-show="showRenterInfor" style="width: 100%">
+        <div v-show="showRenterInfor" style="width: 100%;">
           <v-row v-show="true" v-if="!isLoading" class="d-flex justify-center align-center">
             <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
-              <v-card style="box-shadow: 0 0 35px 0 rgba(154,161,171,.15) !important;" class="pb-4">
+              <v-card
+                style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
+                class="pb-4"
+              >
                 <div
                   class="py-4"
-                  style="background-color: #727cf5!important; border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;"
+                  style="
+                    background-color: #727cf5 !important;
+                    border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+                  "
                 >
                   <v-img
                     alt="Hostel Renting"
@@ -307,24 +350,27 @@
                       background-color="white"
                       no-data-text="Không có kết quả phù hợp"
                       :style="{
-                borderTopLeftRadius: '0px',
-                borderTopRightRadius: '0px'}"
+                        borderTopLeftRadius: '0px',
+                        borderTopRightRadius: '0px',
+                      }"
                     >
                       <template slot="selection" slot-scope="{ item }">
-                        <span
-                          class="font-nunito font-weight-medium text-body-2"
-                        >{{ item.schoolName }}</span>
-                        <span
-                          class="font-nunito font-italic text-body-2"
-                        >- {{ item.address.districtName }}, {{item.address.province.provinceName}}</span>
+                        <span class="font-nunito font-weight-medium text-body-2">{{
+                          item.schoolName
+                        }}</span>
+                        <span class="font-nunito font-italic text-body-2"
+                          >- {{ item.address.districtName }},
+                          {{ item.address.province.provinceName }}</span
+                        >
                       </template>
                       <template slot="item" slot-scope="{ item }">
-                        <span
-                          class="font-nunito font-weight-medium text-body-2"
-                        >{{ item.schoolName }}</span>
-                        <span
-                          class="font-nunito font-italic text-body-2"
-                        >- {{ item.address.districtName }}, {{item.address.province.provinceName}}</span>
+                        <span class="font-nunito font-weight-medium text-body-2">{{
+                          item.schoolName
+                        }}</span>
+                        <span class="font-nunito font-italic text-body-2"
+                          >- {{ item.address.districtName }},
+                          {{ item.address.province.provinceName }}</span
+                        >
                       </template>
                     </v-autocomplete>
                     <v-autocomplete
@@ -342,12 +388,14 @@
                       background-color="white"
                       no-data-text="Không có kết quả phù hợp"
                       :style="{
-                  borderTopLeftRadius: '0px',
-                  borderTopRightRadius: '0px',
-                }"
+                        borderTopLeftRadius: '0px',
+                        borderTopRightRadius: '0px',
+                      }"
                     ></v-autocomplete>
                     <v-btn
+                      @click="registerRenter()"
                       min-width="100%"
+                      :loading="isCreate"
                       class="bg-primary white--text font-nunito align-self-center text-body-2 py-5 bt-primary-hover d-flex align-center"
                     >
                       <v-icon small class="mr-2">mdi mdi-account-circle</v-icon>Đăng ký
@@ -374,12 +422,18 @@ export default {
     showRole: false,
     showRenterInfor: false,
     showPass: false,
+    disableResendOTP: true,
+    timeleft: 80,
+    vetifyCode: '',
+    dialog: false,
+    // user infomation
     name: '',
     password: '',
     phone: '',
-    vetifyCode: '',
+    role: '',
     school: '',
     hometown: '',
+
     rules: {
       required: (value) => !!value || 'Xin đừng để trống!',
       password: {
@@ -401,14 +455,15 @@ export default {
     ...mapActions({
       getAllSchools: 'renter/filterResult/getAllSchools',
       getAllProvinces: 'renter/filterResult/getAllProvinces',
+      createRenter: 'user/registerRenter',
+      createVendor: 'user/registerVendor',
     }),
     verifyPhoneNumber() {
       this.validateFormUsernamePassword();
-      // this.vetify = true;
       this.sendOtp();
     },
     sendOtp() {
-      const countryCode = '+84'; // india
+      const countryCode = '+84'; // vietnam
       const phoneNumber = countryCode + this.phone.substring(1);
       //
       const { appVerifier } = this;
@@ -421,6 +476,10 @@ export default {
           this.vetify = true; // switch to the vetify code UI
           // eslint-disable-next-line
           alert('Đã gửi mã xác thực');
+          this.countdownTime();
+          setTimeout(() => {
+            this.disableResendOTP = false;
+          }, 80000);
         })
         .catch((error) => {
           console.log(error);
@@ -474,10 +533,57 @@ export default {
       this.verifyOtp();
     },
     chooseRenter() {
+      this.role = 'renter';
       this.showRenterInfor = true;
     },
     validateFormUsernamePassword() {
       this.$refs.formUsernamePassword.validate();
+    },
+    countdownTime() {
+      let time = this.timeleft;
+      const downloadTimer = setInterval(() => {
+        if (time <= 0) {
+          clearInterval(downloadTimer);
+        }
+        this.timeleft = time;
+        time -= 1;
+      }, 1000);
+    },
+    registerRenter() {
+      const renter = {
+        username: this.name,
+        password: this.password,
+        phone: this.phone,
+        provinceId: this.hometown,
+        schoolId: this.school,
+      };
+      this.createRenter(renter).then(() => {
+        if (this.duppicateError) {
+          this.showRenterInfor = false;
+          this.showRole = false;
+          this.vetify = false;
+          this.dialog = true;
+        } else if (this.registerStatus) {
+          this.$router.push('/');
+        }
+      });
+    },
+    registerVendor() {
+      const vendor = {
+        username: this.name,
+        password: this.password,
+        phone: this.phone,
+      };
+      this.createVendor(vendor).then(() => {
+        if (this.duppicateError) {
+          this.showRenterInfor = false;
+          this.showRole = false;
+          this.vetify = false;
+          this.dialog = true;
+        } else if (this.registerStatus) {
+          this.$router.push('/');
+        }
+      });
     },
   },
   computed: {
@@ -486,8 +592,17 @@ export default {
       const schools = this.$store.state.renter.filterResult.filter.schools.isLoading;
       return hometown || schools;
     },
+    isCreate() {
+      return this.$store.state.user.user.isLoading;
+    },
     filter() {
       return this.$store.state.renter.filterResult.filter;
+    },
+    duppicateError() {
+      return this.$store.state.user.user.error;
+    },
+    registerStatus() {
+      return this.$store.state.user.user.success;
     },
   },
   created() {
@@ -495,9 +610,8 @@ export default {
       this.getAllSchools();
     }
     if (this.filter.hometown.items.length === 0) {
-      this.getAllProvinces();
+      this.getAllProvinces().then(() => this.initReCaptcha());
     }
-    this.initReCaptcha();
   },
 };
 </script>

@@ -117,6 +117,10 @@ const mutationTypes = {
   DONE_BOOKING_FAILURE: 'DONE_BOOKING_FAILURE',
 
   CLEAR_NEWLY_CREATED_BOOKING: 'CLEAR_NEWLY_CREATED_BOOKING',
+
+  REGISTER_USER_REQUEST: 'REGISTER_USER_REQUEST',
+  REGISTER_USER_SUCCESS: 'REGISTER_USER_SUCCESS',
+  REGISTER_USER_FAILURE: 'REGISTER_USER_FAILURE',
 };
 const mutations = {
   CLEAR_USER_DATA(state) {
@@ -189,6 +193,19 @@ const mutations = {
     state.bookings.isLoading = false;
     state.bookings.success = false;
     state.bookings.error = error;
+  },
+  REGISTER_USER_REQUEST(state) {
+    state.user.isLoading = true;
+  },
+  REGISTER_USER_SUCCESS(state, renter) {
+    state.user.data = renter;
+    state.user.isLoading = false;
+    state.user.success = true;
+  },
+  REGISTER_USER_FAILURE(state, error) {
+    state.user.isLoading = false;
+    state.user.success = false;
+    state.user.error = error;
   },
   GET_DEALS_REQUEST(state) {
     state.deals.isLoading = false;
@@ -345,6 +362,7 @@ const actions = {
     }
   },
   async getBookings({ commit, state }) {
+    console.log(window.$cookies);
     const userId = window.$cookies.get('userId');
     const role = window.$cookies.get('role');
     if (userId && role && state.user.data) {
@@ -580,6 +598,34 @@ const actions = {
   },
   clearNewlyCreatedBooking({ commit }) {
     commit(mutationTypes.CLEAR_NEWLY_CREATED_BOOKING);
+  },
+  async registerRenter({ commit }, renter) {
+    try {
+      commit(mutationTypes.REGISTER_USER_REQUEST);
+      const response = await window.axios.post('/api/v1/renters/register', renter);
+      if (response.status >= 200 && response.status <= 299) {
+        commit(mutationTypes.REGISTER_USER_SUCCESS, response.data.data);
+      }
+      if (response.status === 409) {
+        commit(mutationTypes.REGISTER_USER_FAILURE, 'Số điện thoại này đã được đăng kí');
+      }
+    } catch (error) {
+      commit(mutationTypes.REGISTER_USER_FAILURE, error);
+    }
+  },
+  async registerVendor({ commit }, vendor) {
+    try {
+      commit(mutationTypes.REGISTER_USER_REQUEST);
+      const response = await window.axios.post('/api/v1/vendors/register', vendor);
+      if (response.status >= 200 && response.status <= 299) {
+        commit(mutationTypes.REGISTER_USER_SUCCESS, response.data.data);
+      }
+      if (response.status === 409) {
+        commit(mutationTypes.REGISTER_USER_FAILURE, 'Số điện thoại này đã được đăng kí');
+      }
+    } catch (error) {
+      commit(mutationTypes.REGISTER_USER_FAILURE, error);
+    }
   },
 };
 

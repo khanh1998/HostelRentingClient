@@ -8,16 +8,21 @@
       <v-row justify="center">
         <v-col cols="0" md="4"></v-col>
         <v-col cols="10" md="8">
-          <v-btn-toggle mandatory tile v-model="buttonGroup.selectedBookingStatus">
-            <v-btn outlined color="grey">
+          <v-btn-toggle
+            tile
+            color="deep-purple accent-3"
+            group
+            v-model="buttonGroup.selectedBookingStatus"
+          >
+            <v-btn>
               SẮP TỚI
               <span class="amber--text">({{ counter.incomming }})</span>
             </v-btn>
-            <v-btn outlined color="grey">
+            <v-btn>
               ĐÃ XEM PHÒNG
               <span class="amber--text">({{ counter.done }})</span>
             </v-btn>
-            <v-btn outlined color="grey">
+            <v-btn>
               BỎ LỠ
               <span class="amber--text">({{ counter.cancel }})</span>
             </v-btn>
@@ -68,6 +73,7 @@ export default {
   },
   created() {
     this.getUser().then(() => {
+      this.getBookings();
       // this.getBookings().then(() => {
       //   // const bookings = this.$store.state.user.bookings.data;
       //   // this.arrayEvents = bookings.map((booking) =>

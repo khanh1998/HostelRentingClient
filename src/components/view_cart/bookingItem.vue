@@ -72,7 +72,7 @@
         </v-sheet>
         <v-row align-content="center">
           <v-col>
-            <v-btn color="red" outlined>XEM CHI TIẾT</v-btn>
+            <v-btn color="red" outlined>CHI TIẾT PHÒNG</v-btn>
           </v-col>
         </v-row>
       </v-col>
