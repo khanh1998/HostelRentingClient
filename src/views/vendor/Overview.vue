@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="overflow-y: hidden; height: calc(100vh - 72px);" class="d-flex flex-column">
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -13,27 +13,34 @@
         />
       </v-card>
     </v-dialog>
-    <v-row v-if="!isLoading">
-      <v-col cols="12" md="8">
-        <v-row no-gutters>
-          <v-col cols="12">
-            <SlideBooking />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" lg="4">
-            <SuggestContract />
-          </v-col>
-          <v-col cols="12" lg="8">
-            <ShowEmptyRoom />
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="12" md="4" order="first" order-md="last">
+    <div
+      v-if="!isLoading"
+      class="d-flex flex-row flex-nowrap"
+      style="overflow-y: hidden; height: 100%;"
+    >
+      <div style="min-width: 70vw; height: 100%; overflow-y: hidden;" class="d-flex flex-column">
+        <div class="pa-2">
+          <SlideBooking />
+        </div>
+        <div class="d-flex flex-column pa-2" style="height: 100%; overflow-y: hidden;">
+          <HostelGroupsOverview />
+        </div>
+      </div>
+      <div style="width: 30vw; height: 100%;" class="hidden-sm-and-down pa-2">
         <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
-      </v-col>
-    </v-row>
-    <v-card style="position: absolute; right: 20px; bottom: 10px; height: auto; width: 350px">
+      </div>
+    </div>
+    <v-card
+      style="
+        position: absolute;
+        right: 370px;
+        bottom: 0px;
+        height: auto;
+        width: 300px;
+        z-index: 9998;
+      "
+      elevation="10"
+    >
       <Chatbox
         v-if="this.docs.doc1"
         :doc="this.docs.doc1"
@@ -41,7 +48,17 @@
         v-on:closeChat="closeChatBox($event)"
       />
     </v-card>
-    <v-card style="position: absolute; right: 370px; bottom: 10px; height: auto; width: 350px">
+    <v-card
+      style="
+        position: absolute;
+        right: 680px;
+        bottom: 0px;
+        height: auto;
+        width: 300px;
+        z-index: 9998;
+      "
+      elevation="10"
+    >
       <Chatbox
         v-if="this.docs.doc2"
         :doc="this.docs.doc2"
@@ -49,7 +66,17 @@
         v-on:closeChat="closeChatBox($event)"
       />
     </v-card>
-    <v-card style="position: absolute; right: 720px; bottom: 10px; height: auto; width: 350px">
+    <v-card
+      style="
+        position: absolute;
+        right: 990px;
+        bottom: 0px;
+        height: auto;
+        width: 300px;
+        z-index: 9998;
+      "
+      elevation="10"
+    >
       <Chatbox
         v-if="this.docs.doc3"
         :doc="this.docs.doc3"
@@ -61,20 +88,18 @@
 </template>
 <script>
 import { mapActions } from 'vuex';
-import ChatList from '@/components/vendor/ChatList.vue';
-import SlideBooking from '@/components/vendor/SlideBooking.vue';
-import SuggestContract from '@/components/vendor/SuggestContract.vue';
-import Chatbox from '@/components/vendor/Chatbox.vue';
-import ShowEmptyRoom from '../../components/vendor/ShowEmptyRoom.vue';
+import ChatList from '@/components/vendor/overview/ChatList.vue';
+import SlideBooking from '@/components/vendor/overview/SlideBooking.vue';
+import Chatbox from '@/components/vendor/overview/Chatbox.vue';
+import HostelGroupsOverview from '../../components/vendor/overview/HostelGroupsOverview.vue';
 
 export default {
   name: 'Overview',
   components: {
     ChatList,
     SlideBooking,
-    SuggestContract,
     Chatbox,
-    ShowEmptyRoom,
+    HostelGroupsOverview,
   },
   data: () => ({
     docList: [],
@@ -186,4 +211,9 @@ export default {
   },
 };
 </script>
-<style></style>
+<style scoped>
+/* body {
+  max-height: calc(100vh);
+  overflow: hidden;
+} */
+</style>

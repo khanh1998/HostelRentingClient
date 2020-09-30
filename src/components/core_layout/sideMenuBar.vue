@@ -13,8 +13,18 @@
       </v-list-item>
 
       <div class="text-display mt-3 mb-3 ml-7">Danh mục</div>
+      <v-list-item to="/vendor/mobile-message" v-if="isMobile">
+        <v-list-item-icon>
+          <v-img :src="require('@/assets/menu_chat.png')" max-height="20" max-width="20" />
+        </v-list-item-icon>
 
-      <v-list-item v-for="item in itemsplus" :key="item.title" link :to="item.link">
+        <v-list-item-content>
+          <v-list-item-title class="item-text-display flex-1 text-h6 font-weight-regular"
+            >Tin nhắn</v-list-item-title
+          >
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item v-for="item in itemsplus" :key="item.title" :to="item.link">
         <v-list-item-icon>
           <v-img :src="require('@/assets/' + item.icon + '.png')" max-height="20" max-width="20" />
         </v-list-item-icon>
@@ -26,7 +36,6 @@
       </v-list-item>
 
       <div class="text-display mt-3 mb-3 ml-7">Mở rộng</div>
-
       <v-list-item v-for="itemadd in itemadds" :key="itemadd.title" link :to="itemadd.link">
         <v-list-item-icon>
           <v-img
@@ -58,9 +67,9 @@ export default {
     return {
       drawer: true,
       itemsplus: [
-        { title: 'Tổng quan', icon: 'menu_dashboard', link: '/vendor' },
-        { title: 'Lịch xem phòng', icon: 'menu_calendar', link: '/vendor/booking' },
-        { title: 'Thống kê', icon: 'menu_chart', link: '/vendor/stat' },
+        { title: 'Tổng quan', icon: 'menu_dashboard', link: '/vendor/overview' },
+        { title: 'Lịch xem phòng', icon: 'my_schedule', link: '/vendor/booking' },
+        { title: 'Lịch rảnh', icon: 'menu_chart', link: '/vendor/schedule' },
         {
           title: 'Quản lý nhà trọ',
           icon: 'menu_room',
@@ -81,6 +90,9 @@ export default {
     };
   },
   methods: {
+    showItem(itemadd) {
+      return !itemadd.mobile || (itemadd.mobile && this.isMobile);
+    },
     ...mapActions({
       clearUserData: 'user/clearUserData',
       updateUser: 'user/updateUser',
@@ -161,6 +173,16 @@ export default {
     }),
     hasMessagingToken() {
       return localStorage.getItem('messagingToken') != null;
+    },
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+          return true;
+        case 'sm':
+          return true;
+        default:
+          return false;
+      }
     },
   },
 };

@@ -21,10 +21,7 @@
                 >
               </v-list-item-content>
               <v-list-item-action class="d-flex flex-row">
-                <v-btn icon dark small color="#EF7239">
-                  <v-icon dark>mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn icon dark small color="#EF7239">
+                <v-btn color="red" icon dark small @click="$emit('delete', item.groupId)">
                   <v-icon dark>mdi-delete</v-icon>
                 </v-btn>
               </v-list-item-action>

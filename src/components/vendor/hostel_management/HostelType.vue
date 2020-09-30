@@ -13,11 +13,11 @@
       hide-default-footer
       @page-count="pageCount = $event"
       sort-by="status"
-      class="ml-15"
+      class="ml-16"
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title style="fontsize: 20px; color: #6c98c6;">Loại phòng</v-toolbar-title>
+          <v-toolbar-title>Loại phòng</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-card-title>
             <v-text-field
@@ -139,9 +139,10 @@
 <script>
 export default {
   name: 'HostelType',
-  props: ['groups', 'groupId'],
+  props: ['typesData'],
   components: {},
   data: () => ({
+    types: [],
     page: 1,
     pageCount: 0,
     itemsPerPage: 8,
@@ -202,63 +203,43 @@ export default {
       return this.editedIndex === -1 ? 'Tạo mới phòng trọ' : 'Cập nhật thông tin phòng trọ';
     },
     desserts() {
-      if (this.groupId != null) {
-        const groupList = this.groups.filter((groupItem) => groupItem.groupId === this.groupId);
-        const dessertList = [];
-        const roomEmptyList = [];
-        const roomFullList = [];
-        groupList[0].types.forEach((typeElement) => {
-          const id = typeElement.typeId;
-          const ten = typeElement.title;
-          const dientich = typeElement.superficiality;
-          const nguoi = typeElement.capacity;
-          const gia = typeElement.price;
-          const trangthai = typeElement.typeStatus.statusName;
-          typeElement.rooms.forEach((roomItem) => {
-            const loaiid = roomItem.typeId;
-            if (loaiid === id) {
-              const tinhtrang = roomItem.available;
-              if (tinhtrang) {
-                const tenid = roomItem.roomId;
-                const tenphong = roomItem.roomName;
+      return this.types.map((typeElement) => {
+        let roomEmptyList = [];
+        let roomFullList = [];
+        const id = typeElement.typeId;
+        const ten = typeElement.title;
+        const dientich = typeElement.superficiality;
+        const nguoi = typeElement.capacity;
+        const gia = typeElement.price;
+        const trangthai = typeElement.typeStatus.statusName;
 
-                const tong2 = {
-                  roomId: tenid,
-                  roomName: tenphong,
-                  available: tinhtrang,
-                  typeIds: loaiid,
-                };
-                roomEmptyList.push(tong2);
-              }
-              if (!tinhtrang) {
-                const tenid = roomItem.roomId;
-                const tenphong = roomItem.roomName;
+        const mapper = typeElement.rooms.map((roomItem) => {
+          const tinhtrang = roomItem.available;
+          const tenid = roomItem.roomId;
+          const tenphong = roomItem.roomName;
 
-                const tong2 = {
-                  roomId: tenid,
-                  roomName: tenphong,
-                  available: tinhtrang,
-                  typeIds: loaiid,
-                };
-                roomFullList.push(tong2);
-              }
-            }
-          });
-          const tong = {
-            typeId: id,
-            typeName: ten,
-            superficiality: dientich,
-            capacity: nguoi,
-            price: `${gia} triệu`,
-            status: trangthai,
-            roomEm: roomEmptyList,
-            roomFu: roomFullList,
+          const tong2 = {
+            roomId: tenid,
+            roomName: tenphong,
+            available: tinhtrang,
+            typeIds: roomItem.typeId,
           };
-          dessertList.push(tong);
+          return tong2;
         });
-        return dessertList;
-      }
-      return [];
+        roomEmptyList = mapper.filter((item) => item.tinhtrang);
+        roomFullList = mapper.filter((item) => !item.tinhtrang);
+        const tong = {
+          typeId: id,
+          typeName: ten,
+          superficiality: dientich,
+          capacity: nguoi,
+          price: `${gia} triệu`,
+          status: trangthai,
+          roomEm: roomEmptyList,
+          roomFu: roomFullList,
+        };
+        return tong;
+      });
     },
   },
   methods: {
@@ -292,6 +273,15 @@ export default {
         this.desserts.push(this.editedItem);
       }
       this.close();
+    },
+  },
+  watch: {
+    typesData: {
+      immediate: true,
+      // eslint-disable-next-line
+      handler(val, oldVal) {
+        this.types = val;
+      },
     },
   },
 };

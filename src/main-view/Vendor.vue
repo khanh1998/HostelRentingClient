@@ -22,16 +22,16 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar :clipped-left="primaryDrawer.clipped" app>
+    <v-app-bar hide-on-scroll :clipped-left="primaryDrawer.clipped" app dense>
       <v-app-bar-nav-icon @click.stop="primaryDrawer.model = !primaryDrawer.model">
       </v-app-bar-nav-icon>
-      <v-toolbar-title>TD Hostel</v-toolbar-title>
+      <v-toolbar-title>{{ routeName }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <notify-and-profile />
     </v-app-bar>
 
-    <v-main>
-      <v-container fluid>
+    <v-main style="max-height: calc(100vh); overflow-y: hidden;">
+      <v-container fluid style="max-height: 100%;" class="d-flex flex-column">
         <router-view />
       </v-container>
     </v-main>
@@ -41,13 +41,18 @@
 <script>
 import { mapActions } from 'vuex';
 import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
-import notifyAndProfile from '../components/vendor/NotifyAndProfile.vue';
+import notifyAndProfile from '../components/vendor/overview/NotifyAndProfile.vue';
 
 export default {
   name: 'VendorView',
   components: {
     sideMenuBar,
     notifyAndProfile,
+  },
+  computed: {
+    routeName() {
+      return this.$route.meta.vi || 'Yoho';
+    },
   },
   data: () => ({
     primaryDrawer: {
@@ -77,3 +82,11 @@ export default {
   },
 };
 </script>
+<style scoped>
+.full-height {
+  min-height: 100%;
+  max-height: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+</style>

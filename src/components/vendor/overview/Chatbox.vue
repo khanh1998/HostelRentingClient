@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div v-if="chatShow">
+  <div v-if="chatShow" style="height: 100%; overflow-y: hidden;" class="d-flex flex-column">
     <v-overlay v-model="dialogAccept" width="350" absolute>
       <v-card>
         <v-card-title style="backgroundcolor: #98b7d7; color: white;">Xác nhận</v-card-title>
@@ -33,6 +33,7 @@
       v-if="!userState.isLoading && userState.success"
       width="100%"
       class="d-flex flex-row justify-space-between align-center pa-2"
+      style="z-index: 9999;"
     >
       <div class="d-flex flex-nowrap align-center">
         <v-avatar>
@@ -44,13 +45,14 @@
         <v-icon>clear</v-icon>
       </v-btn>
     </v-card>
-    <div class="chatbox rounded-l overflow-y-auto chatbox" style="max-height: 350px;" id="chatbox">
+    <div class="chatbox rounded-l overflow-y-auto chatbox" :style="{ height: height }" id="chatbox">
       <v-list
         v-scroll.self="myOnScroll"
         align="center"
         justify="center"
         max-height="auto"
-        min-height="350px"
+        min-height="300px"
+        class="pa-1"
       >
         <v-list-item color="success" two-line>
           <v-list-item-content>
@@ -214,6 +216,9 @@ export default {
   props: {
     index: Number,
     doc: Object,
+    height: {
+      default: '300px',
+    },
   },
   data: () => ({
     items: [],
@@ -339,6 +344,12 @@ export default {
     } else {
       this.fetchMessages();
     }
+  },
+  watch: {
+    doc() {
+      console.log('call fetch message again');
+      this.fetchMessages();
+    },
   },
   computed: {
     ...mapGetters({
