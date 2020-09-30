@@ -16,6 +16,7 @@ const routes = [
         name: 'Overview',
         component: Overview,
         meta: { requiresAuth: true, is_vendor: true, vi: 'Tổng quan' },
+        alias: '',
       },
       {
         path: 'management',
