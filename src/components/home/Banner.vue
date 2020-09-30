@@ -245,7 +245,7 @@
                 >
               </div>
             </v-col>
-            <v-col cols="5" class="pt-0 mt-10 pl-3 red" v-show="false">
+            <v-col cols="5" class="pt-0 mt-10 pl-3" v-show="disabled">
               <v-range-slider
                 v-model="filter.price.range"
                 :max="filter.price.max"
