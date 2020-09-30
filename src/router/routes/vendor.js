@@ -12,7 +12,7 @@ const routes = [
     component: VendorView,
     children: [
       {
-        path: '',
+        path: 'overview',
         name: 'Overview',
         component: Overview,
         meta: { requiresAuth: true, is_vendor: true, vi: 'Tổng quan' },
