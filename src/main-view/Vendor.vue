@@ -25,7 +25,7 @@
     <v-app-bar hide-on-scroll :clipped-left="primaryDrawer.clipped" app dense>
       <v-app-bar-nav-icon @click.stop="primaryDrawer.model = !primaryDrawer.model">
       </v-app-bar-nav-icon>
-      <v-toolbar-title>TD Hostel</v-toolbar-title>
+      <v-toolbar-title>{{ routeName }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <notify-and-profile />
     </v-app-bar>
@@ -48,6 +48,11 @@ export default {
   components: {
     sideMenuBar,
     notifyAndProfile,
+  },
+  computed: {
+    routeName() {
+      return this.$route.meta.vi || 'Yoho';
+    },
   },
   data: () => ({
     primaryDrawer: {

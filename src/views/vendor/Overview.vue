@@ -30,7 +30,17 @@
         <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
       </div>
     </div>
-    <v-card style="position: absolute; right: 20px; bottom: 10px; height: auto; width: 350px;">
+    <v-card
+      style="
+        position: absolute;
+        right: 370px;
+        bottom: 0px;
+        height: auto;
+        width: 300px;
+        z-index: 9998;
+      "
+      elevation="10"
+    >
       <Chatbox
         v-if="this.docs.doc1"
         :doc="this.docs.doc1"
@@ -38,7 +48,17 @@
         v-on:closeChat="closeChatBox($event)"
       />
     </v-card>
-    <v-card style="position: absolute; right: 370px; bottom: 10px; height: auto; width: 350px;">
+    <v-card
+      style="
+        position: absolute;
+        right: 680px;
+        bottom: 0px;
+        height: auto;
+        width: 300px;
+        z-index: 9998;
+      "
+      elevation="10"
+    >
       <Chatbox
         v-if="this.docs.doc2"
         :doc="this.docs.doc2"
@@ -46,7 +66,17 @@
         v-on:closeChat="closeChatBox($event)"
       />
     </v-card>
-    <v-card style="position: absolute; right: 720px; bottom: 10px; height: auto; width: 350px;">
+    <v-card
+      style="
+        position: absolute;
+        right: 990px;
+        bottom: 0px;
+        height: auto;
+        width: 300px;
+        z-index: 9998;
+      "
+      elevation="10"
+    >
       <Chatbox
         v-if="this.docs.doc3"
         :doc="this.docs.doc3"

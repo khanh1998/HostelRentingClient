@@ -47,14 +47,23 @@
     <div class="d-flex flex-nowrap align-center ml-3">
       <v-menu left :offset-y="true" v-if="!isLoadingUser">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" large depressed>
+          <v-btn v-bind="attrs" v-on="on" large depressed icon outlined>
             <v-avatar size="30">
               <v-img :src="user.avatar"></v-img>
             </v-avatar>
-            <p class="font-weight-medium mb-0 ml-2 hidden-sm-and-down">{{ user.username }}</p>
           </v-btn>
         </template>
         <v-list>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ user.username }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Chủ trọ
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
           <template v-for="(item, index) in infoMenu">
             <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
             <v-list-item v-else :key="item.title" :to="item.url">
@@ -182,89 +191,10 @@ export default {
   },
   data: () => ({
     notifications: [],
-    items: [
-      {
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-        title: 'Bùi Quốc Khánh',
-        message: '2.500.000',
-        bargain: true,
-        book: false,
-      },
-      {
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-        title: 'Võ Thị Kim Trang',
-        message: '21/ 6/ 2020 từ 15:30',
-        bargain: false,
-        book: true,
-        seen: false,
-      },
-      {
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-        title: 'Võ Thị Kim Trang',
-        message: '21/ 6/ 2020 từ 15:30',
-        bargain: false,
-        book: true,
-        seen: false,
-      },
-      {
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-        title: 'Võ Thị Kim Thỳ',
-        message: '21/ 6/ 2020 từ 15:30',
-        bargain: false,
-        book: true,
-        seen: false,
-      },
-      {
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-        title: 'Võ Thị Kim Trí',
-        message: '21/ 6/ 2020 từ 15:30',
-        bargain: false,
-        book: true,
-        seen: true,
-      },
-      {
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-        title: 'Võ Thị Kim Chung',
-        message: '21/ 6/ 2020 từ 15:30',
-        bargain: false,
-        book: true,
-        seen: true,
-      },
-      {
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        title: 'Trần Tiến Dực',
-        message: 'Phòng trọ ở đây có thể ở được hơn bốn người không ạ?',
-        bargain: false,
-        book: false,
-      },
-      {
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        title: 'Trần Tiến Duật',
-        message: 'Phòng trọ ở đây có thể ở được hơn bốn người không ạ?',
-        bargain: false,
-        book: false,
-      },
-      {
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        title: 'Trần Tiến Duật',
-        message: 'Phòng trọ ở đây có thể ở được hơn bốn người không ạ?',
-        bargain: false,
-        book: false,
-      },
-    ],
+    items: [],
     infoMenu: [
       {
         title: 'Thông tin',
-        url: '',
-      },
-      { divider: true, inset: false },
-      {
-        title: 'Xem mã QR',
-        url: '/vendor/qrgeneration',
-      },
-      { divider: true, inset: false },
-      {
-        title: 'Đổi mật khẩu',
         url: '',
       },
     ],

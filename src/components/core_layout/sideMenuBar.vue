@@ -59,7 +59,8 @@ export default {
       drawer: true,
       itemsplus: [
         { title: 'Tổng quan', icon: 'menu_dashboard', link: '/vendor' },
-        { title: 'Lịch xem phòng', icon: 'menu_calendar', link: '/vendor/booking' },
+        { title: 'Tin nhắn', icon: 'menu_chat', link: '/vendor/mobile-message' },
+        { title: 'Lịch xem phòng', icon: 'my_schedule', link: '/vendor/booking' },
         { title: 'Lịch rảnh', icon: 'menu_chart', link: '/vendor/schedule' },
         {
           title: 'Quản lý nhà trọ',
