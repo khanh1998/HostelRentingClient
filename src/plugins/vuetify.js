@@ -6,6 +6,7 @@ Vuetify.config.silent = false;
 Vue.use(Vuetify);
 Vue.use(VueI18n);
 
+// eslint-disable-next-line
 const messages = {
   en: {
     $vuetify: {
@@ -33,13 +34,15 @@ const messages = {
     },
   },
 };
+// eslint-disable-next-line
 const i18n = new VueI18n({
   locale: 'en', // set locale
   messages, // set locale messages
 });
 
-export default new Vuetify({
-  lang: {
-    t: (key, ...params) => i18n.t(key, params),
-  },
-});
+// export default new Vuetify({
+//   lang: {
+//     t: (key, ...params) => i18n.t(key, params),
+//   },
+// });
+export default new Vuetify({});
