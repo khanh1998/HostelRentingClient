@@ -11,7 +11,8 @@
             <span
               class="font-weight-bold text-subtitle-2 py-0"
               :style="{ color: '#101526', textAlign: 'center' }"
-            >Chọn Ngày</span>
+              >Chọn Ngày</span
+            >
             <div :style="{ width: '30px', height: '2px', backgroundColor: '#4F60C9' }"></div>
           </v-card-text>
           <v-chip-group class="mt-3" mandatory light v-model="pickedDate" center-active show-arrows>
@@ -24,7 +25,7 @@
               large
               class="pickDay mr-1 d-flex justify-center align-center"
               active-class="white--text"
-              style="height: 60px"
+              style="height: 60px;"
               link
             >
               <div class="d-flex flex-column justify-center align-center pa-1 flex-wrap">
@@ -40,7 +41,8 @@
               class="text-caption px-4 py-2 mx-2 white--text"
               depressed
               @click="stepper.step += 1"
-            >Tiếp tục</v-btn>
+              >Tiếp tục</v-btn
+            >
             <v-btn
               small
               outlined
@@ -48,7 +50,8 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="$emit('cancel')"
-            >Hủy</v-btn>
+              >Hủy</v-btn
+            >
           </v-card-actions>
         </v-card>
       </div>
@@ -58,7 +61,8 @@
             <span
               class="font-weight-bold text-subtitle-2 py-0"
               :style="{ color: '#101526', textAlign: 'center' }"
-            >Chọn Giờ</span>
+              >Chọn Giờ</span
+            >
             <div :style="{ width: '30px', height: '2px', backgroundColor: '#4F60C9' }"></div>
           </v-card-text>
           <v-chip-group v-model="selectedTime" light column center-active show-arrows>
@@ -71,7 +75,8 @@
               active-class="white--text"
               link
               style="width: 60px;"
-            >{{ item }}</v-chip>
+              >{{ item }}</v-chip
+            >
           </v-chip-group>
           <v-card-actions>
             <v-btn
@@ -81,7 +86,8 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="$emit('cancel')"
-            >Hủy</v-btn>
+              >Hủy</v-btn
+            >
             <v-btn
               small
               outlined
@@ -89,7 +95,8 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="stepper.step -= 1"
-            >Quay lại</v-btn>
+              >Quay lại</v-btn
+            >
             <v-btn
               v-if="selectedTime"
               small
@@ -97,7 +104,8 @@
               class="text-caption px-4 py-2 mx-2 white--text"
               depressed
               @click="stepper.step += 1"
-            >Tiếp tục</v-btn>
+              >Tiếp tục</v-btn
+            >
           </v-card-actions>
         </v-card>
       </div>
@@ -111,28 +119,28 @@
             <span
               class="text-subtitle-1 font-weight-medium"
               :style="{ color: '#5a669f', textAlign: 'center' }"
-            >Xác nhận bạn muốn đặt lịch hẹn xem phòng vào</span>
+              >Xác nhận bạn muốn đặt lịch hẹn xem phòng vào</span
+            >
             <div class="d-flex justify-space-between mt-6 px-4">
               <div class="d-flex align-center">
                 <div
                   class="d-flex justify-center align-center pa-2"
-                  style="border: 2px solid #ecedf1; border-radius: 50px"
+                  style="border: 2px solid #ecedf1; border-radius: 50px;"
                 >
                   <v-img max-height="15" max-width="15" src="../../assets/typeDetail/date.png" />
                 </div>
-                <span
-                  class="ml-2 text-subtitle-2"
-                  style="color: #101526"
-                >{{ schedules[pickedDate].formatDay }}</span>
+                <span class="ml-2 text-subtitle-2" style="color: #101526;">{{
+                  schedules[pickedDate].formatDay
+                }}</span>
               </div>
               <div class="d-flex align-center">
                 <div
                   class="d-flex justify-center align-center pa-2"
-                  style="border: 2px solid #ecedf1; border-radius: 50px"
+                  style="border: 2px solid #ecedf1; border-radius: 50px;"
                 >
                   <v-img max-height="15" max-width="15" src="../../assets/typeDetail/time.png" />
                 </div>
-                <span class="ml-2 text-subtitle-2" style="color: #101526">{{selectedTime}}</span>
+                <span class="ml-2 text-subtitle-2" style="color: #101526;">{{ selectedTime }}</span>
               </div>
             </div>
           </v-card-text>
@@ -144,7 +152,8 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="$emit('cancel')"
-            >Hủy</v-btn>
+              >Hủy</v-btn
+            >
             <v-btn
               small
               outlined
@@ -152,14 +161,16 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="stepper.step -= 1"
-            >Quay lại</v-btn>
+              >Quay lại</v-btn
+            >
             <v-btn
               small
               color="#4F60C9"
               class="text-caption px-4 py-2 mx-2 white--text"
               depressed
               @click="$emit('ok', pickDateAndTime())"
-            >Đồng ý</v-btn>
+              >Đồng ý</v-btn
+            >
           </v-card-actions>
         </v-card>
       </div>
@@ -285,12 +296,22 @@ export default {
           (d) => d.code === sevenDates[i].code,
         );
         if (freeDay[0]) {
+          let freeTimes = freeDay[0].timeRange;
+          if (i === 0) {
+            // i == 0 to confirm filter first day only (first day == today)
+            freeTimes = freeTimes.filter((t) => {
+              const currentHour = new Date().getHours(); // ?
+              const currentMinute = new Date().getMinutes(); // ?
+              const time = t.split(':'); // ?
+              return time[0] >= currentHour && time[1] >= currentMinute;
+            });
+          }
           const day = {
             scheduleId: freeDay[0].scheduleId,
             date: sevenDates[i].date,
             formatDay: sevenDates[i].formatDay,
             dayOfWeek: freeDay[0].dayOfWeek,
-            freeTimes: freeDay[0].timeRange,
+            freeTimes,
           };
           schedules.push(day);
         }

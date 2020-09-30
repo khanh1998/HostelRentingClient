@@ -5,45 +5,86 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container v-if="!isLoading">
-      <v-row justify="center">
-        <v-col cols="0" md="4"></v-col>
-        <v-col cols="10" md="8">
-          <v-btn-toggle
-            tile
-            color="deep-purple accent-3"
-            group
-            v-model="buttonGroup.selectedBookingStatus"
-          >
-            <v-btn>
-              SẮP TỚI
-              <span class="amber--text">({{ counter.incomming }})</span>
-            </v-btn>
-            <v-btn>
-              ĐÃ XEM PHÒNG
-              <span class="amber--text">({{ counter.done }})</span>
-            </v-btn>
-            <v-btn>
-              BỎ LỠ
-              <span class="amber--text">({{ counter.cancel }})</span>
-            </v-btn>
-          </v-btn-toggle>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" md="4" class="d-flex justify-center">
-          <v-date-picker
-            no-title
-            v-model="date"
-            :event-color="'red'"
-            :events="arrayEvents"
-            locale="vi-vn"
-            first-day-of-week="1"
-          ></v-date-picker>
-        </v-col>
-        <v-col cols="12" md="8">
-          <div v-for="booking in bookings" v-bind:key="booking.bookingId">
-            <bookingItem :booking="booking" />
-          </div>
+      <v-row justify="center" class="py-10">
+        <v-col cols="12" md="9">
+          <v-row class="mb-10 pa-4 d-flex white justify-space-around align-center">
+            <v-btn class="bg-primary font-nunito text-subtitle-2" dark>Hôm nay</v-btn>
+            <v-btn-toggle v-model="buttonGroup.selectedBookingStatus">
+              <v-btn
+                class="btn-primary font-nunito text-subtitle-2 px-5"
+                style="
+                  border-top-left-radius: 0 !important;
+                  border-bottom-left-radius: 0 !important;
+                  border-top-right-radius: 0 !important;
+                  border-bottom-right-radius: 0 !important;
+                "
+                >Sắp tới <span class="amber--text">({{ counter.incomming }})</span></v-btn
+              >
+              <v-btn
+                class="btn-primary font-nunito text-subtitle-2 px-5"
+                style="
+                  border-top-left-radius: 0 !important;
+                  border-bottom-left-radius: 0 !important;
+                  border-top-right-radius: 0 !important;
+                  border-bottom-right-radius: 0 !important;
+                "
+              >
+                Đã xem phòng <span class="amber--text">({{ counter.done }})</span></v-btn
+              >
+              <v-btn
+                class="btn-primary font-nunito text-subtitle-2 px-5"
+                style="
+                  border-top-left-radius: 0 !important;
+                  border-bottom-left-radius: 0 !important;
+                  border-top-right-radius: 0 !important;
+                  border-bottom-right-radius: 0 !important;
+                "
+              >
+                Bỏ lỡ <span class="amber--text">({{ counter.cancel }})</span></v-btn
+              >
+            </v-btn-toggle>
+            <v-dialog
+              ref="dialog"
+              v-model="modal"
+              :return-value.sync="date"
+              persistent
+              max-width="80%"
+              width="50%"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon class="bg-danger-lighten" v-model="date" v-bind="attrs" v-on="on"
+                  ><v-icon color="#fa5c7c">mdi-calendar-edit</v-icon></v-btn
+                >
+              </template>
+              <v-date-picker
+                v-model="date"
+                scrollable
+                full-width
+                locale="vi-vn"
+                :event-color="'red'"
+                :events="arrayEvents"
+                _first-day-of-week="1"
+                color="#727cf5"
+                :show-current="today"
+                range
+                :title-date-format="titleDateFormat"
+              >
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="modal = false">
+                  Cancel
+                </v-btn>
+                <v-btn text color="primary" @click="$refs.dialog.save(date)">
+                  OK
+                </v-btn>
+                {{ date }}
+              </v-date-picker>
+            </v-dialog>
+          </v-row>
+          <v-row>
+            <div v-for="booking in bookings" v-bind:key="booking.bookingId" style="width: 100%;">
+              <bookingItem :booking="booking" />
+            </div>
+          </v-row>
         </v-col>
       </v-row>
     </v-container>
@@ -59,10 +100,20 @@ export default {
   components: { bookingItem },
   data: () => ({
     arrayEvents: null,
-    date: new Date().toISOString().substr(0, 10),
+    date: '',
+    modal: false,
+    // eslint-disable-next-line
+    titleDateFormat: (date) =>
+      // eslint-disable-next-line
+      `${new Date(date[0]).getDate()}/${new Date(date[0]).getMonth() + 1}${
+        date[1] === undefined
+          ? '' // eslint-disable-line
+          : ` đến ${new Date(date[1]).getDate()}/${new Date(date[1]).getMonth() + 1}` // eslint-disable-line
+      }`,
     buttonGroup: {
       selectedBookingStatus: 0,
     },
+    today: new Date().toISOString().substr(0, 10),
   }),
   methods: {
     ...mapActions({
@@ -70,15 +121,31 @@ export default {
       getUser: 'user/getUser',
       getProvinces: 'renter/common/getProvinces',
     }),
+    initDateRange() {
+      const today = new Date();
+      const endDay = new Date(today);
+      endDay.setDate(endDay.getDate() + 7);
+      this.date = [today.toISOString().substr(0, 10), endDay.toISOString().substr(0, 10)];
+    },
+    getTileDateFormat(date) {
+      return `${date[0]} đến ${date[1]}`;
+    },
   },
   created() {
     this.getUser().then(() => {
-      this.getBookings();
-      // this.getBookings().then(() => {
-      //   // const bookings = this.$store.state.user.bookings.data;
-      //   // this.arrayEvents = bookings.map((booking) =>
-      // new Date(booking.meetTime).toISOString().substr(0, 10),);
-      // });
+      this.getBookings().then(() => {
+        const bookings = this.$store.state.user.bookings.data;
+        console.log(
+          bookings.map((b) => ({
+            bookingId: b.bookingId,
+            meetTime: b.meetTime,
+          })),
+        );
+        this.arrayEvents = bookings.map(
+          (booking) => new Date(booking.meetTime).toISOString().substr(0, 10), // eslint-disable-line
+        ); // eslint-disable-line
+      });
+      this.initDateRange();
     });
   },
   computed: {
@@ -143,3 +210,27 @@ export default {
   },
 };
 </script>
+<style scoped>
+.font-nunito {
+  font-family: 'Nunito', sans-serif !important;
+}
+.btn-primary {
+  color: #6c757d !important;
+  background-color: #eef2f7 !important;
+  border-color: #727cf5 !important;
+  /* box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important; */
+  border-radius: 0.15rem !important;
+  height: 2.5rem !important;
+  opacity: 1 !important;
+}
+.v-btn-toggle > .v-btn.v-btn {
+  opacity: 1 !important;
+  border-style: none !important;
+}
+.v-btn-toggle > .v-btn.v-btn--active {
+  color: #fff !important;
+  background-color: #727cf5 !important;
+  box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
+  opacity: 1 !important;
+}
+</style>

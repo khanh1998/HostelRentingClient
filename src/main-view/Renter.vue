@@ -36,10 +36,19 @@ export default {
 .bg-danger {
   background-color: #fa5c7c !important;
 }
+.bg-danger-lighten {
+  background-color: rgba(250, 92, 124, 0.25) !important;
+}
 .bt-primary-hover:hover {
   color: #fff;
   background-color: #4250f2 !important;
   border-color: #3645f1 !important;
+}
+.primary-hover:hover {
+  color: #fff !important;
+  background-color: #727cf5 !important;
+  box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
+  cursor: pointer;
 }
 .btn-success {
   color: #fff !important;
@@ -69,6 +78,9 @@ export default {
 }
 .text-gray-dark {
   color: #343a40;
+}
+.text-danger {
+  color: #fa5c7c !important;
 }
 .bg-secondary {
   color: #727cf5 !important;

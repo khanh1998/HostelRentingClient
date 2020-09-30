@@ -2,7 +2,7 @@
   <div
     class="d-flex flex-column align-center justify-space-between py-16"
     v-if="!isLoading"
-    style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%"
+    style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%;"
   >
     <v-dialog v-model="dateTimePicker.isOpenPicker" width="350">
       <v-card v-if="!userState.data" color="white" light>
@@ -30,10 +30,8 @@
         <span v-else class="text-h4 white--text">{{ getAvatarTitle() }}</span>
       </v-avatar>
     </v-btn>
-    <span class="text-body-1 font-weight-bold text-center font-nunito" style="color: #222">
-      {{
-      name
-      }}
+    <span class="text-body-1 font-weight-bold text-center font-nunito" style="color: #222;">
+      {{ name }}
     </span>
     <div class="d-flex flex-wrap align-center mt-n7 font-nunito">
       <v-icon color="#ffbc00" class="mr-2" x-small>fas fa-star</v-icon>
@@ -50,7 +48,7 @@
             rounded
             :disabled="userState.data && isVendor"
             class="font-nunito font-weight-bold"
-            style="letter-spacing: 0.05rem !important; background-color: #fff"
+            style="letter-spacing: 0.05rem !important; background-color: #fff;"
             v-bind="attrs"
             v-on="on"
           >
@@ -149,6 +147,8 @@ export default {
       console.log(this.dateTimePicker);
       const dateTime = this.dateTimePicker.date.split('/');
       const timeTime = this.dateTimePicker.time.split(':');
+      console.log(dateTime);
+      console.log(timeTime);
       const bookingObj = {
         renterId: this.userState.data.userId,
         vendorId: this.vendorId,

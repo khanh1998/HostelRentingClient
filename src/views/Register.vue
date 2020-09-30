@@ -115,7 +115,7 @@
                   </v-card-actions>
                   <v-card-text class="d-flex justify-center align-center py-0">
                     <span class="text-muted">Đã có tài khoản?</span>
-                    <v-btn text link color="#727cf5" _height="100%">Đăng nhập</v-btn>
+                    <v-btn text link color="#727cf5" @click="login()">Đăng nhập</v-btn>
                   </v-card-text>
                 </v-card>
                 <!-- vetify -->
@@ -584,6 +584,9 @@ export default {
           this.$router.push('/');
         }
       });
+    },
+    login() {
+      this.$router.push('/login');
     },
   },
   computed: {
