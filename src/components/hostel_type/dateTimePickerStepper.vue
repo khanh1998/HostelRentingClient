@@ -298,6 +298,7 @@ export default {
         if (freeDay[0]) {
           let freeTimes = freeDay[0].timeRange;
           if (i === 0) {
+            console.log(freeDay);
             // i == 0 to confirm filter first day only (first day == today)
             freeTimes = freeTimes.filter((t) => {
               const currentHour = new Date().getHours(); // ?

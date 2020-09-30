@@ -511,7 +511,6 @@ export default {
         console.log('nua');
         console.log(this.filter.coordinator);
         if (this.advanceSearch) {
-          console.log(this.filter);
           this.searchLikeFilter({
             filterProperties: this.filter,
           });

@@ -23,7 +23,7 @@
       <v-overlay :value="dateTimeOverlay.show" absolute opacity="0.8">
         <dateTimePickerStepper
           :width="dateTimeOverlay.width"
-          v-on:ok="receiveDateTime"
+          v-on:ok="receivedDateTime"
           v-on:cancel="dateTimeOverlay.show = false"
           :groupId="group.groupId"
         />

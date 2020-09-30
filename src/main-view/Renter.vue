@@ -67,6 +67,9 @@ export default {
 .text-primary {
   color: #727cf5 !important;
 }
+.text-primary-dark {
+  color: #4250f2 !important;
+}
 .text-gray {
   color: #6c757d !important;
 }

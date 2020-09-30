@@ -175,7 +175,6 @@ export default {
       }
     },
     async receivedDateTime(event) {
-      console.log('thuy');
       this.dateTimePicker.isOpenPicker = false;
       this.dateTimePicker.date = event.date;
       this.dateTimePicker.time = event.time;
