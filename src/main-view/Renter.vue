@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <myAppBar style="box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !import" />
+    <myAppBar style="box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !import;" />
     <v-main
       :style="{
         width: '100%',
@@ -33,6 +33,23 @@ export default {
   box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
   border-radius: 0.15rem !important;
 }
+.bg-danger {
+  background-color: #fa5c7c !important;
+}
+.bg-danger-lighten {
+  background-color: rgba(250, 92, 124, 0.25) !important;
+}
+.bt-primary-hover:hover {
+  color: #fff;
+  background-color: #4250f2 !important;
+  border-color: #3645f1 !important;
+}
+.primary-hover:hover {
+  color: #fff !important;
+  background-color: #727cf5 !important;
+  box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
+  cursor: pointer;
+}
 .btn-success {
   color: #fff !important;
   background-color: #0acf97 !important;
@@ -50,11 +67,23 @@ export default {
 .text-primary {
   color: #727cf5 !important;
 }
+.text-primary-dark {
+  color: #4250f2 !important;
+}
 .text-gray {
   color: #6c757d !important;
 }
 .text-warning {
   color: #ffbc00 !important;
+}
+.text-muted {
+  color: #98a6ad !important;
+}
+.text-gray-dark {
+  color: #343a40;
+}
+.text-danger {
+  color: #fa5c7c !important;
 }
 .bg-secondary {
   color: #727cf5 !important;

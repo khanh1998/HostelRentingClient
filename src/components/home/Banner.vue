@@ -8,8 +8,10 @@
           <div class="d-flex flex-column align-center justify-center mt-16">
             <p
               class="white--text px-2 font-weight-bold slogan"
-              style="letter-spacing: 0.001em !important"
-            >HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT</p>
+              style="letter-spacing: 0.001em !important;"
+            >
+              HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT
+            </p>
             <p class="white--text text-h2">TD HOSTEL</p>
             <div class="flex d-flex px-10" :style="{ width: '100%' }">
               <v-col cols="9">
@@ -53,20 +55,19 @@
                   }"
                   color="#fdde52"
                   @click="searchByCoordinates()"
-                >TÌM KIẾM</v-btn>
+                  >TÌM KIẾM</v-btn
+                >
               </v-col>
             </div>
           </div>
           <div class="flex d-flex justify-end align-center px-10" :style="{ width: '100%' }">
             <!-- eslint-disable max-len -->
-            <v-subheader
-              class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
-            >Tùy chọn nâng cao</v-subheader>
+            <v-subheader class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
+              >Tìm kiếm nâng cao</v-subheader
+            >
             <v-btn icon @click="advanceSearch = !advanceSearch">
               <v-icon color="white">
-                {{
-                advanceSearch ? 'mdi-chevron-up' : 'mdi-chevron-down'
-                }}
+                {{ advanceSearch ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
               </v-icon>
             </v-btn>
           </div>
@@ -76,14 +77,12 @@
           <div class="flex d-flex justify-end align-center" :style="{ width: '100%' }">
             <!-- eslint-disable max-len -->
             <p></p>
-            <v-subheader
-              class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
-            >Tùy chọn nâng cao</v-subheader>
+            <v-subheader class="white--text text-subtitle-1 font-weight-regular px-0 ml-auto"
+              >Tìm kiếm nâng cao</v-subheader
+            >
             <v-btn icon @click="advanceSearch = !advanceSearch">
               <v-icon color="white">
-                {{
-                advanceSearch ? 'mdi-chevron-up' : 'mdi-chevron-down'
-                }}
+                {{ advanceSearch ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
               </v-icon>
             </v-btn>
           </div>
@@ -151,20 +150,27 @@
                 background-color="white"
                 no-data-text="Không có kết quả phù hợp"
                 :style="{
-                borderTopLeftRadius: '0px',
-                borderTopRightRadius: '0px'}"
+                  borderTopLeftRadius: '0px',
+                  borderTopRightRadius: '0px',
+                }"
               >
                 <template slot="selection" slot-scope="{ item }">
-                  <span class="font-nunito font-weight-medium text-body-2">{{ item.schoolName }}</span>
-                  <span
-                    class="font-nunito font-italic text-body-2"
-                  >- {{ item.address.districtName }}, {{item.address.province.provinceName}}</span>
+                  <span class="font-nunito font-weight-medium text-body-2">{{
+                    item.schoolName
+                  }}</span>
+                  <span class="font-nunito font-italic text-body-2"
+                    >- {{ item.address.districtName }},
+                    {{ item.address.province.provinceName }}</span
+                  >
                 </template>
                 <template slot="item" slot-scope="{ item }">
-                  <span class="font-nunito font-weight-medium text-body-2">{{ item.schoolName }}</span>
-                  <span
-                    class="font-nunito font-italic text-body-2"
-                  >- {{ item.address.districtName }}, {{item.address.province.provinceName}}</span>
+                  <span class="font-nunito font-weight-medium text-body-2">{{
+                    item.schoolName
+                  }}</span>
+                  <span class="font-nunito font-italic text-body-2"
+                    >- {{ item.address.districtName }},
+                    {{ item.address.province.provinceName }}</span
+                  >
                 </template>
               </v-autocomplete>
             </v-col>
@@ -234,11 +240,12 @@
                 <v-switch class="ml-auto" hide-details v-model="disabled" />
                 <span
                   class="text-body-1 font-weight-medium px-0"
-                  style="line-height: normal; color: #ffff00"
-                >Giá thuê</span>
+                  style="line-height: normal; color: #ffff00;"
+                  >Giá thuê</span
+                >
               </div>
             </v-col>
-            <v-col cols="5" class="pt-0 mt-10 pl-3">
+            <v-col cols="5" class="pt-0 mt-10 pl-3" v-show="disabled">
               <v-range-slider
                 v-model="filter.price.range"
                 :max="filter.price.max"
@@ -250,16 +257,14 @@
                 step="0.1"
                 :disabled="!disabled"
               />
-              <v-row class="justify-center align-center">
+              <v-row class="justify-center align-center" v-show="false">
                 <!-- eslint-disable max-len -->
-                <v-subheader
-                  class="subtitle-2"
-                  :style="{ height: '20px' }"
-                >{{ filter.price.min }} triệu</v-subheader>
-                <v-subheader
-                  class="ml-auto subtitle-2"
-                  :style="{ height: '20px' }"
-                >{{ filter.price.max }} triệu</v-subheader>
+                <v-subheader class="subtitle-2" :style="{ height: '20px' }"
+                  >{{ filter.price.min }} triệu</v-subheader
+                >
+                <v-subheader class="ml-auto subtitle-2" :style="{ height: '20px' }"
+                  >{{ filter.price.max }} triệu</v-subheader
+                >
                 <v-btn
                   icon
                   color="indigo"
@@ -278,7 +283,9 @@
             <v-col cols="3">
               <div :style="{ width: '100%', border: '2px solid #b2ccf7' }">
                 <div class="flex d-flex justify-center align-center">
-                  <v-subheader class="white--text text-subtitle-1 font-weight-regular">Tiện nghi</v-subheader>
+                  <v-subheader class="white--text text-subtitle-1 font-weight-regular"
+                    >Tiện nghi</v-subheader
+                  >
                   <v-btn
                     color="white"
                     icon
@@ -324,9 +331,9 @@
             <v-col cols="6">
               <div :style="{ width: '100%', border: '2px solid #b2ccf7' }">
                 <div class="flex d-flex justify-center align-center">
-                  <v-subheader
-                    class="white--text text-subtitle-1 font-weight-regular"
-                  >Tiện ích xung quanh</v-subheader>
+                  <v-subheader class="white--text text-subtitle-1 font-weight-regular"
+                    >Tiện ích xung quanh</v-subheader
+                  >
                   <v-btn
                     color="white"
                     icon
@@ -374,7 +381,8 @@
                 }"
                 color="#fdde52"
                 @click="searchByCoordinates()"
-              >TÌM KIẾM</v-btn>
+                >TÌM KIẾM</v-btn
+              >
             </v-col>
           </div>
         </div>
@@ -503,7 +511,6 @@ export default {
         console.log('nua');
         console.log(this.filter.coordinator);
         if (this.advanceSearch) {
-          console.log(this.filter);
           this.searchLikeFilter({
             filterProperties: this.filter,
           });

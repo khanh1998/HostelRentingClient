@@ -228,6 +228,7 @@ const actions = {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
     }
   },
+  // toDo: category
   async filterSearchByCoordinatorResult({ commit }, params) {
     // params = {lat, long, filterProperties}
     try {
@@ -259,13 +260,18 @@ const actions = {
       if (params.filterProperties.price.disable) {
         priceStr = `&maxPrice=${params.filterProperties.price.range[1]}&minPrice=${params.filterProperties.price.range[0]}`;
       }
+      // category
+      let categoryStr = '';
+      if (params.filterProperties.categories.select) {
+        categoryStr = `&categoryId=${params.filterProperties.categories.select}`;
+      }
       // min area
       let minSuperficialityStr = '';
       if (params.filterProperties.minArea.select !== '') {
         const minSuperficiality = params.filterProperties.minArea.select.split(' ')[0];
         minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
       }
-      const url = `/api/v1/types?asc=false&${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=1&size=5&sortBy=score`;
+      const url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=1&size=5&sortBy=score`;
       const res = await window.axios.get(url);
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);

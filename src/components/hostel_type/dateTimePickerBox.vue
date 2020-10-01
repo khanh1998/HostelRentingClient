@@ -2,7 +2,7 @@
   <div
     class="d-flex flex-column align-center justify-space-between py-16"
     v-if="!isLoading"
-    style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%"
+    style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%;"
   >
     <v-dialog v-model="dateTimePicker.isOpenPicker" width="350">
       <v-card v-if="!userState.data" color="white" light>
@@ -30,10 +30,8 @@
         <span v-else class="text-h4 white--text">{{ getAvatarTitle() }}</span>
       </v-avatar>
     </v-btn>
-    <span class="text-body-1 font-weight-bold text-center font-nunito" style="color: #222">
-      {{
-      name
-      }}
+    <span class="text-body-1 font-weight-bold text-center font-nunito" style="color: #222;">
+      {{ name }}
     </span>
     <div class="d-flex flex-wrap align-center mt-n7 font-nunito">
       <v-icon color="#ffbc00" class="mr-2" x-small>fas fa-star</v-icon>
@@ -50,7 +48,7 @@
             rounded
             :disabled="userState.data && isVendor"
             class="font-nunito font-weight-bold"
-            style="letter-spacing: 0.05rem !important; background-color: #fff"
+            style="letter-spacing: 0.05rem !important; background-color: #fff;"
             v-bind="attrs"
             v-on="on"
           >
@@ -80,10 +78,7 @@
           <v-card-title class="headline">Xác nhận đặt lịch</v-card-title>
           <v-card-text v-if="dateTimePicker.date != null && dateTimePicker.time != null">
             Bạn muốn đặt lịch vào ngày
-            <span>
-              {{ dateTimePicker.date.getDate() }}/ {{ dateTimePicker.date.getMonth() }}/
-              {{ dateTimePicker.date.getFullYear() }},
-            </span>
+            <span>{{ dateTimePicker.date }}</span>
             vào lúc {{ dateTimePicker.time }} tại nhà trọ {{ name }}
           </v-card-text>
           <v-card-actions>
@@ -149,20 +144,28 @@ export default {
     async sendBooking() {
       this.dialog.booking = false;
       this.showSnackbar('yellow', 'Booking của bạn đang được tạo');
-      const [hours, minutes] = this.dateTimePicker.time.split(':');
-      this.dateTimePicker.date.setHours(hours);
-      this.dateTimePicker.date.setMinutes(minutes);
-      this.dateTimePicker.date.setSeconds(0);
+      console.log(this.dateTimePicker);
+      const dateTime = this.dateTimePicker.date.split('/');
+      const timeTime = this.dateTimePicker.time.split(':');
+      console.log(dateTime);
+      console.log(timeTime);
       const bookingObj = {
         renterId: this.userState.data.userId,
         vendorId: this.vendorId,
         typeId: this.typeId,
         status: 'INCOMING',
         dealId: null,
-        meetTime: this.dateTimePicker.date.getTime(),
+        meetTime: new Date(
+          dateTime[2],
+          dateTime[1],
+          dateTime[0],
+          timeTime[0],
+          timeTime[1],
+        ).getTime(),
       };
       await this.createBooking(bookingObj);
       const success = this.newlyCreated;
+      console.log(this.newlyCreated);
       if (success) {
         this.showSnackbar('success', 'Bạn đã đặt lịch hẹn xem phòng thành công!!!');
         await sendBookingNotification(this.newlyCreated);
@@ -173,7 +176,6 @@ export default {
     },
     async receivedDateTime(event) {
       this.dateTimePicker.isOpenPicker = false;
-      console.log(event);
       this.dateTimePicker.date = event.date;
       this.dateTimePicker.time = event.time;
       await this.sendBooking();

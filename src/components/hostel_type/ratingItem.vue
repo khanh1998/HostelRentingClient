@@ -4,18 +4,20 @@
     <v-avatar height="45" width="45">
       <v-img max-height="45" max-width="45" src="../../assets/home/thumnail.png" />
     </v-avatar>
-    <div class="ml-5">
+    <div class="ml-5 d-flex flex-column">
       <span class="text-subtitle-2">Võ Thị Kim Thùy</span>
       <v-rating
         v-model="rate"
         color="yellow darken-3"
         background-color="grey darken-1"
         small
+        readonly
         class="pa-0 rating"
       ></v-rating>
-      <span class="text-body-2 font-italic">
-        Phòng trọ sạch sẽ, thoáng mát. An ninh tốt. Nhưng xung quanh còn ồn.
-      </span>
+      <span
+        class="text-body-2 font-italic"
+      >Phòng trọ sạch sẽ, thoáng mát. An ninh tốt. Nhưng xung quanh còn ồn.</span>
+      <span class="text-caption font-nunito">2020-07-28 14:57</span>
     </div>
   </div>
 </template>

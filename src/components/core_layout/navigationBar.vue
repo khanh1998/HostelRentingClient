@@ -140,7 +140,7 @@
             <v-icon left>settings</v-icon>Quản lý phòng trọ
           </v-btn>
           <v-divider class="mx-3 hidden-xs-only" inset vertical style="height: 60px;"></v-divider>
-          <v-menu>
+          <v-menu transition="slide-x-transition">
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
                 <v-avatar size="35px" item v-if="isLoggedIn && !isLoadingUser">
@@ -151,34 +151,34 @@
                 </v-avatar>
               </v-btn>
             </template>
-            <v-list v-if="!isLoggedIn">
+            <v-list v-if="!isLoggedIn" class="menu">
               <v-list-item to="/login">
                 <v-list-item-icon>
-                  <v-icon>login</v-icon>
+                  <v-icon color="#727cf5">login</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Đăng nhập</v-list-item-title>
               </v-list-item>
               <v-list-item to="/register">
                 <v-list-item-icon>
-                  <v-icon>person_add</v-icon>
+                  <v-icon color="#727cf5">person_add</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Đăng ký</v-list-item-title>
               </v-list-item>
               <v-list-item to="#" class="hidden-sm-and-up">
                 <v-list-item-icon>
-                  <v-icon>fas fa-paper-plane</v-icon>
+                  <v-icon color="#727cf5">fas fa-paper-plane</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
               </v-list-item>
               <v-list-item to="/cart" class="hidden-sm-and-up">
                 <v-list-item-icon>
-                  <v-icon>far fa-bookmark</v-icon>
+                  <v-icon color="#727cf5">far fa-bookmark</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
               </v-list-item>
               <v-list-item to="/discovery">
                 <v-list-item-icon>
-                  <v-icon>explore</v-icon>
+                  <v-icon color="#727cf5">explore</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Khám phá</v-list-item-title>
               </v-list-item>
@@ -186,9 +186,9 @@
             <v-list v-if="isLoggedIn">
               <v-list-item to="#">
                 <v-list-item-icon>
-                  <v-icon>far fa-user-circle</v-icon>
+                  <v-icon color="#727cf5">mdi mdi-account-circle</v-icon>
                 </v-list-item-icon>
-                <v-list-item-title>Hồ sơ</v-list-item-title>
+                <v-list-item-title>Tài khoản</v-list-item-title>
               </v-list-item>
               <v-list-item
                 to="#"
@@ -196,7 +196,7 @@
                 v-if="user.role.roleName === 'Người thuê'"
               >
                 <v-list-item-icon>
-                  <v-icon>fas fa-paper-plane</v-icon>
+                  <v-icon color="#727cf5">fas fa-paper-plane</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
               </v-list-item>
@@ -206,7 +206,7 @@
                 v-if="user.role.roleName === 'Người thuê'"
               >
                 <v-list-item-icon>
-                  <v-icon>far fa-bookmark</v-icon>
+                  <v-icon color="#727cf5">far fa-bookmark</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
               </v-list-item>
@@ -216,25 +216,25 @@
                 v-if="user.role.roleName === 'Chủ trọ'"
               >
                 <v-list-item-icon>
-                  <v-icon>settings</v-icon>
+                  <v-icon color="#727cf5">settings</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Quản lý phòng trọ</v-list-item-title>
               </v-list-item>
               <v-list-item to="/qr">
                 <v-list-item-icon>
-                  <v-icon>fas fa-qrcode</v-icon>
+                  <v-icon color="#727cf5">fas fa-qrcode</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Quét mã QR</v-list-item-title>
               </v-list-item>
               <v-list-item to="/discovery">
                 <v-list-item-icon>
-                  <v-icon>explore</v-icon>
+                  <v-icon color="#727cf5">explore</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Khám phá</v-list-item-title>
               </v-list-item>
               <v-list-item @click="logout">
                 <v-list-item-icon>
-                  <v-icon>fas fa-sign-out-alt</v-icon>
+                  <v-icon color="#727cf5">mdi mdi-logout</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Đăng xuất</v-list-item-title>
               </v-list-item>
@@ -274,9 +274,22 @@
 .logo:hover {
   cursor: pointer;
 }
-/* .navigation.v-icon:hover {
-  color: #727cf5 !important;
-} */
+</style>
+<style scoped>
+.v-list-item__title {
+  color: #6c757d;
+  font-family: 'Nunito', sans-serif !important;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+.v-menu__content {
+  box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.3) !important;
+  border: 1px solid #f1f3fa;
+  border: 1px solid #e4eaf2;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
 </style>
 <script>
 import { mapActions } from 'vuex';
