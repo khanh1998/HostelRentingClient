@@ -165,7 +165,9 @@ export default {
     },
   },
   mounted() {
-    this.getMessagingToken();
+    if (messaging) {
+      this.getMessagingToken();
+    }
   },
   computed: {
     ...mapState({

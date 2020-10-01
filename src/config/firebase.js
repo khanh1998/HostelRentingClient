@@ -26,8 +26,11 @@ firebase.initializeApp(firebaseConfig);
 const store = firebase.firestore();
 store.enablePersistence({ synchronizeTabs: true });
 
-const messaging = firebase.messaging();
-messaging.usePublicVapidKey(constant.PUBLIC_VAPID_KEY);
+let messaging = null;
+if (firebase.messaging.isSupported()) {
+  messaging = firebase.messaging();
+  messaging.usePublicVapidKey(constant.PUBLIC_VAPID_KEY);
+}
 
 const auth = firebase.auth();
 

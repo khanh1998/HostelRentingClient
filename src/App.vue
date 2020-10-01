@@ -15,7 +15,9 @@ export default {
   name: 'App',
   components: {},
   mounted() {
-    this.listenTokenRefresh();
+    if (messaging) {
+      this.listenTokenRefresh();
+    }
   },
   methods: {
     getMessagingToken() {

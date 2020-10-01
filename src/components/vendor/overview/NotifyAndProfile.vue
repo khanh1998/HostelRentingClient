@@ -171,7 +171,9 @@ export default {
     changePage() {},
   },
   mounted() {
-    messaging.onMessage(this.receivePayload);
+    if (messaging) {
+      messaging.onMessage(this.receivePayload);
+    }
   },
   computed: {
     listBookChange() {
