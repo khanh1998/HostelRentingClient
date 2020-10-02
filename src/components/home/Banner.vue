@@ -2,7 +2,7 @@
   <div class="d-flex">
     <!-- main thumnail -->
     <div class="banner-right d-flex justify-center" :style="{ width: '100%' }">
-      <v-col cols="8">
+      <v-col cols="11" sm="11" md="8" xl="7">
         <!-- search by location -->
         <div v-show="!advanceSearch">
           <div class="d-flex flex-column align-center justify-center mt-16">
@@ -12,7 +12,12 @@
             >
               HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT
             </p>
-            <p class="white--text text-h2">TD HOSTEL</p>
+            <p
+              class="white--text"
+              style="font-size: 3.75rem !important; font-weight: 300 !important;"
+            >
+              TD HOSTEL
+            </p>
             <div class="flex d-flex px-10" :style="{ width: '100%' }">
               <v-col cols="9">
                 <div
@@ -405,7 +410,7 @@
   overflow: hidden;
 }
 .slogan {
-  font-size: 20px !important;
+  font-size: 2rem !important;
   font-family: Montserrat;
   letter-spacing: 0.1em !important;
   text-align: center;
