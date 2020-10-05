@@ -4,27 +4,10 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container fluid v-if="!isLoading" class="px-0">
-      <!-- <v-container fluid class="px-0"> -->
       <v-row justify="center" style="background-color: #f3f4f9;">
         <v-col cols="12" sm="12" md="10" lg="10" xl="10">
-          <div
-            class="d-flex flex-column justify-center align-center"
-            style="
-              font-size: 25px;
-              color: rgba(47, 100, 162, 0.7);
-              font-family: Oswald;
-              font-weight: 400 !important;
-            "
-          >
-            <div
-              style="
-                width: 140px;
-                border: 1px solid #6c98c6;
-                margin-bottom: 20px;
-                margin-bottom: 20px;
-                margin-top: 70px;
-              "
-            ></div>
+          <div class="d-flex flex-column justify-center align-center topview-lable mt-16">
+            <div class="line-blue mb-5"></div>
             <p>Các Phòng Được Đề Xuất Tốt Nhất</p>
           </div>
         </v-col>

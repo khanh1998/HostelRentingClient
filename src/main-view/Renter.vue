@@ -96,4 +96,19 @@ export default {
 .text-white-50 {
   color: rgba(255, 255, 255, 0.5) !important;
 }
+.line-blue {
+  width: 150px;
+  background-color: #727cf5;
+  height: 2px;
+}
+.content {
+  background-color: #fafbfe;
+}
+.v-sheet.v-card:not(.v-sheet--outlined) {
+  -webkit-box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;
+  box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;
+}
+.cursor:hover {
+  cursor: pointer;
+}
 </style>

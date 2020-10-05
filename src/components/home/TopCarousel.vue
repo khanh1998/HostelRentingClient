@@ -50,24 +50,24 @@ export default {
       },
       1264: {
         arrowsOutside: true,
-        visibleSlides: 2,
+        visibleSlides: 3,
         gap: 5,
         draggingDistance: 70,
-        fixedHeight: '440px',
+        fixedHeight: '500px',
       },
       960: {
         arrowsOutside: false,
-        visibleSlides: 1,
+        visibleSlides: 2,
         gap: 5,
         draggingDistance: 70,
-        fixedHeight: '440px',
+        fixedHeight: '500px',
       },
       600: {
         arrowsOutside: false,
         visibleSlides: 1,
         gap: 5,
         draggingDistance: 70,
-        fixedHeight: '440px',
+        fixedHeight: '500px',
       },
     },
   }),
@@ -92,10 +92,5 @@ export default {
 <style scoped>
 .vueperslides--fixed-height.vueperslides--bullets-outside {
   margin-bottom: 0 !important;
-}
-.line-blue {
-  width: 150px;
-  border: 2px solid #6c98c6;
-  margin-bottom: 30px;
 }
 </style>

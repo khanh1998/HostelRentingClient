@@ -1,23 +1,29 @@
 <template>
-  <v-card class="ml-5 mr-5">
-    <v-img
-      :src="type.typeImages[0].resourceUrl"
+  <v-card class="ml-5 mr-5" style="box-shadow: 0 0 20px 0 rgba(154, 161, 171, 0.15) !important;">
+    <v-carousel
+      height="180"
+      hide-delimiters
+      show-arrows-on-hover
       v-if="type.typeImages.length !== 0"
-      style="height: 180px"
     >
-      <div class="category">
-        <!-- eslint-disable max-len -->
-        <span class="font-weight-bold text-body-1 yellow--text"
-          >{{ type.price }} {{ type.priceUnit }}</span
-        >
-        <br />
-        <span class="text-caption">{{ type.view }} lượt xem</span>
-      </div>
-      <div class="arrow-price">
-        <span class="transition-swing text-caption">{{ type.category.categoryName }}</span>
-      </div>
-    </v-img>
-    <v-img style="height: 180px" src="@/assets/image-error.png" v-else>
+      <v-carousel-item
+        v-for="(image, i) in type.typeImages"
+        :key="i"
+        :src="type.typeImages[i].resourceUrl"
+      >
+        <div class="category">
+          <span class="font-weight-bold text-body-1 yellow--text"
+            >{{ type.price }} {{ type.priceUnit }}</span
+          >
+          <br />
+          <span class="text-caption">{{ type.view }} lượt xem</span>
+        </div>
+        <div class="arrow-price">
+          <span class="transition-swing text-caption">{{ type.category.categoryName }}</span>
+        </div>
+      </v-carousel-item>
+    </v-carousel>
+    <v-img height="180" src="@/assets/image-error.png" v-else>
       <div class="category">
         <!-- eslint-disable max-len -->
         <span class="font-weight-bold text-body-1 yellow--text"
@@ -33,7 +39,10 @@
     <v-divider class="mx-4" />
     <v-row class="d-flex align-center justify-center">
       <v-col cols="10 pt-0">
-        <div class="type-name d-flex align-center py-3" style="height: 60px">
+        <div
+          class="text-primary d-flex align-center py-3"
+          style="height: 60px; border-bottom: 1px solid #e2e6ed;"
+        >
           <p
             style="
               display: block;
@@ -48,7 +57,7 @@
             {{ type.title }}
           </p>
         </div>
-        <div class="mt-3 d-flex align-center" style="height: 30px">
+        <div class="mt-3 d-flex align-center" style="height: 40px;">
           <v-img
             class="shrink mr-3"
             src="@/assets/home/address.png"
@@ -56,7 +65,7 @@
             max-width="20px"
             max-height="20px"
           />
-          <span class="item-text" _v-if="!isLoadingProvinces"
+          <span class="font-nunito text-gray item-text"
             >{{ group.address.streetName }}, {{ group.address.districtName }},
             {{ group.address.provinceName }}</span
           >
@@ -69,8 +78,8 @@
             max-width="25px"
             max-height="25px"
           />
-          <span class="blue--text">BigC:</span>
-          <span class="item-text item-text-detail ml-auto">300 m</span>
+          <span class="blue--text font-nunito">BigC:</span>
+          <span class="item-text item-text-detail ml-auto font-nunito">300 m</span>
         </div>
         <div class="mt-3 d-flex align-center">
           <v-img
@@ -80,8 +89,10 @@
             max-width="15px"
             max-height="15px"
           />
-          <span class="item-title font-weight-black">DIỆN TÍCH</span>
-          <span class="item-text ml-auto">{{ type.superficiality }}m2</span>
+          <span class="item-title font-weight-black font-nunitoy">DIỆN TÍCH</span>
+          <span class="item-text ml-auto font-nunito text-gray-dark"
+            >{{ type.superficiality }} m<sup>2</sup></span
+          >
         </div>
         <div class="mt-3 d-flex align-center">
           <v-img
@@ -91,13 +102,17 @@
             max-width="15"
             max-height="15"
           />
-          <span class="item-title font-weight-black">SỨC CHỨA</span>
-          <span class="item-text ml-auto">{{ type.capacity }} người</span>
+          <span class="item-title font-weight-black font-nunito">SỨC CHỨA</span>
+          <span class="item-text ml-auto font-nunito text-gray-dark"
+            >{{ type.capacity }} người</span
+          >
         </div>
         <v-card-actions class="px-0 mt-3" md="auto">
           <!-- eslint-disable -->
-          <v-btn color="#484848" class="btnDetail pl-3 pr-3" :to="'/detail/' + type.typeId"
-            >CHI TIẾT</v-btn
+          <v-btn
+            class="btnDetail font-nunito bg-primary pl-3 pr-3 white--text"
+            :to="'/detail/' + type.typeId"
+            >Chi Tiết</v-btn
           >
         </v-card-actions>
       </v-col>
@@ -158,15 +173,14 @@ export default {
   width: auto;
   max-width: 80%;
   padding: 8px 16px;
-  background: rgba(32, 112, 185, 0.66);
+  background: rgba(26, 103, 175, 0.66);
   color: #fff;
   text-align: center;
   border-bottom-left-radius: 24px;
   box-sizing: border-box;
 }
 .arrow-price {
-  background-image: linear-gradient(to right, rgba(216, 36, 96, 0.6), #d82460);
-  background-image: linear-gradient(to right, rgba(52, 203, 247, 0.71), #1c63b8);
+  background-image: linear-gradient(to right, rgba(114, 124, 245, 0.71), #1c63b8);
   color: #fff;
   padding: 4px 10px;
   position: absolute;
@@ -181,14 +195,9 @@ export default {
   content: '';
   left: -12px;
   border-top: 15px solid transparent;
-  border-right: 12px solid rgba(52, 203, 247, 0.71);
+  border-right: 12px solid rgba(114, 124, 245, 0.71);
   border-bottom: 15px solid transparent;
   width: 0;
-}
-.type-name {
-  border-bottom: 1px solid #e2e6ed;
-  color: #3476b2;
-  font-size: 16.5px;
 }
 .item-title {
   color: #838e9d;
@@ -197,21 +206,18 @@ export default {
   font-family: 'Lato';
 }
 .item-text {
-  color: #656565;
-  font-size: 14px;
-  font-weight: normal;
-  font-family: 'Lato';
+  font-size: 0.9rem !important;
+  font-weight: 400 !important;
 }
 .item-text-detail {
   color: #3357b4 !important;
 }
 .btnDetail {
-  font-size: 13px;
-  color: #fff;
-  font-family: 'Nunito';
   width: 100%;
 }
 .v-btn:hover {
-  background-color: #6c98c6 !important;
+  color: #fff;
+  background-color: #4250f2 !important;
+  border-color: #3645f1 !important;
 }
 </style>
