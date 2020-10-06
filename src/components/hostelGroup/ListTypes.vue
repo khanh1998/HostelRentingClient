@@ -3,15 +3,14 @@
   <div class="d-flex flex-column flex-md-row flex-wrap">
     <Type
       :group="group"
-      v-for="i in list.length"
+      v-for="i in listType.length"
       :key="i"
       :index="i"
-      :type="list[i - 1]"
+      :type="listType[i - 1]"
       class="mb-8"
     />
   </div>
 </template>
-<style scoped></style>
 <script>
 import Type from './Type.vue';
 
@@ -21,7 +20,14 @@ export default {
   props: {
     list: Array,
     group: Object,
+    page: Number,
+    pageRange: Number,
   },
   data: () => ({}),
+  computed: {
+    listType() {
+      return this.list.slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+    },
+  },
 };
 </script>

@@ -1,16 +1,16 @@
 <template>
   <!-- eslint-disable max-len -->
-  <v-row no-gutters class="d-flex justify-center">
-    <v-col cols="12" md="10">
+  <v-row no-gutters class="d-flex justify-center content">
+    <v-col cols="12" sm="9" md="10" lg="9" xl="8">
       <v-overlay :value="isLoading" absolute>
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
       <v-container v-if="!isLoading">
         <v-row class="mt-5">
-          <v-card class="bg-primary pa-7" style="width: 100%">
-            <v-row no-gutters>
+          <v-card class="bg-primary pa-7" style="width: 100%;">
+            <v-row>
               <v-col cols="12" md="7" class="d-flex align-center">
-                <v-avatar height="100" width="100" color="#4F60C9" style="border: 5px solid #fff">
+                <v-avatar height="100" width="100" color="#4F60C9" style="border: 5px solid #fff;">
                   <span v-if="group.imgUrl === null" class="text-h4 white--text">{{
                     getAvatarTitle()
                   }}</span>
@@ -29,7 +29,7 @@
                   <span class="text-white-50 text-caption font-nunito">40 lượt đánh giá</span>
                 </div>
               </v-col>
-              <v-col cols="12" md="5" class="d-flex flex-wrap align-center">
+              <v-col cols="12" md="5" class="d-flex flex-wrap align-center py-5">
                 <span class="white--text text-body-2 mx-5">
                   Loại phòng:
                   <span class="ml-3 black--text">{{ types.length }}</span>
@@ -47,18 +47,20 @@
             </v-row>
           </v-card>
         </v-row>
-        <v-row class="mt-10 d-flex justify-space-between">
-          <v-col cols="12" md="3" class="pa-0">
+        <v-row class="mt-10 d-flex justify-center">
+          <v-col cols="9" md="3" class="pa-0 mb-10">
             <hostelTypeFilter :types="types" />
           </v-col>
-          <v-col cols="12" md="8" class="pa-0" v-if="!isLoading">
-            <listTypes :list="filterResult" :group="group" />
+          <v-col cols="0" md="1"></v-col>
+          <v-col cols="9" md="8" class="pa-0" v-if="!isLoading">
+            <listTypes :list="filterResult" :group="group" :page="page" :pageRange="pageRange" />
             <v-pagination
               class="mt-4"
               v-model="page"
               :length="getTotalPage"
               prev-icon="mdi-menu-left"
               next-icon="mdi-menu-right"
+              color="#727cf5"
             ></v-pagination>
           </v-col>
         </v-row>
@@ -78,6 +80,10 @@ export default {
   data: () => ({
     rate: '3.5',
     page: 1,
+    pageRange: 2,
+    bottomSheet: {
+      show: false,
+    },
   }),
   methods: {
     ...mapActions({
@@ -120,6 +126,12 @@ export default {
     filterResult() {
       return this.$store.state.renter.hostelGroup.filterResult.data;
     },
+    // list() {
+    //   return this.filterResult.subarray(
+    //     this.pageRange * (this.page - 1),
+    //     this.pageRange * this.page,
+    //   );
+    // },
     result() {
       if (this.types.length !== 0) {
         this.filterTypes({
@@ -130,13 +142,14 @@ export default {
       return null;
     },
     getTotalPage() {
-      return Math.ceil(this.types.length / 5);
+      return Math.ceil(this.types.length / this.pageRange);
     },
   },
   created() {
     // if home.js store is empty then start to call api
     this.getHostelGroup(this.groupId);
     this.getAllHostelTypes(this.groupId).then(() => this.initFilter());
+    // .then(() => this.onPageChange());
   },
 };
 </script>

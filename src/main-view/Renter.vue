@@ -111,4 +111,15 @@ export default {
 .cursor:hover {
   cursor: pointer;
 }
+/* type */
+.type-name {
+  border-bottom: 1px solid #e2e6ed;
+  padding-bottom: 10px;
+  color: #727cf5;
+  font-size: 1.05rem !important;
+}
+.item-text {
+  color: #000;
+  font-size: 0.875rem !important;
+}
 </style>
