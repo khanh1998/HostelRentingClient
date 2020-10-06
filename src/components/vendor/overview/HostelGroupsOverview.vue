@@ -75,7 +75,7 @@
       transition="dialog-bottom-transition"
       class="hidden-md-and-up"
     >
-      <v-card>
+      <v-card v-if="selectedGroup">
         <v-toolbar dark color="primary">
           <v-btn icon dark @click="mobileOverviewDialog = false">
             <v-icon>mdi-close</v-icon>

@@ -2,7 +2,7 @@
   <div
     v-if="!isLoadingRenterList || !isLoadingUser"
     class="d-flex flex-column"
-    style="height: 100%;"
+    style="height: 100%; background: #fff;"
   >
     <v-toolbar color="#6C98C6" dark flat>
       <v-text-field

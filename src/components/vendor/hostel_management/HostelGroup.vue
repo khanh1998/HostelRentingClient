@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card height="100%" class="overflow-y-hidden" elevation="0">
-      <vue-scroll>
+      <vue-scroll v-if="groups.length > 0">
         <v-list nav dense>
           <v-list-item-group v-model="itemGroup" color="primary">
             <v-list-item
@@ -11,7 +11,7 @@
               v-on:click="getGroupItem(item.groupId)"
             >
               <v-list-item-avatar>
-                <v-avatar :color="getRandomColor()" size="36">
+                <v-avatar :color="getColor(i)" size="36">
                   <span class="white--text headline">{{ getShortName(item.groupName) }}</span>
                 </v-avatar>
               </v-list-item-avatar>
@@ -29,6 +29,13 @@
           </v-list-item-group>
         </v-list>
       </vue-scroll>
+      <template v-if="groups.length == 0">
+        <v-list>
+          <v-list-item>
+            <v-list-item-title>Danh sách khu trọ đang trống</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </template>
     </v-card>
   </div>
 </template>
@@ -55,6 +62,10 @@ export default {
       const rand = this.getRandomInt(0, this.colors.length - 1);
       return this.colors[rand];
     },
+    getColor(index) {
+      const colorIndex = index % this.colors.length;
+      return this.colors[colorIndex];
+    },
   },
   data: () => ({
     miniVariant: true,
@@ -62,7 +73,6 @@ export default {
     itemGroup: null,
     colors: [
       'red',
-      'pimk',
       'purple',
       'indigo',
       'blue',

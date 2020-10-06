@@ -8,14 +8,12 @@
       :items-per-page="itemsPerPage"
       :single-expand="singleExpand"
       :expanded.sync="expanded"
-      show-expand
-      item-key="typeName"
       hide-default-footer
       @page-count="pageCount = $event"
       sort-by="status"
       class="ml-16"
     >
-      <template v-slot:top>
+      <template v-slot:top v-if="!isMobile">
         <v-toolbar flat color="white">
           <v-toolbar-title>Loại phòng</v-toolbar-title>
           <v-spacer></v-spacer>
@@ -28,46 +26,6 @@
               hide-details
             ></v-text-field>
           </v-card-title>
-          <v-dialog v-model="dialog" max-width="500px">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn dark fab small text class="mb-2" v-bind="attrs" v-on="on" color="#EF7239">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close">Hủy</v-btn>
-                <v-btn color="blue darken-1" text @click="save">Lưu</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
         </v-toolbar>
       </template>
       <template v-slot:[`item.typeName`]="{ item }">
@@ -79,52 +37,13 @@
         </div>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-badge :content="6" class="ml-5" color="red lighten-2" overlap>
-          <v-icon>mdi-calendar-month-outline</v-icon>
-        </v-badge>
-        <v-badge :content="6" class="ml-5" color="red lighten-2" overlap>
-          <v-icon>mdi-cash-usd-outline</v-icon>
-        </v-badge>
-        <v-icon class="ml-5" @click="editItem(item)"> mdi-pencil </v-icon>
-        <v-icon class="ml-5" @click="deleteItem(item)"> mdi-delete </v-icon>
-      </template>
-      <template v-slot:expanded-item="{ headers, item }">
-        <td :colspan="headers.length">
-          <v-row>
-            <v-col cols="2">
-              <v-card-text style="fontsize: 20px;" class="text-center"> Phòng trống </v-card-text>
-            </v-col>
-            <v-col cols="7" style="max-height: 100px; overflow-y: auto;" class="mt-2" id="style-1">
-              <v-chip
-                class="ml-2 mt-2"
-                color="green lighten-1"
-                v-for="tag in item.roomEm"
-                :key="tag.roomId"
-              >
-                <div v-if="tag.available">
-                  {{ tag.roomName }}
-                </div>
-              </v-chip>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="2">
-              <v-card-text style="fontsize: 20px;" class="text-center"> Phòng đã thuê </v-card-text>
-            </v-col>
-            <v-col cols="7">
-              <v-chip
-                class="ml-2 mt-2"
-                color="red lighten-2"
-                v-for="tag in item.roomFu"
-                :key="tag.roomId"
-              >
-                <div v-if="!tag.available">
-                  {{ tag.roomName }}
-                </div>
-              </v-chip>
-            </v-col>
-          </v-row>
-        </td>
+        <v-btn icon>
+          <v-icon @click="showTypeEditor(item)"> mdi-pencil </v-icon>
+        </v-btn>
+        <v-btn icon class="ml-5" @click="getHostelTypeUrl(item.typeId)">
+          <v-icon> preview </v-icon>
+        </v-btn>
+        <!-- <v-icon class="ml-5" @click="deleteItem(item)"> mdi-delete </v-icon> -->
       </template>
       <template v-slot:no-data>
         <v-btn color="primary" @click="desserts">Reset</v-btn>
@@ -133,40 +52,34 @@
     <div class="text-center pt-2">
       <v-pagination v-model="page" :length="pageCount" color="#6C98C6"></v-pagination>
     </div>
+    <HostelTypeViewerAndEditor
+      :type="typeViewer.selectedType"
+      :show="typeViewer.show"
+      v-on:close="closeTypeEditor"
+    />
   </div>
 </template>
 
 <script>
+import HostelTypeViewerAndEditor from './HostelTypeViewerAndEditor.vue';
+
 export default {
   name: 'HostelType',
   props: ['typesData'],
-  components: {},
+  components: { HostelTypeViewerAndEditor },
   data: () => ({
+    typeViewer: {
+      selectedType: null,
+      show: false,
+    },
     types: [],
+    expanded: [],
     page: 1,
     pageCount: 0,
     itemsPerPage: 8,
     search: '',
     dialog: false,
     singleExpand: true,
-    expanded: [],
-    tags: [
-      'Phòng 401',
-      'Phòng 402',
-      'Phòng 403',
-      'Phòng 404',
-      'Phòng 405',
-      'Phòng 406',
-      'Phòng 407',
-      'Phòng 407',
-      'Phòng 407',
-      'Phòng 407',
-      'Phòng 407',
-      'Phòng 407',
-      'Phòng 407',
-      'Phòng 407',
-      'Phòng 407',
-    ],
     headers: [
       {
         text: 'Tên loại phòng',
@@ -241,8 +154,30 @@ export default {
         return tong;
       });
     },
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+          return true;
+        case 'sm':
+          return true;
+        default:
+          return false;
+      }
+    },
   },
   methods: {
+    getHostelTypeUrl(typeId) {
+      window.open(`${window.location.origin}/detail/${typeId}`);
+    },
+    showTypeEditor(dessertItem) {
+      const { typeId } = dessertItem;
+      const type = this.typesData.find((t) => t.typeId === Number(typeId));
+      this.typeViewer.selectedType = type;
+      this.typeViewer.show = true;
+    },
+    closeTypeEditor() {
+      this.typeViewer.show = false;
+    },
     clicked(value) {
       this.expanded.push(value);
     },

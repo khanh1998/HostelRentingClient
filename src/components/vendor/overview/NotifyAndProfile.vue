@@ -47,8 +47,8 @@
     <div class="d-flex flex-nowrap align-center ml-3">
       <v-menu left :offset-y="true" v-if="!isLoadingUser">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" large depressed icon outlined>
-            <v-avatar size="30">
+          <v-btn v-bind="attrs" v-on="on" icon>
+            <v-avatar>
               <v-img :src="user.avatar"></v-img>
             </v-avatar>
           </v-btn>
