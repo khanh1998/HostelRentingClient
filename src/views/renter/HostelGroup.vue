@@ -142,7 +142,7 @@ export default {
       return null;
     },
     getTotalPage() {
-      return Math.ceil(this.types.length / this.pageRange);
+      return Math.ceil(this.filterResult.length / this.pageRange);
     },
   },
   created() {

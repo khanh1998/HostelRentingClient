@@ -117,6 +117,7 @@ export default {
   padding-bottom: 10px;
   color: #727cf5;
   font-size: 1.05rem !important;
+  width: 100%;
 }
 .item-text {
   color: #000;

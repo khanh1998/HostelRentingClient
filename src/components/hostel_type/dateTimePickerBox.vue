@@ -157,15 +157,15 @@ export default {
         dealId: null,
         meetTime: new Date(
           dateTime[2],
-          dateTime[1],
+          dateTime[1] - 1,
           dateTime[0],
           timeTime[0],
           timeTime[1],
         ).getTime(),
       };
+      console.log(bookingObj);
       await this.createBooking(bookingObj);
       const success = this.newlyCreated;
-      console.log(this.newlyCreated);
       if (success) {
         this.showSnackbar('success', 'Bạn đã đặt lịch hẹn xem phòng thành công!!!');
         await sendBookingNotification(this.newlyCreated);

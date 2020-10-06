@@ -1,7 +1,12 @@
 <template>
   <v-sheet class="mb-2">
-    <v-row no-gutters>
-      <v-col cols="5" md="3" class="d-flex flex-column justify-center align-center py-4 px-2">
+    <v-row no-gutters class="d-flex justify-center">
+      <v-col
+        cols="7"
+        sm="3"
+        md="3"
+        class="d-flex flex-column justify-center align-center py-4 px-2"
+      >
         <span class="font-nunito group-name px-4 py-2" @click="getGroup()">{{
           booking.group.groupName
         }}</span>
@@ -10,16 +15,18 @@
           >{{ booking.vendor.phone }}</span
         >
       </v-col>
-      <v-col cols="5" md="2" class="d-flex flex-column align-start justify-center py-4 px-2">
+      <v-col cols="5" sm="2" md="2" class="d-flex flex-column align-start justify-center py-4 px-2">
         <span class="text-danger font-nunito"
-          >{{ timestamp.getDate() }}-{{ timestamp.getMonth() }}-{{ timestamp.getFullYear() }}</span
+          >{{ timestamp.getDate() }}-{{ timestamp.getMonth() + 1 }}-{{
+            timestamp.getFullYear()
+          }}</span
         >
         <span class="text-muted font-nunito"
           >{{ timestamp.getHours() }}:{{ padZero(timestamp.getMinutes())
           }}{{ timestamp.getMinutes() }}</span
         >
       </v-col>
-      <v-col cols="5" md="7" class="d-flex flex-column align-start py-4 pr-2">
+      <v-col cols="12" sm="7" md="7" class="d-flex flex-column align-start py-4 px-4">
         <span class="text-primary-dark font-nunito type-name" @click="getType()">{{
           booking.type.title
         }}</span>

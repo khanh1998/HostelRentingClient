@@ -6,9 +6,11 @@
     </v-overlay>
     <v-container v-if="!isLoading">
       <v-row justify="center" class="py-10">
-        <v-col cols="12" md="9">
-          <v-row class="mb-10 pa-4 d-flex white justify-space-around align-center">
-            <v-btn class="bg-primary font-nunito text-subtitle-2" dark>Hôm nay</v-btn>
+        <v-col cols="10" sm="11" md="9" lg="9" xl="8">
+          <v-row class="mb-10 d-flex white justify-space-around align-center">
+            <v-btn class="bg-primary font-nunito text-subtitle-2 my-4" dark @click="date = [today]"
+              >Hôm nay</v-btn
+            >
             <v-btn-toggle v-model="buttonGroup.selectedBookingStatus">
               <v-btn
                 class="btn-primary font-nunito text-subtitle-2 px-5"
@@ -43,16 +45,20 @@
                 Bỏ lỡ <span class="amber--text">({{ counter.cancel }})</span></v-btn
               >
             </v-btn-toggle>
+            <span
+              class="text-gray font-nunito font-weight-bold"
+              style="font-size: 1.25rem !important;"
+              >{{ dateRange }}</span
+            >
             <v-dialog
               ref="dialog"
               v-model="modal"
               :return-value.sync="date"
               persistent
-              max-width="80%"
-              width="50%"
+              max-width="350px"
             >
               <template v-slot:activator="{ on, attrs }">
-                <v-btn icon class="bg-danger-lighten" v-model="date" v-bind="attrs" v-on="on"
+                <v-btn icon class="bg-danger-lighten my-4" v-model="date" v-bind="attrs" v-on="on"
                   ><v-icon color="#fa5c7c">mdi-calendar-edit</v-icon></v-btn
                 >
               </template>
@@ -76,7 +82,7 @@
                 <v-btn text color="primary" @click="$refs.dialog.save(date)">
                   OK
                 </v-btn>
-                {{ date }}
+                {{ date }} thuy
               </v-date-picker>
             </v-dialog>
           </v-row>
@@ -102,6 +108,7 @@ export default {
     arrayEvents: null,
     date: '',
     modal: false,
+    selectedDate: [],
     // eslint-disable-next-line
     titleDateFormat: (date) =>
       // eslint-disable-next-line
@@ -135,12 +142,12 @@ export default {
     this.getUser().then(() => {
       this.getBookings().then(() => {
         const bookings = this.$store.state.user.bookings.data;
-        console.log(
-          bookings.map((b) => ({
-            bookingId: b.bookingId,
-            meetTime: b.meetTime,
-          })),
-        );
+        // console.log(
+        //   bookings.map((b) => ({
+        //     bookingId: b.bookingId,
+        //     meetTime: b.meetTime,
+        //   })),
+        // );
         this.arrayEvents = bookings.map(
           (booking) => new Date(booking.meetTime).toISOString().substr(0, 10), // eslint-disable-line
         ); // eslint-disable-line
@@ -158,6 +165,18 @@ export default {
     },
     bookings() {
       const list = this.$store.state.user.bookings.data;
+      console.log(list);
+      let filteredDate = [];
+      if (this.date.length === 1) {
+        filteredDate = list.filter((booking) => {
+          const min = new Date(`${this.date[0]}T00:00:00`).getTime();
+          console.log(min);
+          const max = new Date(`${this.date[0]}T23:59:59`).getTime();
+          console.log(max);
+          return booking.meetTime <= max;
+        });
+      } else console.log('thang');
+      console.log(filteredDate);
       const result = list.filter((booking) => {
         const selectedIdx = this.buttonGroup.selectedBookingStatus;
         switch (selectedIdx) {
@@ -172,6 +191,20 @@ export default {
         }
       });
       return result;
+    },
+    dateRange() {
+      const start = new Date(this.date[0]);
+      const end = new Date(this.date[1]);
+      return `${start.getDate()}/${start.getMonth() + 1}${
+        this.date[1] === undefined // eslint-disable-next-line
+          ? `/${start.getFullYear()}` // eslint-disable-next-line
+          : `${
+              // eslint-disable-line
+              start.getFullYear() === end.getFullYear() // eslint-disable-line
+                ? ` - ${end.getDate()}/${end.getMonth() + 1}/${end.getFullYear()}` // eslint-disable-line
+                : `/${start.getFullYear()}` // eslint-disable-line
+            }` // eslint-disable-line
+      }`;
     },
     incommingBooking() {
       return this.bookings.filter((booking) => booking.status === 'INCOMING');
