@@ -76,13 +76,25 @@
                 :title-date-format="titleDateFormat"
               >
                 <v-spacer></v-spacer>
-                <v-btn text color="primary" @click="modal = false">
+                <v-btn
+                  small
+                  outlined
+                  color="#9e9fa7"
+                  class="text-caption px-4 py-2 mx-2"
+                  depressed
+                  @click="modal = false"
+                >
                   Cancel
                 </v-btn>
-                <v-btn text color="primary" @click="$refs.dialog.save(date)">
+                <v-btn
+                  small
+                  color="#4F60C9"
+                  class="text-caption px-4 py-2 mx-2 white--text"
+                  depressed
+                  @click="$refs.dialog.save(date)"
+                >
                   OK
                 </v-btn>
-                {{ date }} thuy
               </v-date-picker>
             </v-dialog>
           </v-row>
@@ -129,10 +141,12 @@ export default {
       getProvinces: 'renter/common/getProvinces',
     }),
     initDateRange() {
-      const today = new Date();
-      const endDay = new Date(today);
-      endDay.setDate(endDay.getDate() + 7);
+      const list = this.$store.state.user.bookings.data;
+      const today = new Date(list[0].meetTime);
+      const endDay = new Date(list[list.length - 1].meetTime);
+      // endDay.setDate(endDay.getDate() + 7);
       this.date = [today.toISOString().substr(0, 10), endDay.toISOString().substr(0, 10)];
+      console.log(this.date);
     },
     getTileDateFormat(date) {
       return `${date[0]} đến ${date[1]}`;
@@ -140,19 +154,14 @@ export default {
   },
   created() {
     this.getUser().then(() => {
-      this.getBookings().then(() => {
-        const bookings = this.$store.state.user.bookings.data;
-        // console.log(
-        //   bookings.map((b) => ({
-        //     bookingId: b.bookingId,
-        //     meetTime: b.meetTime,
-        //   })),
-        // );
-        this.arrayEvents = bookings.map(
-          (booking) => new Date(booking.meetTime).toISOString().substr(0, 10), // eslint-disable-line
-        ); // eslint-disable-line
-      });
-      this.initDateRange();
+      this.getBookings()
+        .then(() => {
+          const bookings = this.$store.state.user.bookings.data;
+          this.arrayEvents = bookings.map(
+            (booking) => new Date(booking.meetTime).toISOString().substr(0, 10), // eslint-disable-line
+          ); // eslint-disable-line
+        })
+        .then(this.initDateRange());
     });
   },
   computed: {
@@ -165,19 +174,18 @@ export default {
     },
     bookings() {
       const list = this.$store.state.user.bookings.data;
-      console.log(list);
+
       let filteredDate = [];
-      if (this.date.length === 1) {
-        filteredDate = list.filter((booking) => {
-          const min = new Date(`${this.date[0]}T00:00:00`).getTime();
-          console.log(min);
-          const max = new Date(`${this.date[0]}T23:59:59`).getTime();
-          console.log(max);
-          return booking.meetTime <= max;
-        });
-      } else console.log('thang');
-      console.log(filteredDate);
-      const result = list.filter((booking) => {
+      filteredDate = list.filter((booking) => {
+        const min = new Date(`${this.date[0]}T00:00:00`).getTime();
+        let max = new Date(`${this.date[0]}T23:59:59`).getTime();
+        if (this.date.length === 2) {
+          max = new Date(`${this.date[1]}T23:59:59`).getTime();
+        }
+        return booking.meetTime <= max && booking.meetTime >= min;
+      });
+
+      const result = filteredDate.filter((booking) => {
         const selectedIdx = this.buttonGroup.selectedBookingStatus;
         switch (selectedIdx) {
           case 0:
@@ -219,11 +227,11 @@ export default {
       return this.$store.state.user.bookings.isLoading;
     },
     counter() {
-      const bookings = this.$store.state.user.bookings.data;
+      // const bookings = this.$store.state.user.bookings.data;
       let incomming = 0;
       let done = 0;
       let cancel = 0;
-      bookings.forEach((booking) => {
+      this.bookings.forEach((booking) => {
         switch (booking.status) {
           case 'INCOMING':
             incomming += 1;
