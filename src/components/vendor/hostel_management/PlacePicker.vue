@@ -11,10 +11,10 @@
     <br />
     <gmap-map :center="center" :zoom="12" style="width: 100%; height: 400px;">
       <gmap-marker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        @click="center = m.position"
+        :position="marker.position"
+        @click="center = marker.position"
+        :clickable="true"
+        :draggable="true"
       ></gmap-marker>
     </gmap-map>
   </div>
@@ -26,9 +26,9 @@ export default {
     return {
       // default to Montreal to keep it simple
       // change this to whatever makes sense
-      center: { lat: 45.508, lng: -73.587 },
-      markers: [],
-      places: [],
+      center: { lat: 10.8230989, lng: 106.6296638 },
+      marker: { position: { lat: 10.8230989, lng: 106.6296638 } },
+      place: { position: { lat: 10.8230989, lng: 106.6296638 } },
       currentPlace: null,
     };
   },
@@ -48,8 +48,8 @@ export default {
           lat: this.currentPlace.geometry.location.lat(),
           lng: this.currentPlace.geometry.location.lng(),
         };
-        this.markers.push({ position: marker });
-        this.places.push(this.currentPlace);
+        this.marker = { position: marker };
+        this.place = this.currentPlace;
         this.center = marker;
         this.currentPlace = null;
       }
