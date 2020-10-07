@@ -1,31 +1,7 @@
 <template>
   <div>
     <!-- eslint-disable max-len -->
-    <v-overlay :value="overlay.show" light opacity="0.6">
-      <!-- <v-text-field
-        color="#E5E5E5"
-        background-color="#E5E5E5"
-        flat
-        solo-inverted
-        light
-        hide-details
-        autofocus
-        placeholder="Tìm kiếm theo địa điểm, khu vực, địa chỉ bạn muốn ở gần"
-        v-model="searchValue"
-        clearable
-        class="flex-fill"
-        height="30px"
-      >
-        <template v-slot:append>
-          <v-btn
-            @click="
-              overlay.show = false;
-              search();
-            "
-          >Search</v-btn>
-        </template>
-      </v-text-field>-->
-    </v-overlay>
+    <v-overlay :value="overlay.show" light opacity="0.6"> </v-overlay>
     <v-app-bar
       app
       color="#fff"
@@ -34,11 +10,11 @@
       min-height="80"
       max-height="160"
       id="top-bar"
-      style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
+      style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
     >
       <v-row height="80" class="d-flex pa-0">
-        <v-col cols="11" md="7" class="pa-0">
-          <v-row class="ma-0 d-flex align-center" style="height: 100%">
+        <v-col cols="10" md="7" class="pa-0">
+          <v-row class="ma-0 d-flex align-center" style="height: 100%;">
             <v-col cols="3" md="2" class="d-flex align-center">
               <router-link to="/">
                 <v-img
@@ -52,9 +28,9 @@
                 />
               </router-link>
             </v-col>
-            <v-col cols="9" md="7" class="pl-10 pa-0" v-show="!isSearchOptional">
+            <v-col cols="9" md="7" class="pl-10 pa-0 hidden-xs-only" v-show="!isSearchOptional">
               <v-row class="pa-0 d-flex align-center">
-                <div class="col-10 pl-2 searchBar d-flex align-center">
+                <v-col cols="9" md="10" class="pl-2 searchBar d-flex align-center">
                   <gmap-autocomplete
                     placeholder="Địa điểm, khu vực... bạn muốn ở gần"
                     class="col-11 gmap-input text-body-2 blue-grey--text"
@@ -69,15 +45,18 @@
                   >
                     <v-icon>clear</v-icon>
                   </v-btn>
-                </div>
-                <v-col class="col-2 px-0">
+                </v-col>
+                <v-col cols="2" md="2" class="px-0">
                   <v-btn
                     class="bg-primary"
                     depressed
                     @click="searchByCoordinates"
                     height="40"
                     width="100%"
-                    style="border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important;"
+                    style="
+                      border-top-left-radius: 0 !important;
+                      border-bottom-left-radius: 0 !important;
+                    "
                   >
                     <v-icon color="white">search</v-icon>
                   </v-btn>
@@ -87,48 +66,35 @@
           </v-row>
         </v-col>
 
-        <v-col cols="1" md="5" class="ml-auto d-flex justify-end align-center pr-5">
+        <v-col cols="2" md="5" class="ml-auto d-flex justify-end align-center pr-5">
           <v-btn
             color="#727cf5"
             light
             depressed
             outlined
             rounded
-            class="mr-5 hidden-xs-only font-weight-regular font-nunito"
-            style="letter-spacing: 0.01rem !important"
+            class="mr-5 font-weight-regular font-nunito hidden-sm-and-down"
+            style="letter-spacing: 0.01rem !important;"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
           >
-            <v-icon left>fas fa-paper-plane</v-icon>Đăng ký tìm phòng
+            <v-icon left>mdi-home-search</v-icon>Đăng ký tìm phòng
           </v-btn>
-
-          <!-- eslint-disable -->
           <v-btn
             to="/cart"
             depressed
             icon
-            class="hidden-xs-only navigation"
+            class="hidden-sm-and-down navigation"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
           >
-            <v-icon
-              style="font-size: 30px;"
-              color="#98a6ad"
-              _color="#727cf5"
-              class="navigation"
-            >mdi mdi-table-eye</v-icon>
+            <v-icon style="font-size: 30px;" color="#98a6ad" _color="#727cf5" class="navigation"
+              >mdi mdi-table-eye</v-icon
+            >
           </v-btn>
-          <v-btn icon depressed class="hidden-xs-only">
+          <v-btn icon depressed class="hidden-sm-and-down">
             <v-badge color="pink" dot overlap>
               <v-icon style="font-size: 25px;" color="#98a6ad">mdi mdi-bell-outline</v-icon>
             </v-badge>
           </v-btn>
-          <!-- <v-btn
-            to="/cart"
-            depressed
-            _dark
-            class="hidden-xs-only bg-secondary font-nunito"
-            style="letter-spacing: 0.01rem !important"
-            v-if="!user || (user && user.role.roleName === 'Người thuê')"
-          >Lịch hẹn của bạn</v-btn>-->
           <v-btn
             to="/vendor"
             depressed
@@ -143,10 +109,18 @@
           <v-menu transition="slide-x-transition">
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
-                <v-avatar size="35px" item v-if="isLoggedIn && !isLoadingUser">
-                  <v-img :src="user.avatar" :alt="user.username"></v-img>
+                <v-avatar
+                  color="#727cf5"
+                  size="35"
+                  min-width="30"
+                  min-height="30"
+                  item
+                  v-if="isLoggedIn && !isLoadingUser"
+                >
+                  <!-- <v-img :src="user.avatar" :alt="user.username"></v-img> -->
+                  <span class="text-overline white--text">{{ getAvatarTitle(user.username) }}</span>
                 </v-avatar>
-                <v-avatar size="35px" item v-if="!isLoggedIn">
+                <v-avatar size="35px" item v-if="!isLoggedIn" min-width="30" min-height="30">
                   <v-icon>face</v-icon>
                 </v-avatar>
               </v-btn>
@@ -154,7 +128,7 @@
             <v-list v-if="!isLoggedIn" class="menu">
               <v-list-item to="/login">
                 <v-list-item-icon>
-                  <v-icon color="#727cf5">login</v-icon>
+                  <v-icon color="#727cf5">mdi-account-arrow-right</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Đăng nhập</v-list-item-title>
               </v-list-item>
@@ -164,15 +138,15 @@
                 </v-list-item-icon>
                 <v-list-item-title>Đăng ký</v-list-item-title>
               </v-list-item>
-              <v-list-item to="#" class="hidden-sm-and-up">
+              <v-list-item to="#" class="hidden-md-and-up">
                 <v-list-item-icon>
-                  <v-icon color="#727cf5">fas fa-paper-plane</v-icon>
+                  <v-icon color="#727cf5">mdi-home-search</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
               </v-list-item>
-              <v-list-item to="/cart" class="hidden-sm-and-up">
+              <v-list-item to="/cart" class="hidden-md-and-up">
                 <v-list-item-icon>
-                  <v-icon color="#727cf5">far fa-bookmark</v-icon>
+                  <v-icon color="#727cf5">mdi-table-eye</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
               </v-list-item>
@@ -190,23 +164,32 @@
                 </v-list-item-icon>
                 <v-list-item-title>Tài khoản</v-list-item-title>
               </v-list-item>
+              <v-list-item to="#" v-if="user" class="hidden-md-and-up">
+                <v-list-item-icon>
+                  <v-badge color="pink" dot overlap>
+                    <!-- <v-icon style="font-size: 25px;" color="#98a6ad">mdi mdi-bell-outline</v-icon> -->
+                    <v-icon color="#727cf5">mdi mdi-bell-outline</v-icon>
+                  </v-badge>
+                </v-list-item-icon>
+                <v-list-item-title>Thông báo</v-list-item-title>
+              </v-list-item>
               <v-list-item
                 to="#"
-                class="hidden-sm-and-up"
+                class="hidden-md-and-up"
                 v-if="user.role.roleName === 'Người thuê'"
               >
                 <v-list-item-icon>
-                  <v-icon color="#727cf5">fas fa-paper-plane</v-icon>
+                  <v-icon color="#727cf5">mdi-home-search</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
               </v-list-item>
               <v-list-item
                 to="/cart"
-                class="hidden-sm-and-up"
+                class="hidden-md-and-up"
                 v-if="user.role.roleName === 'Người thuê'"
               >
                 <v-list-item-icon>
-                  <v-icon color="#727cf5">far fa-bookmark</v-icon>
+                  <v-icon color="#727cf5">mdi-table-eye</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
               </v-list-item>
@@ -234,7 +217,7 @@
               </v-list-item>
               <v-list-item @click="logout">
                 <v-list-item-icon>
-                  <v-icon color="#727cf5">mdi mdi-logout</v-icon>
+                  <v-icon color="#727cf5">mdi-account-arrow-left</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Đăng xuất</v-list-item-title>
               </v-list-item>
@@ -307,6 +290,9 @@ export default {
     visibleProperty: 'hidden',
   }),
   methods: {
+    getAvatarTitle(name) {
+      return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
+    },
     viewHomePage() {
       this.$router.push('/');
     },
