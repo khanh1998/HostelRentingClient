@@ -19,22 +19,30 @@
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
-      <v-row>
-        <v-col cols="12" md="4">
-          <ImageEditor :images="type.typeImages" />
-        </v-col>
-        <v-col cols="12" md="4"></v-col>
-        <v-col cols="12" md="4"></v-col>
-      </v-row>
+      <v-container fluid>
+        <v-row>
+          <v-col cols="12" md="4">
+            <ImageEditor :images="type.typeImages" />
+          </v-col>
+          <v-col cols="12" md="4">
+            <HostelTypeInfoEditor :type="type" />
+          </v-col>
+          <v-col cols="12" md="4">
+            <HostelTypeFacilityEditor :type="type" />
+          </v-col>
+        </v-row>
+      </v-container>
     </v-card>
   </v-dialog>
 </template>
 <script>
 import ImageEditor from './ImageEditor.vue';
+import HostelTypeInfoEditor from './HostelTypeInfoEditor.vue';
+import HostelTypeFacilityEditor from './HostelTypeFacilityEditor.vue';
 
 export default {
   name: 'HotelTypeViewerAndEditor',
   props: ['show', 'type'],
-  components: { ImageEditor },
+  components: { ImageEditor, HostelTypeInfoEditor, HostelTypeFacilityEditor },
 };
 </script>
