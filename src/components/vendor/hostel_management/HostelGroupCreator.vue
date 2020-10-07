@@ -8,24 +8,65 @@
   >
     <v-card>
       <v-toolbar dark color="primary">
-        <v-btn icon dark @click="dialog = false">
+        <v-btn icon dark @click="$emit('close')">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>Settings</v-toolbar-title>
+        <v-toolbar-title>Tạo khu phòng trọ mới</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-btn dark text @click="dialog = false">
-            Save
+            <v-icon>add</v-icon>
+            Tạo ngay
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
-      <v-card-title>Create hostel group</v-card-title>
+      <v-container fluid>
+        <v-row>
+          <v-col cols="12" md="4">
+            <span class="text-h6"> <v-icon>info</v-icon> Thông tin </span>
+            <v-text-field
+              v-model="newGroup.groupName"
+              placeholder="Tên của khu phòng trọ"
+              prepend-icon="closed_caption"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="4">
+            <PlacePicker />
+          </v-col>
+          <v-col cols="12" md="4"></v-col>
+        </v-row>
+      </v-container>
     </v-card>
   </v-dialog>
 </template>
 <script>
+import PlacePicker from './PlacePicker.vue';
+
 export default {
   name: 'HostelGroupCreator',
   props: ['show'],
+  components: { PlacePicker },
+  data: () => ({
+    newGroup: {
+      vendorId: null,
+      groupName: '',
+      buildingNo: '',
+      longitude: '',
+      latitude: '',
+      ownerJoin: false,
+      imgUrl: null,
+      address: {
+        provinceId: 1,
+        provinceName: 'Thành phố Hồ Chí Minh',
+        districtId: null,
+        districtName: '',
+        wardId: null,
+        wardName: '',
+        streetId: null,
+        streetName: '',
+      },
+      services: [],
+    },
+  }),
 };
 </script>

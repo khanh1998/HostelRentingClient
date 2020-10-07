@@ -62,7 +62,7 @@
           v-if="groupId"
         />
       </div>
-      <HostelGroupCreator :show="showGroupCreator" />
+      <HostelGroupCreator :show="showGroupCreator" @close="showGroupCreator = false" />
     </v-card>
   </div>
 </template>
