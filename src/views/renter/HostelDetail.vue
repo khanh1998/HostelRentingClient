@@ -1,6 +1,6 @@
 <template>
   <v-row no-gutters class="d-flex justify-center white">
-    <v-col cols="12" md="11">
+    <v-col cols="11" sm="9" md="12">
       <!-- <v-overlay :value="(isLoading && isLoadingProvinces)" absolute> -->
       <v-overlay :value="isLoading" absolute>
         <v-progress-circular indeterminate size="64"></v-progress-circular>
@@ -21,26 +21,27 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-row no-gutters>
-          <!-- eslint-disable max-len -->
-          <v-col cols="12" md="8">
+        <v-row>
+          <v-col cols="12" sm="12" md="8">
             <div class="d-flex flex-column justify-sm-center">
               <h2
                 class="font-weight-bold font-nunito"
-                :style="{ color: '#656565', fontSize: '28px' }"
-              >{{ info.title }}</h2>
-              <span class="text-body-2" style="color: #9a9a9a; font-family: 'Lato' !important">
+                :style="{ color: '#656565', fontSize: '1.7rem' }"
+              >
+                {{ info.title }}
+              </h2>
+              <span class="text-muted font-nunito" style="font-size: 0.9rem;">
                 {{ group.address.streetName }}, {{ group.address.districtName }},
                 {{ group.address.provinceName }}
               </span>
             </div>
           </v-col>
-          <v-col cols="12" md="4" class="pl-10">
-            <div class="d-flex flex-column justify-end">
-              <span
-                class="font-weight-medium text-h5 text-primary text-center"
-              >{{ info.price }} {{ info.priceUnit }}/tháng</span>
-              <div class="d-flex rounded-0 d-flex justify-space-between mt-3 px-10">
+          <v-col cols="12" sm="12" md="4" class="d-flex flex-column">
+            <span class="font-weight-medium text-h5 text-primary text-center"
+              >{{ info.price }} {{ info.priceUnit }}/tháng</span
+            >
+            <v-row class="d-flex justify-end">
+              <v-col cols="12" md="11" class="d-flex rounded-0 d-flex justify-space-around mt-3">
                 <div>
                   <div class="d-flex justify-center align-center">
                     <v-img
@@ -50,12 +51,12 @@
                       max-width="25"
                       max-height="25"
                     />
-                    <span class="text-body-1" style="color: #444">
+                    <span class="text-body-1" style="color: #444;">
                       {{ info.superficiality }}m
                       <sup>2</sup>
                     </span>
                   </div>
-                  <span class="text-caption" style="color: #555">Diện tích</span>
+                  <span class="text-caption" style="color: #555;">Diện tích</span>
                 </div>
                 <div>
                   <div class="d-flex justify-center align-center">
@@ -66,59 +67,79 @@
                       max-width="25"
                       max-height="25"
                     />
-                    <span class="text-body-1 ml-2" style="color: #444">{{ info.capacity }} người</span>
+                    <span class="text-body-1 ml-2" style="color: #444;"
+                      >{{ info.capacity }} người</span
+                    >
                   </div>
                   <span
                     class="text-caption ml-auto"
-                    style="color: #555"
+                    style="color: #555;"
                     :style="{ float: 'right' }"
-                  >Sức chứa</span>
+                    >Sức chứa</span
+                  >
                 </div>
-              </div>
-            </div>
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="12" sm="8" md="8" lg="8">
+        <v-row class="justify-center">
+          <v-col cols="12" sm="12" md="8" lg="8">
             <v-carousel
               cycle
               height="400"
               delimiter-icon="mdi-circle-medium"
               hide-delimiter-background
               show-arrows-on-hover
+              v-if="images.length !== 0"
             >
               <v-carousel-item v-for="(image, i) in images" :key="i" :src="images[i]">
                 <div class="category">
                   <!-- eslint-disable max-len -->
                   <span class="font-weight-bold text-body-1 yellow--text">
-                    {{
-                    info.category.categoryName
-                    }}
+                    {{ info.category.categoryName }}
                   </span>
                   <br />
                   <span class="text-caption">{{ info.view }} lượt xem</span>
                 </div>
               </v-carousel-item>
             </v-carousel>
+            <v-img
+              src="@/assets/error-no-image.png"
+              v-else
+              height="400"
+              style="box-shadow: 0 0 35px 0 rgba(255, 22, 22, 0.15) !important;"
+            >
+              <div class="category">
+                <!-- eslint-disable max-len -->
+                <span class="font-weight-bold text-body-1 yellow--text">
+                  {{ info.category.categoryName }}
+                </span>
+                <br />
+                <span class="text-caption">{{ info.view }} lượt xem</span>
+              </div>
+            </v-img>
           </v-col>
-          <v-col cols="12" sm="4" md="4" lg="4" class="pl-10">
-            <dateTimePickerBox
-              :name="group.groupName"
-              :avatar="group.imgUrl"
-              :rating="{ average: 3.5, total: 30 }"
-              :groupId="group.groupId"
-              :typeId="info.typeId"
-              :vendorId="group.vendorId"
-              v-on:openMessage="chatBox.show = true"
-            />
+          <v-col cols="12" sm="12" md="4" lg="4" class="d-flex">
+            <v-row class="d-flex justify-end py-0" style="min-height: 300px !important;">
+              <v-col cols="12" sm="12" md="11" class="py-0">
+                <dateTimePickerBox
+                  :name="group.groupName"
+                  :avatar="group.imgUrl"
+                  :rating="{ average: 3.5, total: 30 }"
+                  :groupId="group.groupId"
+                  :typeId="info.typeId"
+                  :vendorId="group.vendorId"
+                  v-on:openMessage="chatBox.show = true"
+                />
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
         <v-row class="mt-3">
           <v-col cols="12" md="4">
-            <span
-              class="text-subtitle-1 font-nunito font-weight-bold"
-              :style="{ color: '#484848' }"
-            >TIỆN ÍCH</span>
+            <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
+              >TIỆN ÍCH</span
+            >
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '30%' }"></div>
               <div class="line-before" :style="{ width: '90%' }"></div>
@@ -140,43 +161,45 @@
         </v-row>
         <v-row v-if="!isLoadingProvinces" class="mt-5">
           <v-col cols="12" md="8">
-            <span
-              class="text-subtitle-1 font-nunito font-weight-bold"
-              :style="{ color: '#484848' }"
-            >GIÁ TRUNG BÌNH</span>
+            <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
+              >GIÁ TRUNG BÌNH</span
+            >
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '15%' }" />
               <div class="line-before" :style="{ width: '85%' }" />
             </div>
             <v-row class="d-flex flex-wrap mx-0 font-nunito text-subtitle-2">
-              <v-col cols="6" class="pl-0">
+              <v-col cols="12" md="6" class="pl-0">
                 <div class="average-item d-flex align-center">
                   <v-col cols="7" class="d-flex average-infor">{{ district.districtName }}</v-col>
-                  <span class="font-weight-bold mx-auto">{{ wardAverage.price }} triệu / tháng</span>
+                  <span class="font-weight-bold mx-auto"
+                    >{{ wardAverage.price }} triệu / tháng</span
+                  >
                 </div>
               </v-col>
-              <v-col cols="6" class="pr-0">
+              <v-col cols="12" md="6" class="pl-0">
                 <div class="average-item d-flex align-center">
                   <v-col cols="7" class="d-flex average-infor">{{ ward.wardName }}</v-col>
-                  <span class="font-weight-bold mx-auto">{{ districtAverage.price }} triệu / tháng</span>
+                  <span class="font-weight-bold mx-auto"
+                    >{{ districtAverage.price }} triệu / tháng</span
+                  >
                 </div>
               </v-col>
-              <v-col cols="6" class="pl-0">
+              <v-col cols="12" md="6" class="pl-0">
                 <div class="average-item d-flex align-center">
                   <v-col cols="7" class="d-flex average-infor">
-                    {{
-                    group.address.streetName
-                    }}
+                    {{ group.address.streetName }}
                   </v-col>
-                  <span class="font-weight-bold mx-auto">{{ streetAverage.price }} triệu / tháng</span>
+                  <span class="font-weight-bold mx-auto"
+                    >{{ streetAverage.price }} triệu / tháng</span
+                  >
                 </div>
               </v-col>
               <v-col cols="6" class="pl-0">
                 <v-btn
-                  class="align-center font-weight-medium"
+                  class="align-center font-weight-medium text-primary-hover"
                   text
                   height="100%"
-                  color="primary"
                   :to="`/discovery/${this.district.districtId}`"
                 >
                   Xem thêm
@@ -188,10 +211,9 @@
         </v-row>
         <v-row class="mt-10">
           <v-col cols="12" md="8">
-            <span
-              class="text-subtitle-1 font-nunito font-weight-bold"
-              :style="{ color: '#484848' }"
-            >ĐÁNH GIÁ PHÒNG TRỌ</span>
+            <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
+              >ĐÁNH GIÁ PHÒNG TRỌ</span
+            >
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '15%' }" />
               <div class="line-before" :style="{ width: '85%' }" />
@@ -205,7 +227,8 @@
               <span
                 class="text-subtitle-1 font-nunito font-weight-bold"
                 :style="{ color: '#484848' }"
-              >CÓ THỂ BẠN SẼ THÍCH</span>
+                >CÓ THỂ BẠN SẼ THÍCH</span
+              >
               <v-btn
                 class="align-end font-weight-medium ml-auto"
                 text
@@ -221,7 +244,7 @@
               <div class="line-after" :style="{ width: '15%' }" />
               <div class="line-before" :style="{ width: '85%' }" />
             </div>
-            <SuggestionList :list="topView" class="mt-5" />
+            <SuggestionList :list="types" class="mt-5" />
           </v-col>
         </v-row>
         <v-row class="mt-10">
@@ -249,7 +272,7 @@
               <div class="line-after" :style="{ width: '15%' }" />
               <div class="line-before" :style="{ width: '85%' }" />
             </div>
-            <GroupHostelTypes :list="topView" class="mt-5" />
+            <GroupHostelTypes :list="types" class="mt-5" />
           </v-col>
         </v-row>
       </v-container>
@@ -290,7 +313,7 @@ export default {
       getTypeAndGroup: 'renter/hostelType/getTypeAndGroup',
       getProvinces: 'renter/common/getProvinces',
       getStreetStats: 'renter/discovery/getStreetStats',
-      getTopView: 'renter/home/getTopViewHostelTypes',
+      getAllHostelTypes: 'renter/hostelGroup/getAllHostelTypes',
       getHostelGroup: 'renter/hostelGroup/getHostelGroup',
       getUtilities: 'renter/hostelGroup/getNearByUtilities',
     }),
@@ -341,11 +364,6 @@ export default {
       const { districtId } = this.district;
       return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
     },
-    topView: {
-      get() {
-        return this.$store.state.renter.home.topView.data;
-      },
-    },
     images: {
       get() {
         if (this.info) {
@@ -365,7 +383,8 @@ export default {
       const street = this.$store.state.renter.discovery.stats.streets.isLoading;
       const utilities = this.$store.state.renter.discovery.stats.streets.isLoading;
       const suggestionList = this.$store.state.renter.hostelGroup.utilities.isLoading;
-      return type || group || street || suggestionList || utilities;
+      const types = this.$store.state.renter.hostelGroup.hostelTypes.isLoading;
+      return type || group || street || suggestionList || utilities || types;
     },
     isLoadingProvinces() {
       return this.$store.state.renter.common.provinces.isLoading;
@@ -410,14 +429,16 @@ export default {
     utilities() {
       return this.$store.state.renter.hostelGroup.utilities.data;
     },
+    types() {
+      return this.$store.state.renter.hostelGroup.hostelTypes.data;
+    },
   },
   created() {
     // if home.js store is empty then start to call api
-    this.getTypeAndGroup(this.typeId).then(() => this.getNearByUtilities());
+    this.getTypeAndGroup(this.typeId)
+      .then(() => this.getNearByUtilities())
+      .then(() => this.getAllHostelTypes(this.group.groupId));
     this.getProvinces().then(() => this.getStreetStats(this.allStreetIds));
-    if (this.topView.length === 0) {
-      this.getTopView({ size: 10 });
-    }
   },
 };
 </script>

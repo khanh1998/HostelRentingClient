@@ -51,7 +51,7 @@ export default {
       },
       1264: {
         arrowsOutside: true,
-        visibleSlides: 2,
+        visibleSlides: 3,
         draggingDistance: 70,
         fixedHeight: '400',
       },

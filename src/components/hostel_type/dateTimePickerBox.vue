@@ -1,6 +1,6 @@
 <template>
   <div
-    class="d-flex flex-column align-center justify-space-between py-16"
+    class="d-flex flex-column align-center justify-center"
     v-if="!isLoading"
     style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%;"
   >
@@ -24,21 +24,19 @@
         :groupId="groupId"
       />
     </v-dialog>
-    <v-btn icon :to="'/group/' + groupId">
-      <v-avatar height="70" width="70" color="#727cf5">
-        <v-img v-if="avatar" max-height="70" max-width="70" :src="avatar" />
-        <span v-else class="text-h4 white--text">{{ getAvatarTitle() }}</span>
-      </v-avatar>
-    </v-btn>
-    <span class="text-body-1 font-weight-bold text-center font-nunito" style="color: #222;">
+    <v-avatar height="70" width="70" color="#727cf5" @click="getGroup()" class="cursor">
+      <v-img v-if="avatar" max-height="70" max-width="70" :src="avatar" />
+      <span v-else class="text-h4 white--text">{{ getAvatarTitle() }}</span>
+    </v-avatar>
+    <span class="text-body-1 font-weight-bold text-center font-nunito mt-2" style="color: #222;">
       {{ name }}
     </span>
-    <div class="d-flex flex-wrap align-center mt-n7 font-nunito">
+    <div class="d-flex align-center font-nunito my-3">
       <v-icon color="#ffbc00" class="mr-2" x-small>fas fa-star</v-icon>
       <p class="grey--text mb-0">{{ ` ${rating.average} / 5` }}</p>
       <p class="mb-0 ml-1">( {{ rating.total }} )</p>
     </div>
-    <div class="d-flex">
+    <div class="d-flex mb-4">
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -58,7 +56,7 @@
         <span>Hãy nhắn tin để thỏa thuận giá!</span>
       </v-tooltip>
     </div>
-    <div class="below d-flex justify-center align-center">
+    <div class="d-flex justify-center align-center">
       <v-dialog v-model="dialog.booking" persistent max-width="290">
         <template v-slot:activator="{ attrs }">
           <v-btn
@@ -182,6 +180,9 @@ export default {
     },
     getAvatarTitle() {
       return this.name.substring(this.name.lastIndexOf(' ') + 1).substring(0, 1);
+    },
+    getGroup() {
+      this.$router.push(`/group/${this.groupId}`);
     },
   },
   computed: {

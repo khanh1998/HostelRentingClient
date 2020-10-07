@@ -67,6 +67,12 @@ export default {
 .text-primary {
   color: #727cf5 !important;
 }
+.text-primary-hover {
+  color: #727cf5 !important;
+}
+.text-primary-hover:hover {
+  color: #4250f2 !important;
+}
 .text-primary-dark {
   color: #4250f2 !important;
 }

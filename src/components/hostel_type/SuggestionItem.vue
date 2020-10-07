@@ -30,8 +30,8 @@
     <v-row class="d-flex align-center justify-center">
       <v-col cols="10 pt-2">
         <span
+          v-if="group"
           class="text-body-2 font-nunito"
-          _v-if="!isLoadingProvinces"
           style="
             display: block;
             display: -webkit-box;
@@ -41,8 +41,9 @@
             text-overflow: ellipsis;
             color: #484848;
           "
-          >{{ group.address.districtName }}, {{ group.address.provinceName }}</span
         >
+          {{ group.address.districtName }}, {{ group.address.provinceName }}thuy
+        </span>
         <div class="d-flex align-center py-3" style="height: 60px;">
           <p
             style="

@@ -142,10 +142,13 @@ export default {
     }),
     initDateRange() {
       const list = this.$store.state.user.bookings.data;
-      const today = new Date(list[0].meetTime);
+      console.log(list);
+      const startDay = new Date(list[0].meetTime);
       const endDay = new Date(list[list.length - 1].meetTime);
+      // const today = new Date();
+      // const endDay = new Date(today);
       // endDay.setDate(endDay.getDate() + 7);
-      this.date = [today.toISOString().substr(0, 10), endDay.toISOString().substr(0, 10)];
+      this.date = [startDay.toISOString().substr(0, 10), endDay.toISOString().substr(0, 10)];
       console.log(this.date);
     },
     getTileDateFormat(date) {
@@ -161,7 +164,7 @@ export default {
             (booking) => new Date(booking.meetTime).toISOString().substr(0, 10), // eslint-disable-line
           ); // eslint-disable-line
         })
-        .then(this.initDateRange());
+        .then(() => this.initDateRange());
     });
   },
   computed: {

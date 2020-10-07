@@ -57,7 +57,7 @@
             {{ type.title }}
           </p>
         </div>
-        <div class="mt-3 d-flex align-center" style="height: 40px;">
+        <div class="mt-3 d-flex align-center" style="height: 40px;" v-if="group">
           <v-img
             class="shrink mr-3"
             src="@/assets/home/address.png"
@@ -65,10 +65,10 @@
             max-width="20px"
             max-height="20px"
           />
-          <span class="font-nunito text-gray item-text"
-            >{{ group.address.streetName }}, {{ group.address.districtName }},
-            {{ group.address.provinceName }}</span
-          >
+          <span class="font-nunito text-gray item-text">
+            {{ group.address.streetName }}, {{ group.address.districtName }},
+            {{ group.address.provinceName }}
+          </span>
         </div>
         <div class="mt-3 d-flex align-center">
           <v-img
