@@ -16,7 +16,6 @@
                   prepend-icon="mdi-account"
                   type="text"
                   v-model="phone"
-                  autofocus
                   hide-details="auto"
                   validate-on-blur
                   :rules="[rules.empty, rules.phone]"
@@ -25,7 +24,6 @@
                 <v-text-field
                   validate-on-blur
                   id="password"
-                  autofocus
                   hide-details="auto"
                   v-model="password"
                   label="Mật khẩu"
