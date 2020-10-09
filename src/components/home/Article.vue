@@ -213,7 +213,7 @@
             <span class="item-text" style="color: #656565;">Giới nghiêm:</span>
             <div class="d-flex ml-1 left">
               <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
-              <span class="item-text">{{ group.curfewTime }}</span>
+              <span class="item-text" v-else>{{ group.curfewTime }}</span>
             </div>
             <div class="ml-auto d-flex font-nunito">
               <span class="item-text" v-if="group.ownerJoin == false">Không chung chủ</span>

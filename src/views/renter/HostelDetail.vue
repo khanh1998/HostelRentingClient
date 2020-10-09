@@ -22,27 +22,122 @@
           </v-card>
         </v-dialog>
         <v-row>
-          <v-col cols="12" sm="12" md="8">
-            <div class="d-flex flex-column justify-sm-center">
-              <h2
-                class="font-weight-bold font-nunito"
-                :style="{ color: '#656565', fontSize: '1.7rem' }"
-              >
-                {{ info.title }}
-              </h2>
-              <span class="text-muted font-nunito" style="font-size: 0.9rem;">
-                {{ group.address.streetName }}, {{ group.address.districtName }},
-                {{ group.address.provinceName }}
-              </span>
+          <v-col
+            cols="12"
+            sm="12"
+            md="8"
+            class="d-flex flex-column pt-0 align-center align-sm-start"
+          >
+            <h2
+              class="font-weight-bold font-nunito"
+              :style="{ color: '#656565', fontSize: '1.7rem' }"
+            >
+              {{ info.title }}
+            </h2>
+            <span class="text-muted font-nunito" style="font-size: 0.9rem;">
+              {{ group.address.streetName }}, {{ group.address.districtName }},
+              {{ group.address.provinceName }}
+            </span>
+            <div style="width: 100%;" class="d-flex flex-wrap mt-3 justify-space-between">
+              <div class="d-flex flex-column">
+                <span
+                  class="font-nunito text-body-1 d-flex align-end justify-space-between"
+                  style="color: #333333;"
+                >
+                  <v-icon color="#98a6ad" class="mr-1">mdi-vector-square</v-icon>
+                  <span>{{ info.superficiality }}</span>
+                  <span class="text-caption">m<sup>2</sup></span>
+                </span>
+                <span class="text-uppercase font-nunito text-caption" style="color: #656565;"
+                  >Diện tích</span
+                >
+              </div>
+              <div class="d-flex flex-column">
+                <span
+                  class="font-nunito text-body-1 d-flex align-end justify-space-between"
+                  style="color: #333333;"
+                >
+                  <v-icon color="#98a6ad" class="mr-1">mdi-account-group-outline</v-icon>
+                  <span class="mr-1">{{ info.capacity }}</span>
+                </span>
+                <span class="text-uppercase font-nunito text-caption" style="color: #656565;"
+                  >Sức chứa</span
+                >
+              </div>
+              <div class="hidden-xs-only">
+                <div
+                  class="d-flex flex-column"
+                  v-if="info.facilities.filter((f) => f.facilityName.includes('WC')).length !== 0"
+                >
+                  <span
+                    class="font-nunito text-body-1 d-flex align-end justify-space-between"
+                    style="color: #333333;"
+                  >
+                    <v-icon color="#98a6ad" class="mr-1">mdi-human-male-female</v-icon>
+                    <span class="mr-1">{{
+                      info.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
+                    }}</span>
+                  </span>
+                  <span class="text-uppercase font-nunito text-caption" style="color: #656565;"
+                    >Nhà vệ sinh</span
+                  >
+                </div>
+              </div>
+              <div class="d-flex flex-column">
+                <span
+                  class="font-nunito text-body-1 d-flex align-end justify-space-between"
+                  style="color: #333333;"
+                >
+                  <v-icon color="#98a6ad" class="mr-1">mdi-home-account</v-icon>
+                  <span v-if="group.ownerJoin == false">Không</span>
+                  <span v-else>Có</span>
+                </span>
+                <span class="text-uppercase font-nunito text-caption" style="color: #656565;"
+                  >Chung chủ</span
+                >
+              </div>
+              <div class="d-flex flex-column">
+                <span
+                  class="font-nunito text-body-1 d-flex align-end justify-space-between"
+                  style="color: #333333;"
+                >
+                  <v-icon color="#98a6ad" class="mr-1">mdi-clock-check</v-icon>
+                  <span v-if="group.curfewTime === null">Tự do</span>
+                  <span v-else>{{ group.curfewTime }}</span>
+                </span>
+                <span class="text-uppercase font-nunito text-caption" style="color: #656565;"
+                  >Thời gian ra vào</span
+                >
+              </div>
             </div>
           </v-col>
           <v-col cols="12" sm="12" md="4" class="d-flex flex-column">
             <span class="font-weight-medium text-h5 text-primary text-center"
               >{{ info.price }} {{ info.priceUnit }}/tháng</span
             >
-            <v-row class="d-flex justify-end">
-              <v-col cols="12" md="11" class="d-flex rounded-0 d-flex justify-space-around mt-3">
-                <div>
+            <v-row class="d-flex justify-end align-end">
+              <v-col cols="12" md="11" class="d-flex rounded-0 d-flex justify-space-around">
+                <div
+                  style="width: 100%; height: 50px; background-color: #f6f7f9;"
+                  class="mt-2 d-flex align-center px-1 rounded-pill"
+                >
+                  <v-icon large class="white rounded-circle pa-1" _style="height: 100%;"
+                    >mdi-home-currency-usd</v-icon
+                  >
+                  <v-col cols="5" class="d-flex flex-column">
+                    <span class="text-uppercase font-nunito text-caption font-weight-medium"
+                      >Cọc thế chân</span
+                    >
+                    <span class="font-nunito text-caption">1 tháng</span>
+                  </v-col>
+                  <v-col cols="5" class="d-flex flex-column">
+                    <span class="text-uppercase font-nunito text-caption font-weight-medium"
+                      >Cọc giữ chỗ</span
+                    >
+                    <span class="font-nunito text-caption">{{ group.downPayment }} triệu</span>
+                  </v-col>
+                </div>
+                <!-- <div>
                   <div class="d-flex justify-center align-center">
                     <v-img
                       src="@/assets/home/superficies.svg"
@@ -77,13 +172,13 @@
                     :style="{ float: 'right' }"
                     >Sức chứa</span
                   >
-                </div>
+                </div> -->
               </v-col>
             </v-row>
           </v-col>
         </v-row>
         <v-row class="justify-center">
-          <v-col cols="12" sm="12" md="8" lg="8">
+          <v-col cols="12" sm="12" md="8" lg="8" class="pt-0">
             <v-carousel
               cycle
               height="400"
@@ -106,7 +201,8 @@
             <v-img
               src="@/assets/error-no-image.png"
               v-else
-              height="400"
+              min-height="250"
+              max-height="400"
               style="box-shadow: 0 0 35px 0 rgba(255, 22, 22, 0.15) !important;"
             >
               <div class="category">
@@ -119,9 +215,29 @@
               </div>
             </v-img>
           </v-col>
-          <v-col cols="12" sm="12" md="4" lg="4" class="d-flex">
-            <v-row class="d-flex justify-end py-0" style="min-height: 300px !important;">
+          <v-col cols="12" sm="12" md="4" lg="4" class="d-flex pt-0">
+            <v-row class="d-flex justify-end py-0" style="min-height: 350px !important;">
               <v-col cols="12" sm="12" md="11" class="py-0">
+                <!-- <div
+                  style="width: 100%; height: 13%; background-color: #f6f7f9;"
+                  class="mb-3 d-flex align-center px-1 rounded-pill"
+                >
+                  <v-icon large class="white rounded-circle pa-1" _style="height: 100%;"
+                    >mdi-home-currency-usd</v-icon
+                  >
+                  <v-col cols="5" class="d-flex flex-column">
+                    <span class="text-uppercase font-nunito text-caption font-weight-medium"
+                      >Cọc thế chân</span
+                    >
+                    <span class="font-nunito text-caption">1 tháng</span>
+                  </v-col>
+                  <v-col cols="5" class="d-flex flex-column">
+                    <span class="text-uppercase font-nunito text-caption font-weight-medium"
+                      >Cọc giữ chỗ</span
+                    >
+                    <span class="font-nunito text-caption">0.2 triệu</span>
+                  </v-col>
+                </div> -->
                 <dateTimePickerBox
                   :name="group.groupName"
                   :avatar="group.imgUrl"
@@ -148,6 +264,22 @@
           </v-col>
           <v-col cols="12" md="4">
             <servicesBox :services="group.services" />
+          </v-col>
+          <v-col cols="12" md="4" v-if="group.regulations.length !== 0">
+            <v-row class="d-flex justify-end py-0">
+              <v-col cols="12" sm="12" md="11" class="py-0">
+                <span
+                  class="text-subtitle-1 font-nunito font-weight-bold"
+                  :style="{ color: '#484848' }"
+                  >LƯU Ý</span
+                >
+                <div class="d-flex mt-3" :style="{ width: '100%' }">
+                  <div class="line-after" :style="{ width: '30%' }"></div>
+                  <div class="line-before" :style="{ width: '90%' }"></div>
+                </div>
+                <regulationsBox :regulations="group.regulations" />
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
         <v-row>
@@ -287,6 +419,7 @@ import chatBox from '@/components/hostel_type/chatBox.vue';
 import { mapActions, mapGetters } from 'vuex';
 import facilitiesBox from '../../components/hostel_type/facilitiesBox.vue';
 import servicesBox from '../../components/hostel_type/servicesBox.vue';
+import regulationsBox from '../../components/hostel_type/regulationsBox.vue';
 import ratingBox from '../../components/hostel_type/ratingBox.vue';
 import SuggestionList from '../../components/hostel_type/SuggestionList.vue';
 import GroupHostelTypes from '../../components/hostel_type/GroupHostelTypes.vue';
@@ -299,6 +432,7 @@ export default {
     treeView,
     chatBox,
     facilitiesBox,
+    regulationsBox,
     ratingBox,
     SuggestionList,
     GroupHostelTypes,

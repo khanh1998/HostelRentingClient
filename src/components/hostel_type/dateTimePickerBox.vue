@@ -1,6 +1,6 @@
 <template>
   <div
-    class="d-flex flex-column align-center justify-center"
+    class="d-flex flex-column align-center justify-center py-3"
     v-if="!isLoading"
     style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%;"
   >

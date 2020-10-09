@@ -129,4 +129,7 @@ export default {
   color: #000;
   font-size: 0.875rem !important;
 }
+.size-1rem {
+  font-size: 1rem !important;
+}
 </style>
