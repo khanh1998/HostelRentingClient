@@ -1,6 +1,6 @@
 <template>
-  <div no-gutters v-if="!isLoading" class="d-flex flex-row flex-nowrap" style="height: 100%;">
-    <v-card width="100%" height="100%" class="overflow-hidden">
+  <div no-gutters class="d-flex flex-row flex-nowrap" style="height: 100%;">
+    <v-card width="100%" height="100%" class="overflow-hidden" :loading="isLoading">
       <v-navigation-drawer
         v-model="drawer"
         :mini-variant="miniVariant"
@@ -25,23 +25,16 @@
         <v-list>
           <v-list-item>
             <v-list-item-action>
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    color="green"
-                    dark
-                    fab
-                    small
-                    depressed
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="showGroupCreator = !showGroupCreator"
-                  >
-                    <v-icon>add</v-icon>
-                  </v-btn>
-                </template>
-                <span>Tạo khu phòng trọ mới</span>
-              </v-tooltip>
+              <v-btn
+                color="green"
+                dark
+                fab
+                small
+                depressed
+                @click="showGroupCreator = !showGroupCreator"
+              >
+                <v-icon>add</v-icon>
+              </v-btn>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>Tạo khu phòng trọ mới</v-list-item-title>
@@ -133,15 +126,19 @@ export default {
   },
 
   async created() {
-    this.getGroups().then(() => {
-      this.getTypes().then(() => {
-        this.getRooms().then(() => {
-          if (this.groups.length > 0) {
-            this.groupId = this.groups[0].groupId;
-          }
+    if (this.groups.length === 0) {
+      this.getGroups().then(() => {
+        this.getTypes().then(() => {
+          this.getRooms().then(() => {
+            if (this.groups.length > 0) {
+              this.groupId = this.groups[0].groupId;
+            }
+          });
         });
       });
-    });
+    } else {
+      this.groupId = this.groups[0].groupId;
+    }
   },
 };
 </script>

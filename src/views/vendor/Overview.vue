@@ -87,7 +87,7 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import ChatList from '@/components/vendor/overview/ChatList.vue';
 import SlideBooking from '@/components/vendor/overview/SlideBooking.vue';
 import Chatbox from '@/components/vendor/overview/Chatbox.vue';
@@ -114,6 +114,7 @@ export default {
     },
   }),
   computed: {
+    ...mapState('vendor/group', ['groups', 'types', 'rooms']),
     isLoading() {
       return (
         this.$store.state.vendor.group.groups.isLoading ||
@@ -204,10 +205,14 @@ export default {
     },
   },
   async created() {
-    this.getGroups().then(() => {
-      this.getTypes().then(() => this.getRooms());
-    });
-    this.getUser();
+    if (this.groups.data.length === 0) {
+      this.getGroups().then(() => {
+        this.getTypes().then(() => this.getRooms());
+      });
+    }
+    if (!this.user) {
+      this.getUser();
+    }
   },
 };
 </script>

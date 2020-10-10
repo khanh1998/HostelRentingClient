@@ -30,6 +30,12 @@ const myState = () => ({
     error: undefined,
     success: undefined,
   },
+  rules: {
+    data: [],
+    isLoading: false,
+    error: undefined,
+    success: undefined,
+  },
 });
 const getters = {
   getCategoryId: (state) => (id) => {
@@ -79,6 +85,10 @@ const mutationTypes = {
   GET_FACILITIES_REQUEST: 'GET_FACILITIES_REQUEST',
   GET_FACILITIES_SUCCESS: 'GET_FACILITIES_SUCCESS',
   GET_FACILITIES_FAILURE: 'GET_FACILITIES_FAILURE',
+
+  GET_RULES_REQUEST: 'GET_RULES_REQUEST',
+  GET_RULES_SUCCESS: 'GET_RULES_SUCCESS',
+  GET_RULES_FAILURE: 'GET_RULES_FAILURE',
 };
 const mutations = {
   GET_CATEGORIES_REQUEST(state) {
@@ -143,6 +153,19 @@ const mutations = {
   GET_SERVICES_REQUEST(state) {
     state.services.isLoading = true;
   },
+  GET_RULES_REQUEST(state) {
+    state.rules.isLoading = true;
+  },
+  GET_RULES_SUCCESS(state, rules) {
+    state.rules.isLoading = false;
+    state.rules.data = rules;
+    state.rules.success = true;
+  },
+  GET_RULES_FAILURE(state, error) {
+    state.rules.isLoading = false;
+    state.rules.error = error;
+    state.rules.success = false;
+  },
 };
 const actions = {
   async getCategories({ commit, state }) {
@@ -191,6 +214,17 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_SERVICES_FAILURE, error);
+    }
+  },
+  async getAllRules({ commit }) {
+    try {
+      commit(mutationTypes.GET_RULES_REQUEST);
+      const res = await window.axios.get('/api/v1/regulations');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_RULES_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_RULES_FAILURE, error);
     }
   },
 };

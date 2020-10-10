@@ -75,7 +75,9 @@ export default {
     },
   },
   created() {
-    this.getContracts();
+    if (this.contracts.length === 0) {
+      this.getContracts();
+    }
     this.updateExpiringRoomList(this.groupId);
   },
 };

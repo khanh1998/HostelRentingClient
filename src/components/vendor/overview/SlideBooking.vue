@@ -156,7 +156,9 @@ export default {
     },
   },
   created() {
-    this.getBookings();
+    if (this.bookings.length === 0) {
+      this.getBookings();
+    }
   },
   data: () => ({
     chipItems: ['Hôm nay', 'Tuần này', 'Tháng này'],

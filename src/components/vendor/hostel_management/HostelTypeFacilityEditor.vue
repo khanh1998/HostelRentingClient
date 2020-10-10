@@ -47,7 +47,9 @@ export default {
     },
   },
   created() {
-    this.getAllFacilities();
+    if (this.facilities.data.length === 0) {
+      this.getAllFacilities();
+    }
   },
 };
 </script>

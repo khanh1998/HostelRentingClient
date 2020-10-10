@@ -22,18 +22,29 @@
       </v-toolbar>
       <v-container fluid>
         <v-row>
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="3">
             <span class="text-h6"> <v-icon>info</v-icon> Thông tin </span>
             <v-text-field
               v-model="newGroup.groupName"
               placeholder="Tên của khu phòng trọ"
               prepend-icon="closed_caption"
+              hide-details
             ></v-text-field>
+            <v-text-field
+              v-model="newGroup.buildingNo"
+              placeholder="Số nhà"
+              prepend-icon="confirmation_number"
+              hide-details
+            ></v-text-field>
+            <v-divider class="mt-6 mb-3" />
+            <HostelGroupRules />
           </v-col>
           <v-col cols="12" md="4">
             <PlacePicker />
           </v-col>
-          <v-col cols="12" md="4"></v-col>
+          <v-col cols="12" md="5">
+            <HostelGroupServiceEditor :groupService="[]" :create="true" :update="false" />
+          </v-col>
         </v-row>
       </v-container>
     </v-card>
@@ -41,11 +52,13 @@
 </template>
 <script>
 import PlacePicker from './PlacePicker.vue';
+import HostelGroupRules from './HostelGroupRules.vue';
+import HostelGroupServiceEditor from './HostelGroupServiceEditor.vue';
 
 export default {
   name: 'HostelGroupCreator',
   props: ['show'],
-  components: { PlacePicker },
+  components: { PlacePicker, HostelGroupRules, HostelGroupServiceEditor },
   data: () => ({
     newGroup: {
       vendorId: null,

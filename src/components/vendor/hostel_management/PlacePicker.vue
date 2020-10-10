@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h2>Chọn vị trí trên bản đồ</h2>
+      <span class="text-h6"><v-icon>directions</v-icon> Chọn vị trí trên bản đồ</span>
       <label>
         <gmap-autocomplete @place_changed="setPlace" :options="autocompleteOptions">
         </gmap-autocomplete>
@@ -16,8 +16,22 @@
         @click="center = marker.position"
         :clickable="true"
         :draggable="true"
-        :title="currentAddressString"
+        @drag="updateMarker"
       ></gmap-marker>
+      <div slot="visible">
+        <div
+          style="
+            bottom: 0;
+            left: 0;
+            background-color: #0000ff;
+            color: white;
+            position: absolute;
+            z-index: 100;
+          "
+        >
+          {{ addressString }}
+        </div>
+      </div>
     </gmap-map>
   </div>
 </template>
@@ -67,8 +81,16 @@ export default {
           };
           this.center = coord;
           this.place = { position: coord };
+          this.marker = { position: coord };
         });
       }
+    },
+    updateMarker(mouseEvent) {
+      // https://developers.google.com/maps/documentation/javascript/reference/map#MouseEvent
+      const { LatLng } = mouseEvent;
+      const coord = { lat: LatLng.lat, lng: LatLng.lng };
+      this.place = { position: coord };
+      this.center = coord;
     },
   },
   computed: {},

@@ -96,7 +96,7 @@
             >
           </v-toolbar-items>
         </v-toolbar>
-        <ServiceEditor :groupService="groupData.services" />
+        <ServiceEditor :groupService="groupData.services" :create="false" :update="true" />
       </v-dialog>
       <v-btn depressed outlined rounded class="ma-1" color="red" small>
         <v-icon>rule</v-icon>
