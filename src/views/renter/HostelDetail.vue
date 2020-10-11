@@ -137,42 +137,6 @@
                     <span class="font-nunito text-caption">{{ group.downPayment }} triệu</span>
                   </v-col>
                 </div>
-                <!-- <div>
-                  <div class="d-flex justify-center align-center">
-                    <v-img
-                      src="@/assets/home/superficies.svg"
-                      transition="scale-transition"
-                      class="shrink mr-2"
-                      max-width="25"
-                      max-height="25"
-                    />
-                    <span class="text-body-1" style="color: #444;">
-                      {{ info.superficiality }}m
-                      <sup>2</sup>
-                    </span>
-                  </div>
-                  <span class="text-caption" style="color: #555;">Diện tích</span>
-                </div>
-                <div>
-                  <div class="d-flex justify-center align-center">
-                    <v-img
-                      src="@/assets/home/people.png"
-                      transition="scale-transition"
-                      class="shrink"
-                      max-width="25"
-                      max-height="25"
-                    />
-                    <span class="text-body-1 ml-2" style="color: #444;"
-                      >{{ info.capacity }} người</span
-                    >
-                  </div>
-                  <span
-                    class="text-caption ml-auto"
-                    style="color: #555;"
-                    :style="{ float: 'right' }"
-                    >Sức chứa</span
-                  >
-                </div> -->
               </v-col>
             </v-row>
           </v-col>
@@ -252,7 +216,7 @@
           </v-col>
         </v-row>
         <v-row class="mt-3">
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="4" v-if="info.facilities.length !== 0">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
               >TIỆN ÍCH</span
             >
@@ -262,7 +226,7 @@
             </div>
             <facilitiesBox :facilities="info.facilities" />
           </v-col>
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="4" v-if="group.services.length !== 0">
             <servicesBox :services="group.services" />
           </v-col>
           <v-col cols="12" md="4" v-if="group.regulations.length !== 0">
@@ -271,7 +235,7 @@
                 <span
                   class="text-subtitle-1 font-nunito font-weight-bold"
                   :style="{ color: '#484848' }"
-                  >LƯU Ý</span
+                  >QUY ĐỊNH</span
                 >
                 <div class="d-flex mt-3" :style="{ width: '100%' }">
                   <div class="line-after" :style="{ width: '30%' }"></div>

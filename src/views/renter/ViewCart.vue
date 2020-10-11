@@ -44,6 +44,17 @@
               >
                 Bỏ lỡ <span class="amber--text">({{ counter.cancel }})</span></v-btn
               >
+              <!-- <v-btn
+                class="btn-primary font-nunito text-subtitle-2 px-5"
+                style="
+                  border-top-left-radius: 0 !important;
+                  border-bottom-left-radius: 0 !important;
+                  border-top-right-radius: 0 !important;
+                  border-bottom-right-radius: 0 !important;
+                "
+              >
+                Tất cả <span class="amber--text">({{ allBooking.length }})</span></v-btn
+              > -->
             </v-btn-toggle>
             <span
               class="text-gray font-nunito font-weight-bold"
@@ -69,7 +80,6 @@
                 locale="vi-vn"
                 :event-color="'red'"
                 :events="arrayEvents"
-                _first-day-of-week="1"
                 color="#727cf5"
                 :show-current="today"
                 range
@@ -99,7 +109,11 @@
             </v-dialog>
           </v-row>
           <v-row>
-            <div v-for="booking in bookings" v-bind:key="booking.bookingId" style="width: 100%;">
+            <div
+              v-for="booking in bookings.result"
+              v-bind:key="booking.resultbookingId"
+              style="width: 100%;"
+            >
               <bookingItem :booking="booking" />
             </div>
           </v-row>
@@ -118,7 +132,7 @@ export default {
   components: { bookingItem },
   data: () => ({
     arrayEvents: null,
-    date: '',
+    date: [],
     modal: false,
     selectedDate: [],
     // eslint-disable-next-line
@@ -141,15 +155,15 @@ export default {
       getProvinces: 'renter/common/getProvinces',
     }),
     initDateRange() {
-      const list = this.$store.state.user.bookings.data;
-      console.log(list);
-      const startDay = new Date(list[0].meetTime);
-      const endDay = new Date(list[list.length - 1].meetTime);
-      // const today = new Date();
-      // const endDay = new Date(today);
-      // endDay.setDate(endDay.getDate() + 7);
-      this.date = [startDay.toISOString().substr(0, 10), endDay.toISOString().substr(0, 10)];
-      console.log(this.date);
+      const list = this.allBooking;
+      if (list.length !== 0) {
+        const today = new Date(list[0].meetTime);
+        const endDay = new Date(list[list.length - 1].meetTime);
+        // endDay.setDate(endDay.getDate() + 7);
+        this.date = [today.toISOString().substr(0, 10), endDay.toISOString().substr(0, 10)];
+      } else {
+        this.date = [this.today];
+      }
     },
     getTileDateFormat(date) {
       return `${date[0]} đến ${date[1]}`;
@@ -159,7 +173,7 @@ export default {
     this.getUser().then(() => {
       this.getBookings()
         .then(() => {
-          const bookings = this.$store.state.user.bookings.data;
+          const bookings = this.allBooking;
           this.arrayEvents = bookings.map(
             (booking) => new Date(booking.meetTime).toISOString().substr(0, 10), // eslint-disable-line
           ); // eslint-disable-line
@@ -175,15 +189,21 @@ export default {
       const loadingProvinces = this.$store.state.renter.common.provinces.isLoading;
       return loadingUser || loadingBookings || loadingDeals || loadingProvinces;
     },
+    allBooking() {
+      return this.$store.state.user.bookings.data;
+    },
     bookings() {
-      const list = this.$store.state.user.bookings.data;
+      const list = this.allBooking;
 
       let filteredDate = [];
       filteredDate = list.filter((booking) => {
         const min = new Date(`${this.date[0]}T00:00:00`).getTime();
         let max = new Date(`${this.date[0]}T23:59:59`).getTime();
-        if (this.date.length === 2) {
+        if (this.date.length === 2 && this.date[0] !== this.date[1]) {
           max = new Date(`${this.date[1]}T23:59:59`).getTime();
+          if (min > max) {
+            return booking.meetTime <= min && booking.meetTime >= max;
+          }
         }
         return booking.meetTime <= max && booking.meetTime >= min;
       });
@@ -201,11 +221,26 @@ export default {
             return true;
         }
       });
-      return result;
+      return { result, filteredDate };
     },
     dateRange() {
       const start = new Date(this.date[0]);
       const end = new Date(this.date[1]);
+      if (start.getTime() === end.getTime()) {
+        return `${start.getDate()}/${start.getMonth() + 1}/${start.getFullYear()}`;
+      }
+      if (start.getTime() > end.getTime()) {
+        return `${end.getDate()}/${end.getMonth() + 1}${
+          this.date[1] === undefined // eslint-disable-next-line
+            ? `/${end.getFullYear()}` // eslint-disable-next-line
+            : `${
+                // eslint-disable-line
+                end.getFullYear() === start.getFullYear() // eslint-disable-line
+                  ? ` - ${start.getDate()}/${start.getMonth() + 1}/${start.getFullYear()}` // eslint-disable-line
+                  : `/${end.getFullYear()}` // eslint-disable-line
+              }` // eslint-disable-line
+        }`;
+      }
       return `${start.getDate()}/${start.getMonth() + 1}${
         this.date[1] === undefined // eslint-disable-next-line
           ? `/${start.getFullYear()}` // eslint-disable-next-line
@@ -217,24 +252,14 @@ export default {
             }` // eslint-disable-line
       }`;
     },
-    incommingBooking() {
-      return this.bookings.filter((booking) => booking.status === 'INCOMING');
-    },
-    doneBookings() {
-      return this.bookings.filter((booking) => booking.status === 'DONE');
-    },
-    cancelledBookings() {
-      return this.bookings.filter((booking) => booking.status === 'CANCELLED');
-    },
     isLoadingBooking() {
       return this.$store.state.user.bookings.isLoading;
     },
     counter() {
-      // const bookings = this.$store.state.user.bookings.data;
       let incomming = 0;
       let done = 0;
       let cancel = 0;
-      this.bookings.forEach((booking) => {
+      this.bookings.filteredDate.forEach((booking) => {
         switch (booking.status) {
           case 'INCOMING':
             incomming += 1;
@@ -246,7 +271,6 @@ export default {
             cancel += 1;
             break;
           default:
-            console.log('error in counter computed');
         }
       });
       return { incomming, done, cancel };

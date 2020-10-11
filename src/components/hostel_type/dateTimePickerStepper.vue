@@ -295,27 +295,29 @@ export default {
         const freeDay = this.modifyTimeRange(this.rawSchedule).filter(
           (d) => d.code === sevenDates[i].code,
         );
-        if (freeDay[0]) {
-          let freeTimes = freeDay[0].timeRange;
-          if (i === 0) {
-            console.log(freeDay);
-            // i == 0 to confirm filter first day only (first day == today)
-            freeTimes = freeTimes.filter((t) => {
-              const currentHour = new Date().getHours(); // ?
-              const currentMinute = new Date().getMinutes(); // ?
-              const time = t.split(':'); // ?
-              return time[0] >= currentHour && time[1] >= currentMinute;
-            });
-          }
-          const day = {
-            scheduleId: freeDay[0].scheduleId,
-            date: sevenDates[i].date,
-            formatDay: sevenDates[i].formatDay,
-            dayOfWeek: freeDay[0].dayOfWeek,
-            freeTimes,
-          };
-          schedules.push(day);
+        let freeTimes = freeDay[0].timeRange;
+        if (i === 0) {
+          console.log(freeDay);
+          // i == 0 to confirm filter first day only (first day == today)
+          const today = new Date();
+          const freeTime = new Date();
+
+          freeTimes = freeTimes.filter((t) => {
+            const time = t.split(':');
+            freeTime.setHours(time[0]);
+            freeTime.setMinutes(time[1]);
+            freeTime.setMilliseconds(0);
+            return freeTime.getTime() > today.getTime();
+          });
         }
+        const day = {
+          scheduleId: freeDay[0].scheduleId,
+          date: sevenDates[i].date,
+          formatDay: sevenDates[i].formatDay,
+          dayOfWeek: freeDay[0].dayOfWeek,
+          freeTimes,
+        };
+        schedules.push(day);
       }
       this.schedules = schedules;
     },

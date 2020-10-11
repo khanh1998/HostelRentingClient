@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="mb-2">
+  <v-card class="mb-2">
     <v-row no-gutters class="d-flex justify-center">
       <v-col
         cols="7"
@@ -15,42 +15,98 @@
           >{{ booking.vendor.phone }}</span
         >
       </v-col>
-      <v-col cols="5" sm="2" md="2" class="d-flex flex-column align-start justify-center py-4 px-2">
-        <span class="text-danger font-nunito"
-          >{{ timestamp.getDate() }}-{{ timestamp.getMonth() + 1 }}-{{
-            timestamp.getFullYear()
-          }}</span
-        >
-        <span class="text-muted font-nunito"
-          >{{ timestamp.getHours() }}:{{ padZero(timestamp.getMinutes())
-          }}{{ timestamp.getMinutes() }}</span
-        >
+      <v-col
+        cols="4"
+        sm="2"
+        md="2"
+        class="d-flex align-start align-sm-center align-md-center align-lg-center py-4 px-2"
+      >
+        <v-col cols="11" sm="11" md="11" class="d-flex flex-column align-start justify-center px-0">
+          <span class="text-danger font-nunito"
+            >{{ timestamp.getDate() }}-{{ timestamp.getMonth() + 1 }}-{{
+              timestamp.getFullYear()
+            }}</span
+          >
+          <span class="text-muted font-nunito"
+            >{{ timestamp.getHours() }}:{{ padZero(timestamp.getMinutes())
+            }}{{ timestamp.getMinutes() }}</span
+          >
+        </v-col>
+        <v-col cols="1" sm="1" md="1" class="hidden-sm-and-up pa-0">
+          <v-menu bottom left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn dark icon v-bind="attrs" v-on="on">
+                <v-icon color="#727cf5">mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-card>
+              <v-list>
+                <v-list-item _@click="logout">
+                  <v-list-item-icon>
+                    <v-icon color="#727cf5">mdi-account-arrow-left</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>Chi tiết lịch hẹn</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-card>
+          </v-menu>
+        </v-col>
       </v-col>
-      <v-col cols="12" sm="7" md="7" class="d-flex flex-column align-start py-4 px-4">
-        <span class="text-primary-dark font-nunito type-name" @click="getType()">{{
-          booking.type.title
-        }}</span>
-        <span class="my-2">
-          <v-icon color="#727cf5">mdi-home-currency-usd</v-icon>
-          <span class="amber--text text-decoration-line-through font-nunito" v-if="booking.deal">
-            {{ booking.type.price }} {{ booking.type.priceUnit }}
+      <v-col cols="12" sm="7" md="7" class="d-flex py-4 px-4">
+        <v-col cols="12" sm="11" md="11" class="d-flex flex-column align-start">
+          <span class="text-primary-dark font-nunito type-name" @click="getType()">{{
+            booking.type.title
+          }}</span>
+          <span class="my-2">
+            <v-icon color="#727cf5">mdi-home-currency-usd</v-icon>
+            <span class="amber--text text-decoration-line-through font-nunito" v-if="booking.deal">
+              {{ booking.type.price }} {{ booking.type.priceUnit }}
+            </span>
+            <span class="amber--text font-nunito" v-if="!booking.deal">
+              {{ booking.type.price }} {{ booking.type.priceUnit }}
+            </span>
+            <span class="amber--text font-nunito" v-if="booking.deal">
+              {{ booking.deal.offeredPrice }} {{ booking.type.priceUnit }}
+            </span>
+            <small class="font-italic" v-if="booking.deal"> (đã trả giá)</small>
           </span>
-          <span class="amber--text font-nunito" v-if="!booking.deal">
-            {{ booking.type.price }} {{ booking.type.priceUnit }}
-          </span>
-          <span class="amber--text font-nunito" v-if="booking.deal">
-            {{ booking.deal.offeredPrice }} {{ booking.type.priceUnit }}
-          </span>
-          <small class="font-italic" v-if="booking.deal"> (đã trả giá)</small>
-        </span>
-        <small class="font-nunito address" @click="openStreetMap()"
-          ><v-icon color="#727cf5">mdi-google-maps</v-icon>{{ booking.group.buildingNo }}
-          {{ booking.group.address.streetName }}, {{ booking.group.address.wardName }},
-          {{ booking.group.address.districtName }}, {{ booking.group.address.provinceName }}</small
-        >
+          <small class="font-nunito address" @click="openStreetMap()"
+            ><v-icon color="#727cf5">mdi-google-maps</v-icon>{{ booking.group.buildingNo }}
+            {{ booking.group.address.streetName }}, {{ booking.group.address.wardName }},
+            {{ booking.group.address.districtName }},
+            {{ booking.group.address.provinceName }}</small
+          >
+        </v-col>
+        <v-col cols="0" sm="1" md="1" class="hidden-xs-only pa-0">
+          <v-menu bottom left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn dark icon v-bind="attrs" v-on="on">
+                <v-icon color="#727cf5">mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                to="#"
+                style="min-height: 20px !important;"
+                class="py-3 pl-3 pr-10 item-hover"
+              >
+                <v-icon color="#6c757d" class="mr-2" small>mdi-file-question</v-icon>
+                <v-list-item-title class="item-hover">Chi tiết lịch hẹn</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="#" class="pa-3 item-hover">
+                <v-icon color="#6c757d" class="mr-2 item-hover" small>report</v-icon>
+                <v-list-item-title class="item-hover">Báo cáo</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="#" class="pa-3">
+                <v-icon small class="mr-2" color="#6c757d">mdi-comment-eye</v-icon>
+                <v-list-item-title class="item-hover">Nhận xét</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-col>
       </v-col>
     </v-row>
-  </v-sheet>
+  </v-card>
 </template>
 <style scoped></style>
 <script>
@@ -131,6 +187,9 @@ export default {
       const url = `https://www.google.com/maps/search/${lat},${long}/@${lat},${long},17z?hl=vi`;
       window.open(url, '_blank');
     },
+    getDetail() {
+      console.log('detail');
+    },
   },
   created() {
     this.getProvinces();
@@ -166,10 +225,21 @@ export default {
   color: #33cc33 !important;
   cursor: pointer;
 }
-.meeting-time {
-  color: #0acf97 !important;
-  /* background-color: rgba(10, 207, 151, 0.25) !important; */
-  /* border-color: #0acf97 !important; */
-  border-radius: 0.2rem !important;
+.v-list-item__title {
+  color: #6c757d;
+  font-family: 'Nunito', sans-serif !important;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+.v-menu__content {
+  box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.3) !important;
+  border: 1px solid #f1f3fa;
+  /* border: 1px solid #e4eaf2; */
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+.item-hover:hover {
+  color: #272e37 !important;
 }
 </style>

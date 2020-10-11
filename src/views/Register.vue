@@ -506,6 +506,7 @@ export default {
         });
     },
     initReCaptcha() {
+      console.log('vao');
       setTimeout(() => {
         const vm = this;
         console.log(vm);

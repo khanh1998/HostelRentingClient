@@ -87,7 +87,7 @@
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
           >
             <v-icon style="font-size: 30px;" color="#98a6ad" _color="#727cf5" class="navigation"
-              >mdi mdi-table-eye</v-icon
+              >mdi-account-clock-outline</v-icon
             >
           </v-btn>
           <v-btn icon depressed class="hidden-sm-and-down">
@@ -146,7 +146,7 @@
               </v-list-item>
               <v-list-item to="/cart" class="hidden-md-and-up">
                 <v-list-item-icon>
-                  <v-icon color="#727cf5">mdi-table-eye</v-icon>
+                  <v-icon color="#727cf5">mdi-account-clock-outline</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
               </v-list-item>
@@ -189,7 +189,7 @@
                 v-if="user.role.roleName === 'Người thuê'"
               >
                 <v-list-item-icon>
-                  <v-icon color="#727cf5">mdi-table-eye</v-icon>
+                  <v-icon color="#727cf5">mdi-account-clock-outline</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
               </v-list-item>
