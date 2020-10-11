@@ -16,7 +16,7 @@
             @click="center = marker.position"
             :clickable="true"
             :draggable="true"
-            @dragend.stop="updateMarker"
+            @dragend="updateMarker"
           ></gmap-marker>
           <div slot="visible">
             <div
