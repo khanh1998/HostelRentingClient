@@ -16,7 +16,7 @@
             @click="center = marker.position"
             :clickable="true"
             :draggable="true"
-            @drag="updateMarker"
+            @dragend.stop="updateMarker"
           ></gmap-marker>
           <div slot="visible">
             <div
@@ -49,7 +49,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
+// import axios from 'axios';
 
 export default {
   name: 'PlacePicker',
@@ -74,6 +74,7 @@ export default {
 
   mounted() {
     this.geolocate();
+    this.updateSelectableAddress();
   },
 
   methods: {
@@ -108,6 +109,7 @@ export default {
     updateMarker(mouseEvent) {
       // https://developers.google.com/maps/documentation/javascript/reference/map#MouseEvent
       const { LatLng } = mouseEvent;
+      console.log(`new coords: ${LatLng}`);
       const coord = { lat: LatLng.lat, lng: LatLng.lng };
       this.place = { position: coord };
       this.marker = { position: coord };
@@ -117,9 +119,11 @@ export default {
       const key = 'AIzaSyDNBmxVGbZ4Je5XHPRqqaZPmDFKjKPPhXk';
       const { lat, lng } = coords;
       const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${key}`;
-      const res = await axios.get(url);
+      let res = await fetch(url);
       if (res.status === 200) {
-        const includeRoutes = res.data.results.filter((item) => {
+        res = await res.json();
+        console.log(res);
+        const includeRoutes = res.results.filter((item) => {
           const indexR = item.address_components.findIndex((compo) => {
             const includeRoute = compo.types.includes('route');
             return includeRoute;
@@ -131,14 +135,17 @@ export default {
       }
       return null;
     },
+    updateSelectableAddress() {
+      const { position } = this.marker;
+      this.searchByCoord(position).then((formattedAddresses) => {
+        this.coordsToString.selectableAddresses = formattedAddresses;
+      });
+    },
   },
   watch: {
     marker: {
       handler() {
-        const { position } = this.marker;
-        this.searchByCoord(position).then((formattedAddresses) => {
-          this.selectableAddresses = formattedAddresses;
-        });
+        this.updateSelectableAddress();
       },
       deep: true,
     },
