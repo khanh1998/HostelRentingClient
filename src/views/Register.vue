@@ -18,8 +18,8 @@
         </v-dialog>
         <div v-show="!showRenterInfor" style="width: 100%;">
           <div v-show="!showRole" style="width: 100%;">
-            <v-row class="d-flex justify-center align-center">
-              <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
+            <v-row class="d-flex justify-center align-center red" style="position: relative;">
+              <v-col cols="11" xl="4" lg="4" sm="8" md="4" class="pa-0" style="position: absolute;">
                 <!-- account -->
                 <v-card
                   v-show="!vetify"
@@ -198,9 +198,7 @@
                   </v-card-text>
                 </v-card>
               </v-col>
-              <v-col>
-                <div id="recaptcha-container"></div>
-              </v-col>
+              <div id="recaptcha-container" style="position: absolute;"></div>
             </v-row>
           </div>
           <!-- confirm role -->
@@ -217,7 +215,7 @@
               </v-col>
             </v-row>
             <v-row class="d-flex justify-space-around align-center">
-              <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
+              <v-col cols="11" xl="4" lg="4" sm="8" md="4">
                 <v-card
                   style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
                   class="pb-4"
@@ -259,7 +257,7 @@
                   </v-card-text>
                 </v-card>
               </v-col>
-              <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
+              <v-col cols="11" xl="4" lg="4" sm="8" md="4">
                 <v-card
                   style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
                   class="pb-4"
@@ -613,9 +611,9 @@ export default {
     if (this.filter.schools.items.length === 0) {
       this.getAllSchools();
     }
-    if (this.filter.hometown.items.length === 0) {
-      this.getAllProvinces().then(() => this.initReCaptcha());
-    }
+    // if (this.filter.hometown.items.length === 0) {
+    this.getAllProvinces().then(() => this.initReCaptcha());
+    // }
   },
 };
 </script>
