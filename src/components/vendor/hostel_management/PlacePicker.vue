@@ -110,7 +110,7 @@ export default {
       // https://developers.google.com/maps/documentation/javascript/reference/map#MouseEvent
       const { latLng } = mouseEvent;
       console.log(`new coords: ${latLng}`);
-      const coord = { lat: latLng.lat, lng: latLng.lng };
+      const coord = { lat: latLng.lat(), lng: latLng.lng() };
       this.place = { position: coord };
       this.marker = { position: coord };
       this.center = coord;
