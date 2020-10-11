@@ -1,41 +1,56 @@
 <template>
   <div>
+    <span class="text-h6"><v-icon>directions</v-icon> Xác định vị trí trên bản đồ</span>
+    <div class="gmap-view">
+      <div class="gmap-search-bar">
+        <gmap-autocomplete
+          @place_changed="setPlace"
+          :options="autocompleteOptions"
+        ></gmap-autocomplete>
+        <v-btn @click="addMarker" icon color="primary"><v-icon>search</v-icon></v-btn>
+      </div>
+      <div class="gmap-view-map">
+        <gmap-map :center="center" :zoom="12" style="width: 100%; height: 400px;">
+          <gmap-marker
+            :position="marker.position"
+            @click="center = marker.position"
+            :clickable="true"
+            :draggable="true"
+            @drag="updateMarker"
+          ></gmap-marker>
+          <div slot="visible">
+            <div
+              style="
+                bottom: 0;
+                left: 0;
+                background-color: #0000ff;
+                color: white;
+                position: absolute;
+                z-index: 100;
+              "
+            >
+              Toạ độ: {{ marker.position.lat }}, {{ marker.position.lng }}
+            </div>
+          </div>
+        </gmap-map>
+      </div>
+    </div>
     <div>
-      <span class="text-h6"><v-icon>directions</v-icon> Chọn vị trí trên bản đồ</span>
-      <label>
-        <gmap-autocomplete @place_changed="setPlace" :options="autocompleteOptions">
-        </gmap-autocomplete>
-        <button @click="addMarker"><v-icon>push_pin</v-icon></button>
-      </label>
+      <v-select
+        prepend-icon="confirmation_number"
+        :items="coordsToString.selectableAddresses"
+        label="Chọn địa chỉ"
+        v-model="coordsToString.selectedAddress"
+        messages="Thay đổi danh sách địa chỉ bằng cách xác định vị trí trên bản đồ"
+      ></v-select>
+      <v-text-field v-model="buildingNo" placeholder="Số nhà" readonly></v-text-field>
       <br />
     </div>
-    <br />
-    <gmap-map :center="center" :zoom="12" style="width: 100%; height: 400px;">
-      <gmap-marker
-        :position="marker.position"
-        @click="center = marker.position"
-        :clickable="true"
-        :draggable="true"
-        @drag="updateMarker"
-      ></gmap-marker>
-      <div slot="visible">
-        <div
-          style="
-            bottom: 0;
-            left: 0;
-            background-color: #0000ff;
-            color: white;
-            position: absolute;
-            z-index: 100;
-          "
-        >
-          {{ addressString }}
-        </div>
-      </div>
-    </gmap-map>
   </div>
 </template>
 <script>
+import axios from 'axios';
+
 export default {
   name: 'PlacePicker',
   data() {
@@ -48,6 +63,11 @@ export default {
       addressString: 'Thành phố Hồ Chí Minh',
       autocompleteOptions: {
         components: 'country:vi',
+      },
+      buildingNo: '',
+      coordsToString: {
+        selectableAddresses: [],
+        selectedAddress: '',
       },
     };
   },
@@ -90,9 +110,62 @@ export default {
       const { LatLng } = mouseEvent;
       const coord = { lat: LatLng.lat, lng: LatLng.lng };
       this.place = { position: coord };
+      this.marker = { position: coord };
       this.center = coord;
+    },
+    async searchByCoord(coords) {
+      const key = 'AIzaSyDNBmxVGbZ4Je5XHPRqqaZPmDFKjKPPhXk';
+      const { lat, lng } = coords;
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${key}`;
+      const res = await axios.get(url);
+      if (res.status === 200) {
+        const includeRoutes = res.data.results.filter((item) => {
+          const indexR = item.address_components.findIndex((compo) => {
+            const includeRoute = compo.types.includes('route');
+            return includeRoute;
+          });
+          return indexR > -1;
+        });
+        const formattedAddresses = includeRoutes.map((item) => item.formatted_address);
+        return formattedAddresses;
+      }
+      return null;
+    },
+  },
+  watch: {
+    marker: {
+      handler() {
+        const { position } = this.marker;
+        this.searchByCoord(position).then((formattedAddresses) => {
+          this.selectableAddresses = formattedAddresses;
+        });
+      },
+      deep: true,
     },
   },
   computed: {},
 };
 </script>
+<style>
+.gmap-view {
+  position: relative;
+  height: 400px;
+  border: 1px slateblue solid;
+}
+.gmap-search-bar {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 9999;
+}
+.gmap-view-map {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 9998;
+}
+.pac-target-input {
+  border: 1px black solid;
+}
+</style>

@@ -30,12 +30,6 @@
               prepend-icon="closed_caption"
               hide-details
             ></v-text-field>
-            <v-text-field
-              v-model="newGroup.buildingNo"
-              placeholder="Số nhà"
-              prepend-icon="confirmation_number"
-              hide-details
-            ></v-text-field>
             <v-divider class="mt-6 mb-3" />
             <HostelGroupRules />
           </v-col>
