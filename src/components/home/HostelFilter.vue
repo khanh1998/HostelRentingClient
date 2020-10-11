@@ -70,6 +70,21 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel>
+        <v-expansion-panel-header>Quy định</v-expansion-panel-header>
+        <v-expansion-panel-content class="noPadding">
+          <v-chip-group v-model="filter.regulations.select" column multiple>
+            <v-chip
+              filter
+              outlined
+              v-for="(item, i) in filter.regulations.items"
+              :key="`item-${i}`"
+              :value="item.regulationId"
+              >{{ item.regulationName }}</v-chip
+            >
+          </v-chip-group>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel>
         <v-expansion-panel-header>Giá thuê</v-expansion-panel-header>
         <v-expansion-panel-content class="noPadding">
           {{ filterSelected.disabledPrice }}
@@ -180,6 +195,7 @@ export default {
     ...mapActions({
       getAllFacilities: 'renter/filterResult/getAllFacilities',
       getAllCategories: 'renter/filterResult/getAllCategories',
+      getAllRegulations: 'renter/filterResult/getAllRegulations',
     }),
     ...mapActions({
       setFilterValue: 'renter/filterResult/setFilterValue',
@@ -229,6 +245,9 @@ export default {
     }
     if (this.filter.categories.data.length === 0) {
       this.getAllCategories();
+    }
+    if (this.filter.regulations.items.length === 0) {
+      this.getAllRegulations();
     }
   },
 };

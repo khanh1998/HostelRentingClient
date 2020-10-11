@@ -74,6 +74,14 @@
   font-weight: 400 !important;
 }
 </style>
+<style>
+.topview-lable {
+  font-size: 25px;
+  color: #727cf5;
+  font-family: Oswald;
+  font-weight: 400 !important;
+}
+</style>
 <script>
 import Banner from '@/components/home/Banner.vue';
 import TopCarousel from '@/components/home/TopCarousel.vue';

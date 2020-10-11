@@ -56,6 +56,11 @@ const myState = {
       items: [],
       isLoading: false,
     },
+    regulations: {
+      select: [],
+      items: [],
+      isLoading: false,
+    },
   },
   results: {
     data: {
@@ -87,6 +92,10 @@ const mutationTypes = {
   GET_PROVINCES_SUCCESS: 'GET_PROVINCES_SUCCESS',
   GET_PROVINCES_FAILURE: 'GET_PROVINCES_FAILURE',
   GET_PROVINCES_REQUEST: 'GET_PROVINCES_REQUEST',
+  // regulations
+  GET_REGULATIONS_SUCCESS: 'GET_REGULATIONS_SUCCESS',
+  GET_REGULATIONS_FAILURE: 'GET_REGULATIONS_FAILURE',
+  GET_REGULATIONS_REQUEST: 'GET_REGULATIONS_REQUEST',
 };
 const mutations = {
   SET_FILTER_VALUES: (state, filterValues) => {
@@ -148,6 +157,17 @@ const mutations = {
   },
   GET_PROVINCES_REQUEST(state) {
     state.filter.hometown.isLoading = true;
+  },
+  // get all regulations
+  GET_REGULATIONS_SUCCESS(state, inputData) {
+    state.filter.regulations.items = inputData;
+    state.filter.regulations.isLoading = false;
+  },
+  GET_REGULATIONS_FAILURE(state) {
+    state.filter.regulations.isLoading = false;
+  },
+  GET_REGULATIONS_REQUEST(state) {
+    state.filter.regulations.isLoading = true;
   },
 };
 const getters = {
@@ -318,6 +338,20 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_PROVINCES_FAILURE);
+    }
+  },
+  async getAllRegulations({ commit }) {
+    // no param
+    try {
+      commit(mutationTypes.GET_REGULATIONS_REQUEST);
+      const res = await window.axios.get('api/v1/regulations');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_REGULATIONS_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.GET_REGULATIONS_FAILURE);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_REGULATIONS_FAILURE);
     }
   },
   async getAllCategories({ commit }) {

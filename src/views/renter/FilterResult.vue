@@ -34,7 +34,7 @@
         </v-col>
       </v-row>
       <v-row class="mx-0" justify="center">
-        <v-col cols="9 p-0" v-if="list.length !== 0">
+        <v-col cols="9" v-if="list.length !== 0">
           <!-- <v-col cols="9 p-0"> -->
           <v-row class="d-flex flex-direction: row">
             <v-col cols="8">
@@ -107,7 +107,8 @@ export default {
       const facilities = this.$store.state.renter.filterResult.filter.facility.isLoading;
       const result = this.$store.state.renter.filterResult.results.isLoading;
       const categories = this.$store.state.renter.filterResult.filter.categories.isLoading;
-      return facilities || categories || result;
+      const regulation = this.$store.state.renter.filterResult.filter.regulations.isLoading;
+      return facilities || categories || regulation || result;
     },
     isLoadingTopView() {
       return this.$store.state.renter.filterResult.results.isLoading;
