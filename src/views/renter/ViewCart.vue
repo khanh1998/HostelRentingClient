@@ -13,7 +13,7 @@
             >
             <v-btn-toggle v-model="buttonGroup.selectedBookingStatus">
               <v-btn
-                class="btn-primary font-nunito text-subtitle-2 px-5"
+                class="btn-primary font-nunito text-subtitle-2 px-5 elevation-0"
                 style="
                   border-top-left-radius: 0 !important;
                   border-bottom-left-radius: 0 !important;
@@ -23,7 +23,7 @@
                 >Sắp tới <span class="amber--text">({{ counter.incomming }})</span></v-btn
               >
               <v-btn
-                class="btn-primary font-nunito text-subtitle-2 px-5"
+                class="btn-primary font-nunito text-subtitle-2 px-5 elevation-0"
                 style="
                   border-top-left-radius: 0 !important;
                   border-bottom-left-radius: 0 !important;
@@ -34,7 +34,7 @@
                 Đã xem phòng <span class="amber--text">({{ counter.done }})</span></v-btn
               >
               <v-btn
-                class="btn-primary font-nunito text-subtitle-2 px-5"
+                class="btn-primary font-nunito text-subtitle-2 px-5 elevation-0"
                 style="
                   border-top-left-radius: 0 !important;
                   border-bottom-left-radius: 0 !important;
@@ -194,14 +194,15 @@ export default {
     },
     bookings() {
       const list = this.allBooking;
-
       let filteredDate = [];
       filteredDate = list.filter((booking) => {
-        const min = new Date(`${this.date[0]}T00:00:00`).getTime();
+        let min = new Date(`${this.date[0]}T00:00:00`).getTime();
         let max = new Date(`${this.date[0]}T23:59:59`).getTime();
         if (this.date.length === 2 && this.date[0] !== this.date[1]) {
           max = new Date(`${this.date[1]}T23:59:59`).getTime();
           if (min > max) {
+            max = new Date(`${this.date[1]}T00:00:00`).getTime();
+            min = new Date(`${this.date[0]}T23:59:59`).getTime();
             return booking.meetTime <= min && booking.meetTime >= max;
           }
         }
