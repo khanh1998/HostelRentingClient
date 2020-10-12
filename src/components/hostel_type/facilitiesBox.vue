@@ -1,8 +1,12 @@
 <template>
   <div>
     <v-chip-group column>
-      <v-icon>flaticon-air-conditioner</v-icon>
-      <v-chip v-for="item in facilities" v-bind:key="item.facilityId">
+      <v-chip
+        v-for="item in facilities"
+        v-bind:key="item.facilityId"
+        class="font-nunito"
+        color="#f1f3fa"
+      >
         {{ item.facilityName }}
       </v-chip>
     </v-chip-group>
@@ -11,9 +15,7 @@
 <script>
 export default {
   name: 'FacilitiesBox',
-  data: () => ({
-    icons: ['ac_unit', 'kitchen'],
-  }),
+  data: () => ({}),
   props: ['facilities'],
 };
 </script>

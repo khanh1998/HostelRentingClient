@@ -90,9 +90,4 @@ export default {
 .vueperslides--fixed-height.vueperslides--bullets-outside {
   margin-bottom: 0 !important;
 }
-.line-blue {
-  width: 150px;
-  border: 2px solid #6c98c6;
-  margin-bottom: 30px;
-}
 </style>

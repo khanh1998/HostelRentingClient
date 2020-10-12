@@ -114,8 +114,6 @@ export default {
         this.$cookies.set('role', role);
         this.$cookies.set('userId', id);
         const { nextUrl, preUrl } = this.$route.params;
-        console.log(this.$route);
-        console.log(nextUrl, preUrl);
         if (nextUrl) {
           this.$router.push(nextUrl);
         } else {

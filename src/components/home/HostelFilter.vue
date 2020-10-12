@@ -1,74 +1,112 @@
 <template>
-  <v-sheet class="pl-2 pr-2 pb-2 pl-md-6 pr-md-6 pb-md-6">
-    <v-expansion-panels focusable multiple>
-      <v-expansion-panel class="mb-3">
+  <!-- eslint-disable max-len -->
+  <v-card style="width: 100%;" outlined>
+    <v-card-title
+      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);"
+      class="d-flex align-center justify-center text-capitalize text-primary-dark font-nunito"
+      >Bộ lọc nâng cao</v-card-title
+    >
+    <v-expansion-panels focusable multiple accordion v-model="panel">
+      <v-expansion-panel>
+        <v-expansion-panel-header>Khoảng cách tối đa</v-expansion-panel-header>
+        <v-expansion-panel-content class="noPadding">
+          <v-chip-group v-model="filter.distance.select" column>
+            <v-chip
+              filter
+              outlined
+              v-for="(item, i) in filter.distance.items"
+              :key="`item-${i}`"
+              :value="item"
+            >
+              {{ item }}
+            </v-chip>
+          </v-chip-group>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel>
+        <v-expansion-panel-header>Loại</v-expansion-panel-header>
+        <v-expansion-panel-content class="noPadding">
+          <v-chip-group v-model="filter.categories.select" column>
+            <v-chip
+              filter
+              outlined
+              v-for="(item, i) in filter.categories.data"
+              :key="`item-${i}`"
+              :value="item.categoryId"
+            >
+              {{ item.categoryName }}
+            </v-chip>
+          </v-chip-group>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel>
         <v-expansion-panel-header>Tiện nghi xung quanh</v-expansion-panel-header>
         <v-expansion-panel-content class="noPadding">
-          <v-list shaped>
-            <v-list-item-group v-model="serviceIds" multiple>
-              <template v-for="(item, i) in filter.around.items">
-                <v-list-item
-                  :key="`item-${i}`"
-                  :value="item"
-                  active-class="deep-purple--text text--accent-4"
-                >
-                  <template v-slot:default="{ active }">
-                    <v-list-item-content>
-                      <v-list-item-title v-text="item" class="text-body-2 noWrap" />
-                    </v-list-item-content>
-                    <v-list-item-action>
-                      <v-checkbox :input-value="active" color="deep-purple accent-4" />
-                    </v-list-item-action>
-                  </template>
-                </v-list-item>
-              </template>
-            </v-list-item-group>
-          </v-list>
+          <v-chip-group v-model="filter.around.selects" column multiple>
+            <v-chip
+              filter
+              outlined
+              v-for="(item, i) in filter.around.items"
+              :key="`item-${i}`"
+              :value="item"
+              >{{ item }}</v-chip
+            >
+          </v-chip-group>
         </v-expansion-panel-content>
       </v-expansion-panel>
-      <v-expansion-panel class="mb-3">
+      <v-expansion-panel>
         <v-expansion-panel-header>Tiện ích</v-expansion-panel-header>
         <v-expansion-panel-content class="noPadding">
-          <v-list shaped>
-            <v-list-item-group v-model="facilityIds" multiple>
-              <template v-for="(item, i) in facilities">
-                <v-list-item
-                  :key="`item-${i}`"
-                  :value="item.facilityId"
-                  active-class="deep-purple--text text--accent-4"
-                >
-                  <template v-slot:default="{ active }">
-                    <v-list-item-content>
-                      <v-list-item-title v-text="item.facilityName" class="text-body-2 noWrap" />
-                    </v-list-item-content>
-                    <v-list-item-action>
-                      <v-checkbox :input-value="active" color="deep-purple accent-4" />
-                    </v-list-item-action>
-                  </template>
-                </v-list-item>
-              </template>
-            </v-list-item-group>
-          </v-list>
+          <v-chip-group v-model="filter.facility.selects" column multiple>
+            <v-chip
+              filter
+              outlined
+              v-for="(item, i) in facilities"
+              :key="`item-${i}`"
+              :value="item.facilityId"
+              >{{ item.facilityName }}</v-chip
+            >
+          </v-chip-group>
         </v-expansion-panel-content>
       </v-expansion-panel>
-      <v-expansion-panel class="mb-3">
-        <v-expansion-panel-header>Giá tiền</v-expansion-panel-header>
-        <!-- eslint-enable -->
+      <v-expansion-panel>
+        <v-expansion-panel-header>Quy định</v-expansion-panel-header>
         <v-expansion-panel-content class="noPadding">
-          <!-- <v-card-text> -->
+          <v-chip-group v-model="filter.regulations.select" column multiple>
+            <v-chip
+              filter
+              outlined
+              v-for="(item, i) in filter.regulations.items"
+              :key="`item-${i}`"
+              :value="item.regulationId"
+              >{{ item.regulationName }}</v-chip
+            >
+          </v-chip-group>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel>
+        <v-expansion-panel-header>Giá thuê</v-expansion-panel-header>
+        <v-expansion-panel-content class="noPadding">
+          {{ filterSelected.disabledPrice }}
           <v-row>
             <v-col class="px-5 pt-0">
-              <v-switch class="ml-auto mb-4" height="10" v-model="disabled" label="Lọc" />
+              <v-switch
+                class="ml-auto mb-4"
+                height="10"
+                v-model="filterSelected.disabledPrice"
+                label="Lọc"
+                color="#727cf5"
+              />
               <v-range-slider
-                v-model="range"
-                :max="max"
-                :min="min"
+                v-model="filter.price.range"
+                :max="filter.price.max"
+                :min="filter.price.min"
                 hide-details
-                _class="align-center"
-                :thumb-size="23"
+                :thumb-size="28"
                 thumb-label="always"
                 step="0.1"
-                :disabled="!disabled"
+                :disabled="!filterSelected.disabledPrice"
+                color="#3645f1"
               />
               <v-row class="justify-center align-center">
                 <v-subheader>{{ min }} tr</v-subheader>
@@ -78,7 +116,7 @@
                   color="indigo"
                   height="30"
                   width="30"
-                  :disabled="!disabled"
+                  :disabled="!filterSelected.disabledPrice"
                   @click="changeMaxPrice()"
                 >
                   <v-icon>add</v-icon>
@@ -86,25 +124,33 @@
               </v-row>
             </v-col>
           </v-row>
-          <!-- </v-card-text> -->
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel class="lastItem">
+        <v-expansion-panel-header>Diện tích tối thiểu</v-expansion-panel-header>
+        <v-expansion-panel-content class="noPadding">
+          <v-chip-group v-model="filter.minArea.select" column>
+            <v-chip
+              outlined
+              v-for="(item, i) in filter.minArea.items"
+              :key="`item-${i}`"
+              :value="item"
+              >{{ item }}</v-chip
+            >
+          </v-chip-group>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-select
-      v-model="minSuperficiality"
-      :items="filter.minArea.items"
-      light
-      outlined
-      label="Diện tích tối thiểu"
-      clearable
-      dense
-    ></v-select>
-    <div class="d-flex justify-center align-center">
-      <v-btn tile min-width="100%" dark depressed class="mt-6" color="amber" @click="filterSubmit()"
-        >ÁP DỤNG</v-btn
+    <v-card-actions class="pa-4" style="border-top: 1px solid rgba(0, 0, 0, 0.12);">
+      <v-btn
+        class="bg-primary bt-primary-hover white--text font-nunito"
+        width="100%"
+        @click="filterSubmit()"
+        :loading="isCreate"
+        >Áp dụng</v-btn
       >
-    </div>
-  </v-sheet>
+    </v-card-actions>
+  </v-card>
 </template>
 <style>
 .noPadding {
@@ -117,12 +163,18 @@
   white-space: normal;
 }
 </style>
+<style scoped>
+.v-expansion-panel::before {
+  box-shadow: none !important;
+}
+</style>
 <script>
 import { mapActions } from 'vuex';
 
 export default {
   name: 'HostelFilter',
   data: () => ({
+    panel: [2],
     facilityIds: [],
     serviceIds: [],
     min: 0,
@@ -131,10 +183,19 @@ export default {
     disabled: false,
     slider: 3,
     minSuperficiality: 0,
+    // new
+    filterSelected: {
+      categoriesIds: [],
+      range: [0, 2.5],
+      minSuperficiality: '',
+      disabledPrice: false,
+    },
   }),
   methods: {
     ...mapActions({
       getAllFacilities: 'renter/filterResult/getAllFacilities',
+      getAllCategories: 'renter/filterResult/getAllCategories',
+      getAllRegulations: 'renter/filterResult/getAllRegulations',
     }),
     ...mapActions({
       setFilterValue: 'renter/filterResult/setFilterValue',
@@ -147,14 +208,14 @@ export default {
       if (this.max < 50) this.max += 5;
     },
     filterSubmit() {
-      this.filterSearchByCoordinatorResult({
-        coordinator: this.coordinates,
-        facilitiesIds: this.facilityIds,
-        disabledPrice: this.disabled,
-        rangePirce: this.range,
-        minSuperficiality: this.minSuperficiality,
-      });
-      this.$router.push('/filter');
+      console.log(this.filter);
+      if (this.filter.coordinator.address) {
+        this.filter.price.disable = this.filterSelected.disabledPrice;
+        this.filterSearchByCoordinatorResult({
+          filterProperties: this.filter,
+        });
+        this.$router.push('/filter');
+      }
     },
     ...mapActions({
       filterSearchByCoordinatorResult: 'renter/filterResult/filterSearchByCoordinatorResult',
@@ -174,10 +235,19 @@ export default {
         return this.$store.state.renter.filterResult.search.value;
       },
     },
+    isCreate() {
+      return this.$store.state.renter.filterResult.results.isLoading;
+    },
   },
   created() {
     if (this.facilities.length === 0) {
       this.getAllFacilities();
+    }
+    if (this.filter.categories.data.length === 0) {
+      this.getAllCategories();
+    }
+    if (this.filter.regulations.items.length === 0) {
+      this.getAllRegulations();
     }
   },
 };

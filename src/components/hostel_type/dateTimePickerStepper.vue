@@ -11,31 +11,27 @@
             <span
               class="font-weight-bold text-subtitle-2 py-0"
               :style="{ color: '#101526', textAlign: 'center' }"
-            >Chọn Ngày</span>
+              >Chọn Ngày</span
+            >
             <div :style="{ width: '30px', height: '2px', backgroundColor: '#4F60C9' }"></div>
           </v-card-text>
           <v-chip-group class="mt-3" mandatory light v-model="pickedDate" center-active show-arrows>
             <v-chip
               light
-              v-for="i in 7"
-              v-bind:key="i"
+              v-for="(item, i) in schedules"
+              :key="`item-${i}`"
+              :value="i"
               label
               large
               class="pickDay mr-1 d-flex justify-center align-center"
               active-class="white--text"
-              style="height: 60px"
+              style="height: 60px;"
               link
-              @click="getTimesForDate(dates[i - 1].getDay())"
             >
-              <!-- <v-sheet
-                class="d-flex flex-column justify-center align-center pa-1 flex-wrap"
-                _light
-              >-->
               <div class="d-flex flex-column justify-center align-center pa-1 flex-wrap">
-                <p class="ma-0">{{ daysOfWeek[dates[i - 1].getDay()] }}</p>
-                <p class="ma-0 font-weight-bold">{{ dates[i - 1].getDate() }}</p>
+                <p class="ma-0 text-capitalize">{{ item.dayOfWeek }}</p>
+                <p class="ma-0 font-weight-bold">{{ item.date }}</p>
               </div>
-              <!-- </v-sheet> -->
             </v-chip>
           </v-chip-group>
           <v-card-actions class="justify-center mt-4">
@@ -45,7 +41,8 @@
               class="text-caption px-4 py-2 mx-2 white--text"
               depressed
               @click="stepper.step += 1"
-            >Tiếp tục</v-btn>
+              >Tiếp tục</v-btn
+            >
             <v-btn
               small
               outlined
@@ -53,7 +50,8 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="$emit('cancel')"
-            >Hủy</v-btn>
+              >Hủy</v-btn
+            >
           </v-card-actions>
         </v-card>
       </div>
@@ -63,30 +61,22 @@
             <span
               class="font-weight-bold text-subtitle-2 py-0"
               :style="{ color: '#101526', textAlign: 'center' }"
-            >Chọn Giờ</span>
+              >Chọn Giờ</span
+            >
             <div :style="{ width: '30px', height: '2px', backgroundColor: '#4F60C9' }"></div>
           </v-card-text>
-          <span v-for="time in timesForDate" v-bind:key="time">{{ time }}</span>
-          <el-time-picker
-            v-model="pickedTime"
-            :picker-options="{
-              selectableRange: timesForDate,
-              step: '00:15:00',
-            }"
-            placeholder="Arbitrary time"
-          ></el-time-picker>
           <v-chip-group v-model="selectedTime" light column center-active show-arrows>
             <v-chip
-              light
-              v-for="item in listHoursToChoice"
-              v-bind:key="item"
-              large
+              v-for="item in schedules[pickedDate].freeTimes"
+              :key="item"
+              :value="item"
               label
-              class="pickTime mr-1"
+              class="pickTime mr-2 py-1 text-subtitle-2 text-xs-center font-nunito"
               active-class="white--text"
               link
-              @click="pickedTime = item"
-            >{{ item }}</v-chip>
+              style="width: 60px;"
+              >{{ item }}</v-chip
+            >
           </v-chip-group>
           <v-card-actions>
             <v-btn
@@ -96,7 +86,8 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="$emit('cancel')"
-            >Hủy</v-btn>
+              >Hủy</v-btn
+            >
             <v-btn
               small
               outlined
@@ -104,15 +95,17 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="stepper.step -= 1"
-            >Quay lại</v-btn>
+              >Quay lại</v-btn
+            >
             <v-btn
-              v-if="pickedTime"
+              v-if="selectedTime"
               small
               color="#4F60C9"
               class="text-caption px-4 py-2 mx-2 white--text"
               depressed
               @click="stepper.step += 1"
-            >Tiếp tục</v-btn>
+              >Tiếp tục</v-btn
+            >
           </v-card-actions>
         </v-card>
       </div>
@@ -126,32 +119,28 @@
             <span
               class="text-subtitle-1 font-weight-medium"
               :style="{ color: '#5a669f', textAlign: 'center' }"
-            >Xác nhận bạn muốn đặt lịch hẹn xem phòng vào</span>
+              >Xác nhận bạn muốn đặt lịch hẹn xem phòng vào</span
+            >
             <div class="d-flex justify-space-between mt-6 px-4">
               <div class="d-flex align-center">
                 <div
                   class="d-flex justify-center align-center pa-2"
-                  style="border: 2px solid #ecedf1; border-radius: 50px"
+                  style="border: 2px solid #ecedf1; border-radius: 50px;"
                 >
                   <v-img max-height="15" max-width="15" src="../../assets/typeDetail/date.png" />
                 </div>
-                <span
-                  class="ml-2 text-subtitle-2"
-                  style="color: #101526"
-                >{{ `${dates[pickedDate].toLocaleDateString('vi-vn')}` }}</span>
+                <span class="ml-2 text-subtitle-2" style="color: #101526;">{{
+                  schedules[pickedDate].formatDay
+                }}</span>
               </div>
               <div class="d-flex align-center">
                 <div
                   class="d-flex justify-center align-center pa-2"
-                  style="border: 2px solid #ecedf1; border-radius: 50px"
+                  style="border: 2px solid #ecedf1; border-radius: 50px;"
                 >
                   <v-img max-height="15" max-width="15" src="../../assets/typeDetail/time.png" />
                 </div>
-                <span class="ml-2 text-subtitle-2" style="color: #101526">
-                  {{
-                  `${pickedTime.getHours()} : ${pickedTime.getMinutes()}`
-                  }}
-                </span>
+                <span class="ml-2 text-subtitle-2" style="color: #101526;">{{ selectedTime }}</span>
               </div>
             </div>
           </v-card-text>
@@ -163,7 +152,8 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="$emit('cancel')"
-            >Hủy</v-btn>
+              >Hủy</v-btn
+            >
             <v-btn
               small
               outlined
@@ -171,14 +161,16 @@
               class="text-caption px-4 py-2 mx-2"
               depressed
               @click="stepper.step -= 1"
-            >Quay lại</v-btn>
+              >Quay lại</v-btn
+            >
             <v-btn
               small
               color="#4F60C9"
-              class="text-caption px-4 py-2 mx-2"
+              class="text-caption px-4 py-2 mx-2 white--text"
               depressed
               @click="$emit('ok', pickDateAndTime())"
-            >Đồng ý</v-btn>
+              >Đồng ý</v-btn
+            >
           </v-card-actions>
         </v-card>
       </div>
@@ -202,12 +194,9 @@ export default {
     stepper: {
       step: 1,
     },
-    daysOfWeekEn: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
-    daysOfWeek: ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'],
+    schedules: [],
     dates: [],
-    timesForDate: null,
     pickedDate: 0,
-    pickedTime: 0,
     selectedTime: null,
   }),
   methods: {
@@ -219,75 +208,132 @@ export default {
       nextDate.setDate(nextDate.getDate() + 1);
       return nextDate;
     },
-    getListOf7Dates(length = 7) {
+    initListOf7Dates() {
       // this function return list of seven dates from today
       const today = new Date();
       const dates = [today];
-      for (let i = 0; i < length; i += 1) {
+      for (let i = 0; i < 7; i += 1) {
         dates.push(this.getNextDate(dates[i]));
       }
       return dates;
     },
-    getTimesForDate(index) {
-      this.timesForDate = this.times[index - 1];
+    mapDateCode(code) {
+      let day;
+      switch (code) {
+        case 0:
+          day = 'SUN';
+          break;
+        case 1:
+          day = 'MON';
+          break;
+        case 2:
+          day = 'TUE';
+          break;
+        case 3:
+          day = 'WED';
+          break;
+        case 4:
+          day = 'THU';
+          break;
+        case 5:
+          day = 'FRI';
+          break;
+        default:
+          day = 'SAT';
+          break;
+      }
+      return day;
+    },
+    get7dates() {
+      const dates = this.initListOf7Dates();
+      const sevenDates = [];
+      for (let i = 0; i < 7; i += 1) {
+        const day = {
+          date: dates[i].getDate(),
+          code: this.mapDateCode(dates[i].getDay()),
+          formatDay: dates[i].toLocaleDateString('vi-vn'),
+        };
+        sevenDates.push(day);
+      }
+      return sevenDates;
+    },
+    modifyTimeRange(schedules) {
+      const modifyListTimeRange = schedules.map((ltr) => ({
+        ...ltr,
+        timeRange: ltr.timeRange.map((tr) => ({
+          start: tr.split(' - ')[0].split(':'),
+          end: tr.split(' - ')[1].split(':'),
+        })),
+      }));
+
+      const listFreeTime = modifyListTimeRange.map((tri) => ({
+        ...tri,
+        timeRange: tri.timeRange
+          .sort((a, b) => Number(a.start[0]) - Number(b.start[0]))
+          .map((tr) => {
+            const startHour = Number(tr.start[0]);
+            const endHour = Number(tr.end[0]);
+            const freeTime = [];
+            for (let index = startHour; index <= endHour; index += 1) {
+              // if-else
+              if (index === startHour && Number(tr.start[1]) === 30) {
+                freeTime.push(`${startHour}:30`);
+              } else if (index === endHour && Number(tr.end[1]) === 0) {
+                freeTime.push(`${endHour}:00`);
+              } else freeTime.push(`${index}:00`, `${index}:30`);
+            }
+            return freeTime;
+          })
+          .flat(),
+      }));
+      return listFreeTime;
+    },
+    getGroupSchedule() {
+      const sevenDates = this.get7dates();
+      const schedules = [];
+      for (let i = 0; i < 7; i += 1) {
+        const freeDay = this.modifyTimeRange(this.rawSchedule).filter(
+          (d) => d.code === sevenDates[i].code,
+        );
+        let freeTimes = freeDay[0].timeRange;
+        if (i === 0) {
+          console.log(freeDay);
+          // i == 0 to confirm filter first day only (first day == today)
+          const today = new Date();
+          const freeTime = new Date();
+
+          freeTimes = freeTimes.filter((t) => {
+            const time = t.split(':');
+            freeTime.setHours(time[0]);
+            freeTime.setMinutes(time[1]);
+            freeTime.setMilliseconds(0);
+            return freeTime.getTime() > today.getTime();
+          });
+        }
+        const day = {
+          scheduleId: freeDay[0].scheduleId,
+          date: sevenDates[i].date,
+          formatDay: sevenDates[i].formatDay,
+          dayOfWeek: freeDay[0].dayOfWeek,
+          freeTimes,
+        };
+        schedules.push(day);
+      }
+      this.schedules = schedules;
     },
     pickDateAndTime() {
       return {
-        date: this.dates[this.pickedDate],
-        time: `${this.pickedTime.getHours()} : ${this.pickedTime.getMinutes()}`,
+        date: this.schedules[this.pickedDate].formatDay,
+        time: this.selectedTime,
       };
     },
     cancelPickDateAndTime() {
       this.pickedDate = null;
-      this.pickedTime = null;
-    },
-    createScheduleObject(item) {
-      // time has pattern '12:30' 'hh:MM'
-      const [startTimeHours, startTimeMinutes] = item.startTime.split(':');
-      const startTime = new Date();
-      startTime.setHours(startTimeHours);
-      startTime.setMinutes(startTimeMinutes);
-      const [endTimeHours, endTimeMinutes] = item.endTime.split(':');
-      const endTime = new Date();
-      endTime.setHours(endTimeHours);
-      endTime.setMinutes(endTimeMinutes);
-      return {
-        startTime,
-        endTime,
-      };
-    },
-    plusOneHour(date) {
-      date.setHours(date.getHours() + 1);
-      return date;
-    },
-    getTimeString(date) {
-      return `${date.getHours()}:${date.getMinutes()}${date.getMinutes() < 10 ? '0' : ''}`;
-    },
-    makeListTimes(schedule) {
-      // schedule contains a string startTime - endTime
-      let [startTime, endTime] = schedule.split('-');
-      startTime = new Date(Date(startTime));
-      endTime = new Date(Date(endTime));
-      console.log('thuy');
-      const result = [];
-      let current = new Date(startTime.getTime());
-      while (current < endTime) {
-        console.log(current);
-        result.push(this.getTimeString(current));
-        current = this.plusOneHour(current);
-      }
-      console.log(result);
-      return result;
+      this.selectedTime = null;
     },
   },
   created() {
-    this.getSchedules(this.groupId).then(() => {
-      [this.timesForDate] = this.times;
-    });
-    console.log('thuy');
-    console.log(this.getSchedules);
-    this.dates = this.getListOf7Dates();
-    console.log(this.date);
+    this.getSchedules(this.groupId).then(() => this.getGroupSchedule());
   },
   computed: {
     rawSchedule() {
@@ -295,25 +341,6 @@ export default {
     },
     isLoading() {
       return this.$store.state.renter.hostelType.schedules.isLoading;
-    },
-    times() {
-      const arr = [];
-      this.daysOfWeekEn.forEach((day) => {
-        let result = this.rawSchedule.find((item) => item.code.toUpperCase() === day.toUpperCase());
-        result = result.timeRange.map((range) => {
-          const [start, end] = range.split('-');
-          return `${start.trim()}:00 - ${end.trim()}:00`;
-        });
-        arr.push(result);
-      });
-      return arr;
-    },
-    listHoursToChoice() {
-      const result = [];
-      this.timesForDate.forEach((times) => {
-        result.push(...this.makeListTimes(times));
-      });
-      return result;
     },
   },
 };
@@ -329,5 +356,6 @@ export default {
 }
 .pickTime.v-chip--active {
   background-color: #4f60c9;
+  /* font-weight: bold; */
 }
 </style>

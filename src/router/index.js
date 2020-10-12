@@ -4,7 +4,7 @@ import * as VueGoogleMaps from 'vue2-google-maps';
 import RenterRoutes from './routes/renter';
 import VendorRoutes from './routes/vendor';
 import AdminRoutes from './routes/admin';
-import LoginRoutes from './routes/login';
+import AuthenticationRoutes from './routes/authentication';
 
 Vue.use(VueRouter);
 
@@ -17,7 +17,7 @@ Vue.use(VueGoogleMaps, {
   },
 });
 
-const routes = [...RenterRoutes, ...VendorRoutes, ...AdminRoutes, ...LoginRoutes];
+const routes = [...RenterRoutes, ...VendorRoutes, ...AdminRoutes, ...AuthenticationRoutes];
 
 const router = new VueRouter({
   mode: 'history',

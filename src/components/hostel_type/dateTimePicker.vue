@@ -39,7 +39,8 @@
             outlined
             active-class="amber--text amber"
             link
-          >{{ timesForDate[j - 1] }}</v-chip>
+            >{{ timesForDate[j - 1] }}</v-chip
+          >
         </v-chip-group>
       </div>
     </div>
@@ -49,7 +50,8 @@
         color="success"
         v-if="pickedDate != null && pickedTime != null"
         @click="$emit('ok', pickDateAndTime())"
-      >CHỌN</v-btn>
+        >CHỌN</v-btn
+      >
     </div>
   </v-sheet>
 </template>
@@ -127,8 +129,6 @@ export default {
         result = result.map((item) => `${item.startTime} - ${item.endTime}`);
         arr.push(result);
       });
-      console.log('thuy');
-      console.log(arr);
       return arr;
     },
   },

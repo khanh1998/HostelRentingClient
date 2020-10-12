@@ -50,17 +50,6 @@ const mutationTypes = {
 
   SET_FILTER_VALUES: 'SET_FILTER_VALUES',
 };
-const getters = {
-  getFilterResult: (state) => {
-    console.log(state.filter);
-    // const result = state.hostelTypes.data.filter((group) => group.groupId === Number(id));
-    // if (result.length > 0) {
-    //   return result[0];
-    // }
-    // return null;
-    return state.filter;
-  },
-};
 const mutations = {
   // get group information
   GET_HOSTEL_GROUP_REQUEST(state) {
@@ -82,7 +71,6 @@ const mutations = {
   GET_HOSTEL_TYPES_SUCCESS(state, hostelGroup) {
     state.hostelTypes.data = hostelGroup;
     state.hostelTypes.isLoading = false;
-    console.log(state.hostelTypes);
     state.hostelTypes.success = true;
   },
   GET_HOSTEL_TYPES_FAILURE(state, error) {
@@ -205,6 +193,5 @@ export default {
   namespaced: true,
   state: myState,
   mutations,
-  getters,
   actions,
 };

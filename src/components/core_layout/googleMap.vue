@@ -2,7 +2,7 @@
   <div>
     <div>
       <label>
-        <gmap-autocomplete @place_changed="setPlace"> </gmap-autocomplete>
+        <gmap-autocomplete @place_changed="setPlace"></gmap-autocomplete>
         <button @click="addMarker">Search</button>
       </label>
       <br />
