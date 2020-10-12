@@ -1,5 +1,148 @@
 <template>
   <v-card class="mb-2">
+    <v-row no-gutters justify="center">
+      <v-dialog v-model="dialog" scrollable max-width="500">
+        <v-card>
+          <div class="d-flex py-3 align-center px-4">
+            <div>
+              <span
+                class="font-nunito text-primary dialog-title d-flex"
+                style="font-size: 1.125rem !important;"
+                >{{ mapDateCode(timestamp.getDay()) }}, {{ timestamp.getDate() }}-{{
+                  timestamp.getMonth() + 1
+                }}-{{ timestamp.getFullYear() }}
+              </span>
+              <span style="font-size: 0.9rem !important;" class="d-flex align-center">
+                <v-icon size="10" color="#8891f7" class="mr-2">fiber_manual_record</v-icon
+                ><span style="color: #8891f7;"
+                  >{{ timestamp.getHours() }}:{{ padZero(timestamp.getMinutes())
+                  }}{{ timestamp.getMinutes() }}</span
+                >
+              </span>
+            </div>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="dialog = false"><v-icon small>close</v-icon></v-btn>
+          </div>
+
+          <v-divider></v-divider>
+          <v-card-text style="height: 300px;">
+            <v-row class="d-flex align-center px-4 ma-0">
+              <v-col md="3" class="px-0 pb-0"
+                ><span class="text-muted font-nunito font-weight-bold title-content"
+                  >Nhà trọ:</span
+                ></v-col
+              >
+              <v-col md="9" class="px-0 pb-0"
+                ><span
+                  class="font-nunito title-content cursor text-primary-hover"
+                  @click="getGroup()"
+                  >{{ booking.group.groupName }}</span
+                ></v-col
+              >
+            </v-row>
+            <v-row class="d-flex align-center px-4 ma-0">
+              <v-col md="3" class="px-0 pb-0"
+                ><span class="text-muted font-nunito font-weight-bold title-content"
+                  >Số điện thoại:</span
+                ></v-col
+              >
+              <v-col md="9" class="px-0 pb-0"
+                ><span class="font-nunito title-content">{{ booking.vendor.phone }}</span></v-col
+              >
+            </v-row>
+            <v-row class="d-flex align-center px-4 ma-0">
+              <v-col md="3" class="px-0 pb-0"
+                ><span class="text-muted font-nunito font-weight-bold title-content"
+                  >Địa chỉ:</span
+                ></v-col
+              >
+              <v-col md="9" class="px-0 pb-0"
+                ><span @click="openStreetMap()" class="font-nunito title-content address"
+                  >{{ booking.group.buildingNo }} {{ booking.group.address.streetName }},
+                  {{ booking.group.address.wardName }}, {{ booking.group.address.districtName }},
+                  {{ booking.group.address.provinceName }}</span
+                ></v-col
+              >
+            </v-row>
+            <v-row class="d-flex align-center px-4 ma-0 pt-3">
+              <v-col md="3" class="px-0 pb-0"
+                ><span class="text-muted font-nunito font-weight-bold title-content"
+                  >Chủ trọ:</span
+                ></v-col
+              >
+              <v-col md="9" class="px-0 pb-0"
+                ><span class="font-nunito title-content text-primary-hover cursor">{{
+                  booking.vendor.username
+                }}</span></v-col
+              >
+            </v-row>
+            <v-row class="d-flex align-center px-4 ma-0">
+              <v-col md="3" class="px-0 pb-0"
+                ><span class="text-muted font-nunito font-weight-bold title-content"
+                  >Số điện thoại:</span
+                ></v-col
+              >
+              <v-col md="9" class="px-0 pb-0"
+                ><span class="font-nunito title-content">{{ booking.vendor.phone }}</span></v-col
+              >
+            </v-row>
+            <v-row class="d-flex align-center px-4 ma-0 pt-3">
+              <v-col md="3" class="px-0 pb-0"
+                ><span class="text-muted font-nunito font-weight-bold title-content"
+                  >Loại phòng:</span
+                ></v-col
+              >
+              <v-col md="9" class="px-0 pb-0"
+                ><span
+                  class="font-nunito title-content text-primary-hover cursor"
+                  @click="getType()"
+                  >{{ booking.type.title }}</span
+                ></v-col
+              >
+            </v-row>
+            <v-row class="d-flex align-center px-4 ma-0">
+              <v-col md="3" class="px-0 pb-0"
+                ><span class="text-muted font-nunito font-weight-bold title-content"
+                  >Giá thuê:</span
+                ></v-col
+              >
+              <v-col md="9" class="px-0 pb-0 d-flex align-center">
+                <span
+                  class="amber--text font-nunito title-content d-flex align-center"
+                  v-if="booking.deal"
+                >
+                  <span class="text-decoration-line-through">
+                    {{ booking.type.price }} {{ booking.type.priceUnit }}</span
+                  >
+                  <span class="ml-3"
+                    >{{ booking.deal.offeredPrice }} {{ booking.type.priceUnit }}</span
+                  >
+                  <small class="font-italic black--text ml-3" v-if="booking.deal">
+                    (đã trả giá)</small
+                  >
+                </span>
+                <span class="amber--text font-nunito title-content" v-if="!booking.deal">
+                  {{ booking.type.price }} {{ booking.type.priceUnit }}
+                </span>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions class="d-flex justify-start pa-4">
+            <v-btn class="btn btn-danger font-nunito" @click="dialog = false">
+              Báo cáo
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn class="btn btn-light elevation-0 font-nunito" @click="dialog = false">
+              Đóng
+            </v-btn>
+            <v-btn class="btn btn-primary font-nunito" @click="dialog = false">
+              Đánh giá phòng trọ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
     <v-row no-gutters class="d-flex justify-center">
       <v-col
         cols="7"
@@ -41,11 +184,29 @@
             </template>
             <v-card>
               <v-list>
-                <v-list-item _@click="logout">
-                  <v-list-item-icon>
-                    <v-icon color="#727cf5">mdi-account-arrow-left</v-icon>
-                  </v-list-item-icon>
-                  <v-list-item-title>Chi tiết lịch hẹn</v-list-item-title>
+                <v-list-item
+                  style="min-height: 20px !important;"
+                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                  @click="dialog = true"
+                >
+                  <v-icon color="#6c757d" class="mr-2 item-hover" size="20"
+                    >mdi-home-map-marker</v-icon
+                  >
+                  <v-list-item-title class="item-hover">Chi tiết</v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                  style="min-height: 20px !important;"
+                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                >
+                  <v-icon color="#6c757d" class="mr-2 item-hover" size="20">report</v-icon>
+                  <v-list-item-title class="item-hover">Báo cáo</v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                  style="min-height: 20px !important;"
+                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                >
+                  <v-icon color="#6c757d" class="mr-2 item-hover" size="20">mdi-comment-eye</v-icon>
+                  <v-list-item-title class="item-hover">Nhận xét</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-card>
@@ -88,6 +249,7 @@
               <v-list-item
                 style="min-height: 20px !important;"
                 class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                @click="dialog = true"
               >
                 <v-icon color="#6c757d" class="mr-2 item-hover" size="20"
                   >mdi-home-map-marker</v-icon
@@ -122,6 +284,10 @@ import { mapActions } from 'vuex';
 export default {
   name: 'BookingItem',
   props: ['booking'],
+  data: () => ({
+    dialog: false,
+    dialogm1: '',
+  }),
   computed: {
     timestamp() {
       return new Date(this.booking.meetTime);
@@ -251,5 +417,11 @@ export default {
 }
 .item-hover:hover {
   color: #272e37 !important;
+}
+.dialog-title {
+  font-weight: 700 !important;
+}
+.title-content {
+  font-size: 0.9rem !important;
 }
 </style>

@@ -50,12 +50,28 @@ export default {
   box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
   cursor: pointer;
 }
+.btn {
+  letter-spacing: 0.01rem !important;
+  border: 1px solid transparent !important;
+  border-radius: 0.15rem !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  padding: 0.45rem 0.9rem !important;
+}
+.btn-primary {
+  color: #fff !important;
+  background-color: #727cf5 !important;
+  border-color: #727cf5 !important;
+  box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
+}
+.btn-primary:hover {
+  background-color: #4e5bf2 !important;
+}
 .btn-success {
   color: #fff !important;
   background-color: #0acf97 !important;
   border-color: #0acf97 !important;
   box-shadow: 0 2px 6px 0 rgba(10, 207, 151, 0.5) !important;
-  letter-spacing: 0.01rem !important;
 }
 .btn-warning {
   color: #313a46 !important;
@@ -63,6 +79,20 @@ export default {
   border-color: #ffbc00 !important;
   box-shadow: 0 2px 6px 0 rgba(255, 188, 0, 0.5) !important;
   letter-spacing: 0.01rem !important;
+}
+.btn-light {
+  color: #313a46 !important;
+  background-color: #eef2f7 !important;
+  border-color: #eef2f7 !important;
+}
+.btn-danger {
+  color: #fff !important;
+  background-color: #fa5c7c !important;
+  border-color: #fa5c7c !important;
+  box-shadow: 0 2px 6px 0 rgba(250, 92, 124, 0.5) !important;
+}
+.btn-danger:hover {
+  background-color: #f9375e !important;
 }
 .text-primary {
   color: #727cf5 !important;
