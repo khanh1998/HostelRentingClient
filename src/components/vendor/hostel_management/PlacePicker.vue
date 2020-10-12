@@ -152,7 +152,7 @@ export default {
   computed: {},
 };
 </script>
-<style>
+<style scoped>
 .gmap-view {
   position: relative;
   height: 400px;
