@@ -194,14 +194,15 @@ export default {
     },
     bookings() {
       const list = this.allBooking;
-
       let filteredDate = [];
       filteredDate = list.filter((booking) => {
-        const min = new Date(`${this.date[0]}T00:00:00`).getTime();
+        let min = new Date(`${this.date[0]}T00:00:00`).getTime();
         let max = new Date(`${this.date[0]}T23:59:59`).getTime();
         if (this.date.length === 2 && this.date[0] !== this.date[1]) {
           max = new Date(`${this.date[1]}T23:59:59`).getTime();
           if (min > max) {
+            max = new Date(`${this.date[1]}T00:00:00`).getTime();
+            min = new Date(`${this.date[0]}T23:59:59`).getTime();
             return booking.meetTime <= min && booking.meetTime >= max;
           }
         }
