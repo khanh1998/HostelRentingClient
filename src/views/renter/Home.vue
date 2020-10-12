@@ -5,38 +5,37 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <!-- <v-container fluid v-if="!(isLoadingTopView || isLoadingTopSuggestion || isLoadingCategories)"> -->
-    <v-container fluid v-if="!isLoading">
+    <v-container fluid v-if="!isLoading" class="pa-0">
       <v-row>
         <v-col cols="12">
           <Banner />
         </v-col>
       </v-row>
-      <v-row justify="center" class="content">
+      <v-row justify="center" class="content" v-if="topView">
         <v-col cols="12" sm="12" md="10" lg="10" xl="10">
-          <div class="d-flex flex-column justify-center align-center topview-lable">
-            <div class="line-blue"></div>
+          <div class="d-flex flex-column justify-center align-center topview-lable mt-16">
+            <div class="line-blue mb-5"></div>
             <p>Lượt Xem Nhiều Nhất</p>
           </div>
         </v-col>
       </v-row>
-      <v-row justify="center" class="content">
-        <v-col cols="9" mt="5">
+      <v-row justify="center" class="content" v-if="topView">
+        <v-col cols="9" sm="10" md="9" lg="9" xl="8">
           <TopCarousel :list="topView" />
         </v-col>
       </v-row>
       <v-row justify="center" class="content">
         <v-col cols="12" sm="12" md="10" lg="10" xl="10">
-          <div class="d-flex flex-column justify-center align-center topview-lable">
-            <div class="line-blue"></div>
+          <div class="d-flex flex-column justify-center align-center topview-lable mt-10">
+            <div class="line-blue mb-5"></div>
             <p>Các Phòng Được Đề Xuất Tốt Nhất</p>
           </div>
         </v-col>
       </v-row>
       <v-row class="content pt-3" justify="center">
-        <v-col cols="9 p-0">
+        <v-col cols="10" sm="10" md="9" lg="9" xl="8">
           <v-row class="d-flex flex-direction: row px-5">
-            <v-col cols="8">
+            <v-col cols="11" sm="11" md="8" lg="8" xl="8">
               <v-row>
                 <v-col cols="12">
                   <ArticleList :list="hostelTypes" />
@@ -65,28 +64,22 @@
   </div>
 </template>
 <style scoped>
-.content {
-  background-color: #f3f4f9;
-}
 .col-12 {
   padding: 0;
 }
-.container {
-  padding: 0;
-  background: #ffffff;
-}
 .topview-lable {
   font-size: 25px;
-  color: rgba(47, 100, 162, 0.7);
+  color: #727cf5;
   font-family: Oswald;
   font-weight: 400 !important;
 }
-.line-blue {
-  width: 140px;
-  border: 1px solid #6c98c6;
-  margin-bottom: 20px;
-  margin-bottom: 20px;
-  margin-top: 70px;
+</style>
+<style>
+.topview-lable {
+  font-size: 25px;
+  color: #727cf5;
+  font-family: Oswald;
+  font-weight: 400 !important;
 }
 </style>
 <script>

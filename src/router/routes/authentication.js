@@ -1,4 +1,6 @@
 import Login from '../../views/Login.vue';
+import Register from '../../views/Register.vue';
+// import Register from '../../views/DemoFirebase.vue';
 
 const routes = [
   {
@@ -6,6 +8,12 @@ const routes = [
     name: 'Login',
     component: Login,
     props: true, // Pass route.params to props
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
+    children: [],
   },
 ];
 

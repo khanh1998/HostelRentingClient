@@ -1,157 +1,220 @@
 <template>
   <!-- eslint-disable max-len -->
   <v-card>
-    <v-row class="mr-0 ml-0">
+    <v-row class="mx-0 d-flex">
       <v-col
         cols="12"
-        class="d-flex flex-xl-row flex-lg-row flex-md-column flex-sm-column flex-column item-classic item-classic-horizontal"
+        sm="4"
+        md="4"
+        lg="4"
+        class="item-classic-left left"
+        style="background: #f3f4f9;"
       >
-        <v-col cols="12" class="d-flex justify-start top-item" style="padding: 0px !important">
-          <v-col cols="4" class="item-classic-left left" style="background: #f3f4f9">
-            <div class="item-classic-media" style="padding-right: 0px !important">
-              <v-carousel
-                height="180"
-                hide-delimiters
-                show-arrows-on-hover
-                v-if="type.typeImages.length !== 0"
-              >
-                <v-carousel-item
-                  v-for="(image, i) in type.typeImages"
-                  :key="i"
-                  :src="type.typeImages[i].resourceUrl"
+        <div class="item-classic-media" style="padding-right: 0px !important;">
+          <v-carousel
+            height="180"
+            hide-delimiters
+            show-arrows-on-hover
+            v-if="type.typeImages.length !== 0"
+          >
+            <v-carousel-item
+              v-for="(image, i) in type.typeImages"
+              :key="i"
+              :src="type.typeImages[i].resourceUrl"
+            >
+              <div class="top">
+                <span class="text-body-2 amber--text" _style="color: #3476b2">{{
+                  type.category.categoryName
+                }}</span>
+                <br />
+                <span class="text-caption">{{ type.view }} lượt xem</span>
+              </div>
+              <!-- </v-img> -->
+            </v-carousel-item>
+          </v-carousel>
+          <v-img src="@/assets/image-error.png" v-else style="height: 180px;" class="image-box">
+            <div class="top">
+              <span class="text-body-2 amber--text" _style="color: #3476b2">{{
+                type.category.categoryName
+              }}</span>
+              <br />
+              <span class="text-caption">{{ type.view }} lượt xem</span>
+            </div>
+          </v-img>
+          <div class="item-classic-price text-body-1 white--text">
+            <span>{{ type.price }} {{ type.priceUnit }}</span>
+          </div>
+        </div>
+      </v-col>
+      <v-col cols="12" sm="8" md="8" lg="8" class="cursor hidden-xs-only" @click="viewHostelType()">
+        <v-col cols="12" class="px-6 white">
+          <div class="type-name mt-2" style="height: 40px;">
+            <p
+              style="
+                display: block;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+              class="font-weight-bold mb-0"
+            >
+              {{ type.title }}
+            </p>
+          </div>
+          <div class="align-center justify-center">
+            <div class="mt-3 d-flex align-center">
+              <v-img
+                src="@/assets/home/superficies.svg"
+                transition="scale-transition"
+                class="shrink mr-3"
+                max-width="15"
+                max-height="15"
+              />
+              <span class="item-text font-nunito font-weight-medium">
+                {{ type.superficiality }}
+                m
+                <sup>2</sup>
+              </span>
+              <div class="ml-auto d-flex justify-center align-center">
+                <v-img
+                  src="@/assets/home/people.png"
+                  transition="scale-transition"
+                  class="shrink mr-3"
+                  max-width="15"
+                  max-height="15"
+                />
+                <span class="item-text font-nunito font-weight-medium"
+                  >{{ type.capacity }} người</span
                 >
-                  <div class="top">
-                    <span class="text-body-2 amber--text" _style="color: #3476b2">{{
-                      type.category.categoryName
-                    }}</span>
-                    <br />
-                    <span class="text-caption">{{ type.view }} lượt xem</span>
-                  </div>
-                  <!-- </v-img> -->
-                </v-carousel-item>
-              </v-carousel>
-              <v-img src="@/assets/image-error.png" v-else style="height: 180px" class="image-box">
-                <div class="top">
-                  <span class="text-body-2 amber--text" _style="color: #3476b2">{{
-                    type.category.categoryName
-                  }}</span>
-                  <br />
-                  <span class="text-caption">{{ type.view }} lượt xem</span>
-                </div>
-              </v-img>
-              <div class="item-classic-price text-body-1 white--text">
-                <span>{{ type.price }} {{ type.priceUnit }}</span>
+              </div>
+              <div
+                class="ml-auto d-flex align-center"
+                v-if="type.facilities.filter((f) => f.facilityName.includes('WC')).length !== 0"
+              >
+                <v-img
+                  src="@/assets/home/toilet.png"
+                  transition="scale-transition"
+                  class="shrink mr-3"
+                  max-width="15"
+                  max-height="15"
+                />
+                <span class="item-text font-nunito font-weight-medium">
+                  {{ type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName }}
+                </span>
               </div>
             </div>
-          </v-col>
-          <v-col
-            cols="8"
-            class="right no-padding d-flex justify-center align-center detail"
-            @click="viewHostelType()"
-          >
-            <v-col cols="12" class="px-6">
-              <div class="type-name mt-2" style="height: 40px">
-                <p
-                  style="
-                    display: block;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 1;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                  "
-                  class="font-weight-bold mb-0"
-                >
-                  {{ type.title }}
-                </p>
-              </div>
-              <div class="align-center justify-center">
-                <div class="mt-3 d-flex align-center">
-                  <v-img
-                    src="@/assets/home/superficies.svg"
-                    transition="scale-transition"
-                    class="shrink mr-3"
-                    max-width="15"
-                    max-height="15"
-                  />
-                  <span class="item-text">
-                    {{ type.superficiality }}
-                    m
-                    <sup>2</sup>
-                  </span>
-                  <div class="ml-auto d-flex justify-center align-center">
-                    <v-img
-                      src="@/assets/home/people.png"
-                      transition="scale-transition"
-                      class="shrink mr-3"
-                      max-width="15"
-                      max-height="15"
-                    />
-                    <span class="item-text">{{ type.capacity }} người</span>
-                  </div>
-                  <div
-                    class="ml-auto d-flex align-center"
-                    v-if="type.facilities.filter((f) => f.facilityName.includes('WC')).length !== 0"
-                  >
-                    <v-img
-                      src="@/assets/home/toilet.png"
-                      transition="scale-transition"
-                      class="shrink mr-3"
-                      max-width="15"
-                      max-height="15"
-                    />
-                    <span class="item-text">
-                      {{
-                        type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
-                      }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="mt-3 d-flex align-center">
-                <span class="item-text" style="color: #656565">Giới nghiêm:</span>
-                <div class="d-flex ml-1 left">
-                  <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
-                  <span v-else class="item-text">{{ group.curfewTime }}</span>
-                </div>
-                <div class="ml-auto d-flex">
-                  <span class="item-text" v-if="group.ownerJoin == false">Không chung chủ</span>
-                  <span class="item-text" v-else>Chung chủ</span>
-                </div>
-              </div>
-            </v-col>
-          </v-col>
+          </div>
+          <div class="mt-3 align-center d-flex">
+            <span class="item-text font-nunito" style="color: #656565;">Giới nghiêm:</span>
+            <span
+              class="item-text font-nunito font-weight-medium ml-1"
+              v-if="group.curfewTime === null"
+              >Giờ giấc tự do</span
+            >
+            <span v-else class="item-text font-nunito font-weight-medium ml-1">{{
+              group.curfewTime
+            }}</span>
+            <span
+              class="item-text font-nunito font-weight-medium ml-auto"
+              v-if="group.ownerJoin == false"
+              >Không chung chủ</span
+            >
+            <span class="item-text font-nunito font-weight-medium ml-auto" v-else>Chung chủ</span>
+            <!-- </div> -->
+          </div>
         </v-col>
       </v-col>
-      <!-- <v-col
+      <v-col
         cols="12"
-        class="pr-0 pb-0 pt-0"
-        style="background: #f3f4f9; padding-left: 7px !important"
+        sm="8"
+        md="8"
+        lg="8"
+        class="no-padding d-flex justify-center align-center cursor d-flex d-sm-none"
+        style="padding-left: 7px !important; background: #f3f4f9;"
+        @click="viewHostelType()"
       >
-        <v-col cols="12" class="flex d-flex" style="background-color: #e7e9f0 !important">
-          <v-col cols="3" style="padding: 0 !important">
-            <v-icon class="ml-2" color="#ABB4C0">visibility</v-icon>
-            <span class="text-caption ml-2">{{ type.view }} lượt xem</span>
-          </v-col>
-          <v-col
-            cols="5"
-            style="padding: 0 !important"
-            class="d-flex align-start justify-center"
-            v-if="school !== ''"
-          >
-            <v-icon color="#ABB4C0">school</v-icon>
-            <div class="text-caption ml-2">
-              <span>20 người học</span>
-              <br />
-              <span>{{ school }}</span>
+        <v-col cols="12" class="px-6 white">
+          <div class="type-name mt-2" style="height: 40px;">
+            <p
+              style="
+                display: block;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+              class="font-weight-bold mb-0"
+            >
+              {{ type.title }}
+            </p>
+          </div>
+          <div class="align-center justify-center">
+            <div class="mt-3 d-flex align-center">
+              <v-img
+                src="@/assets/home/superficies.svg"
+                transition="scale-transition"
+                class="shrink mr-3"
+                max-width="15"
+                max-height="15"
+              />
+              <span class="item-text font-nunito font-weight-medium">
+                {{ type.superficiality }}
+                m
+                <sup>2</sup>
+              </span>
+              <div class="ml-auto d-flex justify-center align-center">
+                <v-img
+                  src="@/assets/home/people.png"
+                  transition="scale-transition"
+                  class="shrink mr-3"
+                  max-width="15"
+                  max-height="15"
+                />
+                <span class="item-text font-nunito font-weight-medium"
+                  >{{ type.capacity }} người</span
+                >
+              </div>
+              <div
+                class="ml-auto d-flex align-center"
+                v-if="type.facilities.filter((f) => f.facilityName.includes('WC')).length !== 0"
+              >
+                <v-img
+                  src="@/assets/home/toilet.png"
+                  transition="scale-transition"
+                  class="shrink mr-3"
+                  max-width="15"
+                  max-height="15"
+                />
+                <span class="item-text font-nunito font-weight-medium">
+                  {{ type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName }}
+                </span>
+              </div>
             </div>
-          </v-col>
-          <v-col cols="4" style="padding: 0 !important" v-if="hometown !== ''">
-            <v-icon color="#ABB4C0">supervisor_account</v-icon>
-            <span class="text-caption ml-2">3 người quê {{ hometown }}</span>
-          </v-col>
+          </div>
+          <div class="mt-3 d-flex align-center">
+            <span class="item-text" style="color: #656565;">Giới nghiêm:</span>
+            <div class="d-flex ml-1 left">
+              <span
+                class="item-text font-nunito font-weight-medium"
+                v-if="group.curfewTime === null"
+                >Giờ giấc tự do</span
+              >
+              <span v-else class="item-text font-nunito font-weight-medium">{{
+                group.curfewTime
+              }}</span>
+            </div>
+            <div class="ml-auto d-flex">
+              <span class="item-text font-nunito font-weight-medium" v-if="group.ownerJoin == false"
+                >Không chung chủ</span
+              >
+              <span class="item-text font-nunito font-weight-medium" v-else>Chung chủ</span>
+            </div>
+          </div>
         </v-col>
-      </v-col>-->
+      </v-col>
     </v-row>
   </v-card>
 </template>
@@ -232,18 +295,6 @@
   font-weight: 400;
   border-bottom-left-radius: 24px;
   box-sizing: border-box;
-}
-.type-name {
-  border-bottom: 1px solid #e2e6ed;
-  padding-bottom: 10px;
-  color: #3476b2;
-  font-size: 16.5px;
-}
-.item-text {
-  color: #000;
-  font-size: 15px;
-  font-weight: normal;
-  font-family: 'Lato';
 }
 .detail:hover {
   cursor: pointer;

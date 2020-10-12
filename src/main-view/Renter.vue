@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <myAppBar style="box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !import" />
+    <myAppBar style="box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !import;" />
     <v-main
       :style="{
         width: '100%',
@@ -33,12 +33,45 @@ export default {
   box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
   border-radius: 0.15rem !important;
 }
+.bg-danger {
+  background-color: #fa5c7c !important;
+}
+.bg-danger-lighten {
+  background-color: rgba(250, 92, 124, 0.25) !important;
+}
+.bt-primary-hover:hover {
+  color: #fff;
+  background-color: #4250f2 !important;
+  border-color: #3645f1 !important;
+}
+.primary-hover:hover {
+  color: #fff !important;
+  background-color: #727cf5 !important;
+  box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
+  cursor: pointer;
+}
+.btn {
+  letter-spacing: 0.01rem !important;
+  border: 1px solid transparent !important;
+  border-radius: 0.15rem !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  padding: 0.45rem 0.9rem !important;
+}
+.btn-primary {
+  color: #fff !important;
+  background-color: #727cf5 !important;
+  border-color: #727cf5 !important;
+  box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
+}
+.btn-primary:hover {
+  background-color: #4e5bf2 !important;
+}
 .btn-success {
   color: #fff !important;
   background-color: #0acf97 !important;
   border-color: #0acf97 !important;
   box-shadow: 0 2px 6px 0 rgba(10, 207, 151, 0.5) !important;
-  letter-spacing: 0.01rem !important;
 }
 .btn-warning {
   color: #313a46 !important;
@@ -47,14 +80,46 @@ export default {
   box-shadow: 0 2px 6px 0 rgba(255, 188, 0, 0.5) !important;
   letter-spacing: 0.01rem !important;
 }
+.btn-light {
+  color: #313a46 !important;
+  background-color: #eef2f7 !important;
+  border-color: #eef2f7 !important;
+}
+.btn-danger {
+  color: #fff !important;
+  background-color: #fa5c7c !important;
+  border-color: #fa5c7c !important;
+  box-shadow: 0 2px 6px 0 rgba(250, 92, 124, 0.5) !important;
+}
+.btn-danger:hover {
+  background-color: #f9375e !important;
+}
 .text-primary {
   color: #727cf5 !important;
+}
+.text-primary-hover {
+  color: #727cf5 !important;
+}
+.text-primary-hover:hover {
+  color: #4250f2 !important;
+}
+.text-primary-dark {
+  color: #4250f2 !important;
 }
 .text-gray {
   color: #6c757d !important;
 }
 .text-warning {
   color: #ffbc00 !important;
+}
+.text-muted {
+  color: #98a6ad !important;
+}
+.text-gray-dark {
+  color: #343a40;
+}
+.text-danger {
+  color: #fa5c7c !important;
 }
 .bg-secondary {
   color: #727cf5 !important;
@@ -66,5 +131,35 @@ export default {
 }
 .text-white-50 {
   color: rgba(255, 255, 255, 0.5) !important;
+}
+.line-blue {
+  width: 150px;
+  background-color: #727cf5;
+  height: 2px;
+}
+.content {
+  background-color: #fafbfe;
+}
+.v-sheet.v-card:not(.v-sheet--outlined) {
+  -webkit-box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;
+  box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;
+}
+.cursor:hover {
+  cursor: pointer;
+}
+/* type */
+.type-name {
+  border-bottom: 1px solid #e2e6ed;
+  padding-bottom: 10px;
+  color: #727cf5;
+  font-size: 1.05rem !important;
+  width: 100%;
+}
+.item-text {
+  color: #000;
+  font-size: 0.875rem !important;
+}
+.size-1rem {
+  font-size: 1rem !important;
 }
 </style>

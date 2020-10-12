@@ -1,8 +1,8 @@
 <template>
   <!-- eslint-disable max-len -->
-  <v-card style="width: 100%" outlined>
+  <v-card style="width: 100%;" outlined>
     <v-card-title
-      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);"
       class="d-flex align-center justify-center text-uppercase"
       >Bộ lọc</v-card-title
     >
@@ -94,7 +94,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-card-actions class="pa-4" style="border-top: 1px solid rgba(0, 0, 0, 0.12)">
+    <v-card-actions class="pa-4" style="border-top: 1px solid rgba(0, 0, 0, 0.12);">
       <v-btn color="#727cf5" class="white--text" width="100%" @click="filterSubmit()"
         >Áp dụng</v-btn
       >
@@ -155,11 +155,6 @@ export default {
         types: this.types,
         filterParam: this.filterSelected,
       });
-      // this.$router.push('/group/2');
-      // console.log('page');
-      // console.log(this.filterSelected);
-      // console.log('param');
-      // console.log(this.filterParamValue);
     },
   },
   computed: {

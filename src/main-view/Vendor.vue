@@ -22,7 +22,7 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar hide-on-scroll :clipped-left="primaryDrawer.clipped" app dense>
+    <v-app-bar hide-on-scroll :clipped-left="primaryDrawer.clipped" app dense _height="70">
       <v-app-bar-nav-icon @click.stop="primaryDrawer.model = !primaryDrawer.model">
       </v-app-bar-nav-icon>
       <v-toolbar-title>{{ routeName }}</v-toolbar-title>

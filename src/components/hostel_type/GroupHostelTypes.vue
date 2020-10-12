@@ -51,7 +51,7 @@ export default {
       },
       1264: {
         arrowsOutside: true,
-        visibleSlides: 2,
+        visibleSlides: 3,
         draggingDistance: 70,
         fixedHeight: '400',
       },
@@ -90,10 +90,5 @@ export default {
 <style scoped>
 .vueperslides--fixed-height.vueperslides--bullets-outside {
   margin-bottom: 0 !important;
-}
-.line-blue {
-  width: 150px;
-  border: 2px solid #6c98c6;
-  margin-bottom: 30px;
 }
 </style>
