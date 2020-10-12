@@ -1,6 +1,6 @@
 <template>
   <div
-    class="d-flex flex-column align-center justify-center py-3"
+    class="d-flex flex-column align-center justify-center pa-4"
     v-if="!isLoading"
     style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%;"
   >
@@ -93,6 +93,12 @@
         </template>
       </v-snackbar>
     </div>
+    <span class="font-nunito text-caption mt-4" style="text-align: end !important;"
+      >TRẠNG THÁI:
+      <span class="text-subtitle-2" style="color: #1edb4c !important;"
+        >3 lịch hẹn / 2 phòng trống</span
+      ></span
+    >
   </div>
 </template>
 <script>

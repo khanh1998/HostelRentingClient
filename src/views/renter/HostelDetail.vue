@@ -182,26 +182,6 @@
           <v-col cols="12" sm="12" md="4" lg="4" class="d-flex pt-0">
             <v-row class="d-flex justify-end py-0" style="min-height: 350px !important;">
               <v-col cols="12" sm="12" md="11" class="py-0">
-                <!-- <div
-                  style="width: 100%; height: 13%; background-color: #f6f7f9;"
-                  class="mb-3 d-flex align-center px-1 rounded-pill"
-                >
-                  <v-icon large class="white rounded-circle pa-1" _style="height: 100%;"
-                    >mdi-home-currency-usd</v-icon
-                  >
-                  <v-col cols="5" class="d-flex flex-column">
-                    <span class="text-uppercase font-nunito text-caption font-weight-medium"
-                      >Cọc thế chân</span
-                    >
-                    <span class="font-nunito text-caption">1 tháng</span>
-                  </v-col>
-                  <v-col cols="5" class="d-flex flex-column">
-                    <span class="text-uppercase font-nunito text-caption font-weight-medium"
-                      >Cọc giữ chỗ</span
-                    >
-                    <span class="font-nunito text-caption">0.2 triệu</span>
-                  </v-col>
-                </div> -->
                 <dateTimePickerBox
                   :name="group.groupName"
                   :avatar="group.imgUrl"

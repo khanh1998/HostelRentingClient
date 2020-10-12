@@ -86,19 +86,26 @@
             </template>
             <v-list>
               <v-list-item
-                to="#"
                 style="min-height: 20px !important;"
-                class="py-3 pl-3 pr-10 item-hover"
+                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
               >
-                <v-icon color="#6c757d" class="mr-2" small>mdi-file-question</v-icon>
-                <v-list-item-title class="item-hover">Chi tiết lịch hẹn</v-list-item-title>
+                <v-icon color="#6c757d" class="mr-2 item-hover" size="20"
+                  >mdi-home-map-marker</v-icon
+                >
+                <v-list-item-title class="item-hover">Chi tiết</v-list-item-title>
               </v-list-item>
-              <v-list-item to="#" class="pa-3 item-hover">
-                <v-icon color="#6c757d" class="mr-2 item-hover" small>report</v-icon>
+              <v-list-item
+                style="min-height: 20px !important;"
+                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+              >
+                <v-icon color="#6c757d" class="mr-2 item-hover" size="20">report</v-icon>
                 <v-list-item-title class="item-hover">Báo cáo</v-list-item-title>
               </v-list-item>
-              <v-list-item to="#" class="pa-3">
-                <v-icon small class="mr-2" color="#6c757d">mdi-comment-eye</v-icon>
+              <v-list-item
+                style="min-height: 20px !important;"
+                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+              >
+                <v-icon color="#6c757d" class="mr-2 item-hover" size="20">mdi-comment-eye</v-icon>
                 <v-list-item-title class="item-hover">Nhận xét</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -228,16 +235,19 @@ export default {
 .v-list-item__title {
   color: #6c757d;
   font-family: 'Nunito', sans-serif !important;
-  font-weight: 400;
-  font-size: 0.9rem;
+  font-weight: 400 !important;
+  font-size: 0.9rem !important;
 }
 .v-menu__content {
-  box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.3) !important;
-  border: 1px solid #f1f3fa;
-  /* border: 1px solid #e4eaf2; */
-  border-radius: 0.25rem;
-  font-size: 0.9rem;
-  color: #6c757d;
+  box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
+  background-color: #fff !important;
+  background-clip: padding-box !important;
+  border: 1px solid #e4eaf2 !important;
+  border-radius: 0.25rem !important;
+  color: #6c757d !important;
+}
+.item-menu:hover {
+  background-color: #f8f9fa;
 }
 .item-hover:hover {
   color: #272e37 !important;
