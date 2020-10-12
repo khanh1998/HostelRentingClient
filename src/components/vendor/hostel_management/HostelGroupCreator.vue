@@ -37,7 +37,12 @@
             <PlacePicker />
           </v-col>
           <v-col cols="12" md="5">
-            <HostelGroupServiceEditor :groupService="[]" :create="true" :update="false" />
+            <HostelGroupServiceEditor
+              :groupService="[]"
+              :create="true"
+              :update="false"
+              @newValue="receiveNewServiceData"
+            />
           </v-col>
         </v-row>
       </v-container>
@@ -51,7 +56,7 @@ import HostelGroupServiceEditor from './HostelGroupServiceEditor.vue';
 
 export default {
   name: 'HostelGroupCreator',
-  props: ['show'],
+  props: ['show', 'create', 'update'],
   components: { PlacePicker, HostelGroupRules, HostelGroupServiceEditor },
   data: () => ({
     newGroup: {
@@ -75,5 +80,12 @@ export default {
       services: [],
     },
   }),
+  methods: {
+    receiveNewServiceData(serviceList) {
+      if (this.create) {
+        this.newGroup.services = serviceList;
+      }
+    },
+  },
 };
 </script>
