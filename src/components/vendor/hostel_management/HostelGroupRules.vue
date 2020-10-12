@@ -5,31 +5,40 @@
     </v-overlay>
     <div class="d-flex flex-column inner" v-if="!rules.isLoading">
       <span class="text-h6 my-2"><v-icon>warning</v-icon> Nội quy khu trọ</span>
-      <v-subheader> <v-icon>schedule</v-icon> Giờ mở cửa</v-subheader>
-      <div class="d-flex flex-row ma-1">
-        <span class="font-weight-bold ma-1">Từ</span>
-        <el-time-select
-          placeholder="Giờ mở cửa"
-          v-model="picker.startTime"
-          :picker-options="{
-            start: '00:00',
-            step: '00:30',
-            end: '23:59',
-          }"
-        >
-        </el-time-select>
-        <span class="font-weight-bold ma-1">đến</span>
-        <el-time-select
-          placeholder="Giờ đóng cửa"
-          v-model="picker.endTime"
-          :picker-options="{
-            start: picker.startTime || '06:00',
-            step: '00:30',
-            end: '23:59',
-            minTime: picker.startTime,
-          }"
-        >
-        </el-time-select>
+      <v-switch
+        label="Giờ giấc tự do"
+        v-model="picker.openAllDay"
+        hide-details
+        color="red"
+        inset
+      ></v-switch>
+      <div v-if="!picker.openAllDay" class="d-flex flex-column justify-center">
+        <p class="ma-1 text-center">Giờ mở cửa</p>
+        <div class="d-flex flex-row ma-1">
+          <span class="font-weight-bold ma-1">Từ</span>
+          <el-time-select
+            placeholder="Giờ mở cửa"
+            v-model="picker.startTime"
+            :picker-options="{
+              start: '00:00',
+              step: '00:30',
+              end: '23:59',
+            }"
+          >
+          </el-time-select>
+          <span class="font-weight-bold ma-1">đến</span>
+          <el-time-select
+            placeholder="Giờ đóng cửa"
+            v-model="picker.endTime"
+            :picker-options="{
+              start: picker.startTime || '06:00',
+              step: '00:30',
+              end: '23:59',
+              minTime: picker.startTime,
+            }"
+          >
+          </el-time-select>
+        </div>
       </div>
       <div class="d-flex flex-row flex-wrap">
         <v-switch
@@ -37,7 +46,7 @@
           :key="rule.regulationId"
           :label="rule.regulationName"
           color="red"
-          value="red"
+          inset
           hide-details
         ></v-switch>
       </div>
@@ -53,6 +62,7 @@ export default {
     picker: {
       startTime: '00:00',
       endTime: '23:59',
+      openAllDay: true,
     },
     activeRules: [],
   }),

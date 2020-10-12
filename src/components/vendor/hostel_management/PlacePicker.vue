@@ -7,7 +7,6 @@
           @place_changed="setPlace"
           :options="autocompleteOptions"
         ></gmap-autocomplete>
-        <v-btn @click="addMarker" icon color="primary"><v-icon>search</v-icon></v-btn>
       </div>
       <div class="gmap-view-map">
         <gmap-map :center="center" :zoom="12" style="width: 100%; height: 400px;">
@@ -161,7 +160,7 @@ export default {
 }
 .gmap-search-bar {
   position: absolute;
-  top: 10px;
+  top: 40px;
   left: 10px;
   z-index: 9999;
 }

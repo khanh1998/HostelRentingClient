@@ -14,7 +14,7 @@
       </template>
       <template v-slot:item.unit="{ item }">
         <v-select
-          v-model="item.unit"
+          v-model="item.userUnit"
           menu-props="auto"
           label="Select"
           hide-details
@@ -25,7 +25,7 @@
       </template>
       <template v-slot:item.time="{ item }">
         <v-select
-          v-model="item.time"
+          v-model="item.timeUnit"
           menu-props="auto"
           label="Select"
           hide-details
@@ -52,7 +52,7 @@
             item-value="serviceId"
             dense
             hide-details
-            v-model="addNew.id"
+            v-model="addNew.serviceId"
             class="pa-1"
           ></v-select>
           <v-text-field
@@ -71,7 +71,7 @@
             label="Đơn vị"
             dense
             hide-details
-            v-model="addNew.unit"
+            v-model="addNew.userUnit"
             class="pa-1"
           ></v-select>
           <v-select
@@ -79,7 +79,7 @@
             label="Tần suất thanh toán"
             dense
             hide-details
-            v-model="addNew.time"
+            v-model="addNew.timeUnit"
             class="pa-1"
           ></v-select>
         </div>
@@ -120,32 +120,32 @@ export default {
           text: 'Tên',
           align: 'start',
           sortable: false,
-          value: 'name',
+          value: 'serviceName',
         },
         { text: 'Giá (Nghìn đồng)', value: 'price' },
-        { text: 'Đơn vị', value: 'unit' },
-        { text: 'Tần suất thanh toán', value: 'time' },
+        { text: 'Đơn vị', value: 'userUnit' },
+        { text: 'Tần suất thanh toán', value: 'timeUnit' },
         { text: 'Xoá', value: 'delete' },
       ],
       units: ['m³', 'kWh', 'người', 'phòng', 'xe'],
       times: ['tuần', 'tháng', 'năm'],
     },
     addNew: {
-      name: '',
-      id: null,
+      serviceName: '',
+      serviceId: null,
       price: 0,
-      unit: '',
-      time: '',
+      userUnit: '',
+      timeUnit: '',
     },
     newServices: [],
   }),
   computed: {
     groupServiceDesserts() {
       return this.groupService.map((service) => ({
-        name: service.serviceName,
+        serviceName: service.serviceName,
         price: service.price,
-        time: service.timeUnit,
-        unit: service.userUnit,
+        timeUnit: service.timeUnit,
+        userUnit: service.userUnit,
       }));
     },
     services() {
@@ -159,8 +159,8 @@ export default {
     },
     addable() {
       // eslint-disable-next-line
-      const { id, unit, time } = this.addNew;
-      if (!id || !unit || !time) {
+      const { serviceId, userUnit, timeUnit } = this.addNew;
+      if (!serviceId || !userUnit || !timeUnit) {
         return false;
       }
       return true;
@@ -183,8 +183,8 @@ export default {
         return false;
       }
       // eslint-disable-next-line
-      const { id, price, unit, time } = this.addNew;
-      if (!id || !unit || !time) {
+      const { serviceId, price, userUnit, timeUnit } = this.addNew;
+      if (!serviceId || !userUnit || !timeUnit) {
         this.showSnackBar('Vui lòng điền đầy đủ tất cả các trường', { color: 'black' });
         return false;
       }
@@ -196,18 +196,18 @@ export default {
     },
     addService() {
       if (this.isNewServiceValid()) {
-        this.addNew.name = this.getService(this.addNew.id).serviceName;
+        this.addNew.serviceName = this.getService(this.addNew.serviceId).serviceName;
         this.newServices.push(this.addNew);
         this.resetAddNew();
       }
     },
     resetAddNew() {
       this.addNew = {
-        name: '',
-        id: null,
+        serviceName: '',
+        serviceId: null,
         price: 0,
-        unit: '',
-        time: '',
+        timeUnit: '',
+        userUnit: '',
       };
     },
     removeService(item) {
