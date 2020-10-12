@@ -13,7 +13,7 @@
             >
             <v-btn-toggle v-model="buttonGroup.selectedBookingStatus">
               <v-btn
-                class="btn-primary font-nunito text-subtitle-2 px-5"
+                class="btn-primary font-nunito text-subtitle-2 px-5 elevation-0"
                 style="
                   border-top-left-radius: 0 !important;
                   border-bottom-left-radius: 0 !important;
@@ -23,7 +23,7 @@
                 >Sắp tới <span class="amber--text">({{ counter.incomming }})</span></v-btn
               >
               <v-btn
-                class="btn-primary font-nunito text-subtitle-2 px-5"
+                class="btn-primary font-nunito text-subtitle-2 px-5 elevation-0"
                 style="
                   border-top-left-radius: 0 !important;
                   border-bottom-left-radius: 0 !important;
@@ -34,7 +34,7 @@
                 Đã xem phòng <span class="amber--text">({{ counter.done }})</span></v-btn
               >
               <v-btn
-                class="btn-primary font-nunito text-subtitle-2 px-5"
+                class="btn-primary font-nunito text-subtitle-2 px-5 elevation-0"
                 style="
                   border-top-left-radius: 0 !important;
                   border-bottom-left-radius: 0 !important;
