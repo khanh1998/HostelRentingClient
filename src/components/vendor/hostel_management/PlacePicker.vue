@@ -168,7 +168,10 @@ export default {
     },
     findDistrictByName(districtName) {
       const district = this.districts.data.find((d) => {
-        const include = d.districtName.trim() === districtName.trim();
+        const include = d.districtName
+          .trim()
+          .toLowerCase()
+          .includes(districtName.trim().toLowerCase());
         return include;
       });
       return district;
