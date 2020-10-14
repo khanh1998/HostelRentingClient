@@ -3,51 +3,53 @@
     <v-overlay :value="provinces.isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <span class="text-h6"><v-icon>directions</v-icon> Xác định vị trí trên bản đồ</span>
-    <div class="gmap-view">
-      <div class="gmap-search-bar">
-        <gmap-autocomplete
-          @place_changed="setPlace"
-          :bounds="gmap.bounds"
-          :selectFirstOnEnter="true"
-        ></gmap-autocomplete>
-      </div>
-      <div class="gmap-view-map">
-        <gmap-map :center="center" :zoom="12" style="width: 100%; height: 400px;">
-          <gmap-marker
-            :position="marker.position"
-            @click="center = marker.position"
-            :clickable="true"
-            :draggable="true"
-            @dragend="updateMarker"
-          ></gmap-marker>
-          <div slot="visible">
-            <div
-              style="
-                bottom: 0;
-                left: 0;
-                background-color: #0000ff;
-                color: white;
-                position: absolute;
-                z-index: 100;
-              "
-            >
-              Toạ độ: {{ marker.position.lat }}, {{ marker.position.lng }}
+    <div v-if="!provinces.isLoading">
+      <span class="text-h6"><v-icon>directions</v-icon> Xác định vị trí trên bản đồ</span>
+      <div class="gmap-view">
+        <div class="gmap-search-bar">
+          <gmap-autocomplete
+            @place_changed="setPlace"
+            :options="gmap"
+            :selectFirstOnEnter="true"
+          ></gmap-autocomplete>
+        </div>
+        <div class="gmap-view-map">
+          <gmap-map :center="center" :zoom="12" style="width: 100%; height: 400px;">
+            <gmap-marker
+              :position="marker.position"
+              @click="center = marker.position"
+              :clickable="true"
+              :draggable="true"
+              @dragend="updateMarker"
+            ></gmap-marker>
+            <div slot="visible">
+              <div
+                style="
+                  bottom: 0;
+                  left: 0;
+                  background-color: #0000ff;
+                  color: white;
+                  position: absolute;
+                  z-index: 100;
+                "
+              >
+                Toạ độ: {{ marker.position.lat }}, {{ marker.position.lng }}
+              </div>
             </div>
-          </div>
-        </gmap-map>
+          </gmap-map>
+        </div>
       </div>
-    </div>
-    <div>
-      <v-select
-        prepend-icon="confirmation_number"
-        :items="coordsToString.selectableAddresses"
-        label="Chọn địa chỉ"
-        v-model="coordsToString.selectedAddress"
-        messages="Thay đổi danh sách địa chỉ bằng cách xác định vị trí trên bản đồ"
-      ></v-select>
-      <v-text-field v-model="buildingNo" placeholder="Số nhà" readonly></v-text-field>
-      <br />
+      <div>
+        <v-select
+          prepend-icon="confirmation_number"
+          :items="coordsToString.selectableAddresses"
+          label="Chọn địa chỉ"
+          v-model="coordsToString.selectedAddress"
+          messages="Thay đổi danh sách địa chỉ bằng cách xác định vị trí trên bản đồ"
+        ></v-select>
+        <v-text-field v-model="buildingNo" placeholder="Số nhà"></v-text-field>
+        <br />
+      </div>
     </div>
   </div>
 </template>
@@ -66,16 +68,12 @@ export default {
       addressString: 'Thành phố Hồ Chí Minh',
       gmap: {
         bounds: {
-          ne: {
-            lat: 11.1602136,
-            lng: 107.0265769,
-          },
-          sw: {
-            lat: 10.3493704,
-            lng: 106.3638784,
-          },
+          north: 11.1602136,
+          south: 10.3493704,
+          east: 107.0265769,
+          west: 106.3638784,
         },
-        autocompleteResponse: null,
+        strictBounds: true,
       },
       buildingNo: '',
       coordsToString: {
@@ -168,20 +166,68 @@ export default {
         this.coordsToString.selectableAddresses = formattedAddresses;
       });
     },
+    findDistrictByName(districtName) {
+      const district = this.districts.data.find((d) => {
+        const include = d.districtName.trim() === districtName.trim();
+        return include;
+      });
+      return district;
+    },
+    findWardByName(wardName, wards) {
+      const ward = wards.find((w) => {
+        const include = w.wardName.trim().toLowerCase().includes(wardName.trim().toLowerCase());
+        return include;
+      });
+      return ward;
+    },
+    emitNewAddress() {
+      this.$emit('newValue', {
+        coords: {
+          longitude: this.marker.position.lng,
+          latitude: this.marker.position.lat,
+        },
+        address: this.addressObjForApi,
+      });
+    },
   },
   watch: {
     marker: {
       handler() {
         this.updateSelectableAddress();
-        this.$emit('newValue', {
-          coords: this.marker.position,
-        });
       },
       deep: true,
+    },
+    'coordsToString.selectedAddress': {
+      handler() {
+        this.emitNewAddress();
+      },
+      deep: true,
+    },
+    buildingNo: {
+      handler() {
+        this.emitNewAddress();
+      },
     },
   },
   computed: {
     ...mapState('renter/common', ['provinces', 'wards', 'districts']),
+    addressObjForApi() {
+      // eslint-disable-next-line
+      let [streetName, wardName, districtName] = this.coordsToString.selectedAddress.split(',');
+      console.log(streetName, wardName, districtName);
+      if (streetName.startsWith('Đ. ')) {
+        streetName = streetName.substring(3);
+      }
+      const district = this.findDistrictByName(districtName);
+      const ward = this.findWardByName(wardName, district.wards);
+      return {
+        provinceId: 1,
+        districtId: district.districtId,
+        wardId: ward.wardId,
+        streetName,
+        buildingNo: this.buildingNo,
+      };
+    },
   },
   created() {
     if (this.provinces.data.length === 0) {

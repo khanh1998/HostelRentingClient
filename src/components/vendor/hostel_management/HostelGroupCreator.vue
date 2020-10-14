@@ -34,7 +34,7 @@
             <HostelGroupRules @newValue="receiveNewRulesData" />
           </v-col>
           <v-col cols="12" md="4">
-            <PlacePicker />
+            <PlacePicker @newValue="receiveNewAddress" />
           </v-col>
           <v-col cols="12" md="5">
             <HostelGroupServiceEditor
@@ -50,6 +50,7 @@
   </v-dialog>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import PlacePicker from './PlacePicker.vue';
 import HostelGroupRules from './HostelGroupRules.vue';
 import HostelGroupServiceEditor from './HostelGroupServiceEditor.vue';
@@ -81,16 +82,43 @@ export default {
     },
   }),
   methods: {
+    ...mapActions({
+      getUser: 'user/getUser',
+    }),
     receiveNewServiceData(serviceList) {
       if (this.create) {
         this.newGroup.services = serviceList;
       }
     },
-    receiveNewRulesData(ruleList) {
+    receiveNewRulesData(obj) {
       if (this.create) {
-        this.newGroup.regulations = ruleList;
+        this.newGroup.regulations = obj.rule;
+        if (!obj.time.openAllDay && obj.time.startTime && obj.time.endTime) {
+          this.newGroup.curfewTime = `${obj.time.startTime} - ${obj.time.endTime}`;
+        } else {
+          this.newGroup.curfewTime = null;
+        }
       }
     },
+    receiveNewAddress(addressObj) {
+      const { coords, address } = addressObj;
+      this.newGroup.longitude = coords.longitude;
+      this.newGroup.latitude = coords.latitude;
+      this.newGroup.address = address;
+      this.newGroup.buildingNo = address.buildingNo;
+    },
+  },
+  computed: {
+    user() {
+      return this.$store.state.user.user.data;
+    },
+  },
+  created() {
+    if (!this.user) {
+      this.getUser().then(() => {
+        this.newGroup.vendorId = this.user.userId;
+      });
+    }
   },
 };
 </script>

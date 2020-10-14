@@ -61,8 +61,8 @@ export default {
   name: 'HostelGroupRules',
   data: () => ({
     picker: {
-      startTime: '00:00',
-      endTime: '23:59',
+      startTime: '',
+      endTime: '',
       openAllDay: true,
     },
     activeRules: [],
@@ -97,7 +97,13 @@ export default {
   watch: {
     activeRules: {
       handler() {
-        this.$emit('newValue', this.listOfActiveRules);
+        this.$emit('newValue', { rules: this.listOfActiveRules, time: this.picker });
+      },
+      deep: true,
+    },
+    picker: {
+      handler() {
+        this.$emit('newValue', { rules: this.listOfActiveRules, time: this.picker });
       },
       deep: true,
     },
