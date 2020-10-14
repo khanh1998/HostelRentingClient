@@ -1,11 +1,15 @@
 <template>
   <div>
+    <v-overlay :value="provinces.isLoading" absolute>
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
     <span class="text-h6"><v-icon>directions</v-icon> Xác định vị trí trên bản đồ</span>
     <div class="gmap-view">
       <div class="gmap-search-bar">
         <gmap-autocomplete
           @place_changed="setPlace"
-          :options="autocompleteOptions"
+          :bounds="gmap.bounds"
+          :selectFirstOnEnter="true"
         ></gmap-autocomplete>
       </div>
       <div class="gmap-view-map">
@@ -48,7 +52,7 @@
   </div>
 </template>
 <script>
-// import axios from 'axios';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'PlacePicker',
@@ -60,11 +64,22 @@ export default {
       marker: { position: { lat: 10.8230989, lng: 106.6296638 } },
       place: { position: { lat: 10.8230989, lng: 106.6296638 } },
       addressString: 'Thành phố Hồ Chí Minh',
-      autocompleteOptions: {
-        components: 'country:vi',
+      gmap: {
+        bounds: {
+          ne: {
+            lat: 11.1602136,
+            lng: 107.0265769,
+          },
+          sw: {
+            lat: 10.3493704,
+            lng: 106.3638784,
+          },
+        },
+        autocompleteResponse: null,
       },
       buildingNo: '',
       coordsToString: {
+        addressComponents: [],
         selectableAddresses: [],
         selectedAddress: '',
       },
@@ -75,8 +90,10 @@ export default {
     this.geolocate();
     this.updateSelectableAddress();
   },
-
   methods: {
+    ...mapActions({
+      getProvinces: 'renter/common/getProvinces',
+    }),
     // receives a place object via the autocomplete component
     setPlace(place) {
       this.place = place;
@@ -108,7 +125,6 @@ export default {
     updateMarker(mouseEvent) {
       // https://developers.google.com/maps/documentation/javascript/reference/map#MouseEvent
       const { latLng } = mouseEvent;
-      console.log(`new coords: ${latLng}`);
       const coord = { lat: latLng.lat(), lng: latLng.lng() };
       this.place = { position: coord };
       this.marker = { position: coord };
@@ -129,8 +145,20 @@ export default {
           });
           return indexR > -1;
         });
-        const formattedAddresses = includeRoutes.map((item) => item.formatted_address);
-        return formattedAddresses;
+        let formattedAddresses = includeRoutes.map((item) => {
+          const addressComponents = item.address_components;
+          const streetNumber = addressComponents.find((compo) => {
+            const isInclude = compo.types.includes('street_number');
+            return isInclude;
+          });
+          if (streetNumber) {
+            const shortName = streetNumber.short_name;
+            return item.formatted_address.substring(shortName.length + 1);
+          }
+          return item.formatted_address;
+        });
+        formattedAddresses = new Set(formattedAddresses);
+        return Array.from(formattedAddresses);
       }
       return null;
     },
@@ -145,11 +173,21 @@ export default {
     marker: {
       handler() {
         this.updateSelectableAddress();
+        this.$emit('newValue', {
+          coords: this.marker.position,
+        });
       },
       deep: true,
     },
   },
-  computed: {},
+  computed: {
+    ...mapState('renter/common', ['provinces', 'wards', 'districts']),
+  },
+  created() {
+    if (this.provinces.data.length === 0) {
+      this.getProvinces();
+    }
+  },
 };
 </script>
 <style scoped>
@@ -160,7 +198,7 @@ export default {
 }
 .gmap-search-bar {
   position: absolute;
-  top: 40px;
+  top: 50px;
   left: 10px;
   z-index: 9999;
 }

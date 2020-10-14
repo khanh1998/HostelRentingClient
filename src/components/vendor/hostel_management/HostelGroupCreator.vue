@@ -31,7 +31,7 @@
               hide-details
             ></v-text-field>
             <v-divider class="mt-6 mb-3" />
-            <HostelGroupRules />
+            <HostelGroupRules @newValue="receiveNewRulesData" />
           </v-col>
           <v-col cols="12" md="4">
             <PlacePicker />
@@ -84,6 +84,11 @@ export default {
     receiveNewServiceData(serviceList) {
       if (this.create) {
         this.newGroup.services = serviceList;
+      }
+    },
+    receiveNewRulesData(ruleList) {
+      if (this.create) {
+        this.newGroup.regulations = ruleList;
       }
     },
   },
