@@ -8,7 +8,7 @@
       <v-container v-if="!isLoading">
         <v-dialog width="400" v-model="chatBox.show">
           <chatBox v-if="renter" v-on:close="chatBox.show = false" :info="info" :group="group" />
-          <v-card v-if="!renter">
+          <!-- <v-card v-if="!renter">
             <v-card-title>Đăng nhập để nhắn tin</v-card-title>
             <v-card-actions>
               <v-btn :to="registerRouteObject" dark class="green lighten-3">
@@ -19,7 +19,8 @@
                 <v-icon>login</v-icon>Đăng nhập
               </v-btn>
             </v-card-actions>
-          </v-card>
+          </v-card> -->
+          <LoginBox v-if="!renter" />
         </v-dialog>
         <v-row>
           <v-col
@@ -134,7 +135,10 @@
                     <span class="text-uppercase font-nunito text-caption font-weight-medium"
                       >Cọc giữ chỗ</span
                     >
-                    <span class="font-nunito text-caption">{{ group.downPayment }} triệu</span>
+                    <span class="font-nunito text-caption" v-if="group.downPayment !== 0">{{
+                      getDownPayment(group.downPayment, info.priceUnit)
+                    }}</span>
+                    <span class="font-nunito text-caption" v-else>Không cần</span>
                   </v-col>
                 </div>
               </v-col>
@@ -189,6 +193,8 @@
                   :groupId="group.groupId"
                   :typeId="info.typeId"
                   :vendorId="group.vendorId"
+                  :currentBooking="info.currentBooking"
+                  :availableRoom="info.availableRoom"
                   v-on:openMessage="chatBox.show = true"
                 />
               </v-col>
@@ -285,7 +291,7 @@
             </v-row>
           </v-col>
         </v-row>
-        <v-row class="mt-10">
+        <!-- <v-row class="mt-10">
           <v-col cols="12" md="8">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
               >ĐÁNH GIÁ PHÒNG TRỌ</span
@@ -296,7 +302,7 @@
             </div>
             <ratingBox class="mt-5" :rating="{ average: 3.5, total: 30 }" />
           </v-col>
-        </v-row>
+        </v-row> -->
         <v-row class="mt-10">
           <v-col cols="12" md="8">
             <div class="d-flex">
@@ -364,12 +370,13 @@ import { mapActions, mapGetters } from 'vuex';
 import facilitiesBox from '../../components/hostel_type/facilitiesBox.vue';
 import servicesBox from '../../components/hostel_type/servicesBox.vue';
 import regulationsBox from '../../components/hostel_type/regulationsBox.vue';
-import ratingBox from '../../components/hostel_type/ratingBox.vue';
+// import ratingBox from '../../components/hostel_type/ratingBox.vue';
 import SuggestionList from '../../components/hostel_type/SuggestionList.vue';
 import GroupHostelTypes from '../../components/hostel_type/GroupHostelTypes.vue';
+import LoginBox from '../../components/login/loginBox.vue';
 
 export default {
-  name: ' ',
+  name: 'HostelDetail',
   components: {
     dateTimePickerBox,
     servicesBox,
@@ -377,9 +384,10 @@ export default {
     chatBox,
     facilitiesBox,
     regulationsBox,
-    ratingBox,
+    // ratingBox,
     SuggestionList,
     GroupHostelTypes,
+    LoginBox,
   },
   data: () => ({
     chatBox: {
@@ -401,6 +409,15 @@ export default {
         longitude: this.group.longitude,
         latitude: this.group.latitude,
       });
+    },
+    getDownPayment(downPayment, priceUnit) {
+      if (priceUnit === 'triệu') {
+        if (downPayment < 1) {
+          return `${downPayment * 1000} ngàn`;
+        }
+        return `${downPayment} triệu`;
+      }
+      return `${downPayment} triệu`;
     },
   },
   computed: {

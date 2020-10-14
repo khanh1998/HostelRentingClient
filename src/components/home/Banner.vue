@@ -361,6 +361,7 @@
                   >Tiện ích xung quanh</v-subheader
                 >
                 <v-btn
+                  disabled
                   color="white"
                   icon
                   class="ml-auto mr-2"

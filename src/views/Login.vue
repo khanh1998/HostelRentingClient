@@ -60,6 +60,11 @@
                     hint="Ít nhất 6 kí tự"
                   ></v-text-field>
                   <span
+                    class="red--text font-nunito"
+                    style="font-size: 0.9rem; font-weight: 400;"
+                    >{{ message }}</span
+                  >
+                  <span
                     class="ml-auto font-nunito text-muted"
                     style="font-size: 0.75rem; font-weight: 400;"
                     >Quên mật khẩu</span

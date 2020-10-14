@@ -117,8 +117,8 @@
                   item
                   v-if="isLoggedIn && !isLoadingUser"
                 >
-                  <!-- <v-img :src="user.avatar" :alt="user.username"></v-img> -->
-                  <span class="text-overline white--text">{{ getAvatarTitle(user.username) }}</span>
+                  <v-img v-if="user.avatar" :src="user.avatar" :alt="user.username"></v-img>
+                  <span v-else class="text-overline white--text">{{ getAvatarTitle(user.username) }}</span>
                 </v-avatar>
                 <v-avatar size="35px" item v-if="!isLoggedIn" min-width="30" min-height="30">
                   <v-icon>face</v-icon>

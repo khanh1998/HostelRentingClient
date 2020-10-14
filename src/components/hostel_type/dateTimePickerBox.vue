@@ -4,8 +4,9 @@
     v-if="!isLoading"
     style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%;"
   >
-    <v-dialog v-model="dateTimePicker.isOpenPicker" width="350">
-      <v-card v-if="!userState.data" color="white" light>
+    <v-dialog v-model="dateTimePicker.isOpenPicker" width="400">
+      <LoginBox v-if="!userState.data" />
+      <!-- <v-card v-if="!userState.data" color="white" light>
         <v-card-title>Đăng nhập để đặt lịch xem phòng</v-card-title>
         <v-card-actions>
           <v-btn :to="registerRouteObject" dark class="green lighten-3">
@@ -16,7 +17,7 @@
             <v-icon>login</v-icon>Đăng nhập
           </v-btn>
         </v-card-actions>
-      </v-card>
+      </v-card> -->
       <dateTimePickerStepper
         v-if="userState.data"
         v-on:cancel="dateTimePicker.isOpenPicker = false"
@@ -31,12 +32,12 @@
     <span class="text-body-1 font-weight-bold text-center font-nunito mt-2" style="color: #222;">
       {{ name }}
     </span>
-    <div class="d-flex align-center font-nunito my-3">
+    <!-- <div class="d-flex align-center font-nunito my-3">
       <v-icon color="#ffbc00" class="mr-2" x-small>fas fa-star</v-icon>
       <p class="grey--text mb-0">{{ ` ${rating.average} / 5` }}</p>
       <p class="mb-0 ml-1">( {{ rating.total }} )</p>
-    </div>
-    <div class="d-flex mb-4">
+    </div> -->
+    <div class="d-flex mb-4 mt-3">
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -96,7 +97,7 @@
     <span class="font-nunito text-caption mt-4" style="text-align: end !important;"
       >TRẠNG THÁI:
       <span class="text-subtitle-2" style="color: #1edb4c !important;"
-        >3 lịch hẹn / 2 phòng trống</span
+        >{{ currentBooking }} lịch hẹn / {{ availableRoom }} phòng trống</span
       ></span
     >
   </div>
@@ -105,12 +106,16 @@
 import { mapGetters, mapActions } from 'vuex';
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
 import utils from '../../utils/firebaseNotification';
+import LoginBox from '../login/loginBox.vue';
 
 const { sendBookingNotification } = utils;
 
 export default {
   name: 'DateTimePickerBox',
-  components: { dateTimePickerStepper },
+  components: {
+    dateTimePickerStepper,
+    LoginBox,
+  },
   props: {
     name: String,
     avatar: String,
@@ -118,6 +123,8 @@ export default {
     groupId: Number,
     typeId: Number,
     vendorId: Number,
+    currentBooking: Number,
+    availableRoom: Number,
   },
   data: () => ({
     dateTimePicker: {
@@ -148,11 +155,8 @@ export default {
     async sendBooking() {
       this.dialog.booking = false;
       this.showSnackbar('yellow', 'Booking của bạn đang được tạo');
-      console.log(this.dateTimePicker);
       const dateTime = this.dateTimePicker.date.split('/');
       const timeTime = this.dateTimePicker.time.split(':');
-      console.log(dateTime);
-      console.log(timeTime);
       const bookingObj = {
         renterId: this.userState.data.userId,
         vendorId: this.vendorId,
@@ -167,7 +171,6 @@ export default {
           timeTime[1],
         ).getTime(),
       };
-      console.log(bookingObj);
       await this.createBooking(bookingObj);
       const success = this.newlyCreated;
       if (success) {

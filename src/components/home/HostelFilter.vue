@@ -176,7 +176,7 @@
           </v-chip-group>
         </v-expansion-panel-content>
       </v-expansion-panel>
-      <v-expansion-panel>
+      <!-- <v-expansion-panel>
         <v-expansion-panel-header>
           <template v-slot:default="{ open }">
             <v-row no-gutters class="d-flex flex colum">
@@ -202,7 +202,7 @@
             >
           </v-chip-group>
         </v-expansion-panel-content>
-      </v-expansion-panel>
+      </v-expansion-panel> -->
       <v-expansion-panel>
         <v-expansion-panel-header>
           <template v-slot:default="{ open }">
