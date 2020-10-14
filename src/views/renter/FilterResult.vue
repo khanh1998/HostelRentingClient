@@ -34,7 +34,7 @@
         </v-col>
       </v-row>
       <v-row class="mx-0" justify="center">
-        <v-col cols="9" v-if="list.length !== 0">
+        <v-col cols="9" _v-if="list.length !== 0">
           <!-- <v-col cols="9 p-0"> -->
           <v-row class="d-flex flex-direction: row">
             <v-col cols="8">
@@ -121,16 +121,15 @@ export default {
         return this.$store.state.renter.home.categories.data;
       },
     },
-    isLoadingCategories: {
-      get() {
-        return this.$store.state.renter.home.categories.isLoading;
-      },
+    filter() {
+      return this.$store.state.renter.filterResult.filter;
     },
   },
   created() {
     if (this.categories.length === 0) {
       this.getAllCategories();
     }
+    // console.log(this.$session.get('searchValue'));
   },
 };
 </script>

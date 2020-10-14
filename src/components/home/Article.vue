@@ -294,7 +294,7 @@
   left: 0 !important;
   top: 28px;
   bottom: auto !important;
-  z-index: 100;
+  z-index: 1;
   position: absolute;
   padding: 2px 21px 2px 11px;
   font-family: 'Poppins', sans-serif;

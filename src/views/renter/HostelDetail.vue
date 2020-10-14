@@ -128,7 +128,7 @@
                     <span class="text-uppercase font-nunito text-caption font-weight-medium"
                       >Cọc thế chân</span
                     >
-                    <span class="font-nunito text-caption">{{ info.deposit }} tháng</span>
+                    <span class="font-nunito text-caption">{{ info.deposit }} tháng tiền thuê</span>
                   </v-col>
                   <v-col cols="5" class="d-flex flex-column">
                     <span class="text-uppercase font-nunito text-caption font-weight-medium"

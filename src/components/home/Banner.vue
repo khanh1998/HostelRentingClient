@@ -232,11 +232,10 @@
             <div :style="{ width: '40%' }" class="hidden-xs-only">
               <v-select
                 v-model="filter.minArea.select"
-                :items="filter.minArea.items"
-                label="Diện tích tối thiểu"
+                :items="minArea"
+                label="`Diện tích tối thiểu"
                 class="text-subtitle-2"
                 filled
-                cache-items
                 dense
                 color="indigo"
                 clearable
@@ -251,11 +250,10 @@
             <div :style="{ width: '100%' }" class="d-flex d-sm-none">
               <v-select
                 v-model="filter.minArea.select"
-                :items="filter.minArea.items"
+                :items="minArea"
                 label="Diện tích tối thiểu"
                 class="text-subtitle-2"
                 filled
-                cache-items
                 dense
                 color="indigo"
                 clearable
@@ -572,6 +570,17 @@ export default {
     },
     categories() {
       return this.$store.state.renter.filterResult.filter.categories.data;
+    },
+    minArea() {
+      const selectedCatgory = this.filter.categories.select;
+      switch (selectedCatgory) {
+        case 2:
+          return ['30 m2', '40 m2', '50 m2', '50 m2', '70 m2', '80 m2', '90 m2', '100 m2'];
+        case 1:
+          return ['10 m2', '15 m2', '20 m2', '25 m2', '30 m2', '40 m2'];
+        default:
+          return [];
+      }
     },
     nameAddress: {
       get() {

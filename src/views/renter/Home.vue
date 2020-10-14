@@ -35,14 +35,64 @@
       <v-row class="content pt-3" justify="center">
         <v-col cols="10" sm="10" md="9" lg="9" xl="8">
           <v-row class="d-flex flex-direction: row px-5">
-            <v-col cols="11" sm="11" md="8" lg="8" xl="8">
-              <v-row>
-                <v-col cols="12">
-                  <ArticleList :list="hostelTypes" />
-                </v-col>
-              </v-row>
+            <v-col cols="11" sm="11" md="8" lg="8" xl="8" class="py-0 pr-5">
+              <ArticleList :list="hostelTypes" />
             </v-col>
-            <v-col cols="4"></v-col>
+            <v-col cols="4" class="hidden-sm-and-down d-flex flex-column py-0 pl-6">
+              <span
+                class="d-flex justify-center pa-2 font-nunito text-overline"
+                style="
+                  background-color: #f1f3fa !important;
+                  border-color: #f1f3fa !important;
+                  font-size: 0.9rem;
+                  font-weight: 400;
+                  line-height: 1.5;
+                  color: #6c757d;
+                "
+                >ĐƠN VỊ ĐỒNG HÀNH</span
+              >
+              <a
+                href="https://www.sac.vn/article/ma-uu-dai-giam-gia-khoa-hoc-unica-len-den-80"
+                target="_blank"
+              >
+                <v-card width="100%" class="mt-2 cursor">
+                  <v-img
+                    src="https://hotrosinhvien.vn/media/cache/lac_birds_large/e1/f5/68de21155c648e439c83964a8606.png"
+                  />
+                </v-card>
+              </a>
+              <a
+                href="https://monkeymath.lapa.pub/?aff_sid=r4iq4n5fSJaV8M9noVipeAqkn6eRVuyFeT9nmxvSDjLM5cXy"
+                target="_blank"
+              >
+                <v-card width="100%" class="mt-2 cursor">
+                  <v-img
+                    src="https://www.sac.vn/media/cache/lac_birds_large/97/57/da2003dac031650b9415496d4749.png"
+                  />
+                </v-card>
+              </a>
+              <a href="https://nkidgroup.com/" target="_blank">
+                <v-card width="100%" class="mt-2 cursor">
+                  <v-img
+                    src="https://hotrosinhvien.vn/media/cache/lac_birds_large/3f/f1/d5591988b863a9a9461fe99286ac.jpeg"
+                  />
+                </v-card>
+              </a>
+              <a href="https://sapuwa.com/" target="_blank">
+                <v-card width="100%" class="mt-2 cursor">
+                  <v-img
+                    src="https://hotrosinhvien.vn/media/cache/lac_birds_large/46/6b/409b520277068051cff64a38eb64.png"
+                  />
+                </v-card>
+              </a>
+              <a href="https://www.ocb.com.vn/" target="_blank">
+                <v-card width="100%" class="mt-2 cursor">
+                  <v-img
+                    src="https://hotrosinhvien.vn/media/cache/lac_birds_large/60/ea/8278928e118849a1f9308b363394.png"
+                  />
+                </v-card>
+              </a>
+            </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" sm="12" md="7" xl="8" lg="8" class="mt-10">

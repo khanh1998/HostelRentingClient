@@ -103,13 +103,13 @@
                     >
                   </v-card-text>
                   <v-card-actions class="d-flex justify-center mt-n2">
-                    <v-btn outlined fab color="#39afd1" x-small class="register mx-2">
+                    <v-btn disabled outlined fab color="#39afd1" x-small class="register mx-2">
                       <v-icon small class="icon-phone">mdi mdi-phone</v-icon>
                     </v-btn>
-                    <v-btn outlined fab color="#727cf5" x-small class="register mx-2">
+                    <v-btn disabled outlined fab color="#727cf5" x-small class="register mx-2">
                       <v-icon small class="icon-fb">mdi mdi-facebook</v-icon>
                     </v-btn>
-                    <v-btn outlined fab color="#fa5c7c" x-small class="register mx-2">
+                    <v-btn disabled outlined fab color="#fa5c7c" x-small class="register mx-2">
                       <v-icon small class="icon-gmail">mdi mdi-google</v-icon>
                     </v-btn>
                   </v-card-actions>

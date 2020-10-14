@@ -14,7 +14,7 @@ const myState = {
       address: '',
     },
     distance: {
-      select: '5km',
+      select: '3km',
       items: ['3km', '5km', '7km', '10km'],
     },
     around: {
@@ -80,6 +80,7 @@ const mutationTypes = {
   GET_CATEGORIES_SUCCESS: 'GET_CATEGORIES_SUCCESS',
   GET_CATEGORIES_FAILURE: 'GET_CATEGORIES_FAILURE',
   GET_CATEGORIES_REQUEST: 'GET_CATEGORIES_REQUEST',
+  SET_CATEGORIES_SELECT: 'SET_CATEGORIES_SELECT',
   // facilities
   GET_FACILITIES_SUCCESS: 'GET_FACILITIES_SUCCESS',
   GET_FACILITIES_FAILURE: 'GET_FACILITIES_FAILURE',
@@ -117,6 +118,7 @@ const mutations = {
   // categories
   GET_CATEGORIES_SUCCESS(state, inputData) {
     state.filter.categories.data = inputData;
+    state.filter.categories.select = inputData.filter((c) => c.displayOrder === 1)[0].categoryId;
     state.filter.categories.isLoading = false;
   },
   GET_CATEGORIES_FAILURE(state) {
