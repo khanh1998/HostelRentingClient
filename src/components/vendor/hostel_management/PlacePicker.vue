@@ -180,6 +180,13 @@ export default {
       });
       return ward;
     },
+    findStreetByName(streetName) {
+      const street = this.streets.data.find((s) => {
+        const include = s.streetName.trim().toLowerCase().includes(streetName.trim().toLowerCase());
+        return include;
+      });
+      return street;
+    },
     emitNewAddress() {
       this.$emit('newValue', {
         coords: {
@@ -210,7 +217,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('renter/common', ['provinces', 'wards', 'districts']),
+    ...mapState('renter/common', ['provinces', 'wards', 'districts', 'streets']),
     addressObjForApi() {
       // eslint-disable-next-line
       let [streetName, wardName, districtName] = this.coordsToString.selectedAddress.split(',');
@@ -220,13 +227,20 @@ export default {
       }
       const district = this.findDistrictByName(districtName);
       const ward = this.findWardByName(wardName, district.wards);
-      return {
+      const street = this.findStreetByName(streetName);
+      const obj = {
         provinceId: 1,
         districtId: district.districtId,
         wardId: ward.wardId,
         streetName,
         buildingNo: this.buildingNo,
       };
+      if (street) {
+        obj.streetId = street.streetId;
+      } else {
+        obj.streetId = null;
+      }
+      return obj;
     },
   },
   created() {

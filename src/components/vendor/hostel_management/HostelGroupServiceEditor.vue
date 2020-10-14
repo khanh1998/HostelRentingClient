@@ -133,9 +133,10 @@ export default {
     addNew: {
       serviceName: '',
       serviceId: null,
-      price: 0,
+      price: null,
       userUnit: '',
       timeUnit: '',
+      priceUnit: 'Nghìn',
     },
     newServices: [],
   }),
@@ -175,10 +176,10 @@ export default {
       return this.services.find((service) => service.serviceId === serviceId);
     },
     isDuplicateService(serviceId) {
-      return this.newServices.findIndex((service) => service.id === serviceId) > -1;
+      return this.newServices.findIndex((service) => service.serviceId === serviceId) > -1;
     },
     isNewServiceValid() {
-      if (this.isDuplicateService(this.addNew.id)) {
+      if (this.isDuplicateService(this.addNew.serviceId)) {
         this.showSnackBar('Dịch vụ bị trùng', { color: 'black' });
         return false;
       }
@@ -205,9 +206,10 @@ export default {
       this.addNew = {
         serviceName: '',
         serviceId: null,
-        price: 0,
+        price: null,
         timeUnit: '',
         userUnit: '',
+        priceUnit: 'Nghìn',
       };
     },
     removeService(item) {

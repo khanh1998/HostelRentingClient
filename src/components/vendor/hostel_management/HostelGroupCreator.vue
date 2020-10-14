@@ -6,17 +6,45 @@
     transition="dialog-bottom-transition"
     class="hidden-md-and-up"
   >
+    <v-dialog v-model="groups.isCreating" hide-overlay persistent width="300">
+      <v-card color="primary" dark>
+        <v-card-text>
+          Đang tạo khu trọ mới
+          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-snackbar
+      v-model="snackBarMixin.show"
+      :multi-line="snackBarMixin.multiLine"
+      :timeout="snackBarMixin.timeout"
+      :absolute="snackBarMixin.absolute"
+      :color="snackBarMixin.color"
+    >
+      {{ snackBarMixin.message }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <v-card>
       <v-toolbar dark color="primary">
         <v-btn icon dark @click="$emit('close')">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>Tạo khu phòng trọ mới</v-toolbar-title>
+        <v-toolbar-title v-if="this.create">Tạo khu phòng trọ mới</v-toolbar-title>
+        <v-toolbar-title v-if="this.create">Cập nhật thông tin khu trọ</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn dark text @click="dialog = false">
+          <v-btn dark text @click="doCreateHostelGroup" v-if="this.create">
             <v-icon>add</v-icon>
             Tạo ngay
+          </v-btn>
+          <v-btn dark text v-if="this.update">
+            <v-icon>update</v-icon>
+            Cập nhật ngay
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
@@ -50,7 +78,8 @@
   </v-dialog>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
+import snackBarMixin from '../../mixins/snackBar';
 import PlacePicker from './PlacePicker.vue';
 import HostelGroupRules from './HostelGroupRules.vue';
 import HostelGroupServiceEditor from './HostelGroupServiceEditor.vue';
@@ -58,6 +87,7 @@ import HostelGroupServiceEditor from './HostelGroupServiceEditor.vue';
 export default {
   name: 'HostelGroupCreator',
   props: ['show', 'create', 'update'],
+  mixins: [snackBarMixin],
   components: { PlacePicker, HostelGroupRules, HostelGroupServiceEditor },
   data: () => ({
     newGroup: {
@@ -84,6 +114,7 @@ export default {
   methods: {
     ...mapActions({
       getUser: 'user/getUser',
+      createHostelGroup: 'vendor/group/createHostelGroup',
     }),
     receiveNewServiceData(serviceList) {
       if (this.create) {
@@ -107,8 +138,23 @@ export default {
       this.newGroup.address = address;
       this.newGroup.buildingNo = address.buildingNo;
     },
+    checkCreatingGroup() {
+      if (this.groups.success) {
+        this.showSnackBar(`Khu trọ ${this.newGroup.groupName} đã được tạo thành công`, {
+          color: 'green',
+        });
+      } else {
+        this.showSnackBar('Tạo khu trọ thất bại', { color: 'red' });
+      }
+    },
+    doCreateHostelGroup() {
+      this.createHostelGroup(this.newGroup).then(() => this.checkCreatingGroup());
+    },
   },
   computed: {
+    ...mapState({
+      groups: (state) => state.vendor.group.groups,
+    }),
     user() {
       return this.$store.state.user.user.data;
     },
