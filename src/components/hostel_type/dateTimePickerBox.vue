@@ -25,6 +25,32 @@
         :groupId="groupId"
       />
     </v-dialog>
+    <v-dialog v-model="warningDialog" max-width="400">
+      <v-card>
+        <v-card-title class="d-flex flex-column justify-center px-8">
+          <v-icon large class="material-icons-outlined" color="#727cf5">report_problem</v-icon>
+          <span
+            class="text-gray font-nunito"
+            style="
+              font-size: 1.125rem !important;
+              text-align: center !important;
+              font-weight: 700 !important;
+            "
+            >Bạn đã có lịch hẹn xem loại phòng này!</span
+          >
+          <span
+            class="font-nunito"
+            style="
+              font-size: 0.9rem;
+              font-weight: 400;
+              text-align: center !important;
+              color: #ffbc00;
+            "
+            >{{ messageAction }}</span
+          >
+        </v-card-title>
+      </v-card>
+    </v-dialog>
     <v-avatar height="70" width="70" color="#727cf5" @click="getGroup()" class="cursor">
       <v-img v-if="avatar" max-height="70" max-width="70" :src="avatar" />
       <span v-else class="text-h4 white--text">{{ getAvatarTitle() }}</span>
@@ -67,7 +93,7 @@
             class="mx-7 text-subtitle-2 white--text py-5 bg-primary"
             depressed
             tile
-            @click="dateTimePicker.isOpenPicker = true"
+            @click="clickBooking()"
             :disabled="hasPendingBooking || isVendor"
           >
             <v-icon left>event_available</v-icon>ĐẶT LỊCH XEM PHÒNG
@@ -144,11 +170,14 @@ export default {
       color: 'red',
       bottom: true,
     },
+    warningDialog: false,
+    messageAction: '',
   }),
   methods: {
     ...mapActions({
       createBooking: 'user/createBooking',
       clearNewlyCreatedBooking: 'user/clearNewlyCreatedBooking',
+      getBookings: 'user/getBookings',
     }),
     showSnackbar(color, message) {
       this.snackbar.message = message;
@@ -196,6 +225,15 @@ export default {
     getGroup() {
       this.$router.push(`/group/${this.groupId}`);
     },
+    clickBooking() {
+      console.log(this.hasIncommingBooking);
+      if (this.hasIncommingBooking) {
+        this.messageAction = 'Để đặt lịch hẹn mới, vui lòng hủy lịch hẹn trước đó';
+        this.warningDialog = true;
+      } else {
+        this.dateTimePicker.isOpenPicker = true;
+      }
+    },
   },
   computed: {
     isLoading() {
@@ -206,8 +244,18 @@ export default {
     ...mapGetters({
       findPendingBooking: 'user/findPendingBooking',
     }),
+    hasIncommingBooking() {
+      return (
+        this.bookings.find((b) => b.type.typeId === this.typeId && b.status === 'INCOMING') &&
+        this.bookings.find((b) => b.type.typeId === this.typeId && b.status === 'INCOMING')
+          .length !== 0
+      );
+    },
     newlyCreated() {
       return this.$store.state.user.bookings.newlyCreated;
+    },
+    bookings() {
+      return this.$store.state.user.bookings.data;
     },
     hasPendingBooking() {
       if (this.userState.data) {
@@ -239,6 +287,11 @@ export default {
         },
       };
     },
+  },
+  created() {
+    if (this.userState.data) {
+      this.getBookings();
+    }
   },
 };
 </script>

@@ -1,8 +1,31 @@
 <template>
   <!-- eslint-disable max-len -->
   <v-card v-if="!isLoading">
-    <v-dialog v-model="warningDialog" persistent max-width="290">
-      <v-card> </v-card>
+    <v-dialog v-model="warningDialog" max-width="400">
+      <v-card>
+        <v-card-title class="d-flex flex-column justify-center px-8">
+          <v-icon large class="material-icons-outlined" color="#ffbc00">report_problem</v-icon>
+          <span
+            class="text-gray font-nunito"
+            style="
+              font-size: 1.125rem !important;
+              text-align: center !important;
+              font-weight: 700 !important;
+            "
+            >{{ messageTitle }}</span
+          >
+          <span
+            class="font-nunito"
+            style="
+              font-size: 0.9rem;
+              font-weight: 400;
+              text-align: center !important;
+              color: #ffbc00;
+            "
+            >{{ messageAction }}</span
+          >
+        </v-card-title>
+      </v-card>
     </v-dialog>
     <v-card-title class="px-3 py-3">
       <v-avatar color="#727cf5" height="30" width="30" min-width="30">
@@ -390,8 +413,8 @@
           rounded
           depressed
           class="ma-2 font-nunito btn-success"
-          v-if="!hasPendingBooking"
-          @click="clickDeal()"
+          v-if="!hasPendingBooking && !hasBookingIncoming"
+          @click="clickBooking()"
         >
           <v-icon left>event_available</v-icon>Đặt lịch
         </v-btn>
@@ -399,8 +422,8 @@
           rounded
           depressed
           class="font-nunito btn-warning"
-          @click="bargainOverlay.show = true"
-          v-if="!hasPendingDeal && !hasPendingBooking && !hasUnreplyBargain"
+          @click="clickDeal()"
+          v-if="!hasPendingDeal && !hasPendingBooking && !hasBookingIncoming"
         >
           <v-icon left>monetization_on</v-icon>Trả giá
         </v-btn>
@@ -432,11 +455,29 @@ export default {
       cancelBooking: 'user/cancelBooking',
     }),
     myOnScroll() {},
-    clickDeal() {
-      if (!this.hasUnreplyBargain) {
+    clickBooking() {
+      console.log(this.hasIncommingBooking);
+      if (this.hasIncommingBooking) {
+        this.messageTitle = 'Bạn đã có lịch hẹn xem loại phòng này!';
+        this.messageAction = 'Để đặt lịch hẹn mới, vui lòng hủy lịch hẹn trước đó';
         this.warningDialog = true;
       }
-      this.dateTimeOverlay.show = true;
+      if (this.hasUnreplyBargain) {
+        this.messageTitle = 'Bạn hiện tại đang có một đề nghị trả giá chưa được chấp nhận!';
+        this.messageAction = 'Để đặt lịch, vui lòng hủy trả giá';
+        this.warningDialog = true;
+      } else {
+        this.dateTimeOverlay.show = true;
+      }
+    },
+    clickDeal() {
+      if (this.hasUnreplyBargain) {
+        this.messageTitle = 'Bạn hiện tại đang có một đề nghị trả giá chưa được chấp nhận!';
+        this.messageAction = 'Để đề xuất trả giá mới, vui lòng hủy trả giá trước đó';
+        this.warningDialog = true;
+      } else {
+        this.bargainOverlay.show = true;
+      }
     },
     bargain(content) {
       this.bargainOverlay.show = false;
@@ -570,7 +611,6 @@ export default {
       chatbox.scrollTop = chatbox.scrollHeight;
     },
     receivedDateTime(e) {
-      console.log('thenag');
       this.dateTimeOverlay.show = false;
       this.dateTimeOverlay.date = e.date;
       this.dateTimeOverlay.time = e.time;
@@ -663,6 +703,8 @@ export default {
     docRef: null,
     dealIds: [],
     warningDialog: false,
+    messageAction: '',
+    messageTitle: '',
   }),
   created() {
     Promise.all([this.getDeals, this.getBookings]).then(() => {
@@ -700,6 +742,10 @@ export default {
       }
       return true;
     },
+    hasBookingIncoming() {
+      const bookingIncoming = this.items.find((message) => message.book && !message.book.cancel);
+      return bookingIncoming !== undefined;
+    },
     userState() {
       return this.$store.state.user.user;
     },
@@ -728,6 +774,16 @@ export default {
     hasUnreplyBargain() {
       return this.items.some(
         (item) => item.sender === 'renter' && item.bargain && item.bargain.status === 'wait',
+      );
+    },
+    bookings() {
+      return this.$store.state.user.bookings.data;
+    },
+    hasIncommingBooking() {
+      return (
+        this.bookings.find((b) => b.type.typeId === this.typeId && b.status === 'INCOMING') &&
+        this.bookings.find((b) => b.type.typeId === this.typeId && b.status === 'INCOMING')
+          .length !== 0
       );
     },
   },

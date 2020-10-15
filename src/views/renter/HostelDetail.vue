@@ -304,7 +304,7 @@
             <ratingBox class="mt-5" :rating="{ average: 3.5, total: 30 }" />
           </v-col>
         </v-row> -->
-        <v-row class="mt-10">
+        <!-- <v-row class="mt-10">
           <v-col cols="12" md="8">
             <div class="d-flex">
               <span
@@ -320,7 +320,6 @@
                 _:to="`/discovery/${this.district.districtId}`"
               >
                 Xem thêm
-                <!-- <v-icon>double_arrow</v-icon> -->
               </v-btn>
             </div>
             <div class="d-flex mt-3" :style="{ width: '100%' }">
@@ -348,7 +347,6 @@
                 _:to="`/discovery/${this.district.districtId}`"
               >
                 Xem thêm
-                <!-- <v-icon>double_arrow</v-icon> -->
               </v-btn>
             </div>
             <div class="d-flex mt-3" :style="{ width: '100%' }">
@@ -357,7 +355,7 @@
             </div>
             <GroupHostelTypes :list="types" class="mt-5" />
           </v-col>
-        </v-row>
+        </v-row> -->
       </v-container>
     </v-col>
   </v-row>
@@ -372,8 +370,8 @@ import facilitiesBox from '../../components/hostel_type/facilitiesBox.vue';
 import servicesBox from '../../components/hostel_type/servicesBox.vue';
 import regulationsBox from '../../components/hostel_type/regulationsBox.vue';
 // import ratingBox from '../../components/hostel_type/ratingBox.vue';
-import SuggestionList from '../../components/hostel_type/SuggestionList.vue';
-import GroupHostelTypes from '../../components/hostel_type/GroupHostelTypes.vue';
+// import SuggestionList from '../../components/hostel_type/SuggestionList.vue';
+// import GroupHostelTypes from '../../components/hostel_type/GroupHostelTypes.vue';
 import LoginBox from '../../components/login/loginBox.vue';
 
 export default {
@@ -386,8 +384,8 @@ export default {
     facilitiesBox,
     regulationsBox,
     // ratingBox,
-    SuggestionList,
-    GroupHostelTypes,
+    // SuggestionList,
+    // GroupHostelTypes,
     LoginBox,
   },
   data: () => ({
@@ -448,6 +446,7 @@ export default {
       const suggestionList = this.$store.state.renter.hostelGroup.utilities.isLoading;
       const types = this.$store.state.renter.hostelGroup.hostelTypes.isLoading;
       const statistic = this.$store.state.renter.discovery.stats.district.isLoading;
+      // const loadingBookings = this.$store.state.user.bookings.isLoading;
       return type || group || statistic || suggestionList || utilities || types;
     },
     isLoadingProvinces() {
