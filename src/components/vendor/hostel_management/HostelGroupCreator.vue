@@ -48,9 +48,10 @@
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
+      <TableOfContent :toc="toc" class="d-none" />
       <v-container fluid>
         <v-row>
-          <v-col cols="12" md="3">
+          <v-col cols="12" md="3" id="name">
             <span class="text-h6"> <v-icon>info</v-icon> Thông tin </span>
             <v-text-field
               v-model="newGroup.groupName"
@@ -61,10 +62,10 @@
             <v-divider class="mt-6 mb-3" />
             <HostelGroupRules @newValue="receiveNewRulesData" />
           </v-col>
-          <v-col cols="12" md="4">
+          <v-col cols="12" md="4" id="address">
             <PlacePicker @newValue="receiveNewAddress" />
           </v-col>
-          <v-col cols="12" md="5">
+          <v-col cols="12" md="5" id="service">
             <HostelGroupServiceEditor
               :groupService="[]"
               :create="true"
@@ -83,12 +84,18 @@ import snackBarMixin from '../../mixins/snackBar';
 import PlacePicker from './PlacePicker.vue';
 import HostelGroupRules from './HostelGroupRules.vue';
 import HostelGroupServiceEditor from './HostelGroupServiceEditor.vue';
+import TableOfContent from './TableOfContent.vue';
 
 export default {
   name: 'HostelGroupCreator',
   props: ['show', 'create', 'update'],
   mixins: [snackBarMixin],
-  components: { PlacePicker, HostelGroupRules, HostelGroupServiceEditor },
+  components: {
+    PlacePicker,
+    HostelGroupRules,
+    HostelGroupServiceEditor,
+    TableOfContent,
+  },
   data: () => ({
     newGroup: {
       vendorId: null,
@@ -110,6 +117,20 @@ export default {
       },
       services: [],
     },
+    toc: [
+      {
+        to: 'name',
+        text: 'Tên khu trọ',
+      },
+      {
+        to: 'address',
+        text: 'Địa chỉ',
+      },
+      {
+        to: 'service',
+        text: 'Dịch vụ',
+      },
+    ],
   }),
   methods: {
     ...mapActions({
