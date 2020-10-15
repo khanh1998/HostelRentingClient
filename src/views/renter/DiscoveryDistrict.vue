@@ -104,7 +104,7 @@
                 <v-data-table
                   :headers="headerStreets"
                   :items="itemStreets"
-                  :items-per-page="10"
+                  :items-per-page="5"
                   class="elevation-1"
                   :search="searchStreet"
                   :footer-props="{

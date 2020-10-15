@@ -412,7 +412,7 @@ export default {
     getDownPayment(downPayment, priceUnit) {
       if (priceUnit === 'triệu') {
         if (downPayment < 1) {
-          return `${downPayment * 1000} ngàn`;
+          return `${downPayment * 1000} nghìn`;
         }
         return `${downPayment} triệu`;
       }
