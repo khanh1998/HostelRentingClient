@@ -68,9 +68,7 @@ const mutations = {
     state.stats.district.isLoading = true;
   },
   GET_DISTRICT_STATS_SUCCESS(state, data) {
-    console.log(data);
     state.stats.district.data = data;
-    console.log(state.stats.district.data);
     state.stats.district.isLoading = false;
     state.stats.district.success = true;
   },
@@ -97,7 +95,6 @@ const actions = {
 
   async getDistrictStatistic({ commit }, districtId) {
     try {
-      console.log(districtId);
       commit(mutationTypes.GET_DISTRICT_STATS_REQUEST);
       const response = await window.axios.get(`/api/v1/statistic?ids=${districtId}`);
       if (response.status >= 200 && response.status <= 299) {

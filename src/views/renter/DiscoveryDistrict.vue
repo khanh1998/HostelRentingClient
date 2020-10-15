@@ -104,7 +104,7 @@
                 <v-data-table
                   :headers="headerStreets"
                   :items="itemStreets"
-                  :items-per-page="5"
+                  :items-per-page="10"
                   class="elevation-1"
                   :search="searchStreet"
                   :footer-props="{
@@ -179,7 +179,6 @@ export default {
       return this.statistic.provinces[0];
     },
     districtStat() {
-      console.log(this.proviceStat.districts[0]);
       return this.proviceStat.districts[0];
     },
     average() {
@@ -218,15 +217,15 @@ export default {
     itemWards() {
       return this.wards.map((ward) => ({
         district: ward.wardName,
-        districtAverage: this.getAverage(this.getStreetIds(ward)).price,
-        districtM2: this.getAverage(this.getStreetIds(ward)).area,
+        districtAverage: this.getWardStat(ward.wardId).avgPrice,
+        districtM2: this.getWardStat(ward.wardId).avgSuperficality,
       }));
     },
     itemStreets() {
       return this.streets.map((street) => ({
         street: street.streetName,
-        streetAverage: this.getAverage([street.streetId]).price,
-        streetM2: this.getAverage([street.streetId]).area,
+        streetAverage: this.getStreetStat(street.streetId).avgPrice,
+        streetM2: this.getStreetStat(street.streetId).avgPrice,
       }));
     },
   },
@@ -239,12 +238,25 @@ export default {
       return ward.streets.map((street) => street.streetId);
     },
     getWardStat(wardId) {
-      return this.districtStat.wards.filter((w) => w.wardId === wardId)[0];
+      const ward = this.districtStat.wards.find((w) => w.wardId === wardId);
+      if (ward) {
+        return { avgPrice: ward.avgPrice, avgSuperficality: ward.avgSuperficality };
+      }
+      return { avgPrice: 'Không xác định', avgSuperficality: 'Không xác định' };
+    },
+    getStreetStat(streetId) {
+      const ward = this.districtStat.wards.find(
+        (w) => w.streets.find((s) => s.streetId === streetId), // eslint-disable-line
+      ); // eslint-disable-line
+      if (ward) {
+        const street = ward.streets.find((s) => s.streetId === streetId);
+        return { avgPrice: street.avgPrice, avgSuperficality: street.avgSuperficality };
+      }
+      return { avgPrice: 'Không xác định', avgSuperficality: 'Không xác định' };
     },
   },
   created() {
     if (!this.districtInput) {
-      console.log(this.districtId);
       this.getProvinces();
       if (!this.statistic) {
         this.getDistrictStatistic(this.districtId);
