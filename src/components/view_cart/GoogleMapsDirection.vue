@@ -22,42 +22,42 @@ export default {
     },
   }),
   methods: {
-    calculateAndDisplayRoute(directionsService, directionsDisplay, start, destination) {
-      directionsService.route(
-        {
-          origin: start,
-          destination,
-          travelMode: 'DRIVING',
-        },
-        (response, status) => {
-          if (status === 'OK') {
-            console.log(response);
-            directionsDisplay.setDirections(response);
-          } else {
-            window.alert(`Directions request failed due to ${status}`);
-          }
-        },
-      );
-    },
     getDirection() {
       // eslint-disable-next-line
-      const directionsService = new google.maps.DirectionsService();
+      const directionsServiceM = new google.maps.DirectionsService();
       // eslint-disable-next-line
-      const directionsDisplay = new google.maps.DirectionsRenderer();
+      const directionsDisplayM = new google.maps.DirectionsRenderer();
       console.log(this.$refs.map);
-      directionsDisplay.setMap(this.$refs.map.$mapObject);
+      directionsDisplayM.setMap(this.$refs.map.$mapObject);
+
+      function calculateAndDisplayRoute(directionsService, directionsDisplay, start, destination) {
+        console.log(JSON.stringify(start));
+        console.log(JSON.stringify(destination));
+        directionsService.route(
+          {
+            origin: start,
+            destination,
+            travelMode: 'DRIVING',
+          },
+          (response, status) => {
+            if (status === 'OK') {
+              console.log(response);
+              directionsDisplay.setDirections(response);
+              console.log('ye ye');
+            } else {
+              console.log(status);
+            }
+          },
+        );
+      }
 
       // google maps API's direction service
-      this.calculateAndDisplayRoute(
-        directionsService,
-        directionsDisplay,
+      calculateAndDisplayRoute(
+        directionsServiceM,
+        directionsDisplayM,
         this.coords,
         this.destination,
       );
-
-      console.log(this.coords);
-      console.log(this.destination);
-      console.log('ye ye');
     },
   },
   created() {
