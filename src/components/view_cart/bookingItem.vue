@@ -170,7 +170,7 @@
               style="border: 1px solid red;"
             >
               <GoogleMapsDirection
-                :destination="{ lat: booking.group.latitude, lng: booking.group.longitude }"
+                :dest="{ lat: booking.group.latitude, lng: booking.group.longitude }"
               />
             </v-col>
             <v-col cols="3" class="d-flex flex-column">

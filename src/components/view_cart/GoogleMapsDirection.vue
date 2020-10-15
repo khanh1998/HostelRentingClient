@@ -1,31 +1,24 @@
 <template>
   <div id="app">
-    <gmap-map
-      v-show="showMap"
-      ref="map"
-      :center="coords"
-      :zoom="15"
-      style="width: 100%; height: 300px;"
-    >
+    <gmap-map ref="map" :center="coords" :zoom="15" style="width: 100%; height: 300px;">
       <gmap-marker :position="this.coords" title="Vị trí của bạn"> </gmap-marker>
       <gmap-marker :position="this.destination" title="Nhà trọ"> </gmap-marker>
     </gmap-map>
-    <button @click="getDirection">get direction</button>
   </div>
 </template>
 <script>
 export default {
   name: 'GoogleMapsDirection',
-  props: ['destination', 'origin'],
+  props: ['dest'],
   data: () => ({
     showMap: true,
     coords: {
-      lat: this.origin.lat,
-      lng: this.origin.lng,
+      lat: null,
+      lng: null,
     },
     destination: {
-      lat: this.destination.lat,
-      lng: this.destination.lng,
+      lat: null,
+      lng: null,
     },
   }),
   methods: {
@@ -50,6 +43,7 @@ export default {
       const directionsService = new google.maps.DirectionsService();
       // eslint-disable-next-line
       const directionsDisplay = new google.maps.DirectionsRenderer();
+      console.log(this.$refs.map);
       directionsDisplay.setMap(this.$refs.map.$mapObject);
 
       // google maps API's direction service
@@ -66,7 +60,9 @@ export default {
     },
   },
   created() {
-    if (navigator.geolocation && !this.origin) {
+    this.destination.lat = this.dest.lat;
+    this.destination.lng = this.dest.lng;
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         console.log(position);
         const coords = {
@@ -76,7 +72,7 @@ export default {
         this.coords = coords;
       });
     }
-    this.getDirection();
+    this.$nextTick(() => this.getDirection());
   },
 };
 </script>
