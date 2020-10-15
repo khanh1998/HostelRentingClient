@@ -169,23 +169,9 @@
               class="d-flex flex-column justify-center"
               style="border: 1px solid red;"
             >
-              <div id="app">
-                <!-- <iframe
-                  width="100%"
-                  height="350"
-                  src="www.google.com/maps/embed/v1/directions?key=AIzaSyDcw-KnCAPzni3QYvgk3RDoTZL65xh8a4o&origin=dubai&destination=ajman"
-                ></iframe> -->
-                <gmap-map
-                  v-show="showMap"
-                  ref="map"
-                  :center="coords"
-                  :zoom="15"
-                  style="width: 100%; height: 350px;"
-                >
-                  <gmap-marker :position="this.coords"> </gmap-marker>
-                  <gmap-marker v-if="this.destination" :position="this.destination"> </gmap-marker>
-                </gmap-map>
-              </div>
+              <GoogleMapsDirection
+                :destination="{ lat: booking.group.latitude, lng: booking.group.longitude }"
+              />
             </v-col>
             <v-col cols="3" class="d-flex flex-column">
               <span
@@ -342,22 +328,15 @@
 <style scoped></style>
 <script>
 import { mapActions } from 'vuex';
+import GoogleMapsDirection from './GoogleMapsDirection.vue';
 
 export default {
   name: 'BookingItem',
   props: ['booking'],
+  components: { GoogleMapsDirection },
   data: () => ({
     dialog: false,
     mapDialog: false,
-    showMap: true,
-    coords: {
-      lat: null,
-      lng: null,
-    },
-    destination: {
-      lat: null,
-      lng: null,
-    },
   }),
   computed: {
     timestamp() {
@@ -431,59 +410,9 @@ export default {
       const url = `https://www.google.com/maps/search/${lat},${long}/@${lat},${long},17z?hl=vi`;
       window.open(url, '_blank');
     },
-    calculateAndDisplayRoute(directionsService, directionsDisplay, start, destination) {
-      directionsService.route(
-        {
-          origin: start,
-          destination,
-          travelMode: 'DRIVING',
-        },
-        (response, status) => {
-          if (status === 'OK') {
-            directionsDisplay.setDirections(response);
-          } else {
-            window.alert(`Directions request failed due to ${status}`);
-          }
-        },
-      );
-    },
-    getDirection() {
-      // eslint-disable-next-line
-      const directionsService = new google.maps.DirectionsService();
-      // eslint-disable-next-line
-      const directionsDisplay = new google.maps.DirectionsRenderer();
-      directionsDisplay.setMap(this.$refs.map.$mapObject);
-
-      // google maps API's direction service
-      this.calculateAndDisplayRoute(
-        directionsService,
-        directionsDisplay,
-        this.coords,
-        this.destination,
-      );
-
-      console.log(this.coords);
-      console.log(this.destination);
-      console.log('hmmm yha');
-    },
   },
   created() {
     this.getProvinces();
-    this.destination = {
-      lat: Number(this.booking.group.latitude),
-      lng: Number(this.booking.group.longitude),
-    };
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        console.log(position);
-        const coords = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        this.coords = coords;
-      });
-    }
-    this.getDirection();
   },
 };
 </script>
