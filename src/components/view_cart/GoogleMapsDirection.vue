@@ -13,12 +13,12 @@ export default {
   data: () => ({
     showMap: true,
     coords: {
-      lat: null,
-      lng: null,
+      lat: 10.8377466,
+      lng: 106.8060503,
     },
     destination: {
-      lat: null,
-      lng: null,
+      lat: 10.8377466,
+      lng: 106.8060503,
     },
   }),
   methods: {
@@ -31,6 +31,7 @@ export default {
         },
         (response, status) => {
           if (status === 'OK') {
+            console.log(response);
             directionsDisplay.setDirections(response);
           } else {
             window.alert(`Directions request failed due to ${status}`);
@@ -56,7 +57,7 @@ export default {
 
       console.log(this.coords);
       console.log(this.destination);
-      console.log('hmmm yha');
+      console.log('ye ye');
     },
   },
   created() {
@@ -70,9 +71,9 @@ export default {
           lng: position.coords.longitude,
         };
         this.coords = coords;
+        this.$nextTick(() => this.getDirection());
       });
     }
-    this.$nextTick(() => this.getDirection());
   },
 };
 </script>
