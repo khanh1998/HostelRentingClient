@@ -342,8 +342,6 @@
 <style scoped></style>
 <script>
 import { mapActions } from 'vuex';
-import { gmapApi } from 'vue2-google-maps';
-import googleMapVue from '../core_layout/googleMap.vue';
 
 export default {
   name: 'BookingItem',
@@ -351,21 +349,17 @@ export default {
   data: () => ({
     dialog: false,
     mapDialog: false,
-    // map
     showMap: true,
-    // coords: null,
-    // destination: null,
     coords: {
-      lat: 10.793946,
-      lng: 106.639684,
+      lat: null,
+      lng: null,
     },
     destination: {
-      lat: 10.846478,
-      lng: 106.793493,
+      lat: null,
+      lng: null,
     },
   }),
   computed: {
-    google: gmapApi,
     timestamp() {
       return new Date(this.booking.meetTime);
     },
@@ -453,42 +447,43 @@ export default {
         },
       );
     },
-    geolocate() {
-      // if (navigator.geolocation) {
-      //   navigator.geolocation.getCurrentPosition((position) => {
-      //     console.log(position);
-      //     const coord = {
-      //       lat: position.coords.latitude,
-      //       lng: position.coords.longitude,
-      //     };
-      //     this.destination = coord;
-      //   });
-      // }
-
-      const directionsService = new googleMapVue.maps.DirectionsService();
-      const directionsDisplay = new googleMapVue.maps.DirectionsRenderer();
+    getDirection() {
+      // eslint-disable-next-line
+      const directionsService = new google.maps.DirectionsService();
+      // eslint-disable-next-line
+      const directionsDisplay = new google.maps.DirectionsRenderer();
       directionsDisplay.setMap(this.$refs.map.$mapObject);
 
       // google maps API's direction service
-
-      console.log(this.coords);
-      console.log(this.destination);
-      console.log('hmmm yha');
       this.calculateAndDisplayRoute(
         directionsService,
         directionsDisplay,
         this.coords,
         this.destination,
       );
+
+      console.log(this.coords);
+      console.log(this.destination);
+      console.log('hmmm yha');
     },
   },
   created() {
     this.getProvinces();
-    // this.coords = {
-    //   lat: Number(this.booking.group.latitude),
-    //   lng: Number(this.booking.group.longitude),
-    // };
-    // this.destination = null;
+    this.destination = {
+      lat: Number(this.booking.group.latitude),
+      lng: Number(this.booking.group.longitude),
+    };
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log(position);
+        const coords = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        this.coords = coords;
+      });
+    }
+    this.getDirection();
   },
 };
 </script>
