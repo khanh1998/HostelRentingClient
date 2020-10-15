@@ -96,10 +96,13 @@
     </div>
     <span class="font-nunito text-caption mt-4" style="text-align: end !important;"
       >TRẠNG THÁI:
-      <span class="text-subtitle-2" style="color: #1edb4c !important;"
-        >{{ currentBooking }} lịch hẹn / {{ availableRoom }} phòng trống</span
-      ></span
-    >
+      <span class="text-subtitle-2" style="color: #1edb4c !important;" v-if="availableRoom !== 0">
+        {{ currentBooking }} lịch hẹn / {{ availableRoom }} phòng trống
+      </span>
+      <span class="text-subtitle-2" style="color: #1edb4c !important;" v-else>
+        Không còn phòng trống
+      </span>
+    </span>
   </div>
 </template>
 <script>

@@ -7,6 +7,12 @@ const myState = () => ({
       error: undefined,
       success: undefined,
     },
+    district: {
+      data: null,
+      isLoading: false,
+      success: null,
+      error: null,
+    },
   },
 });
 
@@ -38,6 +44,10 @@ const mutationTypes = {
   GET_STREET_STATS_REQUEST: 'GET_STREET_STATS_REQUEST',
   GET_STREET_STATS_SUCCESS: 'GET_STREET_STATS_SUCCESS',
   GET_STREET_STATS_FAILURE: 'GET_STREET_STATS_FAILURE',
+
+  GET_DISTRICT_STATS_REQUEST: 'GET_DISTRICT_STATS_REQUEST',
+  GET_DISTRICT_STATS_SUCCESS: 'GET_DISTRICT_STATS_SUCCESS',
+  GET_DISTRICT_STATS_FAILURE: 'GET_DISTRICT_STATS_FAILURE',
 };
 const mutations = {
   GET_STREET_STATS_REQUEST(state) {
@@ -53,6 +63,21 @@ const mutations = {
     state.stats.streets.success = false;
     state.stats.streets.isLoading = false;
   },
+
+  GET_DISTRICT_STATS_REQUEST(state) {
+    state.stats.district.isLoading = true;
+  },
+  GET_DISTRICT_STATS_SUCCESS(state, data) {
+    console.log(data);
+    state.stats.district.data = data;
+    console.log(state.stats.district.data);
+    state.stats.district.isLoading = false;
+    state.stats.district.success = true;
+  },
+  GET_DISTRICT_STATS_FAILURE(state, error) {
+    state.stats.district.isLoading = false;
+    state.stats.district.error = error;
+  },
 };
 const actions = {
   async getStreetStats({ commit, state }, streetIds) {
@@ -67,6 +92,21 @@ const actions = {
       commit(mutationTypes.GET_STREET_STATS_SUCCESS, res.data.data);
     } catch (error) {
       commit(mutationTypes.GET_STREET_STATS_FAILURE, error);
+    }
+  },
+
+  async getDistrictStatistic({ commit }, districtId) {
+    try {
+      console.log(districtId);
+      commit(mutationTypes.GET_DISTRICT_STATS_REQUEST);
+      const response = await window.axios.get(`/api/v1/statistic?ids=${districtId}`);
+      if (response.status >= 200 && response.status <= 299) {
+        commit(mutationTypes.GET_DISTRICT_STATS_SUCCESS, response.data.data);
+      } else {
+        commit(mutationTypes.GET_DISTRICT_STATS_FAILURE);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_DISTRICT_STATS_FAILURE, error);
     }
   },
 };

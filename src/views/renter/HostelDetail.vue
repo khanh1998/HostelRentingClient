@@ -36,7 +36,8 @@
               {{ info.title }}
             </h2>
             <span class="text-muted font-nunito" style="font-size: 0.9rem;">
-              {{ group.address.streetName }}, {{ group.address.districtName }},
+              {{ group.address.streetName }}, {{ group.address.wardName }},
+              {{ group.address.districtName }},
               {{ group.address.provinceName }}
             </span>
             <div style="width: 100%;" class="d-flex flex-wrap mt-3 justify-space-between">
@@ -241,40 +242,40 @@
             <treeView :utitlities="utilities" />
           </v-col>
         </v-row>
-        <v-row v-if="!isLoadingProvinces" class="mt-5">
+        <v-row class="mt-5" v-if="statistic">
           <v-col cols="12" md="8">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
-              >GIÁ TRUNG BÌNH</span
+              >GIÁ TRUNG BÌNH MỘT PHÒNG TRỌ</span
             >
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '15%' }" />
               <div class="line-before" :style="{ width: '85%' }" />
             </div>
             <v-row class="d-flex flex-wrap mx-0 font-nunito text-subtitle-2">
-              <v-col cols="12" md="6" class="pl-0">
-                <div class="average-item d-flex align-center">
-                  <v-col cols="7" class="d-flex average-infor">{{ district.districtName }}</v-col>
-                  <span class="font-weight-bold mx-auto"
-                    >{{ wardAverage.price }} triệu / tháng</span
-                  >
-                </div>
-              </v-col>
-              <v-col cols="12" md="6" class="pl-0">
-                <div class="average-item d-flex align-center">
-                  <v-col cols="7" class="d-flex average-infor">{{ ward.wardName }}</v-col>
-                  <span class="font-weight-bold mx-auto"
-                    >{{ districtAverage.price }} triệu / tháng</span
-                  >
-                </div>
-              </v-col>
-              <v-col cols="12" md="6" class="pl-0">
+              <v-col cols="12" md="6" class="pl-0" v-if="districtStat">
                 <div class="average-item d-flex align-center">
                   <v-col cols="7" class="d-flex average-infor">
-                    {{ group.address.streetName }}
+                    {{ districtStat.districtName }}
                   </v-col>
                   <span class="font-weight-bold mx-auto"
-                    >{{ streetAverage.price }} triệu / tháng</span
+                    >{{ districtStat.avgPrice }} triệu/tháng</span
                   >
+                </div>
+              </v-col>
+              <v-col cols="12" md="6" class="pl-0" v-if="wardStat">
+                <div class="average-item d-flex align-center">
+                  <v-col cols="7" class="d-flex average-infor">{{ wardStat.wardName }}</v-col>
+                  <span class="font-weight-bold mx-auto">{{ wardStat.avgPrice }} triệu/tháng</span>
+                </div>
+              </v-col>
+              <v-col cols="12" md="6" class="pl-0" v-if="streetStat">
+                <div class="average-item d-flex align-center">
+                  <v-col cols="7" class="d-flex average-infor">
+                    {{ streetStat.streetName }}
+                  </v-col>
+                  <span class="font-weight-bold mx-auto">
+                    {{ streetStat.avgPrice }} triệu/tháng
+                  </span>
                 </div>
               </v-col>
               <v-col cols="6" class="pl-0">
@@ -282,7 +283,7 @@
                   class="align-center font-weight-medium text-primary-hover"
                   text
                   height="100%"
-                  :to="`/discovery/${this.district.districtId}`"
+                  :to="`/discovery/${this.group.address.districtId}`"
                 >
                   Xem thêm
                   <v-icon>double_arrow</v-icon>
@@ -398,7 +399,7 @@ export default {
     ...mapActions({
       getTypeAndGroup: 'renter/hostelType/getTypeAndGroup',
       getProvinces: 'renter/common/getProvinces',
-      getStreetStats: 'renter/discovery/getStreetStats',
+      getDistrictStatistic: 'renter/discovery/getDistrictStatistic',
       getAllHostelTypes: 'renter/hostelGroup/getAllHostelTypes',
       getHostelGroup: 'renter/hostelGroup/getHostelGroup',
       getUtilities: 'renter/hostelGroup/getNearByUtilities',
@@ -427,38 +428,6 @@ export default {
     typeId() {
       return this.$route.params.typeId;
     },
-    ward() {
-      const res = this.$store.getters['renter/common/getWardByStreetId'](
-        this.group.address.streetId,
-      );
-      return res;
-    },
-    district() {
-      const { wardId } = this.ward;
-      return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
-    },
-    allStreetIds() {
-      const { wards } = this.district;
-      const streets = wards.map((ward) => ward.streets);
-      const streetIds = streets.flat().map((street) => street.streetId);
-      return streetIds;
-    },
-    districtAverage() {
-      return this.getAverage(this.allStreetIds);
-    },
-    wardAverage() {
-      const { streets } = this.ward;
-      const streetIds = streets.map((street) => street.streetId);
-      return this.getAverage(streetIds);
-    },
-    streetAverage() {
-      const { streetId } = this.group;
-      return this.getAverage([streetId]);
-    },
-    province() {
-      const { districtId } = this.district;
-      return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
-    },
     images: {
       get() {
         if (this.info) {
@@ -475,11 +444,11 @@ export default {
     isLoading() {
       const type = this.$store.state.renter.hostelType.hostelType.isLoading;
       const group = this.$store.state.renter.hostelType.hostelGroup.isLoading;
-      const street = this.$store.state.renter.discovery.stats.streets.isLoading;
-      const utilities = this.$store.state.renter.discovery.stats.streets.isLoading;
+      const utilities = this.$store.state.renter.hostelGroup.utilities.isLoading;
       const suggestionList = this.$store.state.renter.hostelGroup.utilities.isLoading;
       const types = this.$store.state.renter.hostelGroup.hostelTypes.isLoading;
-      return type || group || street || suggestionList || utilities || types;
+      const statistic = this.$store.state.renter.discovery.stats.district.isLoading;
+      return type || group || statistic || suggestionList || utilities || types;
     },
     isLoadingProvinces() {
       return this.$store.state.renter.common.provinces.isLoading;
@@ -527,13 +496,33 @@ export default {
     types() {
       return this.$store.state.renter.hostelGroup.hostelTypes.data;
     },
+    statistic() {
+      return this.$store.state.renter.discovery.stats.district.data;
+    },
+    proviceStat() {
+      return this.statistic.provinces.filter(
+        (p) => p.provinceId === this.group.address.provinceId,
+      )[0];
+    },
+    districtStat() {
+      return this.proviceStat.districts.filter(
+        (d) => d.districtId === this.group.address.districtId,
+      )[0];
+    },
+    wardStat() {
+      return this.districtStat.wards.filter((w) => w.wardId === this.group.address.wardId)[0];
+    },
+    streetStat() {
+      return this.wardStat.streets.filter((s) => s.streetId === this.group.address.streetId)[0];
+    },
   },
   created() {
     // if home.js store is empty then start to call api
     this.getTypeAndGroup(this.typeId)
       .then(() => this.getNearByUtilities())
-      .then(() => this.getAllHostelTypes(this.group.groupId));
-    this.getProvinces().then(() => this.getStreetStats(this.allStreetIds));
+      .then(() => this.getAllHostelTypes(this.group.groupId))
+      .then(() => this.getDistrictStatistic(this.group.address.districtId));
+    // this.getProvinces().then(() => this.getStreetStats(this.allStreetIds));
   },
 };
 </script>

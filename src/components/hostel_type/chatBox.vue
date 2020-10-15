@@ -1,11 +1,13 @@
 <template>
   <!-- eslint-disable max-len -->
   <v-card v-if="!isLoading">
+    <v-dialog v-model="warningDialog" persistent max-width="290">
+      <v-card> </v-card>
+    </v-dialog>
     <v-card-title class="px-3 py-3">
       <v-avatar color="#727cf5" height="30" width="30" min-width="30">
-        <span class="text-overline white--text">{{ getAvatarTitle() }}</span>
-        <!-- toDo -->
-        <!-- <v-img max-height="80" max-width="80" src="../../assets/home/thumnail.png" /> -->
+        <v-img max-height="30" max-width="30" v-if="group.imgUrl" :src="group.imgUrl" />
+        <span class="text-overline white--text" v-else>{{ getAvatarTitle() }}</span>
       </v-avatar>
       <span class="text-subtitle-2 ml-3 text-primary">{{ group.groupName }}</span>
       <v-spacer />
@@ -385,13 +387,11 @@
       </div>
       <div class="d-flex flex-no-wrap justify-center align-center" style="height: 65px;">
         <v-btn
-          _small
           rounded
           depressed
-          _color="success"
           class="ma-2 font-nunito btn-success"
-          v-if="!hasPendingBooking && !hasUnreplyBargain"
-          @click="dateTimeOverlay.show = true"
+          v-if="!hasPendingBooking"
+          @click="clickDeal()"
         >
           <v-icon left>event_available</v-icon>Đặt lịch
         </v-btn>
@@ -432,6 +432,12 @@ export default {
       cancelBooking: 'user/cancelBooking',
     }),
     myOnScroll() {},
+    clickDeal() {
+      if (!this.hasUnreplyBargain) {
+        this.warningDialog = true;
+      }
+      this.dateTimeOverlay.show = true;
+    },
     bargain(content) {
       this.bargainOverlay.show = false;
       const newContent = content;
@@ -656,6 +662,7 @@ export default {
     messCollectionRef: null,
     docRef: null,
     dealIds: [],
+    warningDialog: false,
   }),
   created() {
     Promise.all([this.getDeals, this.getBookings]).then(() => {
