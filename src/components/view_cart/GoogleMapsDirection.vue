@@ -61,8 +61,8 @@ export default {
     },
   },
   created() {
-    this.destination.lat = this.dest.lat;
-    this.destination.lng = this.dest.lng;
+    this.destination.lat = Number(this.dest.lat);
+    this.destination.lng = Number(this.dest.lng);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         console.log(position);
