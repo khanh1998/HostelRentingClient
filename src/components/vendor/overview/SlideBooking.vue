@@ -112,7 +112,7 @@ export default {
     },
     changeToString(bookingId) {
       this.dialog = true;
-      this.qrvalue = bookingId.toString();
+      this.qrvalue = `booking:${bookingId}`;
     },
   },
   computed: {

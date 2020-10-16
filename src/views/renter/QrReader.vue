@@ -61,10 +61,21 @@ export default {
     }),
     onDecode(result) {
       this.result = result;
-      console.log(result);
-      this.updateBookingStatus(Number(this.result)).then(() => {
-        this.dialog = true;
-      });
+      const [type, content] = this.result.split(':');
+      console.log(type, content);
+      switch (type) {
+        case 'booking':
+          console.log('booking', content);
+          this.updateBookingStatus(Number(content)).then(() => {
+            this.dialog = true;
+          });
+          break;
+        case 'contract':
+          console.log('contract', content);
+          break;
+        default:
+          console.log('error');
+      }
     },
     async onInit(promise) {
       try {
