@@ -14,6 +14,8 @@ const myState = () => ({
   bookings: {
     data: [],
     isLoading: false,
+    isCreating: false,
+    isUpdating: false,
     success: null,
     error: null,
     newlyCreated: null,
@@ -156,6 +158,8 @@ const mutations = {
   },
   GET_BOOKINGS_REQUEST(state) {
     state.bookings.isLoading = true;
+    state.bookings.success = null;
+    state.bookings.error = null;
   },
   GET_BOOKINGS_SUCCESS(state, booking) {
     state.bookings.data = booking;
@@ -182,6 +186,8 @@ const mutations = {
   },
   CREATE_BOOKING_REQUEST(state) {
     state.bookings.isLoading = true;
+    state.bookings.success = null;
+    state.bookings.error = null;
   },
   CREATE_BOOKING_SUCCESS(state, booking) {
     state.bookings.data.push(booking);
@@ -248,6 +254,8 @@ const mutations = {
   },
   CANCEL_DEAL_REQUEST(state) {
     state.deals.isLoading = true;
+    state.bookings.success = null;
+    state.bookings.error = null;
   },
   CANCEL_DEAL_SUCCESS(state, dealId) {
     state.deals.isLoading = false;
@@ -274,16 +282,18 @@ const mutations = {
     state.bookings.error = error;
   },
   DONE_BOOKING_REQUEST(state) {
-    state.bookings.isLoading = true;
+    state.bookings.isUpdating = true;
+    state.bookings.success = null;
+    state.bookings.error = null;
   },
   DONE_BOOKING_SUCCESS(state, bookingId) {
-    state.bookings.isLoading = false;
+    state.bookings.isUpdating = false;
     state.bookings.success = true;
     const res = state.bookings.data.filter((book) => book.bookingId === bookingId);
     res[0].status = 'DONE';
   },
   DONE_BOOKING_FAILURE(state, error) {
-    state.bookings.isLoading = false;
+    state.bookings.isUpdating = false;
     state.bookings.error = error;
   },
   UPDATE_USER_REQUEST(state) {
@@ -568,11 +578,11 @@ const actions = {
   async updateBookingStatus({ commit, state }, bookingId) {
     const userId = window.$cookies.get('userId');
     const role = window.$cookies.get('role');
+    commit(mutationTypes.DONE_BOOKING_REQUEST);
     if (userId && role && state.user.data) {
       try {
         const booking = state.bookings.data.filter((item) => item.bookingId === bookingId)[0];
         if (booking) {
-          commit(mutationTypes.DONE_BOOKING_REQUEST);
           const res = await window.axios.put(`/api/v1/bookings/${bookingId}`, {
             bookingId,
             dealId: booking.deal ? booking.deal.dealId : null,
@@ -583,17 +593,21 @@ const actions = {
             meetTime: booking.meetTime,
             qrCode: booking.qrCode,
           });
+          console.log(res);
           if (res.status === 200) {
             commit(mutationTypes.DONE_BOOKING_SUCCESS, bookingId);
           }
         } else {
-          console.log(`booking ${bookingId} is not existed in store`);
+          const error = new Error(`booking ${bookingId} is not existed in store`);
+          console.log(error);
+          commit(mutationTypes.DONE_BOOKING_FAILURE, error);
         }
       } catch (error) {
         commit(mutationTypes.DONE_BOOKING_FAILURE, error);
       }
     } else {
-      throw new Error('you are not loged in');
+      const error = new Error('you are not loged in');
+      commit(mutationTypes.DONE_BOOKING_FAILURE, error);
     }
   },
   clearNewlyCreatedBooking({ commit }) {

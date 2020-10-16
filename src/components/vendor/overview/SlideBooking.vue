@@ -1,6 +1,23 @@
 <template>
   <div>
     <v-sheet class="rounded" elevation="0" height="30%" max-width="100%">
+      <v-dialog v-model="dialog" width="400">
+        <v-card>
+          <v-card-title class="headline" style="background-color: #98b7d7; color: white;">
+            Mã quét
+          </v-card-title>
+          <v-card-text class="d-flex justify-center mt-5">
+            <div>
+              <qrcode-vue :value="qrvalue" :size="200" level="H"></qrcode-vue>
+            </div>
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="dialog = false"> Đóng </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <div
         class="d-flex justify-md-space-between flex-column flex-md-row"
         v-if="bookings.length > 0"
@@ -11,13 +28,6 @@
             <router-link to="vendor/booking" class="text-decoration-none">Xem thêm >></router-link>
           </span>
         </div>
-        <!--
-        <div class="d-flex justify-center">
-          <v-chip-group mandatory active-class="primary--text">
-            <v-chip v-for="tag in chipItems" :key="tag">{{ tag }}</v-chip>
-          </v-chip-group>
-        </div>
-        -->
       </div>
       <v-divider />
       <v-slide-group v-if="bookings.length > 0" center-active show-arrows>
@@ -61,41 +71,9 @@
                 >
               </v-list-item-content>
               <v-list-item-action>
-                <!-- <v-btn icon>
-                  <v-icon @click="deleteItem(item)">
-                    mdi-qrcode
-                  </v-icon>
-                </v-btn> -->
-                <v-dialog v-model="dialog" width="400">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon v-bind="attrs" v-on="on" @click="changeToString(booking.bookingId)">
-                      <v-icon> mdi-qrcode </v-icon>
-                    </v-btn>
-                  </template>
-
-                  <v-card>
-                    <v-card-title class="headline" style="background-color: #98b7d7; color: white;">
-                      Mã quét
-                    </v-card-title>
-
-                    <v-card-text class="d-flex justify-center mt-5">
-                      <div>
-                        <qrcode-vue :value="qrvalue" :size="200" level="H"></qrcode-vue>
-                      </div>
-                      <!-- <div>
-                        <p>test value in qrcode</p>
-                        <h1>{{booking.bookingId}}</h1>
-                      </div> -->
-                    </v-card-text>
-
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" text @click="dialog = false"> Đóng </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
+                <v-btn icon @click="changeToString(booking.bookingId)">
+                  <v-icon> mdi-qrcode </v-icon>
+                </v-btn>
               </v-list-item-action>
             </v-list-item>
             <div>
@@ -133,8 +111,8 @@ export default {
       return `${d.getHours()}:${d.getMinutes() < 10 ? '0' : ''}${d.getMinutes()}`;
     },
     changeToString(bookingId) {
+      this.dialog = true;
       this.qrvalue = bookingId.toString();
-      return this.qrvalue;
     },
   },
   computed: {

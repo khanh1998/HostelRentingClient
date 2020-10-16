@@ -1,40 +1,38 @@
 <template>
-  <div v-if="!isLoading" class="d-flex justify-center">
-    <v-col cols="6">
-      <!-- <v-btn @click="doUpdateBookingStatus">
-        aaa
-      </v-btn> -->
+  <div v-if="!isLoading" class="d-flex justify-center" style="height: calc(100vh - 120px);">
+    <v-col cols="12" md="6">
+      <v-card style="height: 90%;">
+        <p></p>
+        <p class="error text-center">{{ error }}</p>
+        <!-- <p class="decode-result">
+              Last result: <b>{{ result }}</b>
+            </p> -->
+        <qrcode-drop-zone @decode="onDecode" @init="onInit" style="height: 100%;">
+          <qrcode-stream @decode="onDecode" @init="onInit" />
+        </qrcode-drop-zone>
+        <qrcode-capture v-if="noStreamApiSupport" @decode="onDecode" />
+      </v-card>
+      <v-dialog v-model="bookings.isUpdating" hide-overlay persistent width="300">
+        <v-card color="primary" dark>
+          <v-card-text>
+            Đang xác thực
+            <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
       <v-dialog v-model="dialog" width="500">
-        <template v-slot:activator="{ on, attrs }">
-          <v-card style="height: 90%" class="mt-5">
-            <p></p>
-            <p class="error text-center">{{ error }}</p>
-            <!-- <p class="decode-result">Last result: <b>{{ result }}</b></p> -->
-            <qrcode-drop-zone
-              @decode="onDecode"
-              @init="logErrors"
-              v-on="on"
-              v-bind="attrs"
-              style="height: 100%"
-            >
-              <qrcode-stream @decode="onDecode" @init="onInit" />
-            </qrcode-drop-zone>
-            <qrcode-capture v-if="noStreamApiSupport" @decode="onDecode" />
-          </v-card>
-        </template>
-
         <v-card>
-          <v-card-title class="headline" style="background-color: #98b7d7; color: white">
-            Xác nhận
+          <v-card-title class="headline" style="background-color: #98b7d7; color: white;">
+            <span v-if="!bookings.success">Xác thực booking thất bại</span>
+            <span v-if="bookings.success">Xác thực booking thành công</span>
           </v-card-title>
-
-          <v-card-text class="d-flex justify-center mt-5"> Xác nhận quét thành công ! </v-card-text>
-
+          <v-card-text class="d-flex justify-center mt-5">
+            <span>{{ bookings.error }}</span>
+          </v-card-text>
           <v-divider></v-divider>
-
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="doUpdateBookingStatus()"> Đóng </v-btn>
+            <v-btn color="primary" text @click="dialog = false"> Đóng </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -43,7 +41,7 @@
 </template>
 <script>
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader';
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'QR-Reader',
@@ -52,6 +50,7 @@ export default {
     result: '',
     error: '',
     dialog: false,
+    updating: false,
     noStreamApiSupport: false,
   }),
   methods: {
@@ -62,14 +61,10 @@ export default {
     }),
     onDecode(result) {
       this.result = result;
-      this.dialog = true;
-    },
-    doUpdateBookingStatus() {
-      // alert(`số${Number(this.result)}`);
-      // alert(`chữ${this.result}`);
-      console.log('aaa');
-      this.updateBookingStatus(Number(this.result));
-      this.dialog = false;
+      console.log(result);
+      this.updateBookingStatus(Number(this.result)).then(() => {
+        this.dialog = true;
+      });
     },
     async onInit(promise) {
       try {
@@ -92,11 +87,9 @@ export default {
     },
   },
   computed: {
+    ...mapState('user', ['bookings', 'user']),
     isLoading() {
-      return this.$store.state.user.bookings.isLoading;
-    },
-    bookings() {
-      return this.$store.state.user.bookings.data;
+      return this.bookings.isLoading || this.user.isLoading;
     },
   },
   created() {
