@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <v-card style="width: 100%;" outlined>
     <v-card-title
-      class="d-flex align-center justify-center white--text font-nunito"
+      class="d-flex align-center justify-center white--text font-nunito py-5"
       style="background-color: #7d86f6;"
       >Bộ tìm kiếm nâng cao</v-card-title
     >
@@ -321,7 +321,7 @@
   /* background-color: red; */
 }
 .header-label {
-  color: rgba(0, 0, 0, 0.6) !important;
+  color: #313a46 !important;
 }
 </style>
 <script>

@@ -162,4 +162,7 @@ export default {
 .size-1rem {
   font-size: 1rem !important;
 }
+.size-sub-2 {
+  font-size: 0.875rem !important;
+}
 </style>

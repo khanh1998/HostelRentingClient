@@ -13,6 +13,12 @@ const myState = () => ({
       success: null,
       error: null,
     },
+    province: {
+      data: [],
+      isLoading: true,
+      success: null,
+      error: null,
+    },
   },
 });
 
@@ -48,6 +54,10 @@ const mutationTypes = {
   GET_DISTRICT_STATS_REQUEST: 'GET_DISTRICT_STATS_REQUEST',
   GET_DISTRICT_STATS_SUCCESS: 'GET_DISTRICT_STATS_SUCCESS',
   GET_DISTRICT_STATS_FAILURE: 'GET_DISTRICT_STATS_FAILURE',
+
+  GET_PROVINCE_STATS_REQUEST: 'GET_PROVINCE_STATS_REQUEST',
+  GET_PROVINCE_STATS_SUCCESS: 'GET_PROVINCE_STATS_SUCCESS',
+  GET_PROVINCE_STATS_FAILURE: 'GET_PROVINCE_STATS_FAILURE',
 };
 const mutations = {
   GET_STREET_STATS_REQUEST(state) {
@@ -75,6 +85,20 @@ const mutations = {
   GET_DISTRICT_STATS_FAILURE(state, error) {
     state.stats.district.isLoading = false;
     state.stats.district.error = error;
+  },
+
+  GET_PROVINCE_STATS_REQUEST(state) {
+    state.stats.province.isLoading = true;
+  },
+  GET_PROVINCE_STATS_SUCCESS(state, data) {
+    state.stats.province.data = data;
+    console.log(state.stats.province.data);
+    state.stats.province.isLoading = false;
+    state.stats.province.success = true;
+  },
+  GET_PROVINCE_STATS_FAILURE(state, error) {
+    state.stats.province.isLoading = false;
+    state.stats.province.error = error;
   },
 };
 const actions = {
@@ -104,6 +128,24 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_DISTRICT_STATS_FAILURE, error);
+    }
+  },
+  async getProvinceStatistic({ commit }, districts) {
+    // param: list districtIds
+    try {
+      commit(mutationTypes.GET_PROVINCE_STATS_REQUEST);
+      let districtIdsStr = '';
+      districts.districts.forEach((element) => {
+        districtIdsStr += `&ids=${element.districtId}`;
+      });
+      const response = await window.axios.get(`/api/v1/statistic?${districtIdsStr}`);
+      if (response.status >= 200 && response.status <= 299) {
+        commit(mutationTypes.GET_PROVINCE_STATS_SUCCESS, response.data.data);
+      } else {
+        commit(mutationTypes.GET_PROVINCE_STATS_FAILURE);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_PROVINCE_STATS_FAILURE, error);
     }
   },
 };

@@ -94,7 +94,7 @@
               </a>
             </v-col>
           </v-row>
-          <v-row>
+          <!-- <v-row>
             <v-col cols="12" sm="12" md="7" xl="8" lg="8" class="mt-10">
               <v-pagination
                 light
@@ -106,9 +106,26 @@
                 v-on:input="onUpdatePaging"
               ></v-pagination>
             </v-col>
-          </v-row>
+          </v-row> -->
         </v-col>
         <v-col cols="4"></v-col>
+      </v-row>
+      <v-row justify="center" class="content" v-if="topView">
+        <v-col cols="12" sm="12" md="10" lg="10" xl="10">
+          <div class="d-flex flex-column justify-center align-center topview-lable mt-16">
+            <div class="line-blue mb-5"></div>
+            <span>Khám Phá Thành Phố</span>
+            <span style="font-size: 0.9rem; font-weight: 400 !important;"
+              >Tìm hiểu về giá cả nhà trọ trên từng khu vực để giúp bạn tìm được một căn phòng ưng
+              ý</span
+            >
+          </div>
+        </v-col>
+      </v-row>
+      <v-row justify="center" class="content" v-if="provinceStatistic && districts">
+        <v-col cols="9" sm="10" md="9" lg="9" xl="8">
+          <StatisticCity :list="provinceStatistic.provinces[0].districts" />
+        </v-col>
       </v-row>
     </v-container>
   </div>
@@ -136,6 +153,7 @@
 import Banner from '@/components/home/Banner.vue';
 import TopCarousel from '@/components/home/TopCarousel.vue';
 import ArticleList from '@/components/home/ArticleList.vue';
+import StatisticCity from '@/components/home/StatisticCity.vue';
 import { mapActions } from 'vuex';
 
 export default {
@@ -144,6 +162,7 @@ export default {
     Banner,
     TopCarousel,
     ArticleList,
+    StatisticCity,
   },
   data: () => ({
     overlay: false,
@@ -158,15 +177,11 @@ export default {
   methods: {
     ...mapActions({
       getAllCategories: 'renter/home/getAllCategories',
-    }),
-    ...mapActions({
       getHostelTypes: 'renter/home/getHostelTypes',
-    }),
-    ...mapActions({
       getTopView: 'renter/home/getTopViewHostelTypes',
-    }),
-    ...mapActions({
       getFilterResult: 'renter/filterResult/getFilterResult',
+      getAllDistricts: 'renter/home/getAllDistricts',
+      getProvinceStatistic: 'renter/discovery/getProvinceStatistic',
     }),
     onFilterSubmit(data) {
       this.getFilterResult({ page: 1, size: 10 });
@@ -215,13 +230,23 @@ export default {
         return this.$store.state.renter.home.categories.isLoading;
       },
     },
+    districts() {
+      return this.$store.state.renter.home.districts.data;
+    },
+    provinceStatistic() {
+      return this.$store.state.renter.discovery.stats.province.data;
+    },
     isLoading() {
       const facilities = this.$store.state.renter.filterResult.filter.facility.isLoading;
       const schools = this.$store.state.renter.filterResult.filter.schools.isLoading;
       const categories = this.$store.state.renter.filterResult.filter.categories.isLoading;
       const topSuggestion = this.$store.state.renter.home.hostelTypes.isLoading;
       const topView = this.$store.state.renter.home.topView.isLoading;
-      return facilities || categories || schools || topSuggestion || topView;
+      const districts = this.$store.state.renter.home.districts.isLoading;
+      const provinceStat = this.$store.state.renter.discovery.stats.province.isLoading;
+      return (
+        facilities || categories || schools || topSuggestion || topView || districts || provinceStat
+      );
     },
   },
   created() {
@@ -233,6 +258,15 @@ export default {
     }
     if (this.topView.length === 0) {
       this.getTopView({ size: 10 });
+    }
+    if (this.provinceStatistic.length === 0) {
+      if (this.districts.length === 0) {
+        this.getAllDistricts(1).then(
+          () => this.getProvinceStatistic({ districts: this.districts.districts }), // eslint-disable-line
+        ); // eslint-disable-line
+      } else {
+        this.getProvinceStatistic({ districts: this.districts.districts });
+      }
     }
   },
 };

@@ -139,7 +139,7 @@ export default {
     searchStreet: '',
     headers: [
       {
-        text: 'Quận',
+        text: 'Phường',
         value: 'district',
         align: 'start',
         filterable: false,
@@ -179,7 +179,10 @@ export default {
       return this.statistic.provinces[0];
     },
     districtStat() {
-      return this.proviceStat.districts[0];
+      if (!this.districtInput) {
+        return this.proviceStat.districts[0];
+      }
+      return this.districtInput;
     },
     average() {
       return this.getAverage(this.streetIds);
@@ -256,11 +259,16 @@ export default {
     },
   },
   created() {
+    console.log(this.districtInput);
     if (!this.districtInput) {
       this.getProvinces();
       if (!this.statistic) {
         this.getDistrictStatistic(this.districtId);
       }
+    } else {
+      console.log(this.districtInput);
+      this.districtStat = this.districtInput;
+      // console.log(this.districtStat);
     }
   },
 };
