@@ -36,9 +36,9 @@
               {{ info.title }}
             </h2>
             <span class="text-muted font-nunito" style="font-size: 0.9rem;">
-              <!-- {{ group.address.streetName }}, {{ group.address.wardName }},
+              {{ group.address.streetName }}, {{ group.address.wardName }},
               {{ group.address.districtName }},
-              {{ group.address.provinceName }} -->
+              {{ group.address.provinceName }}
             </span>
             <div style="width: 100%;" class="d-flex flex-wrap mt-3 justify-space-between">
               <div class="d-flex flex-column">
@@ -91,8 +91,8 @@
                   style="color: #333333;"
                 >
                   <v-icon color="#98a6ad" class="mr-1">mdi-home-account</v-icon>
-                  <!-- <span v-if="group.ownerJoin == false">Không</span>
-                  <span v-else>Có</span> -->
+                  <span v-if="group.ownerJoin == false">Không</span>
+                  <span v-else>Có</span>
                 </span>
                 <span class="text-uppercase font-nunito text-caption" style="color: #656565;"
                   >Chung chủ</span

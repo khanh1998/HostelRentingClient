@@ -167,7 +167,6 @@ const mutations = {
   },
   GET_DISTRICTS_SUCCESS(state, data) {
     state.districts.data = data;
-    console.log(state.districts.data);
     state.districts.isLoading = false;
     state.districts.success = true;
   },

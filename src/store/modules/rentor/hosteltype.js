@@ -21,7 +21,9 @@ const myState = () => ({
 
 const getters = {
   // eslint-disable-next-line
-  isLoading: (state) => state.hostelGroup.isLoading || state.hostelType.isLoading || state.schedules.isLoading,
+  isLoading: (state) =>
+    // eslint-disable-next-line
+    state.hostelGroup.isLoading || state.hostelType.isLoading || state.schedules.isLoading,
 };
 
 const mutationTypes = {
@@ -85,7 +87,7 @@ const actions = {
       const response = await window.axios.get(`/api/v1/types?typeId=${typeId}`);
       if (response.status >= 200 && response.status <= 299) {
         commit(mutationTypes.GET_HOSTEL_TYPE_SUCCESS, response.data.data.type);
-        commit(mutationTypes.GET_HOSTEL_GROUP_SUCCESS, response.data.data.groupDTOFull);
+        commit(mutationTypes.GET_HOSTEL_GROUP_SUCCESS, response.data.data.group);
       } else {
         commit(mutationTypes.GET_HOSTEL_TYPE_FAILURE);
         commit(mutationTypes.GET_HOSTEL_GROUP_FAILURE);
