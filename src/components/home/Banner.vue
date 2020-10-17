@@ -20,8 +20,6 @@
                 class="d-flex justify-center align-center white"
                 :style="{
                   width: '100%',
-                  _borderTopLeftRadius: '4px',
-                  _borderTopRightRadius: '4px',
                   border: '1px solid #F3E5',
                   margin: '0px 0px 4px',
                   height: '50px',
@@ -522,9 +520,7 @@ export default {
       if (this.filter.price.max < 50) this.filter.price.max += 5;
     },
     searchByCoordinates() {
-      console.log('vao');
       if (this.currentPlace || this.filter.coordinator.address) {
-        console.log('nua');
         console.log(this.filter.coordinator);
         if (this.advanceSearch) {
           this.searchLikeFilter({
@@ -542,9 +538,10 @@ export default {
         this.coordinator.longitude = this.filter.coordinator.latitude.lng;
         this.nameAddress = this.searchValue.split('-');
         this.isSearchOptional = true;
-        this.$router.push('/filter');
+        this.$router.push(
+          `/result/latitude=${this.filter.coordinator.latitude}&longitude=${this.filter.coordinator.longitude}`,
+        );
       }
-      console.log(this.filter);
     },
   },
   computed: {

@@ -11,11 +11,6 @@
             <p>Các Phòng Được Đề Xuất Tốt Nhất</p>
           </div>
         </v-col>
-        <!-- <v-col cols="8" v-if="list.length === 0">
-          <v-card>
-            <v-card-text>Không tìm thấy kết quả phù hợp</v-card-text>
-          </v-card>
-        </v-col> -->
       </v-row>
       <v-row>
         <v-col cols="12" md="8">
@@ -265,13 +260,12 @@ export default {
     },
   },
   created() {
-    console.log(this.searchValue);
     if (this.categories.length === 0) {
       this.getAllCategories();
     }
     if (!this.list) {
       this.reSearch({
-        paramsStr: this.searchValue,
+        paramsStr: window.$cookies.get('searchValue'),
       });
     }
     this.get7dates();

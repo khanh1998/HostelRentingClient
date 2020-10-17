@@ -240,9 +240,10 @@ const actions = {
   async searchByCoordinator({ commit }, params) {
     // params = {lat, long}
     try {
-      commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
       const url = `/api/v1/types?asc=false&distance=5&latitude=${params.lat}&longitude=${params.long}&page=1&size=5&sortBy=score`;
+      window.$cookies.set('searchValue', url);
       const res = await window.axios.get(url);
+      commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
       }
@@ -250,13 +251,14 @@ const actions = {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
     }
   },
-  // toDo: category
   async filterSearchByCoordinatorResult({ commit }, params) {
     // params = {lat, long, filterProperties}
+
     try {
+      commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
       let url = '';
       if (params.paramsStr) {
-        url = `/api/v1/types?asc=false&${params.paramsStr}&page=1&size=5`;
+        url = params.paramsStr;
       } else {
         // coordinator
         let coordinatorStr = '';
@@ -299,6 +301,7 @@ const actions = {
         }
         url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=1&size=5&sortBy=score`;
       }
+      window.$cookies.set('searchValue', url);
 
       const res = await window.axios.get(url);
       if (res.status >= 200 && res.status <= 299) {

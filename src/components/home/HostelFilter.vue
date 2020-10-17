@@ -366,17 +366,20 @@ export default {
       if (this.max < 50) this.max += 5;
     },
     filterSubmit() {
-      if (this.filter.coordinator.address) {
-        this.filter.price.disable = this.filterSelected.disabledPrice;
-        this.filterSearchByCoordinatorResult({
-          filterProperties: this.filter,
-        });
-        // this.$session.start();
-        this.$router.push('/filter');
+      if (!this.filter.coordinator.address) {
+        let coordinator = [];
+        coordinator = this.searchValue.split('&'); // eslint-disable-line
+        this.filter.coordinator.latitude = coordinator[0].split('=')[1]; // eslint-disable-line
+        this.filter.coordinator.longitude = coordinator[1].split('=')[1]; // eslint-disable-line
       }
-      // console.log(this.$session.exists());
-      // console.log(this.filter);
-      // this.$session.set('searchValue', this.filter);
+
+      this.filter.price.disable = this.filterSelected.disabledPrice;
+      this.filterSearchByCoordinatorResult({
+        filterProperties: this.filter,
+      });
+      // } else {
+      //   console.log(this.$route.params.searchValue);
+      // }
     },
     getCategoryName(id) {
       return this.filter.categories.data.filter((c) => c.categoryId === id)[0].categoryName;
@@ -386,6 +389,9 @@ export default {
     }),
   },
   computed: {
+    searchValue() {
+      return this.$route.params.searchValue;
+    },
     filter() {
       return this.$store.state.renter.filterResult.filter;
     },
