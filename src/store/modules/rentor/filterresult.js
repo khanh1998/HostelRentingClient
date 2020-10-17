@@ -64,8 +64,8 @@ const myState = {
   },
   results: {
     data: {
-      types: [],
-      groups: [],
+      types: null,
+      groups: null,
     },
     isLoading: false,
   },
@@ -254,46 +254,52 @@ const actions = {
   async filterSearchByCoordinatorResult({ commit }, params) {
     // params = {lat, long, filterProperties}
     try {
-      // coordinator
-      let coordinatorStr = '';
-      if (params.filterProperties.coordinator !== '') {
-        coordinatorStr = `&latitude=${params.filterProperties.coordinator.latitude}&longitude=${params.filterProperties.coordinator.longitude}`;
+      let url = '';
+      if (params.paramsStr) {
+        url = `/api/v1/types?asc=false&${params.paramsStr}&page=1&size=5`;
+      } else {
+        // coordinator
+        let coordinatorStr = '';
+        if (params.filterProperties.coordinator !== '') {
+          coordinatorStr = `&latitude=${params.filterProperties.coordinator.latitude}&longitude=${params.filterProperties.coordinator.longitude}`;
+        }
+        // distance
+        let distanceStr = '';
+        const distance = params.filterProperties.distance.select.split('km')[0];
+        distanceStr = `&distance=${distance}`;
+        let facilitiesStr = '';
+        params.filterProperties.facility.selects.forEach((element) => {
+          facilitiesStr += `&facilityIds=${element}`;
+        });
+        // school
+        let schoolStr = '';
+        if (params.filterProperties.schools.select) {
+          schoolStr = `&schoolId=${params.filterProperties.schools.select}`;
+        }
+        // hometown
+        let hometownStr = '';
+        if (params.filterProperties.hometown.select) {
+          hometownStr = `&provinceId=${params.filterProperties.hometown.select}`;
+        }
+        // price
+        let priceStr = '';
+        if (params.filterProperties.price.disable) {
+          priceStr = `&maxPrice=${params.filterProperties.price.range[1]}&minPrice=${params.filterProperties.price.range[0]}`;
+        }
+        // category
+        let categoryStr = '';
+        if (params.filterProperties.categories.select) {
+          categoryStr = `&categoryId=${params.filterProperties.categories.select}`;
+        }
+        // min area
+        let minSuperficialityStr = '';
+        if (params.filterProperties.minArea.select !== '') {
+          const minSuperficiality = params.filterProperties.minArea.select.split(' ')[0];
+          minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
+        }
+        url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=1&size=5&sortBy=score`;
       }
-      // distance
-      let distanceStr = '';
-      const distance = params.filterProperties.distance.select.split('km')[0];
-      distanceStr = `&distance=${distance}`;
-      let facilitiesStr = '';
-      params.filterProperties.facility.selects.forEach((element) => {
-        facilitiesStr += `&facilityIds=${element}`;
-      });
-      // school
-      let schoolStr = '';
-      if (params.filterProperties.schools.select) {
-        schoolStr = `&schoolId=${params.filterProperties.schools.select}`;
-      }
-      // hometown
-      let hometownStr = '';
-      if (params.filterProperties.hometown.select) {
-        hometownStr = `&provinceId=${params.filterProperties.hometown.select}`;
-      }
-      // price
-      let priceStr = '';
-      if (params.filterProperties.price.disable) {
-        priceStr = `&maxPrice=${params.filterProperties.price.range[1]}&minPrice=${params.filterProperties.price.range[0]}`;
-      }
-      // category
-      let categoryStr = '';
-      if (params.filterProperties.categories.select) {
-        categoryStr = `&categoryId=${params.filterProperties.categories.select}`;
-      }
-      // min area
-      let minSuperficialityStr = '';
-      if (params.filterProperties.minArea.select !== '') {
-        const minSuperficiality = params.filterProperties.minArea.select.split(' ')[0];
-        minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
-      }
-      const url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=1&size=5&sortBy=score`;
+
       const res = await window.axios.get(url);
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);

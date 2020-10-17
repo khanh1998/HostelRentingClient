@@ -37,12 +37,7 @@
         <v-col cols="9">
           <v-row class="d-flex">
             <v-col cols="12" md="8">
-              <!-- <v-card v-if="list.length === 0">
-                <v-card-text class="font-nunito text-gray" style="font-size: 1rem;"
-                  >Không tìm thấy kết quả phù hợp !</v-card-text
-                >
-              </v-card> -->
-              <div class="d-flex flex-column" _v-else>
+              <div class="d-flex flex-column" v-if="list && list.length !== 0">
                 <div
                   class="white d-flex"
                   style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15); border-radius: 0.25rem;"
@@ -85,8 +80,13 @@
                     >
                   </v-row>
                 </div>
-                <ArticleList :list="list" />
+                <ArticleList :list="list" class="mt-4" />
               </div>
+              <v-card v-else>
+                <v-card-text class="font-nunito text-gray" style="font-size: 1rem;"
+                  >Không tìm thấy kết quả phù hợp !</v-card-text
+                >
+              </v-card>
             </v-col>
             <v-col cols="0" md="4">
               <v-col cols="11" class="ml-auto pt-0 mt-0">
@@ -168,6 +168,7 @@ export default {
     }),
     ...mapActions({
       getAllCategories: 'renter/home/getAllCategories',
+      reSearch: 'renter/filterResult/filterSearchByCoordinatorResult',
     }),
     onUpdatePaging(pageNumber) {
       this.getFilterResult({ page: pageNumber, size: 5 });
@@ -248,8 +249,8 @@ export default {
       const regulation = this.$store.state.renter.filterResult.filter.regulations.isLoading;
       return facilities || categories || regulation || result;
     },
-    isLoadingTopView() {
-      return this.$store.state.renter.filterResult.results.isLoading;
+    searchValue() {
+      return this.$route.params.searchValue;
     },
     list() {
       return this.$store.state.renter.filterResult.results.data.types;
@@ -264,8 +265,14 @@ export default {
     },
   },
   created() {
+    console.log(this.searchValue);
     if (this.categories.length === 0) {
       this.getAllCategories();
+    }
+    if (!this.list) {
+      this.reSearch({
+        paramsStr: this.searchValue,
+      });
     }
     this.get7dates();
   },

@@ -92,7 +92,6 @@ const mutations = {
   },
   GET_PROVINCE_STATS_SUCCESS(state, data) {
     state.stats.province.data = data;
-    console.log(state.stats.province.data);
     state.stats.province.isLoading = false;
     state.stats.province.success = true;
   },

@@ -59,7 +59,7 @@ const routes = [
         // meta: { requiresAuth: true },
       },
       {
-        path: 'filter',
+        path: 'result/:searchValue',
         name: 'FilterResult',
         component: FilterResult,
         props: true,
