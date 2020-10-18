@@ -66,13 +66,16 @@ const myState = {
     data: {
       types: null,
       groups: null,
+      totalType: Number,
     },
+    page: 1,
     isLoading: false,
   },
 };
 const mutationTypes = {
   SET_FILTER_VALUES: 'SET_FILTER_VALUES',
   SET_SEARCH_VALUE: 'SET_SEARCH_VALUE',
+  SET_PAGE: 'SET_PAGE',
   GET_FILTER_RESULT_REQUEST: 'GET_FILTER_RESULT_REQUEST',
   GET_FILTER_RESULT_SUCCESS: 'GET_FILTER_RESULT_SUCCESS',
   GET_FILTER_RESULT_FAILURE: 'GET_FILTER_RESULT_FAILURE',
@@ -101,6 +104,11 @@ const mutationTypes = {
 const mutations = {
   SET_FILTER_VALUES: (state, filterValues) => {
     state.filter = filterValues;
+  },
+  SET_PAGE: (state, page) => {
+    console.log(page);
+    state.results.page = page;
+    console.log(state.results.page);
   },
   SET_SEARCH_VALUE: (state, searchValue) => {
     state.search.value = searchValue;
@@ -192,6 +200,9 @@ const actions = {
   setFilterValue({ commit }, filterValues) {
     commit(mutationTypes.SET_FILTER_VALUES, filterValues);
   },
+  setPageValue({ commit }, page) {
+    commit(mutationTypes.SET_PAGE, page);
+  },
   setSearchValue({ commit }, searchValue) {
     commit(mutationTypes.SET_SEARCH_VALUE, searchValue);
   },
@@ -221,16 +232,6 @@ const actions = {
     });
     queryString = `?${queryString.join('')}size=${params.size}&page=${params.page}`;
     const res = await window.axios.get(`/api/v1/types${queryString}`);
-    if (res.status >= 200 && res.status <= 299) {
-      commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
-    } else {
-      commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
-    }
-  },
-  async searchByAddress({ commit, state }) {
-    commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
-    const url = `/api/v1/types?address=${state.search.value}`;
-    const res = await window.axios.get(url);
     if (res.status >= 200 && res.status <= 299) {
       commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
     } else {
@@ -299,7 +300,7 @@ const actions = {
           const minSuperficiality = params.filterProperties.minArea.select.split(' ')[0];
           minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
         }
-        url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=1&size=5&sortBy=score`;
+        url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=${params.page}&size=${params.size}&sortBy=score`;
       }
       window.$cookies.set('searchValue', url);
 

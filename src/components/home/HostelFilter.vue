@@ -357,9 +357,11 @@ export default {
     }),
     ...mapActions({
       setFilterValue: 'renter/filterResult/setFilterValue',
+      setPageValue: 'renter/filterResult/setPageValue',
     }),
     submit() {
       this.setFilterValue(this.filter);
+      this.setPageValue(1);
       this.$emit('submitFilter');
     },
     changeMaxPrice() {
@@ -376,7 +378,11 @@ export default {
       this.filter.price.disable = this.filterSelected.disabledPrice;
       this.filterSearchByCoordinatorResult({
         filterProperties: this.filter,
+        page: 1,
+        size: 5,
       });
+      window.$cookies.set('page', 1);
+      this.setPageValue(1);
       // } else {
       //   console.log(this.$route.params.searchValue);
       // }
@@ -391,6 +397,9 @@ export default {
   computed: {
     searchValue() {
       return this.$route.params.searchValue;
+    },
+    page() {
+      return this.$store.state.renter.filterResult.results.page;
     },
     filter() {
       return this.$store.state.renter.filterResult.filter;

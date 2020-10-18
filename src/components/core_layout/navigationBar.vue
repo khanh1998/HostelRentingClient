@@ -344,7 +344,6 @@ export default {
     ...mapActions({
       setSearchValue: 'renter/filterResult/setSearchValue',
       setIsSearchOptional: 'renter/home/setSearchTypeValue',
-      searchByAddress: 'renter/filterResult/searchByAddress',
       getUser: 'user/getUser',
       clearUserData: 'user/clearUserData',
       searchByCoordinator: 'renter/filterResult/searchByCoordinator',

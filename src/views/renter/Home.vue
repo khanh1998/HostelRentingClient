@@ -36,7 +36,7 @@
         <v-col cols="10" sm="10" md="9" lg="9" xl="8">
           <v-row class="d-flex flex-direction: row px-5">
             <v-col cols="11" sm="11" md="8" lg="8" xl="8" class="py-0 pr-5">
-              <ArticleList :list="hostelTypes" />
+              <ArticleList :list="hostelTypes" :page="1" />
             </v-col>
             <v-col cols="4" class="hidden-sm-and-down d-flex flex-column py-0 pl-6">
               <span

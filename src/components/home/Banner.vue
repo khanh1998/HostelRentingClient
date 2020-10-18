@@ -525,6 +525,8 @@ export default {
         if (this.advanceSearch) {
           this.searchLikeFilter({
             filterProperties: this.filter,
+            page: 1,
+            size: 5,
           });
         } else {
           this.filter.price.disable = this.disabled;

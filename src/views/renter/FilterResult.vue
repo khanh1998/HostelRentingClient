@@ -52,7 +52,7 @@
                         class="size-sub-2"
                       ></v-select>
                     </v-col>
-                    <!-- <v-spacer></v-spacer> -->
+                    <v-spacer></v-spacer>
                     <!-- <span class="font-nunito text-body-2">Sắp xếp theo</span> -->
                     <v-col cols="4">
                       <v-select
@@ -75,7 +75,7 @@
                     >
                   </v-row>
                 </div>
-                <ArticleList :list="list" class="mt-4" />
+                <ArticleList :list="list" class="mt-4" :page="page" />
               </div>
               <v-card v-else>
                 <v-card-text class="font-nunito text-gray" style="font-size: 1rem;"
@@ -88,35 +88,18 @@
                 <HostelFilter />
               </v-col>
             </v-col>
-            <!-- <v-col cols="8">
-              <v-row>
-                <v-col cols="12">
-                  <v-card>
-                    <v-card-text>Không tìm thấy kết quả phù hợp</v-card-text>
-                  </v-card>
-                  <div class=""></div>
-                  <ArticleList :list="list" />
-                </v-col>
-              </v-row>
-            </v-col>
-            <v-col cols="4">
-              <v-row>
-                <v-col cols="11 ml-auto pt-0 mt-0">
-                  <HostelFilter />
-                </v-col>
-              </v-row>
-            </v-col> -->
           </v-row>
           <v-row>
             <v-col cols="12" sm="12" md="7" xl="8" lg="8" class="mt-10">
               <v-pagination
-                light
-                v-model="paging.page"
-                :length="5"
+                class="mt-4"
+                v-model="page"
+                :length="getTotalPage(totalType)"
                 :total-visible="5"
                 prev-icon="mdi-menu-left"
                 next-icon="mdi-menu-right"
                 v-on:input="onUpdatePaging"
+                color="#727cf5"
               ></v-pagination>
             </v-col>
           </v-row>
@@ -135,9 +118,6 @@ export default {
   components: { HostelFilter, ArticleList },
   props: ['criteria'],
   data: () => ({
-    paging: {
-      page: 1,
-    },
     bottomSheet: {
       show: false,
     },
@@ -165,8 +145,21 @@ export default {
       getAllCategories: 'renter/home/getAllCategories',
       reSearch: 'renter/filterResult/filterSearchByCoordinatorResult',
     }),
+    ...mapActions({
+      setPageValue: 'renter/filterResult/setPageValue',
+    }),
+    getTotalPage(totalTypes) {
+      return Math.ceil(Number(totalTypes) / 5);
+    },
     onUpdatePaging(pageNumber) {
-      this.getFilterResult({ page: pageNumber, size: 5 });
+      let paramsStr = [];
+      paramsStr = window.$cookies.get('searchValue').split('&page=');
+      // this.getFilterResult({ page: pageNumber, size: 5 });
+      this.reSearch({
+        paramsStr: `${paramsStr[0]}&page=${pageNumber}&size=5&sortBy=score`,
+      });
+      this.setPageValue(Number(pageNumber));
+      window.$cookies.set('page', pageNumber);
     },
     get7dates() {
       const dates = this.initListOf7Dates();
@@ -250,6 +243,12 @@ export default {
     list() {
       return this.$store.state.renter.filterResult.results.data.types;
     },
+    totalType() {
+      return this.$store.state.renter.filterResult.results.data.totalType;
+    },
+    page() {
+      return this.$store.state.renter.filterResult.results.page;
+    },
     categories: {
       get() {
         return this.$store.state.renter.home.categories.data;
@@ -260,10 +259,21 @@ export default {
     },
   },
   created() {
-    if (this.categories.length === 0) {
-      this.getAllCategories();
-    }
+    // if (this.categories.length === 0) {
+    //   this.getAllCategories();
+    // }
+    this.setPageValue(1);
+    this.get7dates();
     if (!this.list) {
+      // let paramsStr = [];
+      // paramsStr = window.$cookies.get('searchValue').split('&page=');
+      // console.log(paramsStr);
+      // this.paging.page = Number(paramsStr.split('&page')[1].split('&size')[0].split('=')[1]);
+      const page = window.$cookies.get('page');
+      this.setPageValue(1);
+      if (page) {
+        this.setPageValue(Number(window.$cookies.get('page')));
+      }
       this.reSearch({
         paramsStr: window.$cookies.get('searchValue'),
       });

@@ -23,14 +23,22 @@
             >
               <div class="top">
                 Top
-                <v-icon right color="yellow">{{ numberIcons[index - 1] }}</v-icon>
+                <span class="yellow--text">{{ (page - 1) * 5 + index }}</span>
+              </div>
+              <div class="arrow-price">
+                <span class="text-caption"
+                  >{{ type.currentBooking }} lịch hẹn / {{ type.availableRoom }} phòng</span
+                >
               </div>
             </v-carousel-item>
           </v-carousel>
           <v-img src="@/assets/image-error.png" v-else style="height: 180px;" class="image-box">
             <div class="top">
               Top
-              <v-icon right color="yellow">{{ numberIcons[index - 1] }}</v-icon>
+              <span class="yellow--text">{{ (page - 1) * 5 + index }}</span>
+            </div>
+            <div class="arrow-price">
+              <span class="text-caption">thuy</span>
             </div>
           </v-img>
           <div class="item-classic-price text-body-1 white--text">
@@ -345,6 +353,26 @@
   border-bottom-left-radius: 24px;
   box-sizing: border-box;
 }
+.arrow-price {
+  background-image: linear-gradient(to right, rgba(114, 124, 245, 0.71), #1c63b8);
+  color: #fff;
+  padding: 4px 10px;
+  position: absolute;
+  bottom: 0;
+  right: -1px;
+}
+.arrow-price:before {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  content: '';
+  left: -12px;
+  border-top: 15px solid transparent;
+  border-right: 12px solid rgba(114, 124, 245, 0.71);
+  border-bottom: 15px solid transparent;
+  width: 0;
+}
 .equipment-name {
   /* #656565 */
   color: #0d0d0d;
@@ -384,16 +412,9 @@ export default {
   props: {
     index: Number,
     type: Object,
+    page: Number,
   },
-  data: () => ({
-    numberIcons: [
-      'mdi-numeric-1-circle-outline',
-      'mdi-numeric-2-circle-outline',
-      'mdi-numeric-3-circle-outline',
-      'mdi-numeric-4-circle-outline',
-      'mdi-numeric-5-circle-outline',
-    ],
-  }),
+  data: () => ({}),
   created() {
     this.getProvinces();
   },
@@ -484,19 +505,22 @@ export default {
         return data;
       },
     },
-    ward() {
-      const { streetId } = this.group.street;
-      const res = this.$store.getters['renter/common/getWardByStreetId'](streetId);
-      return res;
+    searchValue() {
+      return window.$cookies.get('searchValue');
     },
-    district() {
-      const { wardId } = this.ward;
-      return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
-    },
-    province() {
-      const { districtId } = this.district;
-      return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
-    },
+    // ward() {
+    //   const { streetId } = this.group.street;
+    //   const res = this.$store.getters['renter/common/getWardByStreetId'](streetId);
+    //   return res;
+    // },
+    // district() {
+    //   const { wardId } = this.ward;
+    //   return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
+    // },
+    // province() {
+    //   const { districtId } = this.district;
+    //   return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
+    // },
   },
 };
 </script>
