@@ -12,7 +12,7 @@
         </v-col>
       </v-row>
       <v-row justify="center" class="content" v-if="topView">
-        <v-col cols="12" sm="12" md="10" lg="10" xl="10">
+        <v-col cols="12" sm="12" md="11" lg="11" xl="10">
           <div class="d-flex flex-column justify-center align-center topview-lable mt-16">
             <div class="line-blue mb-5"></div>
             <p>Lượt Xem Nhiều Nhất</p>
@@ -20,12 +20,12 @@
         </v-col>
       </v-row>
       <v-row justify="center" class="content" v-if="topView">
-        <v-col cols="9" sm="10" md="9" lg="9" xl="8">
+        <v-col cols="9" sm="10" md="10" lg="10" xl="9">
           <TopCarousel :list="topView" />
         </v-col>
       </v-row>
       <v-row justify="center" class="content">
-        <v-col cols="12" sm="12" md="10" lg="10" xl="10">
+        <v-col cols="12" sm="12" md="11" lg="11" xl="10">
           <div class="d-flex flex-column justify-center align-center topview-lable mt-10">
             <div class="line-blue mb-5"></div>
             <p>Các Phòng Được Đề Xuất Tốt Nhất</p>
@@ -33,7 +33,7 @@
         </v-col>
       </v-row>
       <v-row class="content pt-3" justify="center">
-        <v-col cols="10" sm="10" md="9" lg="9" xl="8">
+        <v-col cols="10" sm="10" md="10" lg="10" xl="9">
           <v-row class="d-flex flex-direction: row px-5">
             <v-col cols="11" sm="11" md="8" lg="8" xl="8" class="py-0 pr-5">
               <ArticleList :list="hostelTypes" :page="1" />
