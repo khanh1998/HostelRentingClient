@@ -13,7 +13,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" md="8">
+        <v-col cols="12">
           <v-card class="d-flex flex-column align-center justify-center">
             <v-card-actions class="hidden-md-and-up">
               <v-bottom-sheet v-model="bottomSheet.show" scrollable>
@@ -29,7 +29,7 @@
         </v-col>
       </v-row>
       <v-row class="mx-0" justify="center">
-        <v-col cols="9">
+        <v-col cols="10">
           <v-row class="d-flex">
             <v-col cols="12" md="8">
               <div class="d-flex flex-column" v-if="list && list.length !== 0">

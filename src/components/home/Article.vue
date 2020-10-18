@@ -11,7 +11,7 @@
       >
         <div class="item-classic-media" style="padding-right: 0px !important;">
           <v-carousel
-            height="210"
+            height="220"
             hide-delimiters
             show-arrows-on-hover
             v-if="type.typeImages.length !== 0"
@@ -21,28 +21,19 @@
               :key="i"
               :src="type.typeImages[0].resourceUrl"
             >
-              <div class="top">
-                Top
-                <span class="yellow--text">{{ (page - 1) * 5 + index }}</span>
-              </div>
-              <div class="arrow-price">
-                <span class="text-caption"
-                  >{{ type.currentBooking }} lịch hẹn / {{ type.availableRoom }} phòng</span
-                >
-              </div>
             </v-carousel-item>
           </v-carousel>
-          <v-img src="@/assets/image-error.png" v-else style="height: 210px;" class="image-box">
-            <div class="top">
-              Top
-              <span class="yellow--text">{{ (page - 1) * 5 + index }}</span>
-            </div>
-            <div class="arrow-price">
-              <span class="text-caption"
-                >{{ type.currentBooking }} lịch hẹn / {{ type.availableRoom }} phòng</span
-              >
-            </div>
+          <v-img src="@/assets/image-error.png" v-else style="height: 220px;" class="image-box">
           </v-img>
+          <div class="top">
+            Top
+            <span class="yellow--text">{{ (page - 1) * 5 + index }}</span>
+          </div>
+          <div class="arrow-price">
+            <span class="text-caption"
+              >{{ type.currentBooking }} lịch hẹn / {{ type.availableRoom }} phòng</span
+            >
+          </div>
           <div class="item-classic-price text-body-1 white--text">
             <span>{{ type.price }} {{ type.priceUnit }}</span>
           </div>
@@ -144,9 +135,9 @@
           </v-card>
           <v-sheet class="pa-0 pt-3" max-width="100%" v-if="type.facilities.length !== 0">
             <v-slide-group show-arrows class="px-0" mobile-breakpoint>
-              <v-slide-item v-for="facility in type.facilities" :key="facility">
+              <v-slide-item v-for="(item, i) in type.facilities" :key="`item-${i}`">
                 <v-chip class="ma-1 font-nunito" small>
-                  {{ facility.facilityName }}
+                  {{ item.facilityName }}
                 </v-chip>
               </v-slide-item>
             </v-slide-group>
@@ -251,11 +242,11 @@
               </div>
             </div>
           </v-card>
-          <v-sheet class="pa-0 py-3" max-width="100%" v-if="type.facilities.length !== 0">
+          <v-sheet class="pa-0 pt-3" max-width="100%" v-if="type.facilities.length !== 0">
             <v-slide-group show-arrows class="px-0" mobile-breakpoint>
-              <v-slide-item v-for="facility in type.facilities" :key="facility">
+              <v-slide-item v-for="(item, i) in type.facilities" :key="`item-${i}`">
                 <v-chip class="ma-1 font-nunito" small>
-                  {{ facility.facilityName }}
+                  {{ item.facilityName }}
                 </v-chip>
               </v-slide-item>
             </v-slide-group>
@@ -266,37 +257,34 @@
       <v-col
         cols="12"
         class="pr-0 pb-0 pt-0"
+        v-if="searchValue && (schoolSelected || hometownSelected)"
         style="background: #f3f4f9; padding-left: 7px !important;"
       >
-        <v-col cols="12" class="d-flex" style="background-color: #e7e9f0 !important;">
+        <v-col
+          cols="12"
+          class="d-flex justify-space-around align-center"
+          style="background-color: #e7e9f0 !important;"
+        >
           <v-row class="d-flex">
-            <v-col cols="11" md="3" style="padding: 0 !important;">
+            <!-- <v-col cols="11" md="3" style="padding: 0 !important;">
               <v-icon class="ml-2" color="#ABB4C0">visibility</v-icon>
               <span class="text-caption ml-2">{{ type.view }} lượt xem</span>
-            </v-col>
-            <v-col
-              cols="11"
-              md="5"
-              style="padding: 0 !important;"
-              class="d-flex align-start justify-center"
-              v-if="school.select && type.schoolMate !== 0"
-            >
+            </v-col> -->
+            <v-col cols="11" md="7" style="padding: 0 !important;" v-if="schoolSelected">
               <v-icon color="#ABB4C0">school</v-icon>
-              <div class="text-caption ml-2">
+              <span class="text-caption"
+                >{{ type.schoolMate }} người học {{ schoolSelected.schoolName }}</span
+              >
+              <!-- <div class="text-caption ml-2">
                 <span>{{ type.schoolMate }} người học</span>
                 <br />
-                <span>{{ schoolSelected[0].schoolName }}</span>
-              </div>
+                <span>{{ schoolSelected.schoolName }}</span> -->
+              <!-- </div> -->
             </v-col>
-            <v-col
-              cols="11"
-              md="5"
-              style="padding: 0 !important;"
-              v-if="hometown.select && type.compatriot !== 0"
-            >
+            <v-col cols="11" md="4" style="padding: 0 !important;" v-if="hometownSelected">
               <v-icon color="#ABB4C0">supervisor_account</v-icon>
-              <span class="text-caption ml-2"
-                >{{ type.compatriot }} người quê {{ hometownSelected[0].provinceName }}</span
+              <span class="text-caption"
+                >{{ type.compatriot }} người quê {{ hometownSelected.provinceName }}</span
               >
             </v-col>
           </v-row>
@@ -374,7 +362,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  display: block;
+  /* display: block; */
   width: auto;
   max-width: 80%;
   padding: 8px 16px;
@@ -385,6 +373,7 @@
   font-weight: 400;
   border-bottom-left-radius: 24px;
   box-sizing: border-box;
+  z-index: 2;
 }
 .arrow-price {
   background-image: linear-gradient(to right, rgba(114, 124, 245, 0.71), #1c63b8);
@@ -470,18 +459,21 @@ export default {
       return this.$store.state.renter.filterResult.filter.schools;
     },
     schoolSelected() {
-      const schoolIdSelected = this.school.select;
-      return this.school.items.filter((i) => i.schoolId === schoolIdSelected);
+      if (this.searchValue && this.searchValue.includes('schoolId')) {
+        const schoolIdSelected = Number(this.searchValue.split('&schoolId=')[1].split('&')[0]);
+        return this.school.items.find((i) => i.schoolId === schoolIdSelected);
+      }
+      return null;
     },
     hometown() {
       return this.$store.state.renter.filterResult.filter.hometown;
     },
     hometownSelected() {
-      const hometownIdSelectd = this.hometown.select;
-      return this.hometown.items.filter((p) => p.provinceId === hometownIdSelectd);
-    },
-    isLoadingProvinces() {
-      return this.$store.state.renter.common.provinces.isLoading;
+      if (this.searchValue && this.searchValue.includes('provinceId')) {
+        const hometownIdSelectd = Number(this.searchValue.split('&provinceId=')[1].split('&')[0]);
+        return this.hometown.items.find((p) => p.provinceId === hometownIdSelectd);
+      }
+      return null;
     },
     services() {
       return this.type.services.map((s) => ({
@@ -541,19 +533,6 @@ export default {
     searchValue() {
       return window.$cookies.get('searchValue');
     },
-    // ward() {
-    //   const { streetId } = this.group.street;
-    //   const res = this.$store.getters['renter/common/getWardByStreetId'](streetId);
-    //   return res;
-    // },
-    // district() {
-    //   const { wardId } = this.ward;
-    //   return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
-    // },
-    // province() {
-    //   const { districtId } = this.district;
-    //   return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
-    // },
   },
 };
 </script>
