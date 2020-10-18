@@ -11,7 +11,7 @@
       >
         <div class="item-classic-media" style="padding-right: 0px !important;">
           <v-carousel
-            height="180"
+            height="210"
             hide-delimiters
             show-arrows-on-hover
             v-if="type.typeImages.length !== 0"
@@ -32,13 +32,15 @@
               </div>
             </v-carousel-item>
           </v-carousel>
-          <v-img src="@/assets/image-error.png" v-else style="height: 180px;" class="image-box">
+          <v-img src="@/assets/image-error.png" v-else style="height: 210px;" class="image-box">
             <div class="top">
               Top
               <span class="yellow--text">{{ (page - 1) * 5 + index }}</span>
             </div>
             <div class="arrow-price">
-              <span class="text-caption">thuy</span>
+              <span class="text-caption"
+                >{{ type.currentBooking }} lịch hẹn / {{ type.availableRoom }} phòng</span
+              >
             </div>
           </v-img>
           <div class="item-classic-price text-body-1 white--text">
@@ -46,25 +48,15 @@
           </div>
         </div>
       </v-col>
-      <v-col cols="12" sm="8" md="8" lg="8" class="cursor hidden-xs-only" @click="viewDetail()">
-        <v-col cols="12" class="px-6 white">
-          <span
-            class="item-address"
-            style="
-              display: block;
-              display: -webkit-box;
-              -webkit-line-clamp: 1;
-              -webkit-box-orient: vertical;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            "
+      <v-col cols="12" sm="8" md="8" lg="8" class="hidden-xs-only">
+        <div class="d-flex flex-column px-1 pt-4">
+          <v-card
+            :to="'/detail/' + type.typeId"
+            style="box-shadow: none !important;"
+            class="py-0 px-7"
           >
-            {{ group.address.streetName }}, {{ group.address.wardName }},
-            {{ group.address.districtName }},
-            {{ group.address.provinceName }}
-          </span>
-          <div class="type-name mt-2" style="height: 40px;">
-            <p
+            <span
+              class="item-address"
               style="
                 display: block;
                 display: -webkit-box;
@@ -73,94 +65,107 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
               "
-              class="font-weight-bold mb-0"
             >
-              {{ type.title }}
-            </p>
-          </div>
-          <div class="align-center justify-center">
-            <div class="mt-3 d-flex align-center">
-              <v-img
-                src="@/assets/home/superficies.svg"
-                transition="scale-transition"
-                class="shrink mr-3"
-                max-width="15"
-                max-height="15"
-              />
-              <span class="item-text font-nunito font-weight-medium">
-                {{ type.superficiality }}
-                m
-                <sup>2</sup>
-              </span>
-              <div class="ml-auto d-flex justify-center align-center">
-                <v-img
-                  src="@/assets/home/people.png"
-                  transition="scale-transition"
-                  class="shrink mr-3"
-                  max-width="15"
-                  max-height="15"
-                />
-                <span class="item-text font-nunito font-weight-medium"
-                  >{{ type.capacity }} người</span
-                >
-              </div>
-              <div
-                class="ml-auto d-flex align-center"
-                v-if="type.facilities.filter((f) => f.facilityName.includes('WC')).length !== 0"
+              {{ group.address.streetName }}, {{ group.address.wardName }},
+              {{ group.address.districtName }},
+              {{ group.address.provinceName }}
+            </span>
+            <div class="type-name mt-2" style="height: 40px;">
+              <p
+                style="
+                  display: block;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+                class="font-weight-bold mb-0"
               >
+                {{ type.title }}
+              </p>
+            </div>
+            <div class="align-center justify-center">
+              <div class="mt-3 d-flex align-center">
                 <v-img
-                  src="@/assets/home/toilet.png"
+                  src="@/assets/home/superficies.svg"
                   transition="scale-transition"
                   class="shrink mr-3"
                   max-width="15"
                   max-height="15"
                 />
                 <span class="item-text font-nunito font-weight-medium">
-                  {{ type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName }}
+                  {{ type.superficiality }}
+                  m
+                  <sup>2</sup>
                 </span>
+                <div class="ml-auto d-flex justify-center align-center">
+                  <v-img
+                    src="@/assets/home/people.png"
+                    transition="scale-transition"
+                    class="shrink mr-3"
+                    max-width="15"
+                    max-height="15"
+                  />
+                  <span class="item-text font-nunito font-weight-medium"
+                    >{{ type.capacity }} người</span
+                  >
+                </div>
+                <div
+                  class="ml-auto d-flex align-center"
+                  v-if="type.facilities.filter((f) => f.facilityName.includes('WC')).length !== 0"
+                >
+                  <v-img
+                    src="@/assets/home/toilet.png"
+                    transition="scale-transition"
+                    class="shrink mr-3"
+                    max-width="15"
+                    max-height="15"
+                  />
+                  <span class="item-text font-nunito font-weight-medium">
+                    {{
+                      type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
+                    }}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="mt-3 d-flex align-center">
-            <span class="item-text" style="color: #656565;">Giới nghiêm:</span>
-            <div class="d-flex ml-1 left">
-              <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
-              <span class="item-text">{{ group.curfewTime }}</span>
+            <div class="mt-3 d-flex align-center">
+              <span class="item-text" style="color: #656565;">Giới nghiêm:</span>
+              <div class="d-flex ml-1 left">
+                <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
+                <span class="item-text">{{ group.curfewTime }}</span>
+              </div>
+              <div class="ml-auto d-flex font-nunito">
+                <span class="item-text" v-if="group.ownerJoin == false">Không chung chủ</span>
+                <span class="item-text" v-else>Chung chủ</span>
+              </div>
             </div>
-            <div class="ml-auto d-flex font-nunito">
-              <span class="item-text" v-if="group.ownerJoin == false">Không chung chủ</span>
-              <span class="item-text" v-else>Chung chủ</span>
-            </div>
-          </div>
-        </v-col>
+          </v-card>
+          <v-sheet class="pa-0 pt-3" max-width="100%" v-if="type.facilities.length !== 0">
+            <v-slide-group show-arrows class="px-0" mobile-breakpoint>
+              <v-slide-item v-for="facility in type.facilities" :key="facility">
+                <v-chip class="ma-1 font-nunito" small>
+                  {{ facility.facilityName }}
+                </v-chip>
+              </v-slide-item>
+            </v-slide-group>
+          </v-sheet>
+        </div>
       </v-col>
       <v-col
         cols="12"
-        sm="8"
-        md="8"
-        lg="8"
         class="no-padding d-flex justify-center align-center cursor d-flex d-sm-none"
         style="padding-left: 7px !important; background: #f3f4f9;"
-        @click="viewDetail()"
       >
-        <v-col cols="12" class="px-6 white">
-          <span
-            class="item-address"
-            style="
-              display: block;
-              display: -webkit-box;
-              -webkit-line-clamp: 1;
-              -webkit-box-orient: vertical;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            "
+        <v-col cols="12" class="pa-0">
+          <v-card
+            style="box-shadow: none !important;"
+            :to="'/detail/' + type.typeId"
+            class="pt-5 px-6"
           >
-            {{ group.address.streetName }}, {{ group.address.wardName }},
-            {{ group.address.districtName }},
-            {{ group.address.provinceName }}
-          </span>
-          <div class="type-name mt-2" style="height: 40px;">
-            <p
+            <span
+              class="item-address"
               style="
                 display: block;
                 display: -webkit-box;
@@ -169,67 +174,95 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
               "
-              class="font-weight-bold mb-0"
             >
-              {{ type.title }}
-            </p>
-          </div>
-          <div class="align-center justify-center">
-            <div class="mt-3 d-flex align-center">
-              <v-img
-                src="@/assets/home/superficies.svg"
-                transition="scale-transition"
-                class="shrink mr-3"
-                max-width="15"
-                max-height="15"
-              />
-              <span class="item-text font-nunito font-weight-medium">
-                {{ type.superficiality }}
-                m
-                <sup>2</sup>
-              </span>
-              <div class="ml-auto d-flex justify-center align-center">
-                <v-img
-                  src="@/assets/home/people.png"
-                  transition="scale-transition"
-                  class="shrink mr-3"
-                  max-width="15"
-                  max-height="15"
-                />
-                <span class="item-text font-nunito font-weight-medium"
-                  >{{ type.capacity }} người</span
-                >
-              </div>
-              <div
-                class="ml-auto d-flex align-center"
-                v-if="type.facilities.filter((f) => f.facilityName.includes('WC')).length !== 0"
+              {{ group.address.streetName }}, {{ group.address.wardName }},
+              {{ group.address.districtName }},
+              {{ group.address.provinceName }}
+            </span>
+            <div class="type-name mt-2" style="height: 40px;">
+              <p
+                style="
+                  display: block;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+                class="font-weight-bold mb-0"
               >
+                {{ type.title }}
+              </p>
+            </div>
+            <div class="align-center justify-center">
+              <div class="mt-3 d-flex align-center">
                 <v-img
-                  src="@/assets/home/toilet.png"
+                  src="@/assets/home/superficies.svg"
                   transition="scale-transition"
                   class="shrink mr-3"
                   max-width="15"
                   max-height="15"
                 />
                 <span class="item-text font-nunito font-weight-medium">
-                  {{ type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName }}
+                  {{ type.superficiality }}
+                  m
+                  <sup>2</sup>
                 </span>
+                <div class="ml-auto d-flex justify-center align-center">
+                  <v-img
+                    src="@/assets/home/people.png"
+                    transition="scale-transition"
+                    class="shrink mr-3"
+                    max-width="15"
+                    max-height="15"
+                  />
+                  <span class="item-text font-nunito font-weight-medium"
+                    >{{ type.capacity }} người</span
+                  >
+                </div>
+                <div
+                  class="ml-auto d-flex align-center"
+                  v-if="type.facilities.filter((f) => f.facilityName.includes('WC')).length !== 0"
+                >
+                  <v-img
+                    src="@/assets/home/toilet.png"
+                    transition="scale-transition"
+                    class="shrink mr-3"
+                    max-width="15"
+                    max-height="15"
+                  />
+                  <span class="item-text font-nunito font-weight-medium">
+                    {{
+                      type.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
+                    }}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="mt-3 d-flex align-center">
-            <span class="item-text" style="color: #656565;">Giới nghiêm:</span>
-            <div class="d-flex ml-1 left">
-              <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
-              <span class="item-text" v-else>{{ group.curfewTime }}</span>
+            <div class="mt-3 d-flex align-center">
+              <span class="item-text" style="color: #656565;">Giới nghiêm:</span>
+              <div class="d-flex ml-1 left">
+                <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
+                <span class="item-text" v-else>{{ group.curfewTime }}</span>
+              </div>
+              <div class="ml-auto d-flex font-nunito">
+                <span class="item-text" v-if="group.ownerJoin == false">Không chung chủ</span>
+                <span class="item-text" v-else>Chung chủ</span>
+              </div>
             </div>
-            <div class="ml-auto d-flex font-nunito">
-              <span class="item-text" v-if="group.ownerJoin == false">Không chung chủ</span>
-              <span class="item-text" v-else>Chung chủ</span>
-            </div>
-          </div>
+          </v-card>
+          <v-sheet class="pa-0 py-3" max-width="100%" v-if="type.facilities.length !== 0">
+            <v-slide-group show-arrows class="px-0" mobile-breakpoint>
+              <v-slide-item v-for="facility in type.facilities" :key="facility">
+                <v-chip class="ma-1 font-nunito" small>
+                  {{ facility.facilityName }}
+                </v-chip>
+              </v-slide-item>
+            </v-slide-group>
+          </v-sheet>
         </v-col>
       </v-col>
+
       <v-col
         cols="12"
         class="pr-0 pb-0 pt-0"
