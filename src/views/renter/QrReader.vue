@@ -161,6 +161,7 @@ export default {
         if (success) {
           console.log(success);
           this.showSnackBar('Kích hoạt hợp đồng thành công', { color: 'green' });
+          this.$router.push('/contract');
         } else {
           console.log(error);
           this.showSnackBar(`Kích hoạt hợp đồng thất bại ${error.message}`, { color: 'red' });

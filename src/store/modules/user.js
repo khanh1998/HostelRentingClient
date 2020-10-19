@@ -356,8 +356,9 @@ const mutations = {
   },
   UPDATE_CONTRACT_SUCCESS(state, contractId) {
     state.contracts.isUpdating = false;
-    const index = state.contracts.data.findIndex((c) => c.contractId === Number(contractId));
-    state.contracts.data[index].status = 'ACTIVATED';
+    console.log(contractId);
+    // const index = state.contracts.data.findIndex((c) => c.contractId === Number(contractId));
+    // state.contracts.data[index].status = 'ACTIVATED';
     state.contracts.success = true;
   },
   UPDATE_CONTRACT_FAILURE(state, error) {
