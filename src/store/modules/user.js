@@ -8,6 +8,9 @@ const myState = () => ({
   contracts: {
     data: [],
     isLoading: false,
+    isCreating: false,
+    isUpdating: false,
+    newlyCreated: null,
     success: null,
     error: null,
   },
@@ -66,6 +69,14 @@ const myGetters = {
     const result = state.deals.data.filter((deal) => deal.dealId === id);
     return result[0];
   },
+  findBookingById: (state) => (id) => {
+    const result = state.bookings.data.find((booking) => booking.bookingId === Number(id));
+    return result;
+  },
+  findContractById: (state) => (id) => {
+    const contract = state.contracts.data.find((c) => c.contractId === Number(id));
+    return contract;
+  },
 };
 const mutationTypes = {
   GET_USER_REQUEST: 'GET_USER_REQUEST',
@@ -123,6 +134,14 @@ const mutationTypes = {
   REGISTER_USER_REQUEST: 'REGISTER_USER_REQUEST',
   REGISTER_USER_SUCCESS: 'REGISTER_USER_SUCCESS',
   REGISTER_USER_FAILURE: 'REGISTER_USER_FAILURE',
+
+  CREATE_CONTRACT_REQUEST: 'CREATE_CONTRACT_REQUEST',
+  CREATE_CONTRACT_SUCCESS: 'CREATE_CONTRACT_SUCCESS',
+  CREATE_CONTRACT_FAILURE: 'CREATE_CONTRACT_FAILURE',
+
+  UPDATE_CONTRACT_REQUEST: 'UPDATE_CONTRACT_REQUEST',
+  UPDATE_CONTRACT_SUCCESS: 'UPDATE_CONTRACT_SUCCESS',
+  UPDATE_CONTRACT_FAILURE: 'UPDATE_CONTRACT_FAILURE',
 };
 const mutations = {
   CLEAR_USER_DATA(state) {
@@ -145,6 +164,8 @@ const mutations = {
   },
   GET_CONTRACTS_REQUEST(state) {
     state.contracts.isLoading = true;
+    state.contracts.error = null;
+    state.contracts.success = null;
   },
   GET_CONTRACTS_SUCCESS(state, contracts) {
     state.contracts.data = contracts;
@@ -311,6 +332,38 @@ const mutations = {
   },
   CLEAR_NEWLY_CREATED_BOOKING(state) {
     state.bookings.newlyCreated = null;
+  },
+  CREATE_CONTRACT_REQUEST(state) {
+    state.contracts.isCreating = true;
+    state.contracts.error = null;
+    state.contracts.success = null;
+  },
+  CREATE_CONTRACT_SUCCESS(state, contract) {
+    state.contracts.isCreating = false;
+    state.contracts.data.push(contract);
+    state.contracts.newlyCreated = contract;
+    state.contracts.success = true;
+  },
+  CREATE_CONTRACT_FAILURE(state, error) {
+    state.contracts.isCreating = false;
+    state.contracts.error = error;
+    state.contracts.success = false;
+  },
+  UPDATE_CONTRACT_REQUEST(state) {
+    state.contracts.isUpdating = true;
+    state.contracts.error = null;
+    state.contracts.success = null;
+  },
+  UPDATE_CONTRACT_SUCCESS(state, contractId) {
+    state.contracts.isUpdating = false;
+    const index = state.contracts.data.findIndex((c) => c.contractId === Number(contractId));
+    state.contracts.data[index].status = 'ACTIVATED';
+    state.contracts.success = true;
+  },
+  UPDATE_CONTRACT_FAILURE(state, error) {
+    state.contracts.isUpdating = false;
+    state.contracts.error = error;
+    state.contracts.success = false;
   },
 };
 
@@ -639,6 +692,55 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.REGISTER_USER_FAILURE, error);
+    }
+  },
+  async createContract({ commit, state }, contract) {
+    try {
+      commit(mutationTypes.CREATE_CONTRACT_REQUEST);
+      const userId = window.$cookies.get('userId');
+      const role = window.$cookies.get('role');
+      if (!userId && !state.user.data) {
+        const error = new Error('Loggin to create contract');
+        commit(mutationTypes.CREATE_CONTRACT_FAILURE, error);
+      } else if (role !== 'vendors') {
+        const error = new Error('Only vendor have permission to create contract');
+        commit(mutationTypes.CREATE_CONTRACT_FAILURE, error);
+      } else {
+        const res = await window.axios.post('/api/v1/contracts', contract);
+        if (res.status >= 200 && res.status <= 299) {
+          commit(mutationTypes.CREATE_CONTRACT_SUCCESS, res.data.data);
+        } else {
+          const error = new Error('Cannot receive response from server');
+          commit(mutationTypes.CREATE_CONTRACT_FAILURE, error);
+        }
+      }
+    } catch (error) {
+      commit(mutationTypes.CREATE_CONTRACT_FAILURE, error);
+    }
+  },
+  async updateContract({ commit, state }, contract) {
+    try {
+      commit(mutationTypes.UPDATE_CONTRACT_REQUEST);
+      const userId = window.$cookies.get('userId');
+      const role = window.$cookies.get('role');
+      if (!userId && !state.user.data) {
+        const error = new Error('Loggin to activate contract');
+        commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
+      } else if (role !== 'renters') {
+        const error = new Error('Only renter have permission to create contract');
+        commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
+      } else {
+        const { contractId, qrCode } = contract;
+        const res = await window.axios.put(`/api/v1/contracts/${contractId}`, { qrCode });
+        if (!res) {
+          const error = new Error('Cannot receive response from server');
+          commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
+        } else if (res.status >= 200 && res.status <= 299) {
+          commit(mutationTypes.UPDATE_CONTRACT_SUCCESS, contractId);
+        }
+      }
+    } catch (error) {
+      commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
     }
   },
 };

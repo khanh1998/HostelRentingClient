@@ -13,7 +13,11 @@ const myGetters = {
     if (result.length > 0) {
       return result[0];
     }
-    return null;
+    return {
+      isActive: false,
+      username: 'Người dùng',
+      avatar: 'https://www.bangkokfightlab.com/wp-content/uploads/2017/05/noavatar.png',
+    };
   },
 };
 const mutationTypes = {

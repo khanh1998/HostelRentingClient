@@ -32,7 +32,7 @@
       <v-divider />
       <v-slide-group v-if="bookings.length > 0" center-active show-arrows>
         <v-slide-item
-          v-for="booking in incommingBookings"
+          v-for="booking in bookings"
           :key="booking.bookingId"
           v-slot:default="{ active, toggle }"
         >
@@ -71,9 +71,20 @@
                 >
               </v-list-item-content>
               <v-list-item-action>
-                <v-btn icon @click="changeToString(booking.bookingId)">
+                <v-btn
+                  v-if="booking.status === 'INCOMING'"
+                  icon
+                  @click="changeToString(booking.bookingId)"
+                >
                   <v-icon> mdi-qrcode </v-icon>
                 </v-btn>
+                <v-btn
+                  v-if="booking.status === 'DONE'"
+                  icon
+                  :to="`/vendor/contract?bookingId=${booking.bookingId}`"
+                >
+                  <v-icon>far fa-handshake</v-icon></v-btn
+                >
               </v-list-item-action>
             </v-list-item>
             <div>

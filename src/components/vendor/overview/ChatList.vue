@@ -26,7 +26,8 @@
               @click="$emit('clickChat', getDocRef(item.id))"
             >
               <v-list-item-avatar>
-                <v-img :src="getUserById(item.renterId).avatar || '#'"></v-img>
+                <v-img :src="getUserById(item.renterId).avatar"></v-img>
+                <v-icon>face</v-icon>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>{{ getUserById(item.renterId).username }}</v-list-item-title>

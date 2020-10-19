@@ -41,6 +41,10 @@ const myGetters = {
     }
     return null;
   },
+  findRoomsById: (state) => (id) => {
+    const result = state.rooms.data.find((room) => room.roomId === id);
+    return result;
+  },
 };
 const mutationTypes = {
   GET_GROUPS_REQUEST: 'GET_GROUPS_REQUEST',

@@ -36,28 +36,92 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog
+        v-model="previewDialog.show"
+        fullscreen
+        hide-overlay
+        transition="dialog-bottom-transition"
+      >
+        <v-card :loading="contracts.isLoading">
+          <v-toolbar dark color="primary">
+            <v-btn icon dark @click="dialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-toolbar-title>Xem lại hợp đồng</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn dark text @click="activateContract">
+                Kích hoạt hợp đồng
+              </v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+          <pdf :src="previewDialog.pdf" />
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="contracts.isUpdating" hide-overlay persistent width="300">
+        <v-card color="primary" dark>
+          <v-card-text>
+            Đang kích hoạt hợp đồng
+            <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+      <v-snackbar
+        v-model="snackBarMixin.show"
+        :multi-line="snackBarMixin.multiLine"
+        :timeout="snackBarMixin.timeout"
+        :absolute="snackBarMixin.absolute"
+        :color="snackBarMixin.color"
+      >
+        {{ snackBarMixin.message }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </v-col>
   </div>
 </template>
 <script>
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader';
-import { mapActions, mapState } from 'vuex';
+import pdf from 'vue-pdf';
+import { mapActions, mapState, mapGetters } from 'vuex';
+import snackBarMixin from '../../components/mixins/snackBar';
 
 export default {
   name: 'QR-Reader',
-  components: { QrcodeStream, QrcodeDropZone, QrcodeCapture },
+  mixins: [snackBarMixin],
+  components: {
+    QrcodeStream,
+    QrcodeDropZone,
+    QrcodeCapture,
+    pdf,
+  },
   data: () => ({
     result: '',
     error: '',
     dialog: false,
     updating: false,
     noStreamApiSupport: false,
+    previewDialog: {
+      show: false,
+      pdf: null,
+      contractId: null,
+      contractSecret: null,
+    },
   }),
   methods: {
     ...mapActions({
       getUser: 'user/getUser',
       getBookings: 'user/getBookings',
       updateBookingStatus: 'user/updateBookingStatus',
+      getContracts: 'user/getContracts',
+      updateContract: 'user/updateContract',
+    }),
+    ...mapGetters({
+      findContractById: 'user/findContractById',
     }),
     onDecode(result) {
       this.result = result;
@@ -71,11 +135,37 @@ export default {
           });
           break;
         case 'contract':
-          console.log('contract', content);
+          this.showPreviewDialog(content);
           break;
         default:
           console.log('error');
       }
+    },
+    showPreviewDialog(content) {
+      const [contractId, contractSecret] = content.split(',');
+      this.previewDialog.show = true;
+      this.previewDialog.contractId = contractId;
+      this.previewDialog.contractSecret = contractSecret;
+      this.getContracts(); // get new created contract
+      // const createdContract = this.findContractById()(contractId);
+      this.previewDialog.pdf = 'https://cdn.mozilla.net/pdfjs/tracemonkey.pdf'; // createdContract.pdf;
+    },
+    activateContract() {
+      const payload = {
+        contractId: this.previewDialog.contractId.trim(),
+        qrCode: this.previewDialog.contractSecret.trim(),
+      };
+      this.updateContract(payload).then(() => {
+        this.previewDialog.show = false;
+        const { success, error } = this.contracts;
+        if (success) {
+          console.log(success);
+          this.showSnackBar('Kích hoạt hợp đồng thành công', { color: 'green' });
+        } else {
+          console.log(error);
+          this.showSnackBar(`Kích hoạt hợp đồng thất bại ${error.message}`, { color: 'red' });
+        }
+      });
     },
     async onInit(promise) {
       try {
@@ -98,13 +188,16 @@ export default {
     },
   },
   computed: {
-    ...mapState('user', ['bookings', 'user']),
+    ...mapState('user', ['bookings', 'user', 'contracts']),
     isLoading() {
       return this.bookings.isLoading || this.user.isLoading;
     },
   },
   created() {
-    this.getUser().then(() => this.getBookings());
+    this.getUser().then(() => {
+      this.getBookings();
+      this.getContracts();
+    });
   },
 };
 </script>

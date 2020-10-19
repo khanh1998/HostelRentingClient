@@ -3,7 +3,10 @@
     <span class="text-h6"><v-icon>room_service</v-icon> Dịch vụ</span>
     <v-data-table
       :headers="servicesBox.headers"
+      v-model="selects"
       :items="newServices"
+      item-key="serviceId"
+      show-select
       hide-default-footer
       dense
       locale="vi-VN"
@@ -35,13 +38,23 @@
         ></v-select>
       </template>
       <template v-slot:item.delete="{ item }">
-        <v-btn @click="removeService(item)" icon>
+        <v-btn v-if="!select" @click="removeService(item)" icon>
           <v-icon>clear</v-icon>
         </v-btn>
       </template>
     </v-data-table>
     <v-divider />
-    <v-card class="pa-1 mt-2">
+    <v-card v-if="select">
+      <v-card-subtitle v-if="selects.length === 0">
+        Chưa có dịch vụ nào được chọn
+      </v-card-subtitle>
+      <v-card-subtitle v-if="selects.length != 0">
+        <span class="font-weight-bold">Những dịch vụ được chọn:</span>
+        {{ selects.map((s) => s.serviceName).join(', ') }}
+      </v-card-subtitle>
+    </v-card>
+    <v-divider />
+    <v-card class="pa-1 mt-2" v-if="!select">
       <p class="text-h6 text-center pa-0 ma-2">Tạo mới dịch vụ</p>
       <div class="d-flex flex-column">
         <div class="d-flex flex-row flex-nowrap">
@@ -111,9 +124,10 @@ import snackBarMixin from '../../mixins/snackBar';
 
 export default {
   name: 'HostelGroupServiceEditor',
-  props: ['groupService', 'create', 'update'],
+  props: ['groupService', 'create', 'update', 'select'],
   mixins: [snackBarMixin],
   data: () => ({
+    selects: [],
     servicesBox: {
       headers: [
         {
@@ -125,7 +139,7 @@ export default {
         { text: 'Giá (Nghìn đồng)', value: 'price' },
         { text: 'Đơn vị', value: 'userUnit' },
         { text: 'Tần suất thanh toán', value: 'timeUnit' },
-        { text: 'Xoá', value: 'delete' },
+        { text: () => (this.select ? 'Chọn' : 'Xoá'), value: 'delete' },
       ],
       units: ['m³', 'kWh', 'người', 'phòng', 'xe'],
       times: ['tuần', 'tháng', 'năm'],
@@ -147,6 +161,8 @@ export default {
         price: service.price,
         timeUnit: service.timeUnit,
         userUnit: service.userUnit,
+        serviceId: service.serviceId,
+        select: false,
       }));
     },
     services() {
@@ -230,6 +246,9 @@ export default {
     if (this.update) {
       this.newServices = [...this.groupServiceDesserts];
     }
+    if (this.select) {
+      this.newServices = [...this.groupServiceDesserts];
+    }
   },
   watch: {
     newServices: {
@@ -237,6 +256,12 @@ export default {
         this.$emit('newValue', this.newServices);
       },
       deep: true,
+    },
+    selects: {
+      handler() {
+        const selectedServiceIds = this.selects.map((s) => ({ groupServiceId: s.serviceId }));
+        this.$emit('newSelects', selectedServiceIds);
+      },
     },
   },
 };

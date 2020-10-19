@@ -5,6 +5,7 @@ import QRGeneration from '../../components/vendor/overview/QRGeneration.vue';
 import VendorBooking from '../../views/vendor/Booking.vue';
 import VendorSchedule from '../../views/vendor/Schedule.vue';
 import VendorMobileMessage from '../../views/vendor/MessageMobile.vue';
+import CreateContract from '../../components/vendor/contract/contract.vue';
 
 const routes = [
   {
@@ -47,6 +48,12 @@ const routes = [
         name: 'VendorMobileMessage',
         component: VendorMobileMessage,
         meta: { requiresAuth: true, is_vendor: true, vi: 'Tin nhắn' },
+      },
+      {
+        path: 'contract',
+        name: 'contract',
+        component: CreateContract,
+        meta: { requiresAuth: true, is_vendor: true, vi: 'Hop Dong' },
       },
     ],
   },

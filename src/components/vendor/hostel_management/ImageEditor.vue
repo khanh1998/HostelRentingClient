@@ -9,7 +9,6 @@
           multiple
           lang="vi"
           accept="image/*"
-          class="d-none"
         />
         <div class="d-flex flex-wrap">
           <v-img
@@ -26,10 +25,13 @@
         </v-btn>
       </v-card>
     </v-dialog>
-    <span class="text-h6"><v-icon>insert_photo</v-icon>Hình ảnh</span>
+    <span class="text-h6" v-if="images && images.length > 0"
+      ><v-icon>insert_photo</v-icon>Hình ảnh</span
+    >
     <div
       style="height: 300px; overflow-y: auto;"
       class="d-flex flex-row flex-wrap align-center justify-center"
+      v-if="images && images.length > 0"
     >
       <div v-for="image in images" :key="image.imageId">
         <v-img
@@ -53,16 +55,18 @@
         </v-img>
       </div>
     </div>
-    <v-btn depressed to="/camera"> <v-icon>add_a_photo</v-icon>Chụp ảnh</v-btn>
     <v-btn class="ml-2" @click="openImageUploadDialog" depressed>
       <v-icon>add_photo_alternate</v-icon>Tải lên ảnh mới</v-btn
     >
   </div>
 </template>
 <script>
+import fileMixins from '../../mixins/file';
+
 export default {
   name: 'ImageEditor',
   props: ['images'],
+  mixins: [fileMixins],
   data: () => ({
     dialog: {
       show: false,
@@ -86,8 +90,9 @@ export default {
     uploadImages() {
       const fd = new FormData();
       Array.from(this.files).forEach((file) => {
-        fd.append('image', file, file.data);
+        fd.append('files', file, file.data);
       });
+      this.uploadFile(fd);
     },
   },
 };
