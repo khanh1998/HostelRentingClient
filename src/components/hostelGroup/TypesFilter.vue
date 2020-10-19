@@ -24,7 +24,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel>
-        <v-expansion-panel-header>Tiện ích</v-expansion-panel-header>
+        <v-expansion-panel-header>Tiện nghi</v-expansion-panel-header>
         <v-expansion-panel-content class="noPadding">
           <v-chip-group v-model="filterSelected.facilitiesIds" column multiple>
             <v-chip

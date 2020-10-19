@@ -4,8 +4,9 @@
     v-if="!isLoading"
     style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%;"
   >
-    <v-dialog v-model="dateTimePicker.isOpenPicker" width="350">
-      <v-card v-if="!userState.data" color="white" light>
+    <v-dialog v-model="dateTimePicker.isOpenPicker" width="400">
+      <LoginBox v-if="!userState.data" />
+      <!-- <v-card v-if="!userState.data" color="white" light>
         <v-card-title>Đăng nhập để đặt lịch xem phòng</v-card-title>
         <v-card-actions>
           <v-btn :to="registerRouteObject" dark class="green lighten-3">
@@ -16,13 +17,39 @@
             <v-icon>login</v-icon>Đăng nhập
           </v-btn>
         </v-card-actions>
-      </v-card>
+      </v-card> -->
       <dateTimePickerStepper
         v-if="userState.data"
         v-on:cancel="dateTimePicker.isOpenPicker = false"
         v-on:ok="receivedDateTime"
         :groupId="groupId"
       />
+    </v-dialog>
+    <v-dialog v-model="warningDialog" max-width="400">
+      <v-card>
+        <v-card-title class="d-flex flex-column justify-center px-8">
+          <v-icon large class="material-icons-outlined" color="#727cf5">report_problem</v-icon>
+          <span
+            class="text-gray font-nunito"
+            style="
+              font-size: 1.125rem !important;
+              text-align: center !important;
+              font-weight: 700 !important;
+            "
+            >Bạn đã có lịch hẹn xem loại phòng này!</span
+          >
+          <span
+            class="font-nunito"
+            style="
+              font-size: 0.9rem;
+              font-weight: 400;
+              text-align: center !important;
+              color: #ffbc00;
+            "
+            >{{ messageAction }}</span
+          >
+        </v-card-title>
+      </v-card>
     </v-dialog>
     <v-avatar height="70" width="70" color="#727cf5" @click="getGroup()" class="cursor">
       <v-img v-if="avatar" max-height="70" max-width="70" :src="avatar" />
@@ -31,12 +58,12 @@
     <span class="text-body-1 font-weight-bold text-center font-nunito mt-2" style="color: #222;">
       {{ name }}
     </span>
-    <div class="d-flex align-center font-nunito my-3">
+    <!-- <div class="d-flex align-center font-nunito my-3">
       <v-icon color="#ffbc00" class="mr-2" x-small>fas fa-star</v-icon>
       <p class="grey--text mb-0">{{ ` ${rating.average} / 5` }}</p>
       <p class="mb-0 ml-1">( {{ rating.total }} )</p>
-    </div>
-    <div class="d-flex mb-4">
+    </div> -->
+    <div class="d-flex mb-4 mt-3">
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -66,7 +93,7 @@
             class="mx-7 text-subtitle-2 white--text py-5 bg-primary"
             depressed
             tile
-            @click="dateTimePicker.isOpenPicker = true"
+            @click="clickBooking()"
             :disabled="hasPendingBooking || isVendor"
           >
             <v-icon left>event_available</v-icon>ĐẶT LỊCH XEM PHÒNG
@@ -95,22 +122,29 @@
     </div>
     <span class="font-nunito text-caption mt-4" style="text-align: end !important;"
       >TRẠNG THÁI:
-      <span class="text-subtitle-2" style="color: #1edb4c !important;"
-        >3 lịch hẹn / 2 phòng trống</span
-      ></span
-    >
+      <span class="text-subtitle-2" style="color: #1edb4c !important;" v-if="availableRoom !== 0">
+        {{ availableRoom }} phòng trống / {{ currentBooking }} lịch hẹn
+      </span>
+      <span class="text-subtitle-2" style="color: #1edb4c !important;" v-else>
+        Không còn phòng trống
+      </span>
+    </span>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
 import utils from '../../utils/firebaseNotification';
+import LoginBox from '../login/loginBox.vue';
 
 const { sendBookingNotification } = utils;
 
 export default {
   name: 'DateTimePickerBox',
-  components: { dateTimePickerStepper },
+  components: {
+    dateTimePickerStepper,
+    LoginBox,
+  },
   props: {
     name: String,
     avatar: String,
@@ -118,6 +152,8 @@ export default {
     groupId: Number,
     typeId: Number,
     vendorId: Number,
+    currentBooking: Number,
+    availableRoom: Number,
   },
   data: () => ({
     dateTimePicker: {
@@ -134,11 +170,14 @@ export default {
       color: 'red',
       bottom: true,
     },
+    warningDialog: false,
+    messageAction: '',
   }),
   methods: {
     ...mapActions({
       createBooking: 'user/createBooking',
       clearNewlyCreatedBooking: 'user/clearNewlyCreatedBooking',
+      getBookings: 'user/getBookings',
     }),
     showSnackbar(color, message) {
       this.snackbar.message = message;
@@ -148,11 +187,8 @@ export default {
     async sendBooking() {
       this.dialog.booking = false;
       this.showSnackbar('yellow', 'Booking của bạn đang được tạo');
-      console.log(this.dateTimePicker);
       const dateTime = this.dateTimePicker.date.split('/');
       const timeTime = this.dateTimePicker.time.split(':');
-      console.log(dateTime);
-      console.log(timeTime);
       const bookingObj = {
         renterId: this.userState.data.userId,
         vendorId: this.vendorId,
@@ -167,7 +203,6 @@ export default {
           timeTime[1],
         ).getTime(),
       };
-      console.log(bookingObj);
       await this.createBooking(bookingObj);
       const success = this.newlyCreated;
       if (success) {
@@ -190,6 +225,15 @@ export default {
     getGroup() {
       this.$router.push(`/group/${this.groupId}`);
     },
+    clickBooking() {
+      console.log(this.hasIncommingBooking);
+      if (this.hasIncommingBooking) {
+        this.messageAction = 'Để đặt lịch hẹn mới, vui lòng hủy lịch hẹn trước đó';
+        this.warningDialog = true;
+      } else {
+        this.dateTimePicker.isOpenPicker = true;
+      }
+    },
   },
   computed: {
     isLoading() {
@@ -200,8 +244,18 @@ export default {
     ...mapGetters({
       findPendingBooking: 'user/findPendingBooking',
     }),
+    hasIncommingBooking() {
+      return (
+        this.bookings.find((b) => b.type.typeId === this.typeId && b.status === 'INCOMING') &&
+        this.bookings.find((b) => b.type.typeId === this.typeId && b.status === 'INCOMING')
+          .length !== 0
+      );
+    },
     newlyCreated() {
       return this.$store.state.user.bookings.newlyCreated;
+    },
+    bookings() {
+      return this.$store.state.user.bookings.data;
     },
     hasPendingBooking() {
       if (this.userState.data) {
@@ -233,6 +287,11 @@ export default {
         },
       };
     },
+  },
+  created() {
+    if (this.userState.data) {
+      this.getBookings();
+    }
   },
 };
 </script>

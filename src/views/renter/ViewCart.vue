@@ -111,7 +111,7 @@
           <v-row>
             <div
               v-for="booking in bookings.result"
-              v-bind:key="booking.resultbookingId"
+              v-bind:key="booking.bookingId"
               style="width: 100%;"
             >
               <bookingItem :booking="booking" />

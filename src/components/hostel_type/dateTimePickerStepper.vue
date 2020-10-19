@@ -297,7 +297,6 @@ export default {
         );
         let freeTimes = freeDay[0].timeRange;
         if (i === 0) {
-          console.log(freeDay);
           // i == 0 to confirm filter first day only (first day == today)
           const today = new Date();
           const freeTime = new Date();
@@ -310,14 +309,16 @@ export default {
             return freeTime.getTime() > today.getTime();
           });
         }
-        const day = {
-          scheduleId: freeDay[0].scheduleId,
-          date: sevenDates[i].date,
-          formatDay: sevenDates[i].formatDay,
-          dayOfWeek: freeDay[0].dayOfWeek,
-          freeTimes,
-        };
-        schedules.push(day);
+        if (freeTimes.length !== 0) {
+          const day = {
+            scheduleId: freeDay[0].scheduleId,
+            date: sevenDates[i].date,
+            formatDay: sevenDates[i].formatDay,
+            dayOfWeek: freeDay[0].dayOfWeek,
+            freeTimes,
+          };
+          schedules.push(day);
+        }
       }
       this.schedules = schedules;
     },
