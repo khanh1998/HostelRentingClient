@@ -4,6 +4,7 @@ import HostelGroup from '../../views/renter/HostelGroup.vue';
 import Home from '../../views/renter/Home.vue';
 import User from '../../views/renter/User.vue';
 import ViewCart from '../../views/renter/ViewCart.vue';
+import ViewContracts from '../../views/renter/ViewContracts.vue';
 import Appointment from '../../views/renter/Appointment.vue';
 import QrReader from '../../views/renter/QrReader.vue';
 import FilterResult from '../../views/renter/FilterResult.vue';
@@ -44,6 +45,12 @@ const routes = [
         path: 'cart',
         name: 'ViewCard',
         component: ViewCart,
+        meta: { requiresAuth: true, is_renter: true },
+      },
+      {
+        path: 'contract',
+        name: 'ViewContracts',
+        component: ViewContracts,
         meta: { requiresAuth: true, is_renter: true },
       },
       {
