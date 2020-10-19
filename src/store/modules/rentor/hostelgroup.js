@@ -107,6 +107,19 @@ const mutations = {
   SET_FILTER_VALUES: (state, filterValues) => {
     state.filter = filterValues;
   },
+
+  CREATE_HOSTEL_GROUP_REQUEST: (state) => {
+    state.hostelGroup.isCreating = true;
+  },
+  CREATE_HOSTEL_GROUP_SUCCESS: (state, createdNewGroup) => {
+    state.hostelGroup.isCreating = false;
+    state.hostelGroup.data.unshift(createdNewGroup);
+    state.hostelGroup.success = true;
+  },
+  CREATE_HOSTEL_GROUP_FAILURE: (state, error) => {
+    state.hostelGroup.isCreating = false;
+    state.hostelGroup.error = error;
+  },
 };
 
 const actions = {

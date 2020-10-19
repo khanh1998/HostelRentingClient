@@ -4,6 +4,7 @@ const myState = () => ({
     isLoading: false,
     success: null,
     error: null,
+    isCreating: false,
   },
   types: {
     data: [],
@@ -45,12 +46,19 @@ const mutationTypes = {
   GET_GROUPS_REQUEST: 'GET_GROUPS_REQUEST',
   GET_GROUPS_SUCCESS: 'GET_GROUPS_SUCCESS',
   GET_GROUPS_FAILURE: 'GET_GROUPS_FAILURE',
+
+  CREATE_HOSTEL_GROUP_REQUEST: 'CREATE_HOSTEL_GROUP_REQUEST',
+  CREATE_HOSTEL_GROUP_SUCCESS: 'CREATE_HOSTEL_GROUP_SUCCESS',
+  CREATE_HOSTEL_GROUP_FAILURE: 'CREATE_HOSTEL_GROUP_FAILURE',
+
   GET_TYPES_REQUEST: 'GET_TYPES_REQUEST',
   GET_TYPES_SUCCESS: 'GET_TYPES_SUCCESS',
   GET_TYPES_FAILURE: 'GET_TYPES_FAILURE',
+
   GET_ROOMS_REQUEST: 'GET_ROOMS_REQUEST',
   GET_ROOMS_SUCCESS: 'GET_ROOMS_SUCCESS',
   GET_ROOMS_FAILURE: 'GET_ROOMS_FAILURE',
+
   GET_GROUP_SCHEDULES_REQUEST: 'GET_GROUP_SCHEDULES_REQUEST',
   GET_GROUP_SCHEDULES_SUCCESS: 'GET_GROUP_SCHEDULES_SUCCESS',
   GET_GROUP_SCHEDULES_FAILURE: 'GET_GROUP_SCHEDULES_FAILURE',
@@ -107,6 +115,21 @@ const mutations = {
     state.schedules.isLoading = false;
     state.schedules.error = error;
     state.schedules.success = false;
+  },
+
+  CREATE_HOSTEL_GROUP_REQUEST: (state) => {
+    state.groups.isCreating = true;
+    state.groups.success = false;
+    state.groups.error = null;
+  },
+  CREATE_HOSTEL_GROUP_SUCCESS: (state, createdNewGroup) => {
+    state.groups.isCreating = false;
+    state.groups.data.unshift(createdNewGroup);
+    state.groups.success = true;
+  },
+  CREATE_HOSTEL_GROUP_FAILURE: (state, error) => {
+    state.groups.isCreating = false;
+    state.groups.error = error;
   },
 };
 
@@ -193,6 +216,17 @@ const actions = {
       } catch (error) {
         commit(mutationTypes.GET_GROUP_SCHEDULES_FAILURE, error);
       }
+    }
+  },
+  async createHostelGroup({ commit }, newGroup) {
+    try {
+      commit(mutationTypes.CREATE_HOSTEL_GROUP_REQUEST);
+      const res = await window.axios.post('/api/v1/groups', [newGroup]);
+      if (res.status === 201) {
+        commit(mutationTypes.CREATE_HOSTEL_GROUP_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.CREATE_HOSTEL_GROUP_FAILURE, error);
     }
   },
 };

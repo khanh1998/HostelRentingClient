@@ -42,10 +42,11 @@
       </div>
       <div class="d-flex flex-row flex-wrap">
         <v-switch
-          v-for="rule in rules.data"
+          v-for="(rule, index) in rules.data"
           :key="rule.regulationId"
           :label="rule.regulationName"
           color="red"
+          v-model="activeRules[index]"
           inset
           hide-details
         ></v-switch>
@@ -60,14 +61,26 @@ export default {
   name: 'HostelGroupRules',
   data: () => ({
     picker: {
-      startTime: '00:00',
-      endTime: '23:59',
+      startTime: '',
+      endTime: '',
       openAllDay: true,
     },
     activeRules: [],
   }),
   computed: {
     ...mapState('renter/common', ['rules']),
+    listOfActiveRules() {
+      return this.activeRules.map((item, index) => {
+        const { regulationName, regulationId } = this.rules.data[index];
+        const obj = {
+          regulationId,
+          regulationName,
+          allowed: item,
+          active: true,
+        };
+        return obj;
+      });
+    },
   },
   methods: {
     ...mapActions({
@@ -76,8 +89,24 @@ export default {
   },
   created() {
     if (this.rules.data.length === 0) {
-      this.getAllRules();
+      this.getAllRules().then(() => {
+        this.activeRules = Array(this.rules.data.length).fill(false);
+      });
     }
+  },
+  watch: {
+    activeRules: {
+      handler() {
+        this.$emit('newValue', { rules: this.listOfActiveRules, time: this.picker });
+      },
+      deep: true,
+    },
+    picker: {
+      handler() {
+        this.$emit('newValue', { rules: this.listOfActiveRules, time: this.picker });
+      },
+      deep: true,
+    },
   },
 };
 </script>

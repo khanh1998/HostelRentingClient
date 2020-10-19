@@ -55,7 +55,12 @@
           v-if="groupId"
         />
       </div>
-      <HostelGroupCreator :show="showGroupCreator" @close="showGroupCreator = false" />
+      <HostelGroupCreator
+        :show="showGroupCreator"
+        @close="showGroupCreator = false"
+        :create="true"
+        :update="false"
+      />
     </v-card>
   </div>
 </template>
