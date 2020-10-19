@@ -196,12 +196,12 @@
                 <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
               </v-list-item>
               <v-list-item
-                to="/cart"
+                to="/contract"
                 _class="hidden-md-and-up"
                 v-if="user.role.roleName === 'Người thuê'"
               >
                 <v-list-item-icon>
-                  <v-icon color="#727cf5">mdi-account-clock-outline</v-icon>
+                  <v-icon color="#727cf5">mdi-file-document-edit</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Hợp đồng</v-list-item-title>
               </v-list-item>
