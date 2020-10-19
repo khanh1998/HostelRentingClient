@@ -7,11 +7,11 @@
     <v-container v-if="!isLoading">
       <v-row justify="center" class="py-10">
         <v-col cols="11" sm="11" md="11" lg="11" xl="10">
-          <v-row class="d-flex">
-            <v-col cols="3" class="d-flex align-center">
+          <v-row class="d-flex px-4">
+            <v-col cols="3" class="d-flex align-center pl-0">
               <span class="font-nunito text-gray size-sub-2">Chủ trọ</span>
             </v-col>
-            <v-col cols="3" class="d-flex align-center">
+            <v-col cols="3" class="d-flex align-center pl-0">
               <span class="font-nunito text-gray size-sub-2">Nhà trọ</span>
             </v-col>
             <v-col cols="1" class="d-flex justify-center align-center">
