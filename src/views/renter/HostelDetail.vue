@@ -8,7 +8,7 @@
       <v-container v-if="!isLoading">
         <v-dialog width="400" v-model="chatBox.show">
           <chatBox v-if="renter" v-on:close="chatBox.show = false" :info="info" :group="group" />
-          <v-card v-if="!renter">
+          <!-- <v-card v-if="!renter">
             <v-card-title>Đăng nhập để nhắn tin</v-card-title>
             <v-card-actions>
               <v-btn :to="registerRouteObject" dark class="green lighten-3">
@@ -19,7 +19,8 @@
                 <v-icon>login</v-icon>Đăng nhập
               </v-btn>
             </v-card-actions>
-          </v-card>
+          </v-card> -->
+          <LoginBox v-if="!renter" />
         </v-dialog>
         <v-row>
           <v-col
@@ -35,7 +36,8 @@
               {{ info.title }}
             </h2>
             <span class="text-muted font-nunito" style="font-size: 0.9rem;">
-              {{ group.address.streetName }}, {{ group.address.districtName }},
+              {{ group.address.streetName }}, {{ group.address.wardName }},
+              {{ group.address.districtName }},
               {{ group.address.provinceName }}
             </span>
             <div style="width: 100%;" class="d-flex flex-wrap mt-3 justify-space-between">
@@ -128,21 +130,24 @@
                     <span class="text-uppercase font-nunito text-caption font-weight-medium"
                       >Cọc thế chân</span
                     >
-                    <span class="font-nunito text-caption">{{ info.deposit }} tháng</span>
+                    <span class="font-nunito text-caption">{{ info.deposit }} tháng tiền thuê</span>
                   </v-col>
                   <v-col cols="5" class="d-flex flex-column">
                     <span class="text-uppercase font-nunito text-caption font-weight-medium"
                       >Cọc giữ chỗ</span
                     >
-                    <span class="font-nunito text-caption">{{ group.downPayment }} triệu</span>
+                    <span class="font-nunito text-caption" v-if="group.downPayment !== 0">{{
+                      getDownPayment(group.downPayment, info.priceUnit)
+                    }}</span>
+                    <span class="font-nunito text-caption" v-else>Không cần</span>
                   </v-col>
                 </div>
               </v-col>
             </v-row>
           </v-col>
         </v-row>
-        <v-row class="justify-center">
-          <v-col cols="12" sm="12" md="8" lg="8" class="pt-0">
+        <v-row class="justify-center py-0">
+          <v-col cols="12" sm="12" md="8" lg="8" class="py-0">
             <v-carousel
               cycle
               height="400"
@@ -152,15 +157,36 @@
               v-if="images.length !== 0"
             >
               <v-carousel-item v-for="(image, i) in images" :key="i" :src="images[i]">
-                <div class="category">
-                  <!-- eslint-disable max-len -->
-                  <span class="font-weight-bold text-body-1 yellow--text">
-                    {{ info.category.categoryName }}
-                  </span>
-                  <br />
-                  <span class="text-caption">{{ info.view }} lượt xem</span>
-                </div>
               </v-carousel-item>
+              <div class="category">
+                <span class="font-weight-bold text-body-1 yellow--text">
+                  {{ info.category.categoryName }}
+                </span>
+                <br />
+                <span class="text-caption">{{ info.view }} lượt xem</span>
+              </div>
+              <div
+                class="arrow-price d-flex flex-column"
+                v-if="
+                  searchValue &&
+                  (schoolSelected || hometownSelected) &&
+                  schoolMate !== 0 &&
+                  compatriot !== 0
+                "
+              >
+                <span class="text-caption" v-if="schoolSelected">
+                  <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
+                  <span class="text-caption"
+                    >{{ schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                  >
+                </span>
+                <span class="text-caption" v-if="hometownSelected">
+                  <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
+                  <span class="text-caption"
+                    >{{ compatriot }} người quê {{ hometownSelected.provinceName }}</span
+                  >
+                </span>
+              </div>
             </v-carousel>
             <v-img
               src="@/assets/error-no-image.png"
@@ -170,7 +196,6 @@
               style="box-shadow: 0 0 35px 0 rgba(255, 22, 22, 0.15) !important;"
             >
               <div class="category">
-                <!-- eslint-disable max-len -->
                 <span class="font-weight-bold text-body-1 yellow--text">
                   {{ info.category.categoryName }}
                 </span>
@@ -179,7 +204,7 @@
               </div>
             </v-img>
           </v-col>
-          <v-col cols="12" sm="12" md="4" lg="4" class="d-flex pt-0">
+          <v-col cols="12" sm="12" md="4" lg="4" class="d-flex py-0">
             <v-row class="d-flex justify-end py-0" style="min-height: 350px !important;">
               <v-col cols="12" sm="12" md="11" class="py-0">
                 <dateTimePickerBox
@@ -189,16 +214,23 @@
                   :groupId="group.groupId"
                   :typeId="info.typeId"
                   :vendorId="group.vendorId"
+                  :currentBooking="info.currentBooking"
+                  :availableRoom="info.availableRoom"
                   v-on:openMessage="chatBox.show = true"
                 />
               </v-col>
             </v-row>
           </v-col>
         </v-row>
+        <!-- <v-row>
+          <v-col cols="12" sm="12" md="8" lg="8" class="pt-0 d-flex flex-column">
+            <div>thuy</div>
+          </v-col>
+        </v-row> -->
         <v-row class="mt-3">
           <v-col cols="12" md="4" v-if="info.facilities.length !== 0">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
-              >TIỆN ÍCH</span
+              >TIỆN NGHI</span
             >
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '30%' }"></div>
@@ -235,40 +267,40 @@
             <treeView :utitlities="utilities" />
           </v-col>
         </v-row>
-        <v-row v-if="!isLoadingProvinces" class="mt-5">
+        <v-row class="mt-5" v-if="statistic">
           <v-col cols="12" md="8">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
-              >GIÁ TRUNG BÌNH</span
+              >GIÁ TRUNG BÌNH MỘT PHÒNG TRỌ</span
             >
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '15%' }" />
               <div class="line-before" :style="{ width: '85%' }" />
             </div>
             <v-row class="d-flex flex-wrap mx-0 font-nunito text-subtitle-2">
-              <v-col cols="12" md="6" class="pl-0">
-                <div class="average-item d-flex align-center">
-                  <v-col cols="7" class="d-flex average-infor">{{ district.districtName }}</v-col>
-                  <span class="font-weight-bold mx-auto"
-                    >{{ wardAverage.price }} triệu / tháng</span
-                  >
-                </div>
-              </v-col>
-              <v-col cols="12" md="6" class="pl-0">
-                <div class="average-item d-flex align-center">
-                  <v-col cols="7" class="d-flex average-infor">{{ ward.wardName }}</v-col>
-                  <span class="font-weight-bold mx-auto"
-                    >{{ districtAverage.price }} triệu / tháng</span
-                  >
-                </div>
-              </v-col>
-              <v-col cols="12" md="6" class="pl-0">
+              <v-col cols="12" md="6" class="pl-0" v-if="districtStat">
                 <div class="average-item d-flex align-center">
                   <v-col cols="7" class="d-flex average-infor">
-                    {{ group.address.streetName }}
+                    {{ districtStat.districtName }}
                   </v-col>
                   <span class="font-weight-bold mx-auto"
-                    >{{ streetAverage.price }} triệu / tháng</span
+                    >{{ districtStat.avgPrice }} triệu/tháng</span
                   >
+                </div>
+              </v-col>
+              <v-col cols="12" md="6" class="pl-0" v-if="wardStat">
+                <div class="average-item d-flex align-center">
+                  <v-col cols="7" class="d-flex average-infor">{{ wardStat.wardName }}</v-col>
+                  <span class="font-weight-bold mx-auto">{{ wardStat.avgPrice }} triệu/tháng</span>
+                </div>
+              </v-col>
+              <v-col cols="12" md="6" class="pl-0" v-if="streetStat">
+                <div class="average-item d-flex align-center">
+                  <v-col cols="7" class="d-flex average-infor">
+                    {{ streetStat.streetName }}
+                  </v-col>
+                  <span class="font-weight-bold mx-auto">
+                    {{ streetStat.avgPrice }} triệu/tháng
+                  </span>
                 </div>
               </v-col>
               <v-col cols="6" class="pl-0">
@@ -276,7 +308,7 @@
                   class="align-center font-weight-medium text-primary-hover"
                   text
                   height="100%"
-                  :to="`/discovery/${this.district.districtId}`"
+                  :to="`/discovery/${this.group.address.districtId}`"
                 >
                   Xem thêm
                   <v-icon>double_arrow</v-icon>
@@ -285,7 +317,7 @@
             </v-row>
           </v-col>
         </v-row>
-        <v-row class="mt-10">
+        <!-- <v-row class="mt-10">
           <v-col cols="12" md="8">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
               >ĐÁNH GIÁ PHÒNG TRỌ</span
@@ -296,8 +328,8 @@
             </div>
             <ratingBox class="mt-5" :rating="{ average: 3.5, total: 30 }" />
           </v-col>
-        </v-row>
-        <v-row class="mt-10">
+        </v-row> -->
+        <!-- <v-row class="mt-10">
           <v-col cols="12" md="8">
             <div class="d-flex">
               <span
@@ -313,7 +345,6 @@
                 _:to="`/discovery/${this.district.districtId}`"
               >
                 Xem thêm
-                <!-- <v-icon>double_arrow</v-icon> -->
               </v-btn>
             </div>
             <div class="d-flex mt-3" :style="{ width: '100%' }">
@@ -341,7 +372,6 @@
                 _:to="`/discovery/${this.district.districtId}`"
               >
                 Xem thêm
-                <!-- <v-icon>double_arrow</v-icon> -->
               </v-btn>
             </div>
             <div class="d-flex mt-3" :style="{ width: '100%' }">
@@ -350,7 +380,7 @@
             </div>
             <GroupHostelTypes :list="types" class="mt-5" />
           </v-col>
-        </v-row>
+        </v-row> -->
       </v-container>
     </v-col>
   </v-row>
@@ -364,12 +394,13 @@ import { mapActions, mapGetters } from 'vuex';
 import facilitiesBox from '../../components/hostel_type/facilitiesBox.vue';
 import servicesBox from '../../components/hostel_type/servicesBox.vue';
 import regulationsBox from '../../components/hostel_type/regulationsBox.vue';
-import ratingBox from '../../components/hostel_type/ratingBox.vue';
-import SuggestionList from '../../components/hostel_type/SuggestionList.vue';
-import GroupHostelTypes from '../../components/hostel_type/GroupHostelTypes.vue';
+// import ratingBox from '../../components/hostel_type/ratingBox.vue';
+// import SuggestionList from '../../components/hostel_type/SuggestionList.vue';
+// import GroupHostelTypes from '../../components/hostel_type/GroupHostelTypes.vue';
+import LoginBox from '../../components/login/loginBox.vue';
 
 export default {
-  name: ' ',
+  name: 'HostelDetail',
   components: {
     dateTimePickerBox,
     servicesBox,
@@ -377,9 +408,10 @@ export default {
     chatBox,
     facilitiesBox,
     regulationsBox,
-    ratingBox,
-    SuggestionList,
-    GroupHostelTypes,
+    // ratingBox,
+    // SuggestionList,
+    // GroupHostelTypes,
+    LoginBox,
   },
   data: () => ({
     chatBox: {
@@ -390,7 +422,7 @@ export default {
     ...mapActions({
       getTypeAndGroup: 'renter/hostelType/getTypeAndGroup',
       getProvinces: 'renter/common/getProvinces',
-      getStreetStats: 'renter/discovery/getStreetStats',
+      getDistrictStatistic: 'renter/discovery/getDistrictStatistic',
       getAllHostelTypes: 'renter/hostelGroup/getAllHostelTypes',
       getHostelGroup: 'renter/hostelGroup/getHostelGroup',
       getUtilities: 'renter/hostelGroup/getNearByUtilities',
@@ -402,6 +434,15 @@ export default {
         latitude: this.group.latitude,
       });
     },
+    getDownPayment(downPayment, priceUnit) {
+      if (priceUnit === 'triệu') {
+        if (downPayment < 1) {
+          return `${downPayment * 1000} nghìn`;
+        }
+        return `${downPayment} triệu`;
+      }
+      return `${downPayment} triệu`;
+    },
   },
   computed: {
     ...mapGetters({
@@ -409,38 +450,6 @@ export default {
     }),
     typeId() {
       return this.$route.params.typeId;
-    },
-    ward() {
-      const res = this.$store.getters['renter/common/getWardByStreetId'](
-        this.group.address.streetId,
-      );
-      return res;
-    },
-    district() {
-      const { wardId } = this.ward;
-      return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
-    },
-    allStreetIds() {
-      const { wards } = this.district;
-      const streets = wards.map((ward) => ward.streets);
-      const streetIds = streets.flat().map((street) => street.streetId);
-      return streetIds;
-    },
-    districtAverage() {
-      return this.getAverage(this.allStreetIds);
-    },
-    wardAverage() {
-      const { streets } = this.ward;
-      const streetIds = streets.map((street) => street.streetId);
-      return this.getAverage(streetIds);
-    },
-    streetAverage() {
-      const { streetId } = this.group;
-      return this.getAverage([streetId]);
-    },
-    province() {
-      const { districtId } = this.district;
-      return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
     },
     images: {
       get() {
@@ -458,11 +467,12 @@ export default {
     isLoading() {
       const type = this.$store.state.renter.hostelType.hostelType.isLoading;
       const group = this.$store.state.renter.hostelType.hostelGroup.isLoading;
-      const street = this.$store.state.renter.discovery.stats.streets.isLoading;
-      const utilities = this.$store.state.renter.discovery.stats.streets.isLoading;
+      const utilities = this.$store.state.renter.hostelGroup.utilities.isLoading;
       const suggestionList = this.$store.state.renter.hostelGroup.utilities.isLoading;
       const types = this.$store.state.renter.hostelGroup.hostelTypes.isLoading;
-      return type || group || street || suggestionList || utilities || types;
+      const statistic = this.$store.state.renter.discovery.stats.district.isLoading;
+      // const loadingBookings = this.$store.state.user.bookings.isLoading;
+      return type || group || statistic || suggestionList || utilities || types;
     },
     isLoadingProvinces() {
       return this.$store.state.renter.common.provinces.isLoading;
@@ -510,13 +520,62 @@ export default {
     types() {
       return this.$store.state.renter.hostelGroup.hostelTypes.data;
     },
+    statistic() {
+      return this.$store.state.renter.discovery.stats.district.data;
+    },
+    proviceStat() {
+      return this.statistic.provinces.filter(
+        (p) => p.provinceId === this.group.address.provinceId,
+      )[0];
+    },
+    districtStat() {
+      return this.proviceStat.districts.filter(
+        (d) => d.districtId === this.group.address.districtId,
+      )[0];
+    },
+    wardStat() {
+      return this.districtStat.wards.filter((w) => w.wardId === this.group.address.wardId)[0];
+    },
+    streetStat() {
+      return this.wardStat.streets.filter((s) => s.streetId === this.group.address.streetId)[0];
+    },
+    searchValue() {
+      return window.$cookies.get('searchValue');
+    },
+    school() {
+      return this.$store.state.renter.filterResult.filter.schools;
+    },
+    schoolSelected() {
+      if (this.searchValue && this.searchValue.includes('schoolId')) {
+        const schoolIdSelected = Number(this.searchValue.split('&schoolId=')[1].split('&')[0]);
+        return this.school.items.find((i) => i.schoolId === schoolIdSelected);
+      }
+      return null;
+    },
+    schoolMate() {
+      return window.$cookies.get('schoolMate');
+    },
+    hometown() {
+      console.log(this.$store.state.renter.filterResult.filter.hometown);
+      return this.$store.state.renter.filterResult.filter.hometown;
+    },
+    hometownSelected() {
+      if (this.searchValue && this.searchValue.includes('provinceId')) {
+        const hometownIdSelectd = Number(this.searchValue.split('&provinceId=')[1].split('&')[0]);
+        return this.hometown.items.find((p) => p.provinceId === hometownIdSelectd);
+      }
+      return null;
+    },
+    compatriot() {
+      return window.$cookies.get('compatriot');
+    },
   },
   created() {
     // if home.js store is empty then start to call api
     this.getTypeAndGroup(this.typeId)
       .then(() => this.getNearByUtilities())
-      .then(() => this.getAllHostelTypes(this.group.groupId));
-    this.getProvinces().then(() => this.getStreetStats(this.allStreetIds));
+      .then(() => this.getAllHostelTypes(this.group.groupId))
+      .then(() => this.getDistrictStatistic(this.group.address.districtId));
   },
 };
 </script>

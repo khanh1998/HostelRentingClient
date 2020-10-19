@@ -14,7 +14,7 @@ const myState = {
       address: '',
     },
     distance: {
-      select: '5km',
+      select: '3km',
       items: ['3km', '5km', '7km', '10km'],
     },
     around: {
@@ -64,15 +64,18 @@ const myState = {
   },
   results: {
     data: {
-      types: [],
-      groups: [],
+      types: null,
+      groups: null,
+      totalType: Number,
     },
+    page: 1,
     isLoading: false,
   },
 };
 const mutationTypes = {
   SET_FILTER_VALUES: 'SET_FILTER_VALUES',
   SET_SEARCH_VALUE: 'SET_SEARCH_VALUE',
+  SET_PAGE: 'SET_PAGE',
   GET_FILTER_RESULT_REQUEST: 'GET_FILTER_RESULT_REQUEST',
   GET_FILTER_RESULT_SUCCESS: 'GET_FILTER_RESULT_SUCCESS',
   GET_FILTER_RESULT_FAILURE: 'GET_FILTER_RESULT_FAILURE',
@@ -80,6 +83,7 @@ const mutationTypes = {
   GET_CATEGORIES_SUCCESS: 'GET_CATEGORIES_SUCCESS',
   GET_CATEGORIES_FAILURE: 'GET_CATEGORIES_FAILURE',
   GET_CATEGORIES_REQUEST: 'GET_CATEGORIES_REQUEST',
+  SET_CATEGORIES_SELECT: 'SET_CATEGORIES_SELECT',
   // facilities
   GET_FACILITIES_SUCCESS: 'GET_FACILITIES_SUCCESS',
   GET_FACILITIES_FAILURE: 'GET_FACILITIES_FAILURE',
@@ -101,6 +105,9 @@ const mutations = {
   SET_FILTER_VALUES: (state, filterValues) => {
     state.filter = filterValues;
   },
+  SET_PAGE: (state, page) => {
+    state.results.page = page;
+  },
   SET_SEARCH_VALUE: (state, searchValue) => {
     state.search.value = searchValue;
   },
@@ -117,6 +124,7 @@ const mutations = {
   // categories
   GET_CATEGORIES_SUCCESS(state, inputData) {
     state.filter.categories.data = inputData;
+    state.filter.categories.select = inputData.filter((c) => c.displayOrder === 1)[0].categoryId;
     state.filter.categories.isLoading = false;
   },
   GET_CATEGORIES_FAILURE(state) {
@@ -190,6 +198,9 @@ const actions = {
   setFilterValue({ commit }, filterValues) {
     commit(mutationTypes.SET_FILTER_VALUES, filterValues);
   },
+  setPageValue({ commit }, page) {
+    commit(mutationTypes.SET_PAGE, page);
+  },
   setSearchValue({ commit }, searchValue) {
     commit(mutationTypes.SET_SEARCH_VALUE, searchValue);
   },
@@ -225,22 +236,13 @@ const actions = {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
     }
   },
-  async searchByAddress({ commit, state }) {
-    commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
-    const url = `/api/v1/types?address=${state.search.value}`;
-    const res = await window.axios.get(url);
-    if (res.status >= 200 && res.status <= 299) {
-      commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
-    } else {
-      commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
-    }
-  },
   async searchByCoordinator({ commit }, params) {
     // params = {lat, long}
     try {
-      commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
       const url = `/api/v1/types?asc=false&distance=5&latitude=${params.lat}&longitude=${params.long}&page=1&size=5&sortBy=score`;
+      window.$cookies.set('searchValue', url);
       const res = await window.axios.get(url);
+      commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
       }
@@ -248,50 +250,58 @@ const actions = {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
     }
   },
-  // toDo: category
   async filterSearchByCoordinatorResult({ commit }, params) {
     // params = {lat, long, filterProperties}
+
     try {
-      // coordinator
-      let coordinatorStr = '';
-      if (params.filterProperties.coordinator !== '') {
-        coordinatorStr = `&latitude=${params.filterProperties.coordinator.latitude}&longitude=${params.filterProperties.coordinator.longitude}`;
+      commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
+      let url = '';
+      if (params.paramsStr) {
+        url = params.paramsStr;
+      } else {
+        // coordinator
+        let coordinatorStr = '';
+        if (params.filterProperties.coordinator !== '') {
+          coordinatorStr = `&latitude=${params.filterProperties.coordinator.latitude}&longitude=${params.filterProperties.coordinator.longitude}`;
+        }
+        // distance
+        let distanceStr = '';
+        const distance = params.filterProperties.distance.select.split('km')[0];
+        distanceStr = `&distance=${distance}`;
+        let facilitiesStr = '';
+        params.filterProperties.facility.selects.forEach((element) => {
+          facilitiesStr += `&facilityIds=${element}`;
+        });
+        // school
+        let schoolStr = '';
+        if (params.filterProperties.schools.select) {
+          schoolStr = `&schoolId=${params.filterProperties.schools.select}`;
+        }
+        // hometown
+        let hometownStr = '';
+        if (params.filterProperties.hometown.select) {
+          hometownStr = `&provinceId=${params.filterProperties.hometown.select}`;
+        }
+        // price
+        let priceStr = '';
+        if (params.filterProperties.price.disable) {
+          priceStr = `&maxPrice=${params.filterProperties.price.range[1]}&minPrice=${params.filterProperties.price.range[0]}`;
+        }
+        // category
+        let categoryStr = '';
+        if (params.filterProperties.categories.select) {
+          categoryStr = `&categoryId=${params.filterProperties.categories.select}`;
+        }
+        // min area
+        let minSuperficialityStr = '';
+        if (params.filterProperties.minArea.select !== '') {
+          const minSuperficiality = params.filterProperties.minArea.select.split(' ')[0];
+          minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
+        }
+        url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=${params.page}&size=${params.size}&sortBy=score`;
       }
-      // distance
-      let distanceStr = '';
-      const distance = params.filterProperties.distance.select.split('km')[0];
-      distanceStr = `&distance=${distance}`;
-      let facilitiesStr = '';
-      params.filterProperties.facility.selects.forEach((element) => {
-        facilitiesStr += `&facilityIds=${element}`;
-      });
-      // school
-      let schoolStr = '';
-      if (params.filterProperties.schools.select) {
-        schoolStr = `&schoolId=${params.filterProperties.schools.select}`;
-      }
-      // hometown
-      let hometownStr = '';
-      if (params.filterProperties.hometown.select) {
-        hometownStr = `&provinceId=${params.filterProperties.hometown.select}`;
-      }
-      // price
-      let priceStr = '';
-      if (params.filterProperties.price.disable) {
-        priceStr = `&maxPrice=${params.filterProperties.price.range[1]}&minPrice=${params.filterProperties.price.range[0]}`;
-      }
-      // category
-      let categoryStr = '';
-      if (params.filterProperties.categories.select) {
-        categoryStr = `&categoryId=${params.filterProperties.categories.select}`;
-      }
-      // min area
-      let minSuperficialityStr = '';
-      if (params.filterProperties.minArea.select !== '') {
-        const minSuperficiality = params.filterProperties.minArea.select.split(' ')[0];
-        minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
-      }
-      const url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=1&size=5&sortBy=score`;
+      window.$cookies.set('searchValue', url);
+
       const res = await window.axios.get(url);
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);

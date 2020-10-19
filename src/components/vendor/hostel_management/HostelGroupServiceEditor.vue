@@ -264,5 +264,13 @@ export default {
       },
     },
   },
+  watch: {
+    newServices: {
+      handler() {
+        this.$emit('newValue', this.newServices);
+      },
+      deep: true,
+    },
+  },
 };
 </script>

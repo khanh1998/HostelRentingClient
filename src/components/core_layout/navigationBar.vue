@@ -117,8 +117,10 @@
                   item
                   v-if="isLoggedIn && !isLoadingUser"
                 >
-                  <!-- <v-img :src="user.avatar" :alt="user.username"></v-img> -->
-                  <span class="text-overline white--text">{{ getAvatarTitle(user.username) }}</span>
+                  <v-img v-if="user.avatar" :src="user.avatar" :alt="user.username"></v-img>
+                  <span v-else class="text-overline white--text">{{
+                    getAvatarTitle(user.username)
+                  }}</span>
                 </v-avatar>
                 <v-avatar size="35px" item v-if="!isLoggedIn" min-width="30" min-height="30">
                   <v-icon>face</v-icon>
@@ -192,6 +194,16 @@
                   <v-icon color="#727cf5">mdi-account-clock-outline</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                to="/contract"
+                _class="hidden-md-and-up"
+                v-if="user.role.roleName === 'Người thuê'"
+              >
+                <v-list-item-icon>
+                  <v-icon color="#727cf5">mdi-file-document-edit</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Hợp đồng</v-list-item-title>
               </v-list-item>
               <v-list-item
                 to="/vendor"
@@ -324,7 +336,9 @@ export default {
         });
         this.setSearchValue(this.coordinates);
         this.nameAddress = this.searchValue.split('-');
-        this.$router.push('/filter');
+        this.$router.push(
+          `/result/latitude=${this.filter.coordinator.latitude}&longitude=${this.filter.coordinator.longitude}`,
+        );
       }
     },
     search() {
@@ -340,7 +354,6 @@ export default {
     ...mapActions({
       setSearchValue: 'renter/filterResult/setSearchValue',
       setIsSearchOptional: 'renter/home/setSearchTypeValue',
-      searchByAddress: 'renter/filterResult/searchByAddress',
       getUser: 'user/getUser',
       clearUserData: 'user/clearUserData',
       searchByCoordinator: 'renter/filterResult/searchByCoordinator',

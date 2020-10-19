@@ -9,7 +9,9 @@
         <v-col cols="12" lg="11">
           <v-row class="d-flex align-center">
             <v-col cols="12" lg="3">
-              <p class="font-weight-bold text-h4 blue--text mb-2">{{ district.districtName }}</p>
+              <p class="font-weight-bold text-h4 blue--text mb-2">
+                {{ district.districtName }}
+              </p>
               <!-- toDo: api district -->
               <span class="font-weight-bold text-uppercase">thành phố hồ chí minh</span>
             </v-col>
@@ -17,8 +19,11 @@
               <v-card outlined>
                 <v-list-item two-line>
                   <v-list-item-content>
-                    <span class="text-uppercase text-h5 mb-4">{{ average.price }}</span>
-                    <v-list-item-subtitle>Giá trung bình</v-list-item-subtitle>
+                    <span class="text-uppercase text-h5 mb-4">
+                      {{ districtStat.avgPrice }}
+                      <span class="text-lowercase">triệu</span>
+                    </span>
+                    <v-list-item-subtitle>Giá trung bình / phòng</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-avatar tile color="white">
                     <v-icon x-large>attach_money</v-icon>
@@ -26,15 +31,22 @@
                 </v-list-item>
               </v-card>
             </v-col>
-            <v-col cols="12" lg="3">
+            <v-col cols="12" lg="4">
               <v-card outlined>
                 <v-list-item two-line>
                   <v-list-item-content>
-                    <span class="text-uppercase text-h5 mb-4">{{ average.area }}</span>
-                    <v-list-item-subtitle>Diện tích trung bình</v-list-item-subtitle>
+                    <span class="text-uppercase text-h5 mb-4">
+                      {{ districtStat.avgSuperficiality }}
+                      <span class="text-lowercase">m<sup>2</sup></span>
+                    </span>
+                    <v-list-item-subtitle>Diện tích trung bình / phòng</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-avatar tile color="white">
-                    <v-img src="@/assets/home/superficies.svg" transition="scale-transition" />
+                    <v-img
+                      style="width: 10px;"
+                      src="@/assets/home/superficies.svg"
+                      transition="scale-transition"
+                    />
                   </v-list-item-avatar>
                 </v-list-item>
               </v-card>
@@ -42,7 +54,7 @@
           </v-row>
           <v-row class="d-flex mt-10">
             <v-col cols="12" lg="6">
-              <v-card class="flex" outlined width="100%" style="height: 100%">
+              <v-card class="flex" outlined width="100%" style="height: 100%;">
                 <v-card-title class="d-flex justify-center" :style="{ backgroundColor: '#f4f4f4' }">
                   <span class="text-body-1 txt-dark text-capitalize font-nunito font-weight-medium"
                     >THEO PHƯỜNG</span
@@ -71,7 +83,7 @@
               </v-card>
             </v-col>
             <v-col cols="12" lg="6">
-              <v-card width="100%" style="height: 100%" outlined>
+              <v-card width="100%" style="height: 100%;" outlined>
                 <v-card-title
                   class="d-flex justify-space-between"
                   :style="{ backgroundColor: '#f4f4f4' }"
@@ -109,7 +121,11 @@
   </div>
 </template>
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
+import {
+  mapActions,
+  // mapState,
+  mapGetters,
+} from 'vuex';
 
 export default {
   name: 'DiscoveryDistrict',
@@ -123,19 +139,17 @@ export default {
     searchStreet: '',
     headers: [
       {
-        text: 'Quận',
+        text: 'Phường',
         value: 'district',
         align: 'start',
         filterable: false,
       },
       {
         text: 'Giá trung bình / phòng (Triệu)',
-        // text: 'Giá trung bình / phòng (Triệu)',
         value: 'districtAverage',
       },
       {
         text: 'Diện tích trung bình / phòng (m2)',
-        // text: 'Diện tích trung bình / phòng (m2)',
         value: 'districtM2',
       },
     ],
@@ -155,12 +169,21 @@ export default {
     ],
   }),
   computed: {
-    ...mapState({
-      'stats.streets': (state) => state.renter.discovery.stats.streets.data,
-    }),
     ...mapGetters({
       getAverage: 'renter/discovery/getAverage',
     }),
+    statistic() {
+      return this.$store.state.renter.discovery.stats.district.data;
+    },
+    proviceStat() {
+      return this.statistic.provinces[0];
+    },
+    districtStat() {
+      if (!this.districtInput) {
+        return this.proviceStat.districts[0];
+      }
+      return this.districtInput;
+    },
     average() {
       return this.getAverage(this.streetIds);
     },
@@ -190,38 +213,62 @@ export default {
     isLoading() {
       return (
         this.$store.state.renter.common.provinces.isLoading ||
-        this.$store.state.renter.discovery.stats.streets.isLoading
+        this.$store.state.renter.discovery.stats.streets.isLoading ||
+        this.$store.state.renter.discovery.stats.district.isLoading
       );
     },
     itemWards() {
       return this.wards.map((ward) => ({
         district: ward.wardName,
-        districtAverage: this.getAverage(this.getStreetIds(ward)).price,
-        districtM2: this.getAverage(this.getStreetIds(ward)).area,
+        districtAverage: this.getWardStat(ward.wardId).avgPrice,
+        districtM2: this.getWardStat(ward.wardId).avgSuperficality,
       }));
     },
     itemStreets() {
       return this.streets.map((street) => ({
         street: street.streetName,
-        streetAverage: this.getAverage([street.streetId]).price,
-        streetM2: this.getAverage([street.streetId]).area,
+        streetAverage: this.getStreetStat(street.streetId).avgPrice,
+        streetM2: this.getStreetStat(street.streetId).avgPrice,
       }));
     },
   },
   methods: {
     ...mapActions({
       getProvinces: 'renter/common/getProvinces',
-      getStreetStats: 'renter/discovery/getStreetStats',
+      getDistrictStatistic: 'renter/discovery/getDistrictStatistic',
     }),
     getStreetIds(ward) {
       return ward.streets.map((street) => street.streetId);
     },
+    getWardStat(wardId) {
+      const ward = this.districtStat.wards.find((w) => w.wardId === wardId);
+      if (ward) {
+        return { avgPrice: ward.avgPrice, avgSuperficality: ward.avgSuperficality };
+      }
+      return { avgPrice: 'Không xác định', avgSuperficality: 'Không xác định' };
+    },
+    getStreetStat(streetId) {
+      const ward = this.districtStat.wards.find(
+        (w) => w.streets.find((s) => s.streetId === streetId), // eslint-disable-line
+      ); // eslint-disable-line
+      if (ward) {
+        const street = ward.streets.find((s) => s.streetId === streetId);
+        return { avgPrice: street.avgPrice, avgSuperficality: street.avgSuperficality };
+      }
+      return { avgPrice: 'Không xác định', avgSuperficality: 'Không xác định' };
+    },
   },
   created() {
+    console.log(this.districtInput);
     if (!this.districtInput) {
-      this.getProvinces().then(() => this.getStreetStats(this.streetIds));
+      this.getProvinces();
+      if (!this.statistic) {
+        this.getDistrictStatistic(this.districtId);
+      }
     } else {
-      this.getStreetStats(this.streetIds);
+      console.log(this.districtInput);
+      this.districtStat = this.districtInput;
+      // console.log(this.districtStat);
     }
   },
 };

@@ -142,6 +142,54 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="mapDialog" scrollable max-width="70%">
+        <v-card>
+          <div class="d-flex py-3 align-center px-4">
+            <div>
+              <span
+                class="font-nunito text-primary dialog-title d-flex"
+                style="font-size: 1.125rem !important;"
+                ><v-icon size="20" color="#727cf5" class="mr-2">mdi-home-map-marker</v-icon
+                >{{ booking.group.groupName }}
+              </span>
+              <span class="font-nunito text-gray d-flex" style="font-size: 0.9rem !important;"
+                ><v-icon size="20" color="green" class="mr-2">mdi-google-maps</v-icon
+                >{{ booking.group.buildingNo }} {{ booking.group.address.streetName }},
+                {{ booking.group.address.wardName }}, {{ booking.group.address.districtName }},
+                {{ booking.group.address.provinceName }}
+              </span>
+            </div>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="mapDialog = false"><v-icon>close</v-icon></v-btn>
+          </div>
+          <v-divider></v-divider>
+          <v-row style="height: 400px;" class="ma-0 white">
+            <v-col
+              cols="9"
+              class="d-flex flex-column justify-center"
+              style="border: 1px solid red;"
+            >
+              <GoogleMapsDirection
+                :dest="{ lat: booking.group.latitude, lng: booking.group.longitude }"
+              />
+            </v-col>
+            <v-col cols="3" class="d-flex flex-column">
+              <span
+                class="font-nunito text-muted d-flex align-center cursor"
+                style="font-size: 0.875rem;"
+                @click="geolocate()"
+                ><v-icon color="#727cf5" small class="mr-1">mdi-near-me</v-icon>Chỉ đường</span
+              >
+              <span
+                class="font-nunito text-muted d-flex align-center cursor mt-3"
+                style="font-size: 0.875rem;"
+                ><v-icon color="#33cc33" small class="mr-1">mdi-map</v-icon>Xem trên Google
+                Map</span
+              >
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-dialog>
     </v-row>
     <v-row no-gutters class="d-flex justify-center">
       <v-col
@@ -231,7 +279,7 @@
             </span>
             <small class="font-italic" v-if="booking.deal"> (đã trả giá)</small>
           </span>
-          <small class="font-nunito address" @click="openStreetMap()"
+          <small class="font-nunito address" @click="mapDialog = true"
             ><v-icon color="#727cf5">mdi-google-maps</v-icon>{{ booking.group.buildingNo }}
             {{ booking.group.address.streetName }}, {{ booking.group.address.wardName }},
             {{ booking.group.address.districtName }},
@@ -280,13 +328,15 @@
 <style scoped></style>
 <script>
 import { mapActions } from 'vuex';
+import GoogleMapsDirection from './GoogleMapsDirection.vue';
 
 export default {
   name: 'BookingItem',
   props: ['booking'],
+  components: { GoogleMapsDirection },
   data: () => ({
     dialog: false,
-    dialogm1: '',
+    mapDialog: false,
   }),
   computed: {
     timestamp() {
@@ -359,9 +409,6 @@ export default {
       const long = this.booking.group.longitude;
       const url = `https://www.google.com/maps/search/${lat},${long}/@${lat},${long},17z?hl=vi`;
       window.open(url, '_blank');
-    },
-    getDetail() {
-      console.log('detail');
     },
   },
   created() {

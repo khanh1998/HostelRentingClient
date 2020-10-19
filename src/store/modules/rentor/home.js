@@ -37,6 +37,12 @@ const myState = () => ({
     data: [],
     isLoading: false,
   },
+  districts: {
+    data: [],
+    isLoading: false,
+    success: null,
+    error: null,
+  },
 });
 const getters = {
   getHostelGroupById: (state) => (id) => {
@@ -82,6 +88,10 @@ const mutationTypes = {
   GET_FACILITIES_SUCCESS: 'GET_FACILITIES_SUCCESS',
   GET_FACILITIES_FAILURE: 'GET_FACILITIES_FAILURE',
   GET_FACILITIES_REQUEST: 'GET_FACILITIES_REQUEST',
+
+  GET_DISTRICTS_SUCCESS: 'GET_DISTRICTS_SUCCESS',
+  GET_DISTRICTS_FAILURE: 'GET_DISTRICTS_FAILURE',
+  GET_DISTRICTS_REQUEST: 'GET_DISTRICTS_REQUEST',
 };
 const mutations = {
   SET_SEARCH_TYPE_VALUE: (state, isOptional) => {
@@ -151,6 +161,19 @@ const mutations = {
   GET_FACILITIES_REQUEST(state) {
     state.facility.isLoading = true;
   },
+  // get all districts in HCM city
+  GET_DISTRICTS_REQUEST(state) {
+    state.districts.isLoading = true;
+  },
+  GET_DISTRICTS_SUCCESS(state, data) {
+    state.districts.data = data;
+    state.districts.isLoading = false;
+    state.districts.success = true;
+  },
+  GET_DISTRICTS_FAILURE(state, error) {
+    state.districts.isLoading = false;
+    state.districts.error = error;
+  },
 };
 const actions = {
   setSearchTypeValue({ commit }, isOptional) {
@@ -208,7 +231,6 @@ const actions = {
   async getAllFacilities({ commit }) {
     // no param
     try {
-      console.log('filter');
       commit(mutationTypes.GET_FACILITIES_REQUEST);
       const res = await window.axios.get('/api/v1/facilities');
       if (res.status >= 200 && res.status <= 299) {
@@ -216,6 +238,19 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_FACILITIES_FAILURE);
+    }
+  },
+  async getAllDistricts({ commit }, provinceId) {
+    try {
+      commit(mutationTypes.GET_DISTRICTS_REQUEST);
+      const response = await window.axios.get(`api/v1/provinces/${provinceId}`);
+      if (response.status >= 200 && response.status <= 299) {
+        commit(mutationTypes.GET_DISTRICTS_SUCCESS, response.data.data);
+      } else {
+        commit(mutationTypes.GET_DISTRICTS_FAILURE);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_DISTRICTS_FAILURE, error);
     }
   },
 };
