@@ -106,9 +106,7 @@ const mutations = {
     state.filter = filterValues;
   },
   SET_PAGE: (state, page) => {
-    console.log(page);
     state.results.page = page;
-    console.log(state.results.page);
   },
   SET_SEARCH_VALUE: (state, searchValue) => {
     state.search.value = searchValue;

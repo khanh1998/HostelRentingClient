@@ -11,7 +11,7 @@
       >
         <div class="item-classic-media" style="padding-right: 0px !important;">
           <v-carousel
-            height="220"
+            height="210"
             hide-delimiters
             show-arrows-on-hover
             v-if="type.typeImages.length !== 0"
@@ -23,7 +23,7 @@
             >
             </v-carousel-item>
           </v-carousel>
-          <v-img src="@/assets/image-error.png" v-else style="height: 220px;" class="image-box">
+          <v-img src="@/assets/image-error.png" v-else style="height: 210px;" class="image-box">
           </v-img>
           <div class="top">
             Top
@@ -40,7 +40,7 @@
         </div>
       </v-col>
       <v-col cols="12" sm="8" md="8" lg="8" class="hidden-xs-only">
-        <div class="d-flex flex-column px-1 pt-4">
+        <div class="d-flex flex-column px-1 pt-2">
           <v-card
             :to="'/detail/' + type.typeId"
             style="box-shadow: none !important;"
@@ -257,7 +257,12 @@
       <v-col
         cols="12"
         class="pr-0 pb-0 pt-0"
-        v-if="searchValue && (schoolSelected || hometownSelected)"
+        v-if="
+          searchValue &&
+          (schoolSelected || hometownSelected) &&
+          type.schoolMate !== 0 &&
+          type.compatriot !== 0
+        "
         style="background: #f3f4f9; padding-left: 7px !important;"
       >
         <v-col
@@ -265,24 +270,31 @@
           class="d-flex justify-space-around align-center"
           style="background-color: #e7e9f0 !important;"
         >
-          <v-row class="d-flex">
+          <v-row class="d-flex justify-space-around">
             <!-- <v-col cols="11" md="3" style="padding: 0 !important;">
               <v-icon class="ml-2" color="#ABB4C0">visibility</v-icon>
               <span class="text-caption ml-2">{{ type.view }} lượt xem</span>
             </v-col> -->
-            <v-col cols="11" md="7" style="padding: 0 !important;" v-if="schoolSelected">
-              <v-icon color="#ABB4C0">school</v-icon>
+            <v-col
+              cols="11"
+              md="7"
+              style="padding: 0 !important;"
+              v-if="schoolSelected"
+              class="d-flex justify-center align-center"
+            >
+              <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
               <span class="text-caption"
                 >{{ type.schoolMate }} người học {{ schoolSelected.schoolName }}</span
               >
-              <!-- <div class="text-caption ml-2">
-                <span>{{ type.schoolMate }} người học</span>
-                <br />
-                <span>{{ schoolSelected.schoolName }}</span> -->
-              <!-- </div> -->
             </v-col>
-            <v-col cols="11" md="4" style="padding: 0 !important;" v-if="hometownSelected">
-              <v-icon color="#ABB4C0">supervisor_account</v-icon>
+            <v-col
+              cols="11"
+              md="4"
+              style="padding: 0 !important;"
+              v-if="hometownSelected"
+              class="d-flex justify-center align-center"
+            >
+              <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
               <span class="text-caption"
                 >{{ type.compatriot }} người quê {{ hometownSelected.provinceName }}</span
               >
@@ -375,26 +387,7 @@
   box-sizing: border-box;
   z-index: 2;
 }
-.arrow-price {
-  background-image: linear-gradient(to right, rgba(114, 124, 245, 0.71), #1c63b8);
-  color: #fff;
-  padding: 4px 10px;
-  position: absolute;
-  bottom: 0;
-  right: -1px;
-}
-.arrow-price:before {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  content: '';
-  left: -12px;
-  border-top: 15px solid transparent;
-  border-right: 12px solid rgba(114, 124, 245, 0.71);
-  border-bottom: 15px solid transparent;
-  width: 0;
-}
+
 .equipment-name {
   /* #656565 */
   color: #0d0d0d;
@@ -425,6 +418,28 @@
 .image-box:hover {
   transform: scale(1.3);
 } */
+</style>
+<style>
+.arrow-price {
+  background-image: linear-gradient(to right, rgba(114, 124, 245, 0.71), #1c63b8);
+  color: #fff;
+  padding: 4px 10px;
+  position: absolute;
+  bottom: 0;
+  right: -1px;
+}
+.arrow-price:before {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  content: '';
+  left: -12px;
+  border-top: 15px solid transparent;
+  border-right: 12px solid rgba(114, 124, 245, 0.71);
+  border-bottom: 15px solid transparent;
+  width: 0;
+}
 </style>
 <script>
 import { mapActions } from 'vuex';
@@ -460,6 +475,7 @@ export default {
     },
     schoolSelected() {
       if (this.searchValue && this.searchValue.includes('schoolId')) {
+        window.$cookies.set('schoolMate', this.type.schoolMate);
         const schoolIdSelected = Number(this.searchValue.split('&schoolId=')[1].split('&')[0]);
         return this.school.items.find((i) => i.schoolId === schoolIdSelected);
       }
@@ -470,6 +486,7 @@ export default {
     },
     hometownSelected() {
       if (this.searchValue && this.searchValue.includes('provinceId')) {
+        window.$cookies.set('compatriot', this.type.compatriot);
         const hometownIdSelectd = Number(this.searchValue.split('&provinceId=')[1].split('&')[0]);
         return this.hometown.items.find((p) => p.provinceId === hometownIdSelectd);
       }

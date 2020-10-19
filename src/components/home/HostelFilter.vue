@@ -146,7 +146,7 @@
         <v-expansion-panel-header class="text-body-2 header-label">
           <template v-slot:default="{ open }">
             <v-row no-gutters class="d-flex flex colum">
-              <span class="text-body-2 header-label">Tiện ích</span>
+              <span class="text-body-2 header-label">Tiện nghi</span>
               <v-fade-transition leave-absolute>
                 <span
                   v-if="!open && filter.facility.selects.length !== 0"
@@ -208,7 +208,7 @@
           <template v-slot:default="{ open }">
             <v-row no-gutters class="d-flex flex colum">
               <span class="text-body-2 header-label">Giá thuê</span>
-              <v-fade-transition leave-absolute v-if="filterSelected.disabledPrice">
+              <v-fade-transition leave-absolute v-if="filter.price.disable">
                 <span v-if="!open" key="1" class="ml-auto text-body-2 text-primary-dark">
                   {{ filter.price.range[0] }} - {{ filter.price.range[1] }} triệu
                 </span>
@@ -220,9 +220,9 @@
           <v-row>
             <v-col class="px-5 pt-0">
               <v-switch
-                class="ml-auto mb-4"
+                class="ml-auto mb-4 filter"
                 height="10"
-                v-model="filterSelected.disabledPrice"
+                v-model="filter.price.disable"
                 label="Lọc"
                 color="#727cf5"
               />
@@ -234,8 +234,9 @@
                 :thumb-size="28"
                 thumb-label="always"
                 step="0.1"
-                :disabled="!filterSelected.disabledPrice"
+                :disabled="!filter.price.disable"
                 color="#3645f1"
+                class="filter"
               />
               <v-row class="justify-center align-center">
                 <v-subheader>{{ min }} triệu</v-subheader>
@@ -245,7 +246,7 @@
                   color="indigo"
                   height="30"
                   width="30"
-                  :disabled="!filterSelected.disabledPrice"
+                  :disabled="!filter.price.disable"
                   @click="changeMaxPrice()"
                 >
                   <v-icon>add</v-icon>
@@ -324,6 +325,12 @@
   color: #313a46 !important;
 }
 </style>
+<style>
+.filter .v-input__slot {
+  /* color: #313a46; */
+  border: none !important;
+}
+</style>
 <script>
 import { mapActions } from 'vuex';
 
@@ -375,7 +382,7 @@ export default {
         this.filter.coordinator.longitude = coordinator[1].split('=')[1]; // eslint-disable-line
       }
 
-      this.filter.price.disable = this.filterSelected.disabledPrice;
+      // this.filter.price.disable = this.filterSelected.disabledPrice;
       this.filterSearchByCoordinatorResult({
         filterProperties: this.filter,
         page: 1,

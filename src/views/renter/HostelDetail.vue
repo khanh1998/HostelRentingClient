@@ -146,8 +146,8 @@
             </v-row>
           </v-col>
         </v-row>
-        <v-row class="justify-center">
-          <v-col cols="12" sm="12" md="8" lg="8" class="pt-0">
+        <v-row class="justify-center py-0">
+          <v-col cols="12" sm="12" md="8" lg="8" class="py-0">
             <v-carousel
               cycle
               height="400"
@@ -157,15 +157,36 @@
               v-if="images.length !== 0"
             >
               <v-carousel-item v-for="(image, i) in images" :key="i" :src="images[i]">
-                <div class="category">
-                  <!-- eslint-disable max-len -->
-                  <span class="font-weight-bold text-body-1 yellow--text">
-                    {{ info.category.categoryName }}
-                  </span>
-                  <br />
-                  <span class="text-caption">{{ info.view }} lượt xem</span>
-                </div>
               </v-carousel-item>
+              <div class="category">
+                <span class="font-weight-bold text-body-1 yellow--text">
+                  {{ info.category.categoryName }}
+                </span>
+                <br />
+                <span class="text-caption">{{ info.view }} lượt xem</span>
+              </div>
+              <div
+                class="arrow-price d-flex flex-column"
+                v-if="
+                  searchValue &&
+                  (schoolSelected || hometownSelected) &&
+                  schoolMate !== 0 &&
+                  compatriot !== 0
+                "
+              >
+                <span class="text-caption" v-if="schoolSelected">
+                  <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
+                  <span class="text-caption"
+                    >{{ schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                  >
+                </span>
+                <span class="text-caption" v-if="hometownSelected">
+                  <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
+                  <span class="text-caption"
+                    >{{ compatriot }} người quê {{ hometownSelected.provinceName }}</span
+                  >
+                </span>
+              </div>
             </v-carousel>
             <v-img
               src="@/assets/error-no-image.png"
@@ -175,7 +196,6 @@
               style="box-shadow: 0 0 35px 0 rgba(255, 22, 22, 0.15) !important;"
             >
               <div class="category">
-                <!-- eslint-disable max-len -->
                 <span class="font-weight-bold text-body-1 yellow--text">
                   {{ info.category.categoryName }}
                 </span>
@@ -184,7 +204,7 @@
               </div>
             </v-img>
           </v-col>
-          <v-col cols="12" sm="12" md="4" lg="4" class="d-flex pt-0">
+          <v-col cols="12" sm="12" md="4" lg="4" class="d-flex py-0">
             <v-row class="d-flex justify-end py-0" style="min-height: 350px !important;">
               <v-col cols="12" sm="12" md="11" class="py-0">
                 <dateTimePickerBox
@@ -202,10 +222,15 @@
             </v-row>
           </v-col>
         </v-row>
+        <!-- <v-row>
+          <v-col cols="12" sm="12" md="8" lg="8" class="pt-0 d-flex flex-column">
+            <div>thuy</div>
+          </v-col>
+        </v-row> -->
         <v-row class="mt-3">
           <v-col cols="12" md="4" v-if="info.facilities.length !== 0">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
-              >TIỆN ÍCH</span
+              >TIỆN NGHI</span
             >
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '30%' }"></div>
@@ -514,6 +539,36 @@ export default {
     streetStat() {
       return this.wardStat.streets.filter((s) => s.streetId === this.group.address.streetId)[0];
     },
+    searchValue() {
+      return window.$cookies.get('searchValue');
+    },
+    school() {
+      return this.$store.state.renter.filterResult.filter.schools;
+    },
+    schoolSelected() {
+      if (this.searchValue && this.searchValue.includes('schoolId')) {
+        const schoolIdSelected = Number(this.searchValue.split('&schoolId=')[1].split('&')[0]);
+        return this.school.items.find((i) => i.schoolId === schoolIdSelected);
+      }
+      return null;
+    },
+    schoolMate() {
+      return window.$cookies.get('schoolMate');
+    },
+    hometown() {
+      console.log(this.$store.state.renter.filterResult.filter.hometown);
+      return this.$store.state.renter.filterResult.filter.hometown;
+    },
+    hometownSelected() {
+      if (this.searchValue && this.searchValue.includes('provinceId')) {
+        const hometownIdSelectd = Number(this.searchValue.split('&provinceId=')[1].split('&')[0]);
+        return this.hometown.items.find((p) => p.provinceId === hometownIdSelectd);
+      }
+      return null;
+    },
+    compatriot() {
+      return window.$cookies.get('compatriot');
+    },
   },
   created() {
     // if home.js store is empty then start to call api
@@ -521,7 +576,6 @@ export default {
       .then(() => this.getNearByUtilities())
       .then(() => this.getAllHostelTypes(this.group.groupId))
       .then(() => this.getDistrictStatistic(this.group.address.districtId));
-    // this.getProvinces().then(() => this.getStreetStats(this.allStreetIds));
   },
 };
 </script>
