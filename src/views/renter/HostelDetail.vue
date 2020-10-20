@@ -610,7 +610,10 @@ export default {
       return this.districtStat.wards.filter((w) => w.wardId === this.group.address.wardId)[0];
     },
     streetStat() {
-      return this.wardStat.streets.filter((s) => s.streetId === this.group.address.streetId)[0];
+      if (this.wardStat) {
+        return this.wardStat.streets.filter((s) => s.streetId === this.group.address.streetId)[0];
+      }
+      return null;
     },
     searchValue() {
       return window.$cookies.get('searchValue');
