@@ -51,6 +51,9 @@
           v-on:ok="receivedDateTime"
           v-on:cancel="dateTimeOverlay.show = false"
           :groupId="group.groupId"
+          :price="info.price"
+          :lastDeal="getLastDeal"
+          :priceUnit="info.priceUnit"
         />
       </v-overlay>
       <v-overlay :value="bookingCancel.show" absolute opacity="0.8">
@@ -246,7 +249,7 @@
         <!-- all message -->
         <v-list-item v-for="item in filteredMessage" v-bind:key="item.createdAt">
           <v-list-item-content>
-            <div v-if="item.sender === 'renter'" class="d-flex justify-end">
+            <div v-if="item.sender === 'renter'" class="d-flex flex-column align-end">
               <div class="d-flex justify-center" v-if="item.bargain" style="width: 100%;">
                 <div
                   v-ripple
@@ -259,8 +262,10 @@
                     >TRẢ GIÁ</span
                   >
                   <div class="d-flex justify-space-between align-center my-4" style="width: 100%;">
-                    <span class="font-nunito font-weight-regular text-gray text-subtitle-2"
-                      >$ {{ info.price }} {{ info.priceUnit }}</span
+                    <span
+                      class="font-nunito font-weight-regular text-gray text-subtitle-2 d-flex align-center"
+                      ><v-icon class="mr-1">mdi-home-currency-usd</v-icon> {{ info.price }}
+                      {{ info.priceUnit }}</span
                     >
                     <span class="font-nunito font-weight-regular text-warning text-subtitle-2">
                       <v-icon color="#ffbc00">mdi mdi-arrow-down-bold</v-icon>
@@ -322,14 +327,36 @@
                     >LỊCH HẸN</span
                   >
                   <div class="d-flex justify-space-between align-center my-4" style="width: 100%;">
-                    <span class="font-nunito font-weight-regular text-gray text-subtitle-2">
+                    <!-- <span class="d-flex flex-column"> -->
+                    <span
+                      class="font-nunito font-weight-regular text-gray text-subtitle-2 d-flex align-center"
+                    >
                       <v-icon class="mr-1" color="#0acf97">event_available</v-icon>
                       {{ item.book.date }}
                     </span>
-                    <span class="font-nunito font-weight-regular text-gray text-subtitle-2">
+                    <!-- <span
+                        class="font-nunito font-weight-regular text-gray text-subtitle-2 d-flex align-center"
+                      >
+                        <v-icon class="mr-1" color="#727cf5">mdi-home-currency-usd</v-icon>
+                        <span class="text-decoration-line-through"
+                          >{{ getLastDeal.bargain.originalPrice }} {{ info.priceUnit }}</span
+                        >
+                      </span> -->
+                    <!-- </span> -->
+                    <!-- <span class="d-flex flex-column"> -->
+                    <span
+                      class="font-nunito font-weight-regular text-gray text-subtitle-2 d-flex align-center"
+                    >
                       <v-icon class="mr-1" color="#0acf97">schedule</v-icon>
                       {{ item.book.time }}
                     </span>
+                    <!-- <span
+                        class="font-nunito font-weight-regular text-gray text-subtitle-2 d-flex align-center"
+                      >
+                        <v-icon class="mr-1" color="#727cf5">mdi mdi-arrow-down-bold</v-icon>
+                        {{ getLastDeal.bargain.newPrice }} {{ info.priceUnit }}
+                      </span>
+                    </span> -->
                   </div>
                   <v-btn
                     min-width="100%"
@@ -359,8 +386,11 @@
                 class="lighten-5 py-2 px-5 max-w-3/4 text-subtitle-2 renterChatMessage"
                 >{{ item.message }}</span
               >
+              <span class="font-nunito text-gray text-caption">{{
+                getTimeSendMsg(item.createdAt)
+              }}</span>
             </div>
-            <div v-if="item.sender === 'vendor'" class="d-flex justify-start">
+            <div v-if="item.sender === 'vendor'" class="d-flex flex-column align-start">
               <span
                 _style="width: 75%"
                 v-ripple
@@ -374,7 +404,7 @@
                 class="lighten-5 pa-2 rounded max-w-3/4"
                 v-if="item.bargain && item.bargain.dealId"
               >
-                Chủ trọ đồng ý với mức giá bạn đề xuất.
+                Chủ trọ đồng ý với mức giá bạn đề xuất
                 <!-- <v-btn small color="amber" class="mt-2">Hủy thỏa thuận</v-btn> -->
               </span>
               <span
@@ -382,8 +412,11 @@
                 v-ripple
                 class="red lighten-5 pa-2 rounded max-w-3/4"
                 v-if="item.bargain && !item.bargain.dealId"
-                >Chủ trọ không đồng ý với mức giá bạn đề xuất.</span
-              >
+                >Chủ trọ không đồng ý với mức giá bạn đề xuất.
+              </span>
+              <span class="font-nunito text-gray text-caption">{{
+                getTimeSendMsg(item.createdAt)
+              }}</span>
             </div>
           </v-list-item-content>
         </v-list-item>
@@ -473,7 +506,7 @@ export default {
     clickDeal() {
       if (this.hasUnreplyBargain) {
         this.messageTitle = 'Bạn hiện tại đang có một đề nghị trả giá chưa được chấp nhận!';
-        this.messageAction = 'Để đề xuất trả giá mới, vui lòng hủy trả giá trước đó';
+        this.messageAction = 'Để đề xuất trả giá mới, vui lòng hủy đề xuất trả giá trước đó';
         this.warningDialog = true;
       } else {
         this.bargainOverlay.show = true;
@@ -660,6 +693,15 @@ export default {
         .substring(this.group.groupName.lastIndexOf(' ') + 1)
         .substring(0, 1);
     },
+    getTimeSendMsg(createdTime) {
+      const date = new Date(createdTime).toLocaleDateString('vi-vn');
+      const time = new Date(createdTime).toLocaleTimeString('vi-vn').substr(0, 5);
+      const today = new Date().toLocaleDateString('vi-vn');
+      if (today === date) {
+        return time;
+      }
+      return `${time}, ${date}`;
+    },
   },
   data: () => ({
     rules: {
@@ -770,6 +812,23 @@ export default {
         }
         return true;
       });
+    },
+    getLastDeal() {
+      let allMsg = this.filteredMessage;
+      console.log(allMsg);
+      allMsg.sort((a, b) => a.createdAt - b.createdAt);
+      console.log(allMsg);
+      allMsg = allMsg.filter(
+        (m) => m.sender === 'renter' && m.bargain && m.bargain.status === 'accept',
+      );
+      console.log(allMsg);
+
+      if (allMsg && allMsg.length !== 0) {
+        console.log('thuy');
+        console.log(allMsg[allMsg.length - 1]);
+        return allMsg[allMsg.length - 1];
+      }
+      return null;
     },
     hasUnreplyBargain() {
       return this.items.some(

@@ -22,6 +22,11 @@
           </v-card> -->
           <LoginBox v-if="!renter" />
         </v-dialog>
+        <!-- <v-row>
+          <v-col cols="12" sm="12" md="8" class="pa-0 ml-auto">
+            <v-breadcrumbs :items="breadcrumbs"></v-breadcrumbs>
+          </v-col>
+        </v-row> -->
         <v-row>
           <v-col
             cols="12"
@@ -113,7 +118,11 @@
               </div>
             </div>
           </v-col>
-          <v-col cols="12" sm="12" md="4" class="d-flex flex-column">
+          <v-col cols="12" sm="12" md="4" class="d-flex flex-column py-0">
+            <v-breadcrumbs
+              :items="breadcrumbs"
+              class="font-nunito py-1 d-flex justify-center breadcrumbs"
+            ></v-breadcrumbs>
             <span class="font-weight-medium text-h5 text-primary text-center"
               >{{ info.price }} {{ info.priceUnit }}/tháng</span
             >
@@ -121,7 +130,7 @@
               <v-col cols="12" md="11" class="d-flex rounded-0 d-flex justify-space-around">
                 <div
                   style="width: 100%; height: 50px; background-color: #f6f7f9;"
-                  class="mt-2 d-flex align-center px-1 rounded-pill"
+                  class="d-flex align-center px-1 rounded-pill"
                 >
                   <v-icon large class="white rounded-circle pa-1" _style="height: 100%;"
                     >mdi-home-currency-usd</v-icon
@@ -232,7 +241,7 @@
                   :avatar="group.imgUrl"
                   :rating="{ average: 3.5, total: 30 }"
                   :groupId="group.groupId"
-                  :typeId="info.typeId"
+                  :type="info"
                   :vendorId="group.vendorId"
                   :currentBooking="info.currentBooking"
                   :availableRoom="info.availableRoom"
@@ -437,6 +446,23 @@ export default {
     chatBox: {
       show: false,
     },
+    breadcrumbs: [
+      {
+        text: 'Trang chủ',
+        disabled: false,
+        href: '/',
+      },
+      {
+        text: 'Kết quả tìm kiếm',
+        disabled: false,
+        href: 'breadcrumbs_dashboard',
+      },
+      {
+        text: 'Chi tiết phòng',
+        disabled: true,
+        href: 'breadcrumbs_dashboard',
+      },
+    ],
   }),
   methods: {
     ...mapActions({
@@ -634,6 +660,15 @@ export default {
 }
 </style>
 <style>
+.v-breadcrumbs__item {
+  color: #727cf5 !important;
+}
+.v-application a:hover {
+  color: #4250f2 !important;
+}
+.v-breadcrumbs__item--disabled {
+  color: rgba(0, 0, 0, 0.38) !important;
+}
 .font-nunito {
   font-family: 'Nunito', sans-serif !important;
 }

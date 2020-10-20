@@ -23,6 +23,9 @@
         v-on:cancel="dateTimePicker.isOpenPicker = false"
         v-on:ok="receivedDateTime"
         :groupId="groupId"
+        :price="type.price"
+        :lastDeal="getLastDeal"
+        :priceUnit="type.priceUnit"
       />
     </v-dialog>
     <v-dialog v-model="warningDialog" max-width="400">
@@ -136,8 +139,11 @@ import { mapGetters, mapActions } from 'vuex';
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
 import utils from '../../utils/firebaseNotification';
 import LoginBox from '../login/loginBox.vue';
+import firebase from '../../config/firebase';
 
 const { sendBookingNotification } = utils;
+const { store } = firebase;
+const chatCollectionRef = store.collection('chat');
 
 export default {
   name: 'DateTimePickerBox',
@@ -150,7 +156,7 @@ export default {
     avatar: String,
     rating: Object,
     groupId: Number,
-    typeId: Number,
+    type: Object,
     vendorId: Number,
     currentBooking: Number,
     availableRoom: Number,
@@ -172,12 +178,14 @@ export default {
     },
     warningDialog: false,
     messageAction: '',
+    items: [],
   }),
   methods: {
     ...mapActions({
       createBooking: 'user/createBooking',
       clearNewlyCreatedBooking: 'user/clearNewlyCreatedBooking',
       getBookings: 'user/getBookings',
+      getDeals: 'user/getDeals',
     }),
     showSnackbar(color, message) {
       this.snackbar.message = message;
@@ -192,7 +200,7 @@ export default {
       const bookingObj = {
         renterId: this.userState.data.userId,
         vendorId: this.vendorId,
-        typeId: this.typeId,
+        typeId: this.type.typeId,
         status: 'INCOMING',
         dealId: null,
         meetTime: new Date(
@@ -234,6 +242,44 @@ export default {
         this.dateTimePicker.isOpenPicker = true;
       }
     },
+    async createDoc() {
+      const { userId } = this.userState.data;
+      const { vendorId, typeId, groupId } = this.id;
+      const docRef = chatCollectionRef.doc(`renter-${userId}:vendor-${vendorId}:type-${typeId}`);
+      await docRef.get().then((doc) => {
+        if (!doc.exists) {
+          doc.ref.set({
+            vendorId,
+            renterId: userId,
+            typeId,
+            groupId,
+            updated: Date.now(),
+            lastedMessage: null,
+          });
+        }
+      });
+      this.messCollectionRef = docRef.collection('messages');
+      this.docRef = docRef;
+    },
+    fetchMessages() {
+      // this.createDoc();
+      const { userId } = this.userState.data;
+      const { vendorId, typeId } = this.id;
+      const docRef = chatCollectionRef.doc(`renter-${userId}:vendor-${vendorId}:type-${typeId}`);
+      this.messCollectionRef = docRef.collection('messages');
+      this.messCollectionRef.orderBy('createdAt', 'asc').onSnapshot((querySnapshot) => {
+        const items = [];
+        this.dealIds = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          items.push({ ...data, id: doc.id });
+          if (data.bargain && data.bargain.dealId) {
+            this.dealIds.push(data.bargain.dealId);
+          }
+        });
+        this.items = items;
+      });
+    },
   },
   computed: {
     isLoading() {
@@ -244,12 +290,45 @@ export default {
     ...mapGetters({
       findPendingBooking: 'user/findPendingBooking',
     }),
+    id() {
+      return {
+        typeId: this.info.typeId,
+        groupId: this.group.groupId,
+        renterId: this.userState.renterId,
+        vendorId: this.group.vendorId,
+      };
+    },
     hasIncommingBooking() {
       return (
-        this.bookings.find((b) => b.type.typeId === this.typeId && b.status === 'INCOMING') &&
-        this.bookings.find((b) => b.type.typeId === this.typeId && b.status === 'INCOMING')
+        this.bookings.find((b) => b.type.typeId === this.type.typeId && b.status === 'INCOMING') &&
+        this.bookings.find((b) => b.type.typeId === this.type.typeId && b.status === 'INCOMING')
           .length !== 0
       );
+    },
+    filteredMessage() {
+      return this.items.filter((item) => {
+        if (item.sender === 'vendor' && item.bargain) {
+          return false;
+        }
+        return true;
+      });
+    },
+    getLastDeal() {
+      let allMsg = this.filteredMessage;
+      console.log(allMsg);
+      allMsg.sort((a, b) => a.createdAt - b.createdAt);
+      console.log(allMsg);
+      allMsg = allMsg.filter(
+        (m) => m.sender === 'renter' && m.bargain && m.bargain.status === 'accept',
+      );
+      console.log(allMsg);
+
+      if (allMsg && allMsg.length !== 0) {
+        console.log('thuy');
+        console.log(allMsg[allMsg.length - 1]);
+        return allMsg[allMsg.length - 1];
+      }
+      return null;
     },
     newlyCreated() {
       return this.$store.state.user.bookings.newlyCreated;
@@ -260,7 +339,7 @@ export default {
     hasPendingBooking() {
       if (this.userState.data) {
         const renterId = this.userState.data.userId;
-        const res = this.findPendingBooking(renterId, this.vendorId, this.typeId);
+        const res = this.findPendingBooking(renterId, this.vendorId, this.type.typeId);
         return res != null;
       }
       return false;
@@ -290,7 +369,9 @@ export default {
   },
   created() {
     if (this.userState.data) {
-      this.getBookings();
+      Promise.all([this.getDeals, this.getBookings]).then(() => {
+        this.fetchMessages();
+      });
     }
   },
 };

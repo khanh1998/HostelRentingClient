@@ -143,6 +143,23 @@
                 <span class="ml-2 text-subtitle-2" style="color: #101526;">{{ selectedTime }}</span>
               </div>
             </div>
+            <div class="d-flex flex-column mt-2 px-4">
+              <div class="d-flex align-end">
+                <v-icon large color="#727cf5">mdi-home-currency-usd</v-icon>
+                <span
+                  class="font-nunito text-gray text-subtitle-1 ml-2 text-decoration-line-through"
+                  v-if="lastDeal"
+                  >{{ price }} {{ priceUnit }}</span
+                >
+                <span class="font-nunito text-warning text-subtitle-1 ml-auto" v-if="lastDeal">
+                  <v-icon color="#ffbc00">mdi mdi-arrow-down-bold</v-icon>
+                  {{ lastDeal.bargain.newPrice }} {{ priceUnit }}
+                </span>
+                <span class="font-nunito text-warning text-subtitle-1 ml-2" v-else>
+                  {{ price }} {{ priceUnit }}
+                </span>
+              </div>
+            </div>
           </v-card-text>
           <v-card-actions>
             <v-btn
@@ -189,6 +206,9 @@ export default {
       default: undefined,
     },
     groupId: Number,
+    price: Number,
+    lastDeal: Object,
+    priceUnit: String,
   },
   data: () => ({
     stepper: {
