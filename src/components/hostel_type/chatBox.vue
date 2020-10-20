@@ -546,7 +546,7 @@ export default {
         typeId,
         meetTime: new Date(
           dateTime[2],
-          dateTime[1],
+          dateTime[1] - 1,
           dateTime[0],
           timeTime[0],
           timeTime[1],
