@@ -170,17 +170,16 @@
                 v-if="
                   searchValue &&
                   (schoolSelected || hometownSelected) &&
-                  schoolMate !== 0 &&
-                  compatriot !== 0
+                  (schoolMate !== 0 || compatriot !== 0)
                 "
               >
-                <span class="text-caption" v-if="schoolSelected">
+                <span class="text-caption" v-if="schoolSelected && schoolMate !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
                   <span class="text-caption"
                     >{{ schoolMate }} người học {{ schoolSelected.schoolName }}</span
                   >
                 </span>
-                <span class="text-caption" v-if="hometownSelected">
+                <span class="text-caption" v-if="hometownSelected && compatriot !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
                   <span class="text-caption"
                     >{{ compatriot }} người quê {{ hometownSelected.provinceName }}</span
@@ -201,6 +200,27 @@
                 </span>
                 <br />
                 <span class="text-caption">{{ info.view }} lượt xem</span>
+              </div>
+              <div
+                class="arrow-price d-flex flex-column"
+                v-if="
+                  searchValue &&
+                  (schoolSelected || hometownSelected) &&
+                  (schoolMate !== 0 || compatriot !== 0)
+                "
+              >
+                <span class="text-caption" v-if="schoolSelected && schoolMate !== 0">
+                  <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
+                  <span class="text-caption"
+                    >{{ schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                  >
+                </span>
+                <span class="text-caption" v-if="hometownSelected && compatriot !== 0">
+                  <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
+                  <span class="text-caption"
+                    >{{ compatriot }} người quê {{ hometownSelected.provinceName }}</span
+                  >
+                </span>
               </div>
             </v-img>
           </v-col>
