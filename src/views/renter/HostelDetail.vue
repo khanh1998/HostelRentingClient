@@ -120,7 +120,7 @@
           </v-col>
           <v-col cols="12" sm="12" md="4" class="d-flex flex-column py-0">
             <v-breadcrumbs
-              :items="breadcrumbs"
+              :items="getBreadcrumbs"
               class="font-nunito py-1 d-flex justify-center breadcrumbs"
             ></v-breadcrumbs>
             <span class="font-weight-medium text-h5 text-primary text-center"
@@ -446,23 +446,23 @@ export default {
     chatBox: {
       show: false,
     },
-    breadcrumbs: [
-      {
-        text: 'Trang chủ',
-        disabled: false,
-        href: '/',
-      },
-      {
-        text: 'Kết quả tìm kiếm',
-        disabled: false,
-        href: 'breadcrumbs_dashboard',
-      },
-      {
-        text: 'Chi tiết phòng',
-        disabled: true,
-        href: 'breadcrumbs_dashboard',
-      },
-    ],
+    prevRoute: null,
+    // breadcrumbs: [
+    //   {
+    //     text: 'Trang chủ',
+    //     disabled: false,
+    //     href: '/',
+    //   },
+    //   {
+    //     text: 'Kết quả tìm kiếm',
+    //     disabled: false,
+    //     href: `${this.prevRoute.fullPath}`,
+    //   },
+    //   {
+    //     text: 'Chi tiết phòng',
+    //     disabled: true,
+    //   },
+    // ],
   }),
   methods: {
     ...mapActions({
@@ -473,6 +473,7 @@ export default {
       getHostelGroup: 'renter/hostelGroup/getHostelGroup',
       getUtilities: 'renter/hostelGroup/getNearByUtilities',
     }),
+
     getNearByUtilities() {
       this.getUtilities({
         distance: '10',
@@ -496,6 +497,32 @@ export default {
     }),
     typeId() {
       return this.$route.params.typeId;
+    },
+    getBreadcrumbs() {
+      let preURL = '/detail/4';
+      console.log(preURL);
+      let disablePreURL = true;
+      if (this.prevRoute && this.prevRoute.fullPath) {
+        preURL = this.prevRoute.fullPath;
+        disablePreURL = false;
+      }
+      const breadcrumbs = [
+        {
+          text: 'Trang chủ',
+          disabled: false,
+          href: '/',
+        },
+        {
+          text: 'Kết quả tìm kiếm',
+          disabled: disablePreURL,
+          href: preURL,
+        },
+        {
+          text: 'Chi tiết phòng',
+          disabled: true,
+        },
+      ];
+      return breadcrumbs;
     },
     images: {
       get() {
@@ -622,6 +649,11 @@ export default {
       .then(() => this.getNearByUtilities())
       .then(() => this.getAllHostelTypes(this.group.groupId))
       .then(() => this.getDistrictStatistic(this.group.address.districtId));
+  },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.prevRoute = from; // eslint-disable-line
+    });
   },
 };
 </script>
