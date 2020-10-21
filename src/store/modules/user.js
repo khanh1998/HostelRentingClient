@@ -154,6 +154,7 @@ const mutations = {
   },
   GET_USER_SUCCESS(state, user) {
     state.user.data = user;
+    console.log(user);
     state.user.isLoading = false;
     state.user.success = true;
   },
@@ -672,6 +673,7 @@ const actions = {
       commit(mutationTypes.REGISTER_USER_REQUEST);
       const response = await window.axios.post('/api/v1/renters/register', renter);
       if (response.status >= 200 && response.status <= 299) {
+        console.log(response.data.data);
         commit(mutationTypes.REGISTER_USER_SUCCESS, response.data.data);
       }
       if (response.status === 409) {

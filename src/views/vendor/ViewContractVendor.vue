@@ -1,10 +1,10 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
+  <div style="height: 100%; overflow-y:auto">
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-container v-if="!isLoading">
+    <v-container v-if="!isLoading" style="height: 98%">
       <v-row justify="center" class="py-10">
         <v-col cols="11" sm="11" md="11" lg="11" xl="10">
           <v-row class="d-flex px-4">
@@ -47,7 +47,7 @@ import { mapActions } from 'vuex';
 import contractItem from '@/components/view_contracts/contractItem.vue';
 
 export default {
-  name: 'ViewContracts',
+  name: 'ViewContractVendor',
   components: { contractItem },
   data: () => ({}),
   methods: {

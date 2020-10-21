@@ -260,8 +260,7 @@
         v-if="
           searchValue &&
           (schoolSelected || hometownSelected) &&
-          type.schoolMate !== 0 &&
-          type.compatriot !== 0
+          (type.schoolMate !== 0 || type.compatriot !== 0)
         "
         style="background: #f3f4f9; padding-left: 7px !important;"
       >
@@ -279,7 +278,7 @@
               cols="11"
               md="7"
               style="padding: 0 !important;"
-              v-if="schoolSelected"
+              v-if="schoolSelected && type.schoolMate !== 0"
               class="d-flex justify-center align-center"
             >
               <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
@@ -291,7 +290,7 @@
               cols="11"
               md="4"
               style="padding: 0 !important;"
-              v-if="hometownSelected"
+              v-if="hometownSelected && type.compatriot"
               class="d-flex justify-center align-center"
             >
               <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>

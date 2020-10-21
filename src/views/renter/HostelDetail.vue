@@ -22,6 +22,11 @@
           </v-card> -->
           <LoginBox v-if="!renter" />
         </v-dialog>
+        <!-- <v-row>
+          <v-col cols="12" sm="12" md="8" class="pa-0 ml-auto">
+            <v-breadcrumbs :items="breadcrumbs"></v-breadcrumbs>
+          </v-col>
+        </v-row> -->
         <v-row>
           <v-col
             cols="12"
@@ -113,7 +118,11 @@
               </div>
             </div>
           </v-col>
-          <v-col cols="12" sm="12" md="4" class="d-flex flex-column">
+          <v-col cols="12" sm="12" md="4" class="d-flex flex-column py-0">
+            <v-breadcrumbs
+              :items="getBreadcrumbs"
+              class="font-nunito py-1 d-flex justify-center breadcrumbs"
+            ></v-breadcrumbs>
             <span class="font-weight-medium text-h5 text-primary text-center"
               >{{ info.price }} {{ info.priceUnit }}/tháng</span
             >
@@ -121,7 +130,7 @@
               <v-col cols="12" md="11" class="d-flex rounded-0 d-flex justify-space-around">
                 <div
                   style="width: 100%; height: 50px; background-color: #f6f7f9;"
-                  class="mt-2 d-flex align-center px-1 rounded-pill"
+                  class="d-flex align-center px-1 rounded-pill"
                 >
                   <v-icon large class="white rounded-circle pa-1" _style="height: 100%;"
                     >mdi-home-currency-usd</v-icon
@@ -170,17 +179,16 @@
                 v-if="
                   searchValue &&
                   (schoolSelected || hometownSelected) &&
-                  schoolMate !== 0 &&
-                  compatriot !== 0
+                  (schoolMate !== 0 || compatriot !== 0)
                 "
               >
-                <span class="text-caption" v-if="schoolSelected">
+                <span class="text-caption" v-if="schoolSelected && schoolMate !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
                   <span class="text-caption"
                     >{{ schoolMate }} người học {{ schoolSelected.schoolName }}</span
                   >
                 </span>
-                <span class="text-caption" v-if="hometownSelected">
+                <span class="text-caption" v-if="hometownSelected && compatriot !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
                   <span class="text-caption"
                     >{{ compatriot }} người quê {{ hometownSelected.provinceName }}</span
@@ -202,6 +210,27 @@
                 <br />
                 <span class="text-caption">{{ info.view }} lượt xem</span>
               </div>
+              <div
+                class="arrow-price d-flex flex-column"
+                v-if="
+                  searchValue &&
+                  (schoolSelected || hometownSelected) &&
+                  (schoolMate !== 0 || compatriot !== 0)
+                "
+              >
+                <span class="text-caption" v-if="schoolSelected && schoolMate !== 0">
+                  <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
+                  <span class="text-caption"
+                    >{{ schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                  >
+                </span>
+                <span class="text-caption" v-if="hometownSelected && compatriot !== 0">
+                  <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
+                  <span class="text-caption"
+                    >{{ compatriot }} người quê {{ hometownSelected.provinceName }}</span
+                  >
+                </span>
+              </div>
             </v-img>
           </v-col>
           <v-col cols="12" sm="12" md="4" lg="4" class="d-flex py-0">
@@ -212,7 +241,7 @@
                   :avatar="group.imgUrl"
                   :rating="{ average: 3.5, total: 30 }"
                   :groupId="group.groupId"
-                  :typeId="info.typeId"
+                  :type="info"
                   :vendorId="group.vendorId"
                   :currentBooking="info.currentBooking"
                   :availableRoom="info.availableRoom"
@@ -417,6 +446,23 @@ export default {
     chatBox: {
       show: false,
     },
+    prevRoute: null,
+    // breadcrumbs: [
+    //   {
+    //     text: 'Trang chủ',
+    //     disabled: false,
+    //     href: '/',
+    //   },
+    //   {
+    //     text: 'Kết quả tìm kiếm',
+    //     disabled: false,
+    //     href: `${this.prevRoute.fullPath}`,
+    //   },
+    //   {
+    //     text: 'Chi tiết phòng',
+    //     disabled: true,
+    //   },
+    // ],
   }),
   methods: {
     ...mapActions({
@@ -427,6 +473,7 @@ export default {
       getHostelGroup: 'renter/hostelGroup/getHostelGroup',
       getUtilities: 'renter/hostelGroup/getNearByUtilities',
     }),
+
     getNearByUtilities() {
       this.getUtilities({
         distance: '10',
@@ -450,6 +497,32 @@ export default {
     }),
     typeId() {
       return this.$route.params.typeId;
+    },
+    getBreadcrumbs() {
+      let preURL = '/detail/4';
+      console.log(preURL);
+      let disablePreURL = true;
+      if (this.prevRoute && this.prevRoute.fullPath) {
+        preURL = this.prevRoute.fullPath;
+        disablePreURL = false;
+      }
+      const breadcrumbs = [
+        {
+          text: 'Trang chủ',
+          disabled: false,
+          href: '/',
+        },
+        {
+          text: 'Kết quả tìm kiếm',
+          disabled: disablePreURL,
+          href: preURL,
+        },
+        {
+          text: 'Chi tiết phòng',
+          disabled: true,
+        },
+      ];
+      return breadcrumbs;
     },
     images: {
       get() {
@@ -577,6 +650,11 @@ export default {
       .then(() => this.getAllHostelTypes(this.group.groupId))
       .then(() => this.getDistrictStatistic(this.group.address.districtId));
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.prevRoute = from; // eslint-disable-line
+    });
+  },
 };
 </script>
 <style scoped>
@@ -614,6 +692,15 @@ export default {
 }
 </style>
 <style>
+.v-breadcrumbs__item {
+  color: #727cf5 !important;
+}
+.v-application a:hover {
+  color: #4250f2 !important;
+}
+.v-breadcrumbs__item--disabled {
+  color: rgba(0, 0, 0, 0.38) !important;
+}
 .font-nunito {
   font-family: 'Nunito', sans-serif !important;
 }

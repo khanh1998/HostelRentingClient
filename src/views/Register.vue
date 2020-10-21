@@ -412,9 +412,12 @@
 import { mapActions } from 'vuex';
 import firebase from 'firebase';
 
+const { auth } = firebase;
+
 export default {
   name: 'register',
   data: () => ({
+    prevRoute: null,
     appVerifier: '',
     vetify: false,
     showRole: false,
@@ -506,8 +509,8 @@ export default {
     initReCaptcha() {
       console.log('vao');
       setTimeout(() => {
-        const vm = this;
-        console.log(vm);
+        // const vm = this;
+        // console.log(vm);
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
           size: 'invisible',
           callback(response) {
@@ -548,41 +551,87 @@ export default {
         time -= 1;
       }, 1000);
     },
-    registerRenter() {
+    async registerRenter() {
       const renter = {
         username: this.name,
         password: this.password,
         phone: this.phone,
-        provinceId: this.hometown,
-        schoolId: this.school,
       };
-      this.createRenter(renter).then(() => {
-        if (this.duppicateError) {
-          this.showRenterInfor = false;
-          this.showRole = false;
-          this.vetify = false;
-          this.dialog = true;
-        } else if (this.registerStatus) {
-          this.$router.push('/');
-        }
-      });
+      if (this.hometown) {
+        renter.provinceId = this.hometown;
+      }
+      if (this.school) {
+        renter.schoolId = this.school;
+      }
+      await this.createRenter(renter);
+      await this.afterLogin();
     },
-    registerVendor() {
+    async registerVendor() {
       const vendor = {
         username: this.name,
         password: this.password,
         phone: this.phone,
       };
-      this.createVendor(vendor).then(() => {
-        if (this.duppicateError) {
-          this.showRenterInfor = false;
-          this.showRole = false;
-          this.vetify = false;
-          this.dialog = true;
-        } else if (this.registerStatus) {
-          this.$router.push('/');
+      await this.createVendor(vendor);
+      await this.afterLogin();
+    },
+    async getTokenIdFromFirebase(jwtToken) {
+      try {
+        await auth.signInWithCustomToken(jwtToken);
+        const idToken = await auth.currentUser.getIdToken();
+        return idToken;
+      } catch (error) {
+        console.log('firebase login error: ', error);
+      }
+      return null;
+    },
+    async afterLogin() {
+      if (this.registerStatus) {
+        // this.$router.push('/');
+        const { jwtToken } = this.userData;
+        this.$cookies.set('jwt', jwtToken);
+        const idToken = await this.getTokenIdFromFirebase(jwtToken);
+        this.$cookies.set('firebaseIdToken', idToken);
+        let role = 'admin';
+        const id = this.userData.userId;
+        switch (this.userData.role.roleId) {
+          case 1:
+            role = 'vendors';
+            break;
+          case 2:
+            role = 'renters';
+            break;
+          default:
+            break;
         }
-      });
+        this.$cookies.set('role', role);
+        this.$cookies.set('userId', id);
+        // const { nextUrl, preUrl } = this.$route.params;
+        const preURL = this.prevRoute.fullPath;
+        console.log();
+        if (preURL) {
+          this.$router.push(preURL);
+        } else {
+          switch (role) {
+            case 'vendors':
+              this.$router.push('/vendor');
+              break;
+            case 'renters':
+              this.$router.push('/');
+              break;
+            case 'admin':
+              this.$router.push('/admin');
+              break;
+            default:
+              this.$router.push('/');
+          }
+        }
+      } else if (this.duppicateError) {
+        this.showRenterInfor = false;
+        this.showRole = false;
+        this.vetify = false;
+        this.dialog = true;
+      }
     },
     login() {
       this.$router.push('/login');
@@ -606,14 +655,23 @@ export default {
     registerStatus() {
       return this.$store.state.user.user.success;
     },
+    userData() {
+      return this.$store.state.user.user.data;
+    },
   },
   created() {
+    console.log(this.$route.params);
     if (this.filter.schools.items.length === 0) {
       this.getAllSchools();
     }
     // if (this.filter.hometown.items.length === 0) {
     this.getAllProvinces().then(() => this.initReCaptcha());
     // }
+  },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.prevRoute = from; // eslint-disable-line
+    });
   },
 };
 </script>
