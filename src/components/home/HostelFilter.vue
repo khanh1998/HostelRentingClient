@@ -372,7 +372,10 @@ export default {
       this.$emit('submitFilter');
     },
     changeMaxPrice() {
-      if (this.max < 50) this.max += 5;
+      if (this.filter.price.max < 50) {
+        this.filter.price.max += 5;
+        this.max = this.filter.price.max;
+      }
     },
     filterSubmit() {
       if (!this.filter.coordinator.address) {
