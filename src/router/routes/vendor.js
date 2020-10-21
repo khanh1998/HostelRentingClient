@@ -6,6 +6,7 @@ import VendorBooking from '../../views/vendor/Booking.vue';
 import VendorSchedule from '../../views/vendor/Schedule.vue';
 import VendorMobileMessage from '../../views/vendor/MessageMobile.vue';
 import CreateContract from '../../components/vendor/contract/contract.vue';
+import ViewContractVendor from '../../views/vendor/ViewContractVendor.vue';
 
 const routes = [
   {
@@ -54,6 +55,12 @@ const routes = [
         name: 'contract',
         component: CreateContract,
         meta: { requiresAuth: true, is_vendor: true, vi: 'Hop Dong' },
+      },
+      {
+        path: 'view-contract',
+        name: 'ViewContractVendor',
+        component: ViewContractVendor,
+        meta: { requiresAuth: true, is_vendor: true, vi: 'Quản lý hợp đồng' },
       },
     ],
   },

@@ -28,10 +28,10 @@
         <v-list-item-icon>
           <v-img :src="require('@/assets/' + item.icon + '.png')" max-height="20" max-width="20" />
         </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title class="item-text-display flex-1 text-h6 font-weight-regular">{{
+        <v-list-item-content class="item-text-display flex-1 text-h6 font-weight-regular">
+          {{
             item.title
-          }}</v-list-item-title>
+          }}
         </v-list-item-content>
       </v-list-item>
 
@@ -45,10 +45,9 @@
           />
         </v-list-item-icon>
 
-        <v-list-item-content>
-          <v-list-item-title class="item-text-display flex-1 text-h6 font-weight-regular">{{
+        <v-list-item-content class="item-text-display flex-1 text-h6 font-weight-regular">{{
             itemadd.title
-          }}</v-list-item-title>
+          }}
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -74,6 +73,11 @@ export default {
           title: 'Quản lý nhà trọ',
           icon: 'menu_room',
           link: '/vendor/management',
+        },
+        {
+          title: 'Quản lý hợp đồng',
+          icon: 'contract',
+          link: '/vendor/view-contract',
         },
       ],
 

@@ -40,6 +40,28 @@
             <v-menu bottom right>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+                  <span>{{ statusToLabel[status] }}</span>
+                  <v-icon right>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="changeStatus('ALL')">
+                  <v-list-item-title>Tất cả</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="changeStatus('INCOMING')">
+                  <v-list-item-title>Sắp tới</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="changeStatus('DONE')">
+                  <v-list-item-title>Hoàn tất</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="changeStatus('CANCELLED')">
+                  <v-list-item-title>Đã hủy</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <v-menu bottom right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
                   <span>{{ typeToLabel[type] }}</span>
                   <v-icon right>mdi-menu-down</v-icon>
                 </v-btn>
@@ -70,10 +92,11 @@
             :events="events"
             :event-color="getEventColor"
             :type="type"
+            :status="status"
             @click:event="showEvent"
             @click:more="viewDay"
             @click:date="viewDay"
-            @change="getEvents"
+            @change='getEvents'
           ></v-calendar>
           <v-menu
             v-model="selectedOpen"
@@ -96,15 +119,16 @@
                   </v-avatar>
                   <span class="text-h6 blue--text"> {{ selectedEvent.data.renter.username }} </span>
                 </p>
-                <p><v-icon>call</v-icon> {{ selectedEvent.data.renter.phone }}</p>
+                <p><v-icon>call</v-icon> {{ selectedEvent.data.renter.phone }} </p>
                 <p>
                   <span class="font-weight-bold">
                     <v-icon>today</v-icon>
                     {{ new Date(selectedEvent.start).toLocaleDateString('vi-vn') }}
                   </span>
+
                   <span class="font-weight-bold">
                     <v-icon>schedule</v-icon>
-                    {{ new Date(selectedEvent.start).toLocaleTimeString('vi-vn') }}
+                    {{ new Date(selectedEvent.start).toLocaleTimeString('vi-vn') }} - {{ new Date(selectedEvent.end).toLocaleTimeString('vi-vn') }}
                   </span>
                 </p>
                 <p><v-icon>category</v-icon> {{ selectedEvent.data.type.title }}</p>
@@ -117,7 +141,7 @@
                   }}</span>
                 </p>
               </v-card-text>
-              <v-card-actions v-if="selectedEvent && selectedEvent.data">
+              <v-card-actions v-if="selectedEvent && selectedEvent.data" class="d-flex justify-center">
                 <v-btn
                   v-if="selectedEvent.data.status === 'INCOMING'"
                   dark
@@ -126,6 +150,41 @@
                 >
                   Hủy hẹn
                 </v-btn>
+                <v-dialog
+                  v-model="dialog"
+                  persistent
+                  max-width="290"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn v-if="selectedEvent.data.status === 'INCOMING'"
+                      @click="changeToString(selectedEvent.data.bookingId)" v-bind="attrs"
+                      v-on="on">
+                      <v-icon> mdi-qrcode </v-icon>
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title class="headline" style="background-color: #98b7d7; color: white;">
+                      Mã quét
+                    </v-card-title>
+                    <v-card-text class="d-flex justify-center mt-5">
+                      <div>
+                        <qrcode-vue :value="qrvalue" :size="200" level="H"></qrcode-vue>
+                      </div>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="primary" text @click="dialog = false"> Đóng </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <v-btn v-if="selectedEvent.data.status === 'DONE'"
+                      @click="changeToSContractString(se)"
+                      v-bind="attrs"
+                      v-on="on"
+                      :to="`/vendor/contract?bookingId=${selectedEvent.data.bookingId}`">
+                      <v-icon>far fa-handshake</v-icon>
+                      </v-btn>
               </v-card-actions>
             </v-card>
           </v-menu>
@@ -136,9 +195,13 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';
+import QrcodeVue from 'qrcode.vue';
 
 export default {
   name: 'VendorBooking',
+  components: {
+    QrcodeVue,
+  },
   data: () => ({
     focus: '',
     type: 'month',
@@ -147,6 +210,13 @@ export default {
       week: 'Tuần',
       day: 'Ngày',
       '4day': '4 ngày',
+    },
+    status: 'ALL',
+    statusToLabel: {
+      ALL: 'Tất cả',
+      INCOMING: 'Sắp tới',
+      DONE: 'Hoàn tất',
+      CANCELLED: 'Đã hủy',
     },
     selectedEvent: {},
     selectedElement: null,
@@ -158,6 +228,13 @@ export default {
       show: false,
       bookingId: undefined,
     },
+    time: {
+      start: {},
+      end: {},
+    },
+    dialog: false,
+    dialogContract: false,
+    qrvalue: null,
   }),
   computed: {
     ...mapState({
@@ -169,6 +246,15 @@ export default {
       const isLoadingUser = this.user.isLoading;
       return isLoadingBookings || isLoadingUser;
     },
+    incommingBookings() {
+      return this.bookings.data.filter((booking) => booking.status === 'INCOMING');
+    },
+    doneBookings() {
+      return this.bookings.data.filter((booking) => booking.status === 'DONE');
+    },
+    cancelledBookings() {
+      return this.bookings.data.filter((booking) => booking.status === 'CANCELLED');
+    },
   },
   methods: {
     ...mapActions({
@@ -176,9 +262,17 @@ export default {
       getUser: 'user/getUser',
       cancelBooking: 'user/cancelBooking',
     }),
+    changeToString(bookingId) {
+      this.dialog = true;
+      this.cancelDialog.show = false;
+      this.qrvalue = `booking:${bookingId}`;
+    },
+    changeToSContractString() {
+      this.dialogContract = true;
+      this.cancelDialog.show = false;
+    },
     getEvents({ start, end }) {
       const events = [];
-
       const min = new Date(`${start.date}T00:00:00`);
       const max = new Date(`${end.date}T23:59:59`);
       const { length } = this.bookings.data;
@@ -186,18 +280,29 @@ export default {
         const booking = this.bookings.data[i];
         const meetTime = new Date(booking.meetTime);
         if (meetTime >= min && meetTime <= max) {
-          const endTime = meetTime.setMinutes(meetTime.getMinutes() + 30);
-          events.push({
-            name: this.getEventName(booking),
-            start: meetTime.getTime(),
-            end: endTime,
-            color: this.getEventColor(booking),
-            timed: true,
-            data: booking,
-          });
+          if (this.status === 'ALL') {
+            events.push({
+              name: this.getEventName(booking),
+              start: meetTime.getTime(),
+              end: meetTime.setMinutes(meetTime.getMinutes() + 30),
+              color: this.getEventColor(booking),
+              timed: true,
+              data: booking,
+            });
+          } else if (this.status.toUpperCase() === booking.status) {
+            events.push({
+              name: this.getEventName(booking),
+              start: meetTime.getTime(),
+              end: meetTime.setMinutes(meetTime.getMinutes() + 30),
+              color: this.getEventColor(booking),
+              timed: true,
+              data: booking,
+            });
+          }
         }
       }
-
+      this.time.start = start;
+      this.time.end = end;
       this.events = events;
     },
     getEventName(event) {
@@ -243,6 +348,7 @@ export default {
     showEvent({ nativeEvent, event }) {
       const open = () => {
         this.selectedEvent = event;
+        console.log(this.selectedEvent.data.bookingId);
         this.selectedElement = nativeEvent.target;
         setTimeout(() => {
           this.selectedOpen = true;
@@ -268,6 +374,27 @@ export default {
     },
     doCancelBooking() {
       this.cancelBooking(this.cancelDialog.bookingId).then(this.unshowCancelDialog());
+    },
+    changeStatus(status) {
+      this.status = status;
+      let filterData = this.bookings.data.filter((item) => item.status === status);
+      if (status === 'ALL') {
+        filterData = this.bookings.data;
+      }
+
+      const events = [];
+      for (let i = 0; i < filterData.length; i += 1) {
+        const booking = filterData[i];
+        events.push({
+          name: this.getEventName(booking),
+          start: new Date(booking.meetTime).getTime(),
+          end: new Date(booking.meetTime).setMinutes(new Date(booking.meetTime).getMinutes() + 30),
+          color: this.getEventColor(booking),
+          timed: true,
+          data: booking,
+        });
+      }
+      this.events = events;
     },
   },
   created() {
