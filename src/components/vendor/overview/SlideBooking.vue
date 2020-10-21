@@ -7,7 +7,8 @@
             Mã quét
           </v-card-title>
           <v-card-text class="d-flex justify-center mt-5">
-            <div>
+            <div class="d-flex flex-column justify-center align-center">
+              <p>Người xem phòng quét mã để xác nhận đã gặp mặt.</p>
               <qrcode-vue :value="qrvalue" :size="200" level="H"></qrcode-vue>
             </div>
           </v-card-text>

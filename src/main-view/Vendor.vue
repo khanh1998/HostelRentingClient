@@ -31,7 +31,13 @@
     </v-app-bar>
 
     <v-main style="max-height: calc(100vh); overflow-y: hidden;">
-      <v-container fluid style="max-height: 100%;" class="d-flex flex-column">
+      <v-container
+        id="container"
+        ref="container"
+        fluid
+        style="max-height: 100%;"
+        class="d-flex flex-column"
+      >
         <router-view />
       </v-container>
     </v-main>
