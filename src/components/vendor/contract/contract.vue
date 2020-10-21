@@ -44,7 +44,7 @@ export default {
   name: 'contract',
   components: { InfomationSection, TermsOfContractSection, QrcodeVue },
   data: () => ({
-    heading: 'HỢP ĐỒNG THUÊ PHÒNG TRỌ',
+    heading: 'THÔNG TIN HỢP ĐỒNG',
     contract: {},
     showQRDialog: false,
   }),
