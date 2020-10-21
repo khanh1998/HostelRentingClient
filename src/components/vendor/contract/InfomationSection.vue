@@ -4,7 +4,7 @@
       <v-col>
         <v-card>
           <v-row no-gutters>
-            <v-col cols="6">
+            <v-col cols="12" md="6">
               <v-card-text>
                 <v-container>
                   <h1>BÊN A: BÊN CHO THUÊ</h1>
@@ -15,6 +15,7 @@
                         :value="vendor.username"
                         required
                         readonly
+                        disabled
                         dense
                       ></v-text-field>
                     </v-col>
@@ -24,6 +25,7 @@
                         :value="vendor.yearOfBirth"
                         dense
                         readonly
+                        disabled
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4" md="4">
@@ -32,6 +34,7 @@
                         persistent-hint
                         required
                         readonly
+                        disabled
                         dense
                       ></v-text-field>
                     </v-col>
@@ -41,6 +44,7 @@
                         dense
                         required
                         readonly
+                        disabled
                         :value="new Date(vendor.idIssuedDate)"
                       ></v-text-field>
                     </v-col>
@@ -50,11 +54,12 @@
                         dense
                         required
                         readonly
+                        disabled
                         :value="vendor.idIssuedLocation"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <v-textarea rows="2" readonly dense :value="vendor.householdAddress">
+                      <v-textarea rows="2" readonly disabled dense :value="vendor.householdAddress">
                         <template v-slot:label>
                           <div>
                             Hộ khẩu
@@ -63,7 +68,7 @@
                       </v-textarea>
                     </v-col>
                     <v-col cols="12">
-                      <v-textarea rows="2" readonly dense :value="vendor.currentAddress">
+                      <v-textarea rows="2" readonly disabled dense :value="vendor.currentAddress">
                         <template v-slot:label>
                           <div>
                             Địa chỉ
@@ -78,13 +83,14 @@
                         :value="vendor.phone"
                         required
                         readonly
+                        disabled
                       ></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
               </v-card-text>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="12" md="6">
               <v-card-text>
                 <v-container>
                   <h1>BÊN B: BÊN THUÊ</h1>
@@ -96,6 +102,7 @@
                         dense
                         required
                         readonly
+                        disabled
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
@@ -104,6 +111,7 @@
                         :value="renter.yearOfBirth"
                         dense
                         readonly
+                        disabled
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4" md="4">
@@ -113,6 +121,7 @@
                         persistent-hint
                         required
                         readonly
+                        disabled
                         :value="renter.idNum"
                       ></v-text-field>
                     </v-col>
@@ -122,6 +131,7 @@
                         dense
                         required
                         readonly
+                        disabled
                         :value="new Date(renter.idIssuedDate)"
                       ></v-text-field>
                     </v-col>
@@ -131,11 +141,12 @@
                         dense
                         required
                         readonly
+                        disabled
                         :value="renter.idIssuedLocation"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <v-textarea rows="2" readonly dense :value="renter.householdAddress">
+                      <v-textarea rows="2" readonly disabled dense :value="renter.householdAddress">
                         <template v-slot:label>
                           <div>
                             Hộ khẩu
@@ -144,7 +155,7 @@
                       </v-textarea>
                     </v-col>
                     <v-col cols="12">
-                      <v-textarea rows="2" readonly dense :value="renter.currentAddress">
+                      <v-textarea rows="2" readonly disabled dense :value="renter.currentAddress">
                         <template v-slot:label>
                           <div>
                             Địa chỉ
@@ -159,6 +170,7 @@
                         required
                         readonly
                         dense
+                        disabled
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="8" md="4">
@@ -168,6 +180,7 @@
                         :value="renter.school.schoolName"
                         required
                         readonly
+                        disabled
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
@@ -176,6 +189,7 @@
                         :value="renter.school.address.districtName"
                         rows="2"
                         readonly
+                        disabled
                       >
                         <template v-slot:label>
                           <div>

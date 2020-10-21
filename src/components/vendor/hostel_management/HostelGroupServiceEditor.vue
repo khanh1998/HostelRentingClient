@@ -133,13 +133,13 @@ export default {
         {
           text: 'Tên',
           align: 'start',
-          sortable: false,
+          sortable: true,
           value: 'serviceName',
         },
-        { text: 'Giá (Nghìn đồng)', value: 'price' },
-        { text: 'Đơn vị', value: 'userUnit' },
-        { text: 'Tần suất thanh toán', value: 'timeUnit' },
-        { text: () => (this.select ? 'Chọn' : 'Xoá'), value: 'delete' },
+        { text: 'Giá (Nghìn đồng)', value: 'price', sortable: true },
+        { text: 'Đơn vị', value: 'userUnit', sortable: false },
+        { text: 'Tần suất thanh toán', value: 'timeUnit', sortable: false },
+        { text: () => (this.select ? 'Chọn' : 'Xoá'), value: 'delete', sortable: false },
       ],
       units: ['m³', 'kWh', 'người', 'phòng', 'xe'],
       times: ['tuần', 'tháng', 'năm'],
@@ -156,14 +156,17 @@ export default {
   }),
   computed: {
     groupServiceDesserts() {
-      return this.groupService.map((service) => ({
-        serviceName: service.serviceName,
-        price: service.price,
-        timeUnit: service.timeUnit,
-        userUnit: service.userUnit,
-        serviceId: service.serviceId,
-        select: false,
-      }));
+      return this.groupService
+        .map((service) => ({
+          serviceName: service.serviceName,
+          price: service.price,
+          timeUnit: service.timeUnit,
+          userUnit: service.userUnit,
+          serviceId: service.serviceId,
+          select: false,
+          groupServiceId: service.groupServiceId,
+          active: service.active,
+        }));
     },
     services() {
       return this.$store.state.renter.common.services.data;
@@ -248,6 +251,7 @@ export default {
     }
     if (this.select) {
       this.newServices = [...this.groupServiceDesserts];
+      this.newServices = this.newServices.filter((service) => service.active);
     }
   },
   watch: {
@@ -259,7 +263,7 @@ export default {
     },
     selects: {
       handler() {
-        const selectedServiceIds = this.selects.map((s) => ({ groupServiceId: s.serviceId }));
+        const selectedServiceIds = this.selects.map((s) => ({ groupServiceId: s.groupServiceId }));
         this.$emit('newSelects', selectedServiceIds);
       },
     },

@@ -1,5 +1,11 @@
 <template>
-  <v-data-table :headers="headersF" hide-default-footer :items="facilityItems" class="elevation-1">
+  <v-data-table
+    :headers="headersF"
+    dense
+    hide-default-footer
+    :items="facilityItems"
+    class="elevation-1"
+  >
     <template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title>Nội thất</v-toolbar-title>
@@ -27,7 +33,7 @@ export default {
       {
         text: 'Nội dung',
         align: 'start',
-        sortable: false,
+        sortable: true,
         value: 'facilityName',
       },
       { text: 'Số lượng', value: 'count' },

@@ -7,21 +7,16 @@ const fileUploadMixin = {
   }),
   methods: {
     async uploadFile(formDatas) {
-      try {
-        this.isFileUploading = true;
-        this.listUploadedFiles = [];
-        const res = await window.axios.post('/api/v1/files', formDatas, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        this.isFileUploading = false;
-        this.fileUploadSuccess = true;
-        this.listUploadedFiles = res.data.data.map((item) => item.fileDownloadUri);
-      } catch (error) {
-        this.isFileUploading = false;
-        this.fileUploadError = error;
-      }
+      this.isFileUploading = true;
+      this.listUploadedFiles = [];
+      const res = await window.axios.post('/api/v1/images', formDatas, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      this.isFileUploading = false;
+      this.fileUploadSuccess = true;
+      this.listUploadedFiles = res.data.data.map((item) => item.fileDownloadUri);
     },
   },
   watch: {

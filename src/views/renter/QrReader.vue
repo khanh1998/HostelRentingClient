@@ -22,11 +22,15 @@
       </v-dialog>
       <v-dialog v-model="dialog" width="500">
         <v-card>
-          <v-card-title class="headline" style="background-color: #98b7d7; color: white;">
-            <span v-if="!bookings.success">Xác thực booking thất bại</span>
-            <span v-if="bookings.success">Xác thực booking thành công</span>
+          <v-card-title class="headline">
+            <span v-if="!bookings.success" class="red--text"
+              ><v-icon>report</v-icon> Xác thực booking thất bại</span
+            >
+            <span v-if="bookings.success" class="green--text"
+              ><v-icon>done_outline</v-icon>Xác thực booking thành công</span
+            >
           </v-card-title>
-          <v-card-text class="d-flex justify-center mt-5">
+          <v-card-text v-if="bookings.error" class="d-flex justify-center mt-5">
             <span>{{ bookings.error }}</span>
           </v-card-text>
           <v-divider></v-divider>
@@ -55,7 +59,8 @@
               </v-btn>
             </v-toolbar-items>
           </v-toolbar>
-          <pdf :src="previewDialog.pdf" />
+          <v-progress-linear :value="previewDialog.pdfProgress"></v-progress-linear>
+          <pdf :src="previewDialog.pdf" :page="1" @progress="progressPdf" />
         </v-card>
       </v-dialog>
       <v-dialog v-model="contracts.isUpdating" hide-overlay persistent width="300">
@@ -110,6 +115,7 @@ export default {
       pdf: null,
       contractId: null,
       contractSecret: null,
+      pdfProgress: 0,
     },
   }),
   methods: {
@@ -186,6 +192,9 @@ export default {
           this.error = 'ERROR: Stream API is not supported in this browser';
         }
       }
+    },
+    progressPdf(progress) {
+      this.previewDialog.pdfProgress = Math.ceil(progress * 100);
     },
   },
   computed: {

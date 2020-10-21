@@ -1,5 +1,5 @@
 <template>
-  <v-card class="overflow-y-auto" max-height="100%">
+  <v-card class="overflow-y-auto" max-height="100%" ref="contractView" id="contractView">
     <v-dialog v-model="contracts.isCreating" hide-overlay persistent width="300">
       <v-card color="primary" dark>
         <v-card-text>
@@ -8,20 +8,32 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="showQRDialog" width="300">
-      <p class="text-h6">Quét mã để kích hoạt hợp đồng</p>
-      <QrcodeVue :value="qrCodeValue" v-if="contracts.newlyCreated" :size="200" level="H" />
+    <v-dialog v-model="showQRDialog" width="350">
+      <v-card>
+        <v-card-title style="background-color: #98b7d7; color: white;">Mã quét</v-card-title>
+        <v-card-text>
+          <p>Người xem phòng quét mã để xem lại và kích hoạt hợp đồng.</p>
+          <div class="d-flex justify-center align-center">
+            <QrcodeVue :value="qrCodeValue" v-if="contracts.newlyCreated" :size="200" level="H" />
+          </div>
+        </v-card-text>
+      </v-card>
     </v-dialog>
     <div class="d-flex justify-center" style="font-size: 45px;">{{ heading }}</div>
-    <v-tabs>
+    <v-tabs v-model="tabs.index">
       <v-tab>
-        Thông tin hai bên
+        1. Thông tin hai bên
       </v-tab>
       <v-tab>
-        Điều khoản
+        2. Điều khoản
       </v-tab>
       <v-tab-item>
-        <InfomationSection :renter="booking.renter" :vendor="booking.vendor" />
+        <div class="d-flex flex-column justify-center align-center">
+          <InfomationSection :renter="booking.renter" :vendor="booking.vendor" />
+          <v-btn color="primary" large class="ma-2" @click="goToNextTab"
+            >Tiếp tục <v-icon>arrow_forward_ios</v-icon></v-btn
+          >
+        </div>
       </v-tab-item>
       <v-tab-item>
         <TermsOfContractSection
@@ -47,6 +59,9 @@ export default {
     heading: 'HỢP ĐỒNG THUÊ PHÒNG TRỌ',
     contract: {},
     showQRDialog: false,
+    tabs: {
+      index: 0,
+    },
   }),
   methods: {
     ...mapActions({
@@ -54,7 +69,6 @@ export default {
       getOneBooking: 'user/getOneBooking',
       createContract: 'user/createContract',
     }),
-
     ...mapGetters({
       findBookingById: 'user/findBookingById',
     }),
@@ -67,10 +81,13 @@ export default {
       this.contract.dealId = deal ? deal.dealId : null;
       this.contract.renterId = this.booking.renter.userId;
       this.contract.vendorId = this.booking.vendor.userId;
-      this.contract.startTime = this.contract.startTime.getTime();
       this.contract.duration = Number(this.contract.duration);
       console.log(this.contract);
       this.createContract(this.contract);
+    },
+    goToNextTab() {
+      this.tabs.index += 1;
+      document.getElementById('contractView').scrollTop = 0;
     },
   },
   computed: {

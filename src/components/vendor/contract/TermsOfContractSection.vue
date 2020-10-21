@@ -4,13 +4,13 @@
       <v-col>
         <v-card>
           <v-row no-gutters>
-            <v-col cols="6">
+            <v-col cols="12" md="6">
               <v-card-text>
                 <v-container>
                   <h1>Điều 1</h1>
                   <v-row>
                     <v-col cols="12">
-                      <v-textarea v-model="addressString" rows="2" readonly>
+                      <v-textarea v-model="addressString" rows="2" readonly disabled>
                         <template v-slot:label>
                           <div>
                             Địa chỉ phòng trọ
@@ -33,6 +33,7 @@
                         v-model="contract.duration"
                         type="number"
                         suffix="tháng"
+                        :rules="isPositiveInt"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6">
@@ -59,6 +60,7 @@
                           no-title
                           @input="menu1 = false"
                           locale="vi"
+                          :allowed-dates="allowedDates"
                         ></v-date-picker>
                       </v-menu>
                     </v-col>
@@ -69,8 +71,12 @@
                           suffix="Triệu đồng/Tháng"
                           label="Giá thuê phòng"
                           type="number"
+                          disabled
+                          readonly
                         ></v-text-field>
                         <v-text-field
+                          readonly
+                          disabled
                           class="ml-2"
                           v-model="type.deposit"
                           label="Đặt cọc"
@@ -96,7 +102,7 @@
                 </v-container>
               </v-card-text>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="12" md="6">
               <v-card-text>
                 <v-container>
                   <v-row>
@@ -127,7 +133,7 @@
                   </v-row>
                   <v-row>
                     <v-col>
-                      <ImageEditor />
+                      <ImageEditor @newValues="receiveNewImages" />
                     </v-col>
                     <v-col class="12" style="font-size: 18px;">
                       <v-btn
@@ -153,10 +159,12 @@ import HostelGroupServiceEditor from '../hostel_management/HostelGroupServiceEdi
 import RegulationTable from './RegulationTable.vue';
 import FacilityTable from './FacilityTable.vue';
 import ImageEditor from '../hostel_management/ImageEditor.vue';
+import validateMixins from '../../mixins/validate';
 
 export default {
   name: 'TermsOfContractSection',
   props: ['type', 'group'],
+  mixins: [validateMixins],
   components: {
     HostelGroupServiceEditor,
     RegulationTable,
@@ -170,7 +178,8 @@ export default {
       roomId: null,
       duration: null,
       groupServiceIds: [],
-      startTime: new Date(),
+      startTime: new Date().getTime(),
+      evidenceImgUrl: null,
     },
     rooms: {
       data: [],
@@ -183,6 +192,9 @@ export default {
     receiveSelectServiceIds(selectServiceIds) {
       console.log(selectServiceIds);
       this.contract.groupServiceIds = selectServiceIds;
+    },
+    receiveNewImages(imageUrls) {
+      [this.contract.evidenceImgUrl] = imageUrls;
     },
     async getRoomsOfType() {
       try {
@@ -220,6 +232,9 @@ export default {
         this.$emit('newValue', this.contract);
       },
       deep: true,
+    },
+    startTime() {
+      this.contract.startTime = new Date(this.startTime).getTime();
     },
   },
 };
