@@ -121,6 +121,9 @@ export default {
 .text-danger {
   color: #fa5c7c !important;
 }
+.text-brown {
+  color: #adb5bd !important;
+}
 .bg-secondary {
   color: #727cf5 !important;
   background-color: rgba(114, 124, 245, 0.18) !important;

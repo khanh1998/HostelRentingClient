@@ -610,7 +610,10 @@ export default {
       return this.districtStat.wards.filter((w) => w.wardId === this.group.address.wardId)[0];
     },
     streetStat() {
-      return this.wardStat.streets.filter((s) => s.streetId === this.group.address.streetId)[0];
+      if (this.wardStat) {
+        return this.wardStat.streets.filter((s) => s.streetId === this.group.address.streetId)[0];
+      }
+      return null;
     },
     searchValue() {
       return window.$cookies.get('searchValue');
@@ -649,6 +652,13 @@ export default {
       .then(() => this.getNearByUtilities())
       .then(() => this.getAllHostelTypes(this.group.groupId))
       .then(() => this.getDistrictStatistic(this.group.address.districtId));
+    console.log(
+      this.searchValue &&
+        (this.schoolSelected || this.hometownSelected) &&
+        (this.schoolMate !== 0 || this.compatriot !== 0),
+    );
+    console.log(this.schoolSelected && this.schoolMate !== 0);
+    console.log(this.hometownSelected && this.compatriot !== 0);
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
