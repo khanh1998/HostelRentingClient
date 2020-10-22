@@ -50,7 +50,7 @@
             <v-col cols="12" md="6">
               <v-card-text>
                 <v-container>
-                  <span class="text-h6">BÊN A: BÊN CHO THUÊ</span>
+                  <span class="text-h6">BÊN B: BÊN THUÊ</span>
                   <v-row class="mt-5">
                     <v-col cols="12" sm="6" md="6" class="d-flex pb-0">
                       <span class="font-weight-bold text-gray-black">Ông (Bà): </span
