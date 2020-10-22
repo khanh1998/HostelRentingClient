@@ -1,7 +1,7 @@
 <template>
   <v-data-table dense :headers="headersR" hide-default-footer :items="rules" class="elevation-1">
     <template v-slot:item.allowed="{ item }">
-      <v-simple-checkbox v-model="item.allowed" readonly></v-simple-checkbox>
+      <v-simple-checkbox v-model="item.allowed" disabled></v-simple-checkbox>
     </template>
     <template v-slot:top>
       <v-toolbar flat>

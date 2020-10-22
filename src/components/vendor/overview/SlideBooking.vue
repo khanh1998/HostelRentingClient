@@ -80,11 +80,14 @@
                   <v-icon> mdi-qrcode </v-icon>
                 </v-btn>
                 <v-btn
-                  v-if="booking.status === 'DONE'"
+                  v-if="booking.status === 'DONE' && !booking.contractId"
                   icon
                   :to="`/vendor/contract?bookingId=${booking.bookingId}`"
                 >
                   <v-icon>far fa-handshake</v-icon></v-btn
+                >
+                <v-btn v-if="booking.status === 'DONE' && booking.contractId" icon>
+                  <v-icon>done_all</v-icon></v-btn
                 >
               </v-list-item-action>
             </v-list-item>

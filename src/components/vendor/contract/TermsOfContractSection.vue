@@ -152,7 +152,7 @@
                   </v-row>
                   <v-row>
                     <v-col cols="12" style="font-size: 18px;">
-                      <v-btn class="ma-4 btn-primary ml-auto" @click="$emit('clickCreateContract')">
+                      <v-btn class="ma-4 btn-primary ml-auto" @click="checkEmptyField">
                         Tạo hợp đồng
                       </v-btn>
                     </v-col>
@@ -164,6 +164,21 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-snackbar
+      v-model="snackBarMixin.show"
+      :multi-line="snackBarMixin.multiLine"
+      :timeout="snackBarMixin.timeout"
+      :absolute="snackBarMixin.absolute"
+      :color="snackBarMixin.color"
+    >
+      {{ snackBarMixin.message }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-card>
 </template>
 <script>
@@ -172,11 +187,12 @@ import RegulationTable from './RegulationTable.vue';
 import FacilityTable from './FacilityTable.vue';
 import ImageEditor from '../hostel_management/ImageEditor.vue';
 import validateMixins from '../../mixins/validate';
+import SnackBarMixins from '../../mixins/snackBar';
 
 export default {
   name: 'TermsOfContractSection',
   props: ['type', 'group'],
-  mixins: [validateMixins],
+  mixins: [validateMixins, SnackBarMixins],
   components: {
     HostelGroupServiceEditor,
     RegulationTable,
@@ -220,6 +236,15 @@ export default {
         this.rooms.isLoading = false;
         this.rooms.error = error;
         this.rooms.success = false;
+      }
+    },
+    checkEmptyField() {
+      if (!this.contract.roomId) {
+        this.showSnackBar('Chọn phòng trước khi tạo hợp đồng', { color: 'red' });
+      } else if (!this.contract.duration) {
+        this.showSnackBar('Nhập Thời hạn hợp đồng', { color: 'red' });
+      } else {
+        this.$emit('clickCreateContract');
       }
     },
   },

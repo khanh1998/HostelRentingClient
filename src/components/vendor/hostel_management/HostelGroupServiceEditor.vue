@@ -272,6 +272,7 @@ export default {
     newServices: {
       handler() {
         this.$emit('newValue', this.newServices);
+        this.selects = this.newServices.filter((s) => s.select);
       },
       deep: true,
     },

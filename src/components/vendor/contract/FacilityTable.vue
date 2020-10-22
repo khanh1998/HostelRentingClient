@@ -30,15 +30,16 @@ export default {
     dialogF: false,
     dialogDeleteF: false,
     headersF: [
+      { text: 'Số thứ tự', align: 'start', value: 'no' },
       {
         text: 'Nội dung',
         align: 'start',
         sortable: true,
         value: 'facilityName',
       },
-      { text: 'Số lượng', value: 'count' },
-      { text: 'Đơn vị tính', value: 'unit', sortable: false },
-      { value: 'actions', sortable: false },
+      // { text: 'Số lượng', value: 'count' },
+      // { text: 'Đơn vị tính', value: 'unit', sortable: false },
+      // { value: 'actions', sortable: false },
     ],
     editedIndexF: -1,
     editedItemF: {
@@ -92,7 +93,12 @@ export default {
     },
   },
   created() {
-    this.facilityItems = this.facilities.map((f) => ({ ...f, count: 1, unit: 'Cái' }));
+    this.facilityItems = this.facilities.map((f, index) => ({
+      no: index + 1,
+      ...f,
+      count: 1,
+      unit: 'Cái',
+    }));
   },
 };
 </script>
