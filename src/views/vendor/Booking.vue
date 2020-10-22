@@ -24,20 +24,9 @@
     </v-dialog>
     <v-row v-if="!isLoading">
       <v-col>
-        <v-sheet height="64">
-          <v-toolbar flat color="white">
-            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday"> Hôm nay </v-btn>
-            <v-btn fab text small color="grey darken-2" @click="prev">
-              <v-icon small>mdi-chevron-left</v-icon>
-            </v-btn>
-            <v-btn fab text small color="grey darken-2" @click="next">
-              <v-icon small>mdi-chevron-right</v-icon>
-            </v-btn>
-            <v-toolbar-title v-if="$refs.calendar">
-              {{ $refs.calendar.title }}
-            </v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-menu bottom right>
+        <v-row no-gutters class="hidden-sm-and-up">
+              <v-col cols="6" class="d-flex justify-center">
+                <v-menu bottom right>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
                   <span>{{ statusToLabel[status] }}</span>
@@ -59,7 +48,9 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-            <v-menu bottom right>
+              </v-col>
+              <v-col cols="6" class="d-flex justify-center">
+                <v-menu bottom right>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
                   <span>{{ typeToLabel[type] }}</span>
@@ -81,6 +72,72 @@
                 </v-list-item>
               </v-list>
             </v-menu>
+              </v-col>
+        </v-row>
+        <v-sheet height="64">
+          <v-toolbar flat color="white">
+            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday"> Hôm nay </v-btn>
+            <v-btn fab text small color="grey darken-2" @click="prev">
+              <v-icon small>mdi-chevron-left</v-icon>
+            </v-btn>
+            <v-btn fab text small color="grey darken-2" @click="next">
+              <v-icon small>mdi-chevron-right</v-icon>
+            </v-btn>
+            <v-toolbar-title v-if="$refs.calendar">
+              {{ $refs.calendar.title }}
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <!-- <v-row no-gutters class="d-flex justify-end"> -->
+              <!-- <v-col cols="12"> --><div class="hidden-sm-and-down">
+                <v-menu bottom right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+                  <span>{{ statusToLabel[status] }}</span>
+                  <v-icon right>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="changeStatus('ALL')">
+                  <v-list-item-title>Tất cả</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="changeStatus('INCOMING')">
+                  <v-list-item-title>Sắp tới</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="changeStatus('DONE')">
+                  <v-list-item-title>Hoàn tất</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="changeStatus('CANCELLED')">
+                  <v-list-item-title>Đã hủy</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+              <!-- </v-col> -->
+              <!-- <v-col cols="12"> -->
+                <v-menu bottom right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+                  <span>{{ typeToLabel[type] }}</span>
+                  <v-icon right>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="type = 'day'">
+                  <v-list-item-title>Ngày</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = 'week'">
+                  <v-list-item-title>Tuần</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = 'month'">
+                  <v-list-item-title>Tháng</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = '4day'">
+                  <v-list-item-title>4 Ngày</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            </div>
+              <!-- </v-col>
+            </v-row> -->
           </v-toolbar>
         </v-sheet>
         <v-sheet height="500">
@@ -103,23 +160,39 @@
             :close-on-content-click="false"
             :activator="selectedElement"
             offset-x
+            :nudge-width="200"
           >
-            <v-card color="grey lighten-4" min-width="350px" flat>
+            <v-card color="grey lighten-4" flat
+              >
+              <!-- v-click-outside="onClickOutSide"> -->
               <v-toolbar :color="selectedEvent.color" dark>
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                <v-spacer></v-spacer>
+                <button class="d-flex justify-end" @click="onClickOutSide">X</button>
               </v-toolbar>
               <v-card-text v-if="selectedEvent && selectedEvent.data">
                 <p class="text-center">
                   <v-avatar>
                     <v-img
                       :src="
-                        selectedEvent.data.renter.avartar || require('@/assets/suzy-avatar.jpg')
+                        selectedEvent.data.renter.avatar || require('@/assets/user.png')
                       "
                     />
                   </v-avatar>
                   <span class="text-h6 blue--text"> {{ selectedEvent.data.renter.username }} </span>
                 </p>
-                <p><v-icon>call</v-icon> {{ selectedEvent.data.renter.phone }} </p>
+                <v-row>
+                  <v-col cols="6">
+                    <p><v-icon>call</v-icon> {{ selectedEvent.data.renter.phone }} </p>
+                <p v-if="selectedEvent.data.deal != null"><span><v-icon>money</v-icon>  {{ selectedEvent.data.deal.offeredPrice }} {{selectedEvent.data.type.priceUnit}}</span></p>
+                <p v-if="selectedEvent.data.deal == null"><span><v-icon>money</v-icon>  {{selectedEvent.data.type.price}} {{selectedEvent.data.type.priceUnit}}</span></p>
+                  </v-col>
+                  <v-col cols="6">
+                    <div v-if="selectedEvent.data.status === 'INCOMING'" v-on="changeToString(selectedEvent.data.bookingId)">
+                        <qrcode-vue :value="qrvalue" :size="100" level="H"></qrcode-vue>
+                    </div>
+                  </v-col>
+                </v-row>
                 <p>
                   <span class="font-weight-bold">
                     <v-icon>today</v-icon>
@@ -150,7 +223,7 @@
                 >
                   Hủy hẹn
                 </v-btn>
-                <v-dialog
+                <!-- <v-dialog
                   v-model="dialog"
                   persistent
                   max-width="290"
@@ -177,7 +250,7 @@
                       <v-btn color="primary" text @click="dialog = false"> Đóng </v-btn>
                     </v-card-actions>
                   </v-card>
-                </v-dialog>
+                </v-dialog> -->
                 <v-btn v-if="selectedEvent.data.status === 'DONE'"
                       @click="changeToSContractString(se)"
                       v-bind="attrs"
@@ -348,7 +421,7 @@ export default {
     showEvent({ nativeEvent, event }) {
       const open = () => {
         this.selectedEvent = event;
-        console.log(this.selectedEvent.data.bookingId);
+        console.log(`showevent${this.selectedEvent.data.bookingId}`);
         this.selectedElement = nativeEvent.target;
         setTimeout(() => {
           this.selectedOpen = true;
@@ -395,6 +468,12 @@ export default {
         });
       }
       this.events = events;
+    },
+    onClickOutSide() {
+      console.log(`truoc${this.selectedEvent.data.bookingId}`);
+      this.selectedOpen = false;
+      this.selectedEvent = {};
+      console.log(`sau${this.selectedEvent.data.bookingId}`);
     },
   },
   created() {

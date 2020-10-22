@@ -10,22 +10,41 @@
         flat
         hide-details
         label="Tìm kiếm tin nhắn"
+        v-model="searchQuery"
         prepend-inner-icon="search"
         solo-inverted
       ></v-text-field>
+          <!-- <v-menu bottom right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+                  <span>aaa</span>
+                  <v-icon right>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="changeStatus('ALL')">
+                  <v-list-item-title>Tất cả</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="changeStatus('INCOMING')">
+                  <v-list-item-title>Trả giá</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="changeStatus('DONE')">
+                  <v-list-item-title>Đặt lịch</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu> -->
     </v-toolbar>
-
-    <div style="height: 100%; overflow-y: auto;">
+    <div style="height: 100%; overflow-y: auto;min-width: 310px">
       <vue-scroll>
         <v-list two-line nav avatar class="rounded-l">
           <v-list-item-group color="primary">
             <v-list-item
               dense
-              v-for="item in docsHasMessage"
+              v-for="item in resultQuery"
               :key="item.id"
               @click="$emit('clickChat', getDocRef(item.id))"
             >
-              <v-list-item-avatar>
+            <v-list-item-avatar>
                 <v-img :src="getUserById(item.renterId).avatar"></v-img>
                 <v-icon>face</v-icon>
               </v-list-item-avatar>
@@ -86,6 +105,14 @@ export default {
       docRefs: [],
       docs: [],
       renterIds: [],
+      searchQuery: '',
+      idList: [],
+      tab: null,
+      tabItems: [
+        { id: 1, name: 'Tất cả' },
+        { id: 2, name: 'Trả giá' },
+        { id: 3, name: 'Đặt lịch' },
+      ],
     };
   },
   computed: {
@@ -93,7 +120,7 @@ export default {
       getUserById: 'vendor/overview/getUserById',
     }),
     docsHasMessage() {
-      return this.docs.filter((item) => item.lastedMessage);
+      return this.docs;
     },
     listDealChange() {
       return this.items.filter((items) => {
@@ -120,6 +147,9 @@ export default {
     renterList() {
       return this.$store.state.vendor.overview.usersChatList.data;
     },
+    // filterRenterIs() { // tra ve danh sach id
+    //   return this.renterList.filter;
+    // },
     isLoadingRenterList() {
       return this.$store.state.vendor.overview.usersChatList.isLoadings;
     },
@@ -138,6 +168,18 @@ export default {
         default:
           return null;
       }
+    },
+    resultQuery() {
+      if (this.searchQuery) {
+        const idList = this.renterList.filter((item1) => item1.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1).map((item2) => item2.userId);
+        return this.docs.filter((item) => idList.includes(item.renterId)).filter((item2) => item2.lastedMessage);
+      }
+      return this.docs.filter((item) => item.lastedMessage);
+      // if (this.searchQuery) {
+      //   return this.renterList.filter((item) => this.searchQuery.toLowerCase().split(' ').every((v) => item.username.toLowerCase().includes(v)));
+      // }
+      // return this.docs.filter((item) => item.lastedMessage);
+      // return this.docs.filter((item) => item.lastedMessage.getUserById(item.renterId).username.toLowerCase().includes(this.searchQuery));
     },
   },
   methods: {
@@ -163,7 +205,7 @@ export default {
     },
     getDocRef(id) {
       const res = this.docRefs[id];
-      console.log(res);
+      // console.log(res);
       return res;
     },
     denyMessage() {
@@ -197,7 +239,7 @@ export default {
           });
           message = result;
         });
-      console.log(message);
+      // console.log(message);
       return message;
     },
     async fetchNewBooking(doc) {
