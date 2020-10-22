@@ -290,7 +290,7 @@
               cols="11"
               md="4"
               style="padding: 0 !important;"
-              v-if="hometownSelected && type.compatriot"
+              v-if="hometownSelected && type.compatriot !== 0"
               class="d-flex justify-center align-center"
             >
               <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
@@ -474,10 +474,11 @@ export default {
     },
     schoolSelected() {
       if (this.searchValue && this.searchValue.includes('schoolId')) {
-        window.$cookies.set('schoolMate', this.type.schoolMate);
+        window.$cookies.set('schoolMate', Number(this.type.schoolMate));
         const schoolIdSelected = Number(this.searchValue.split('&schoolId=')[1].split('&')[0]);
         return this.school.items.find((i) => i.schoolId === schoolIdSelected);
       }
+      window.$cookies.set('schoolMate', 0);
       return null;
     },
     hometown() {
@@ -485,10 +486,11 @@ export default {
     },
     hometownSelected() {
       if (this.searchValue && this.searchValue.includes('provinceId')) {
-        window.$cookies.set('compatriot', this.type.compatriot);
+        window.$cookies.set('compatriot', Number(this.type.compatriot));
         const hometownIdSelectd = Number(this.searchValue.split('&provinceId=')[1].split('&')[0]);
         return this.hometown.items.find((p) => p.provinceId === hometownIdSelectd);
       }
+      window.$cookies.set('compatriot', 0);
       return null;
     },
     services() {

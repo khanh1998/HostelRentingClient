@@ -118,8 +118,14 @@ export default {
 .text-gray-dark {
   color: #343a40;
 }
+.text-gray-black {
+  color: #495057;
+}
 .text-danger {
   color: #fa5c7c !important;
+}
+.text-brown {
+  color: #adb5bd !important;
 }
 .bg-secondary {
   color: #727cf5 !important;

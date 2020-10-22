@@ -5,11 +5,19 @@
     </v-overlay>
     <v-container fluid v-if="!isLoading" class="px-0">
       <v-row justify="center" style="background-color: #f3f4f9;">
-        <v-col cols="12" sm="12" md="10" lg="10" xl="10">
-          <div class="d-flex flex-column justify-center align-center topview-lable mt-16">
-            <div class="line-blue mb-5"></div>
-            <p>Các Phòng Được Đề Xuất Tốt Nhất</p>
-          </div>
+        <v-col
+          cols="12"
+          sm="12"
+          md="10"
+          lg="10"
+          xl="10"
+          class="d-flex flex-column justify-center align-center"
+        >
+          <div class="line-blue mb-5 mt-10"></div>
+          <span class="topview-lable">Các Phòng Được Đề Xuất Tốt Nhất</span>
+          <span class="font-nunito text-brown size9rem mt-3" v-if="totalType && totalType > 0"
+            >Tìm thấy {{ totalType }} kết quả phù hợp</span
+          >
         </v-col>
       </v-row>
       <v-row>
@@ -47,9 +55,8 @@
                         label="Ngày rảnh"
                         hide-details
                         dense
-                        _outlined
                         solo
-                        class="size-sub-2"
+                        class="size-sub-2 hostel-filter"
                       ></v-select>
                     </v-col>
                     <v-spacer></v-spacer>

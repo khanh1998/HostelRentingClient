@@ -54,7 +54,7 @@ const routes = [
         path: 'contract',
         name: 'contract',
         component: CreateContract,
-        meta: { requiresAuth: true, is_vendor: true, vi: 'Hop Dong' },
+        meta: { requiresAuth: true, is_vendor: true, vi: 'Tạo hợp đồng' },
       },
       {
         path: 'view-contract',

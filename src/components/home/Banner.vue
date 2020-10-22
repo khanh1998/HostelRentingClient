@@ -264,7 +264,7 @@
             </div>
             <div :style="{ width: '30%' }" class="hidden-xs-only">
               <v-row class="d-flex align-end pr-3">
-                <v-switch class="ml-auto" hide-details v-model="disabled" />
+                <v-switch class="ml-auto filter" hide-details v-model="disabled" />
                 <span
                   class="text-body-1 font-weight-medium px-0"
                   style="line-height: normal; color: #ffff00;"
@@ -275,7 +275,7 @@
           </v-col>
           <v-col cols="5" class="d-flex d-sm-none" :style="{ height: '76px' }">
             <div :style="{ width: '100%' }" class="d-flex align-end hidden-xs-only">
-              <v-switch class="ml-auto" hide-details v-model="disabled" />
+              <v-switch class="ml-auto filter" hide-details v-model="disabled" />
               <span
                 class="text-body-1 font-weight-medium px-0"
                 style="line-height: normal; color: #ffff00;"
@@ -288,7 +288,7 @@
               v-model="filter.price.range"
               :max="filter.price.max"
               :min="filter.price.min"
-              class="price"
+              class="price filter"
               hide-details
               :thumb-size="28"
               thumb-label="always"

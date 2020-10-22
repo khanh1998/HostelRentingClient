@@ -5,111 +5,127 @@
         <v-card>
           <v-row no-gutters>
             <v-col cols="12" md="6">
-              <v-card-text>
-                <v-container>
-                  <h1>Điều 1</h1>
-                  <v-row>
-                    <v-col cols="12">
-                      <v-textarea v-model="addressString" rows="2" readonly disabled>
-                        <template v-slot:label>
-                          <div>
-                            Địa chỉ phòng trọ
-                          </div>
-                        </template>
-                      </v-textarea>
-                      <v-select
-                        :loading="rooms.isLoading"
-                        label="Chọn phòng"
-                        v-model="contract.roomId"
-                        :items="availableRooms"
-                        item-text="roomName"
-                        item-value="roomId"
-                      >
-                      </v-select>
-                    </v-col>
-                    <v-col cols="12" sm="6">
-                      <v-text-field
-                        label="Thời hạn hợp đồng"
-                        v-model="contract.duration"
-                        type="number"
-                        suffix="tháng"
-                        :rules="isPositiveInt"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6">
-                      <v-menu
-                        v-model="menu1"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        max-width="290px"
-                        min-width="290px"
-                      >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
-                            label="Ngày bắt đầu hợp đồng"
-                            persistent-hint
-                            prepend-icon="mdi-calendar"
-                            v-bind="attrs"
-                            v-on="on"
-                            :value="startTimeString"
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          v-model="startTime"
-                          no-title
-                          @input="menu1 = false"
-                          locale="vi"
-                          :allowed-dates="allowedDates"
-                        ></v-date-picker>
-                      </v-menu>
-                    </v-col>
-                    <v-col cols="12">
-                      <div class="d-flex flex-row flex-nowrap">
-                        <v-text-field
-                          v-model="type.price"
-                          suffix="Triệu đồng/Tháng"
-                          label="Giá thuê phòng"
-                          type="number"
-                          disabled
-                          readonly
-                        ></v-text-field>
-                        <v-text-field
-                          readonly
-                          disabled
-                          class="ml-2"
-                          v-model="type.deposit"
-                          label="Đặt cọc"
-                          suffix="tháng tiền phòng"
-                          type="number"
-                        ></v-text-field>
-                      </div>
-                    </v-col>
-                  </v-row>
-                  <h1>Điều 2</h1>
-                  <div class="d-flex justify-center">
-                    Các dịch vụ, nội thất, quy định khi thuê phòng trọ
-                  </div>
-                  <v-row>
-                    <v-col class="12">
-                      <HostelGroupServiceEditor
-                        :groupService="group.services"
-                        :select="true"
-                        @newSelects="receiveSelectServiceIds"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-container>
+              <v-card-text class="d-flex flex-column">
+                <span class="text-h6 mt-5"
+                  >ĐIỀU 1: <span class="font-weight-regular">Thông tin phòng trọ</span></span
+                >
+                <span class="text-muted font-italic"
+                  >Vui lòng nhập đầy đủ các thông tin bắt buộc</span
+                >
+                <v-row>
+                  <v-col cols="12" class="d-flex flex-column">
+                    <span class="font-weight-bold text-gray-black">Chọn nhà </span>
+                    <span class="text size-sub-2 px-3 py-2 mt-2">{{ group.groupName }}</span>
+                  </v-col>
+                  <v-col cols="12" class="d-flex flex-column">
+                    <!-- <v-textarea v-model="addressString" rows="2" readonly disabled>
+                      <template v-slot:label>
+                        <div>
+                          Địa chỉ phòng trọ
+                        </div>
+                      </template>
+                    </v-textarea> -->
+                    <span class="font-weight-bold text-gray-black"
+                      >Chọn phòng <span class="text-danger">(*)</span>
+                    </span>
+                    <v-select
+                      :loading="rooms.isLoading"
+                      v-model="contract.roomId"
+                      :items="availableRooms"
+                      item-text="roomName"
+                      item-value="roomId"
+                      hide-details
+                      dense
+                      solo
+                      class="size-sub-2 mt-2"
+                    >
+                    </v-select>
+                  </v-col>
+
+                  <v-col cols="12" sm="6" class="d-flex flex-column">
+                    <span class="font-weight-bold text-gray-black"
+                      >Ngày bắt đầu hợp đồng<span class="text-danger">(*)</span>
+                    </span>
+                    <v-menu
+                      v-model="menu1"
+                      :close-on-content-click="false"
+                      transition="scale-transition"
+                      offset-y
+                      max-width="290px"
+                      min-width="290px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <span class="text size-sub-2 px-3 py-2 mt-2" v-bind="attrs" v-on="on">{{
+                          startTimeString
+                        }}</span>
+                      </template>
+                      <v-date-picker
+                        v-model="startTime"
+                        no-title
+                        @input="menu1 = false"
+                        locale="vi"
+                        :allowed-dates="allowedDates"
+                      ></v-date-picker>
+                    </v-menu>
+                  </v-col>
+                  <v-col cols="12" sm="6" class="d-flex flex-column">
+                    <span class="font-weight-bold text-gray-black"
+                      >Thời hạn hợp đồng<span class="text-danger">(*)</span></span
+                    >
+                    <v-text-field
+                      class="size-sub-2 mt-2"
+                      type="number"
+                      color="#727cf5"
+                      solo
+                      dense
+                      light
+                      hide-details
+                      v-model="contract.duration"
+                      suffix="Tháng"
+                      step="1"
+                      min="1"
+                      :rules="isPositiveInt"
+                    />
+                  </v-col>
+                  <v-col cols="6" sm="6" class="d-flex flex-column">
+                    <span class="font-weight-bold text-gray-black">Tiền thuê </span>
+                    <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
+                      ><span>{{ type.price }}</span>
+                      <span class="ml-auto">triệu/tháng</span>
+                    </span>
+                  </v-col>
+                  <v-col cols="6" sm="6" class="d-flex flex-column">
+                    <span class="font-weight-bold text-gray-black">Tiền cọc</span>
+                    <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
+                      ><span>{{ type.deposit }}</span>
+                      <span class="ml-auto">tháng tiền phòng</span>
+                    </span>
+                  </v-col>
+                </v-row>
+                <span class="text-h6 mt-5"
+                  >ĐIỀU 2: <span class="font-weight-regular">Thông tin dịch vụ</span></span
+                >
+                <span class="text-muted font-italic">Chọn dịch vụ mà bạn sẽ tính tiền</span>
+                <v-row>
+                  <v-col class="12">
+                    <HostelGroupServiceEditor
+                      :groupService="group.services"
+                      :select="true"
+                      @newSelects="receiveSelectServiceIds"
+                    />
+                  </v-col>
+                </v-row>
+                <!-- </v-container> -->
               </v-card-text>
             </v-col>
             <v-col cols="12" md="6">
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col class="12">
+                    <v-col cols="12" md="6">
                       <FacilityTable :facilities="type.facilities" />
                     </v-col>
-                    <v-col class="12">
+                    <v-col cols="12" md="6">
                       <RegulationTable :rules="group.regulations" />
                     </v-col>
                   </v-row>
@@ -130,17 +146,13 @@
                       Bên A ngưng hợp đồng (lấy lại nhà) trước thời hạn thì bồi thường gấp đôi số
                       tiền bên B đã đặt cọc.
                     </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col>
+                    <v-col cols="12">
                       <ImageEditor @newValues="receiveNewImages" />
                     </v-col>
-                    <v-col class="12" style="font-size: 18px;">
-                      <v-btn
-                        color="primary"
-                        class="white--text"
-                        @click="$emit('clickCreateContract')"
-                      >
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12" style="font-size: 18px;">
+                      <v-btn class="ma-4 btn-primary ml-auto" @click="$emit('clickCreateContract')">
                         Tạo hợp đồng
                       </v-btn>
                     </v-col>
@@ -239,3 +251,12 @@ export default {
   },
 };
 </script>
+<style>
+.text {
+  border: 1px solid #e1e1e1 !important;
+  border-radius: 0.25rem;
+}
+.theme--light.v-text-field > .v-input__control > .v-input__slot:before {
+  border-color: #e1e1e1;
+}
+</style>

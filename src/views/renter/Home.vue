@@ -252,6 +252,7 @@ export default {
     },
   },
   created() {
+    window.$cookies.set('searchValue', null);
     if (this.categories.length === 0) {
       this.getAllCategories();
     }

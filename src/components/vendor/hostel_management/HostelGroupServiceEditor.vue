@@ -77,6 +77,7 @@
             hide-details
             v-model="addNew.serviceId"
             class="pa-1"
+            solo
           ></v-select>
           <v-text-field
             v-model="addNew.price"
@@ -86,6 +87,7 @@
             type="number"
             class="pa-1"
             suffix="nghìn đ"
+            solo
           />
         </div>
         <div class="d-flex flex-row flex-nowrap">
