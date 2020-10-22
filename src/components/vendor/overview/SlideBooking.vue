@@ -22,7 +22,7 @@
         class="d-flex justify-md-space-between flex-column flex-md-row"
       >
         <div class="d-flex align-center justify-center justify-md-left">
-          <span class="text-h6 font-weight-bold text-center ml-3">Lịch hẹn xem phòng</span>
+          <span class="text-h6 font-weight-bold text-center ml-3">Lịch hẹn xem phòng hôm nay</span>
         </div>
         <v-row no-gutters class="d-flex justify-end">
 
@@ -145,13 +145,18 @@ export default {
   },
   computed: {
     bookings() {
-      const cur = Date.now();
+      // const cur = Date.now();
+      const min = new Date();
+      min.setHours(0, 0, 0, 0);
+      const max = new Date();
+      max.setHours(23, 59, 59, 59);
       // console.log(this.$store.state.user.bookings.data.filter((item) => item.meetTime >= cur).sort((a, b) => a - b));
       // console.log(this.searchQuery);
       if (this.searchQuery) {
-        return this.$store.state.user.bookings.data.filter((item) => item.meetTime >= cur).filter((item2) => item2.renter.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1);
+        return this.$store.state.user.bookings.data.filter((item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime())
+          .filter((item2) => item2.renter.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1);
       }
-      return this.$store.state.user.bookings.data.filter((item) => item.meetTime >= cur);
+      return this.$store.state.user.bookings.data.filter((item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime());
     },
     incommingBookings() {
       return this.bookings.filter((booking) => booking.status === 'INCOMING');
