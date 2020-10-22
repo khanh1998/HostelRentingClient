@@ -122,45 +122,48 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" md="6">
+                    <v-col cols="12">
                       <FacilityTable :facilities="type.facilities" />
                     </v-col>
-                    <v-col cols="12" md="6">
+                    <v-col cols="12">
                       <RegulationTable :rules="group.regulations" />
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col class="12" style="font-size: 18px;">
-                      Tiền đặt cọc trong <b>Điều 2 Khoản 1</b> sẽ được trả lại đầy đủ cho bên B khi
-                      hết hợp đồng thuê phòng trọ với điều kiện thanh toán đầy đủ tiền điện, nước,
-                      phí dịch vụ và các khoản khác liên quan.
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col class="12" style="font-size: 18px;">
-                      Bên B ngưng hợp đồng trước thời hạn thì phải chịu mất tiền thế chân.
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col class="12" style="font-size: 18px;">
-                      Bên A ngưng hợp đồng (lấy lại nhà) trước thời hạn thì bồi thường gấp đôi số
-                      tiền bên B đã đặt cọc.
+                    <v-col cols="12" class="d-flex flex-column">
+                      <span
+                        >Tiền đặt cọc sẽ được trả lại đầy đủ cho bên B khi hết hợp đồng thuê phòng
+                        trọ với điều kiện thanh toán đầy đủ tiền điện, nước, phí dịch vụ và các
+                        khoản khác liên quan.</span
+                      >
+                      <span class="mt-2"
+                        >Bên A ngưng hợp đồng (lấy lại nhà) trước thời hạn thì bồi thường gấp đôi số
+                        tiền bên B đã đặt cọc.</span
+                      >
+                      <span class="mt-2"
+                        >Bên B ngưng hợp đồng trước thời hạn thì phải chịu mất tiền thế chân.</span
+                      >
                     </v-col>
                     <v-col cols="12">
-                      <ImageEditor @newValues="receiveNewImages" />
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" style="font-size: 18px;">
-                      <v-btn class="ma-4 btn-primary ml-auto" @click="checkEmptyField">
-                        Tạo hợp đồng
-                      </v-btn>
+                      <!-- <ImageEditor @newValues="receiveNewImages" /> -->
                     </v-col>
                   </v-row>
                 </v-container>
               </v-card-text>
             </v-col>
+            <!-- <v-col cols="12"> -->
+            <v-row>
+              <v-col cols="12" md="6">
+                <ImageEditor @newValues="receiveNewImages" class="pa-0" />
+              </v-col>
+              <v-col cols="12" md="6" class="d-flex justify-center py-0">
+                <v-btn class="ma-4 btn-primary" @click="$emit('clickCreateContract')">
+                  Tạo hợp đồng
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-row>
+          <!-- </v-col> -->
         </v-card>
       </v-col>
     </v-row>

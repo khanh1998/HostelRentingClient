@@ -40,18 +40,13 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog
-        v-model="previewDialog.show"
-        fullscreen
-        hide-overlay
-        transition="dialog-bottom-transition"
-      >
+      <v-dialog :value="true" fullscreen hide-overlay transition="dialog-bottom-transition">
         <v-card :loading="contracts.isLoading">
           <v-toolbar dark color="primary">
             <v-btn icon dark @click="dialog = false">
               <v-icon>mdi-close</v-icon>
             </v-btn>
-            <v-toolbar-title>Xem lại hợp đồng</v-toolbar-title>
+            <!-- <v-toolbar-title>Xem lại hợp đồng</v-toolbar-title> -->
             <v-spacer></v-spacer>
             <v-toolbar-items>
               <v-btn dark text @click="activateContract">
@@ -59,8 +54,9 @@
               </v-btn>
             </v-toolbar-items>
           </v-toolbar>
-          <v-progress-linear :value="previewDialog.pdfProgress"></v-progress-linear>
-          <pdf :src="previewDialog.pdf" :page="1" @progress="progressPdf" />
+          <!-- <v-progress-linear :value="previewDialog.pdfProgress"></v-progress-linear>
+          <pdf :src="previewDialog.pdf" :page="1" @progress="progressPdf" /> -->
+          <!-- {{ previewDialog.constract.type.title }} -->
         </v-card>
       </v-dialog>
       <v-dialog v-model="contracts.isUpdating" hide-overlay persistent width="300">
@@ -91,7 +87,7 @@
 </template>
 <script>
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader';
-import pdf from 'vue-pdf';
+// import pdf from 'vue-pdf';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import snackBarMixin from '../../components/mixins/snackBar';
 
@@ -102,7 +98,7 @@ export default {
     QrcodeStream,
     QrcodeDropZone,
     QrcodeCapture,
-    pdf,
+    // pdf,
   },
   data: () => ({
     result: '',
@@ -116,6 +112,7 @@ export default {
       contractId: null,
       contractSecret: null,
       pdfProgress: 0,
+      constract: null,
     },
   }),
   methods: {
@@ -153,7 +150,8 @@ export default {
       this.previewDialog.contractId = contractId;
       this.previewDialog.contractSecret = contractSecret;
       this.getContracts(); // get new created contract
-      // const createdContract = this.findContractById()(contractId);
+      const createdContract = this.findContractById()(contractId);
+      this.previewDialog.constract = createdContract;
       this.previewDialog.pdf = 'https://cdn.mozilla.net/pdfjs/tracemonkey.pdf'; // createdContract.pdf;
     },
     activateContract() {
