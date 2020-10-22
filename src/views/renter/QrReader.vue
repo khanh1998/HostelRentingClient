@@ -7,7 +7,12 @@
         <!-- <p class="decode-result">
               Last result: <b>{{ result }}</b>
             </p> -->
-        <qrcode-drop-zone @decode="onDecode" @init="onInit" style="height: 100%;">
+        <qrcode-drop-zone
+          v-if="!noStreamApiSupport"
+          @decode="onDecode"
+          @init="onInit"
+          style="height: 100%;"
+        >
           <qrcode-stream @decode="onDecode" @init="onInit" />
         </qrcode-drop-zone>
         <qrcode-capture v-if="noStreamApiSupport" @decode="onDecode" />
@@ -188,6 +193,7 @@ export default {
           this.error = 'ERROR: installed cameras are not suitable';
         } else if (error.name === 'StreamApiNotSupportedError') {
           this.error = 'ERROR: Stream API is not supported in this browser';
+          this.noStreamApiSupport = true;
         }
       }
     },
