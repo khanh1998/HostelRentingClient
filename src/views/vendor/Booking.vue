@@ -459,7 +459,7 @@ export default {
     onClickOutSide() {
       console.log(`truoc${this.selectedEvent.data.bookingId}`);
       this.selectedOpen = false;
-      this.selectedEvent = {};
+      // this.selectedEvent = null;
       console.log(`sau${this.selectedEvent.data.bookingId}`);
     },
   },
