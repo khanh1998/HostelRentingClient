@@ -12,6 +12,11 @@
       locale="vi-VN"
       class="mt-2"
     >
+      <template v-slot:header.data-table-select> </template>
+      <template v-slot:item.data-table-select="{ item }">
+        <v-simple-checkbox v-model="item.select" v-if="!item.required"></v-simple-checkbox>
+        <v-simple-checkbox v-model="item.select" v-if="item.required" disabled></v-simple-checkbox>
+      </template>
       <template v-slot:item.price="{ item }">
         <v-text-field v-model="item.price" hide-details dense></v-text-field>
       </template>
@@ -41,6 +46,11 @@
         <v-btn v-if="!select" @click="removeService(item)" icon>
           <v-icon>clear</v-icon>
         </v-btn>
+        <div v-if="select">
+          <span v-if="item.required">
+            bắt buộc
+          </span>
+        </div>
       </template>
     </v-data-table>
     <v-divider />
@@ -156,17 +166,17 @@ export default {
   }),
   computed: {
     groupServiceDesserts() {
-      return this.groupService
-        .map((service) => ({
-          serviceName: service.serviceName,
-          price: service.price,
-          timeUnit: service.timeUnit,
-          userUnit: service.userUnit,
-          serviceId: service.serviceId,
-          select: false,
-          groupServiceId: service.groupServiceId,
-          active: service.active,
-        }));
+      return this.groupService.map((service) => ({
+        serviceName: service.serviceName,
+        price: service.price,
+        timeUnit: service.timeUnit,
+        userUnit: service.userUnit,
+        serviceId: service.serviceId,
+        select: service.required,
+        groupServiceId: service.groupServiceId,
+        active: service.active,
+        required: service.required,
+      }));
     },
     services() {
       return this.$store.state.renter.common.services.data;
@@ -229,6 +239,7 @@ export default {
         timeUnit: '',
         userUnit: '',
         priceUnit: 'Nghìn',
+        required: false,
       };
     },
     removeService(item) {
@@ -252,6 +263,7 @@ export default {
     if (this.select) {
       this.newServices = [...this.groupServiceDesserts];
       this.newServices = this.newServices.filter((service) => service.active);
+      this.selects = this.newServices.filter((service) => service.required);
     }
   },
   watch: {
