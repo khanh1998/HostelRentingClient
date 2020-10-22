@@ -19,24 +19,20 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <div
-        class="d-flex justify-md-space-between flex-column flex-md-row"
-      >
+      <div class="d-flex justify-md-space-between flex-column flex-md-row">
         <div class="d-flex align-center justify-center justify-md-left">
           <span class="text-h6 font-weight-bold text-center ml-3">Lịch hẹn xem phòng hôm nay</span>
         </div>
         <v-row no-gutters class="d-flex justify-end">
-
           <v-col cols="12" md="5">
             <v-text-field
-        class="ma-3"
-        style=""
-        hide-details
-        label="Tìm theo tên"
-        v-model="searchQuery"
-        prepend-inner-icon="search"
-        solo-inverted
-      ></v-text-field>
+              class="ma-3"
+              style=""
+              hide-details
+              label="Tìm theo tên"
+              v-model="searchQuery"
+              prepend-inner-icon="search"
+            ></v-text-field>
           </v-col>
         </v-row>
       </div>
@@ -114,10 +110,10 @@
       </v-card>
       <v-divider />
       <div class="d-flex align-center justify-center justify-md-right">
-          <span style="color: #818286;" v-if="bookings.length > 0" class="ml-2">
-            <router-link to="booking" class="text-decoration-none">Xem thêm >></router-link>
-          </span>
-        </div>
+        <span style="color: #818286;" v-if="bookings.length > 0" class="ml-2">
+          <router-link to="booking" class="text-decoration-none">Xem thêm >></router-link>
+        </span>
+      </div>
     </v-sheet>
   </div>
 </template>
@@ -157,10 +153,17 @@ export default {
       // console.log(this.$store.state.user.bookings.data.filter((item) => item.meetTime >= cur).sort((a, b) => a - b));
       // console.log(this.searchQuery);
       if (this.searchQuery) {
-        return this.$store.state.user.bookings.data.filter((item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime())
-          .filter((item2) => item2.renter.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1);
+        return this.$store.state.user.bookings.data
+          .filter((item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime())
+          .filter((item2) => {
+            const res =
+              item2.renter.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1;
+            return res;
+          });
       }
-      return this.$store.state.user.bookings.data.filter((item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime());
+      return this.$store.state.user.bookings.data.filter(
+        (item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime(),
+      );
     },
     incommingBookings() {
       return this.bookings.filter((booking) => booking.status === 'INCOMING');
@@ -202,10 +205,10 @@ export default {
 </script>
 <style>
 .text {
-   overflow: hidden;
-   text-overflow: ellipsis;
-   display: -webkit-box;
-   -webkit-line-clamp: 1; /* number of lines to show */
-   -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
 }
 </style>
