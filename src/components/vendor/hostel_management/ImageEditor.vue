@@ -37,8 +37,11 @@
     >
     <div
       style="height: 300px; overflow-y: auto;"
-      class="d-flex flex-row flex-wrap align-center justify-center"
+      class="d-flex flex-row flex-wrap align-start justify-start"
     >
+      <v-btn class="ml-2" @click="openImageUploadDialog" depressed>
+        <v-icon>add_photo_alternate</v-icon>Tải lên ảnh mới</v-btn
+      >
       <!-- display input images -->
       <div v-for="image in images" :key="image.imageId">
         <v-img
@@ -84,9 +87,7 @@
         </v-img>
       </div>
     </div>
-    <v-btn class="ml-2" @click="openImageUploadDialog" depressed>
-      <v-icon>add_photo_alternate</v-icon>Tải lên ảnh mới</v-btn
-    >
+
     <v-snackbar
       v-model="snackBarMixin.show"
       :multi-line="snackBarMixin.multiLine"
