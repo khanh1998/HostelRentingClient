@@ -5,7 +5,7 @@
     class="d-flex flex-column pa-2"
     style="height: 100%;"
   >
-    <div class="text-h6 font-weight-thin">
+    <div class="text-h6 font-weight-bold">
       Tổng quan về các khu trọ
     </div>
     <v-divider />
