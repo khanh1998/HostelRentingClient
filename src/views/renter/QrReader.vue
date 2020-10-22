@@ -40,7 +40,12 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog :value="true" fullscreen hide-overlay transition="dialog-bottom-transition">
+      <v-dialog
+        :value="previewDialog.constract !== null"
+        fullscreen
+        hide-overlay
+        transition="dialog-bottom-transition"
+      >
         <v-card :loading="contracts.isLoading">
           <v-toolbar dark color="primary">
             <v-btn icon dark @click="dialog = false">
@@ -56,7 +61,145 @@
           </v-toolbar>
           <!-- <v-progress-linear :value="previewDialog.pdfProgress"></v-progress-linear>
           <pdf :src="previewDialog.pdf" :page="1" @progress="progressPdf" /> -->
-          <!-- {{ previewDialog.constract.type.title }} -->
+          <!-- <span v-if="previewDialog.constract">{{ previewDialog.constract.type.title }}</span> -->
+          <v-tabs
+            v-model="tabs.index"
+            class="font-nunito font-weight-bold"
+            color="#727cf5"
+            v-if="previewDialog.constract"
+          >
+            <v-tab>
+              1. Thông tin hai bên
+            </v-tab>
+            <v-tab>
+              2. THÔNG TIN HỢP ĐỒNG
+            </v-tab>
+            <v-tab-item>
+              <div class="d-flex flex-column justify-center align-end">
+                <InfomationSection
+                  :renter="previewDialog.constract.renter"
+                  :vendor="previewDialog.constract.vendor"
+                />
+                <v-btn class="ma-4 btn-primary" @click="goToNextTab"
+                  >Tiếp tục <v-icon small>arrow_forward_ios</v-icon></v-btn
+                >
+              </div>
+            </v-tab-item>
+            <v-tab-item>
+              <!-- <v-card flat>
+                <v-row no-gutters>
+                  <v-col>
+                    <v-card>
+                      <v-row no-gutters>
+                        <v-col cols="12" md="6">
+                          <v-card-text class="d-flex flex-column">
+                            <span class="text-h6 mt-5"
+                              >ĐIỀU 1:
+                              <span class="font-weight-regular">Thông tin phòng trọ</span></span
+                            >
+                            <v-row>
+                              <v-col cols="12" class="d-flex flex-column">
+                                <span class="font-weight-bold text-gray-black">Nhà </span>
+                                <span class="text size-sub-2 px-3 py-2 mt-2">{{
+                                  previewDialog.constract.group.groupName
+                                }}</span>
+                              </v-col>
+                              <v-col cols="12" class="d-flex flex-column">
+                                <span class="font-weight-bold text-gray-black">
+                                  <span class="text-danger">Phòng</span>
+                                </span>
+                                <span class="text size-sub-2 px-3 py-2 mt-2">{{
+                                  previewDialog.constract.room.roomName
+                                }}</span>
+                              </v-col>
+
+                              <v-col cols="12" sm="6" class="d-flex flex-column">
+                                <span class="font-weight-bold text-gray-black"
+                                  >Ngày bắt đầu hợp đồng<span class="text-danger"></span>
+                                </span>
+                                <span
+                                  class="text size-sub-2 px-3 py-2 mt-2"
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  >{{ startTimeString(previewDialog.constract.startTime) }}</span
+                                >
+                              </v-col>
+                              <v-col cols="12" sm="6" class="d-flex flex-column">
+                                <span class="font-weight-bold text-gray-black"
+                                  >Thời hạn hợp đồng</span
+                                >
+                                <span
+                                  class="text size-sub-2 px-3 py-2 mt-2"
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  >{{ previewDialog.constract.duration }} tháng</span
+                                >
+                              </v-col>
+                              <v-col cols="6" sm="6" class="d-flex flex-column">
+                                <span class="font-weight-bold text-gray-black">Tiền thuê </span>
+                                <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
+                                  ><span
+                                    >{{ previewDialog.constract.type.price }}
+                                    {{ previewDialog.constract.type.priceUnit }}</span
+                                  >
+                                </span>
+                              </v-col>
+                              <v-col cols="6" sm="6" class="d-flex flex-column">
+                                <span class="font-weight-bold text-gray-black">Tiền cọc</span>
+                                <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
+                                  ><span>{{ previewDialog.constract.type.deposit }}</span>
+                                  <span class="ml-auto">tháng tiền phòng</span>
+                                </span>
+                              </v-col>
+                            </v-row>
+                            <span class="text-h6 mt-5"
+                              >ĐIỀU 2:
+                              <span class="font-weight-regular">Thông tin dịch vụ</span></span
+                            >
+                          </v-card-text>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                          <v-card-text>
+                            <v-container>
+                              <v-row>
+                                <v-col cols="12"> </v-col>
+                                <v-col cols="12"> </v-col>
+                              </v-row>
+                              <v-row>
+                                <v-col cols="12" class="d-flex flex-column">
+                                  <span
+                                    >Tiền đặt cọc sẽ được trả lại đầy đủ cho bên B khi hết hợp đồng
+                                    thuê phòng trọ với điều kiện thanh toán đầy đủ tiền điện, nước,
+                                    phí dịch vụ và các khoản khác liên quan.</span
+                                  >
+                                  <span class="mt-2"
+                                    >Bên A ngưng hợp đồng (lấy lại nhà) trước thời hạn thì bồi
+                                    thường gấp đôi số tiền bên B đã đặt cọc.</span
+                                  >
+                                  <span class="mt-2"
+                                    >Bên B ngưng hợp đồng trước thời hạn thì phải chịu mất tiền thế
+                                    chân.</span
+                                  >
+                                </v-col>
+                                <v-col cols="12"> </v-col>
+                              </v-row>
+                            </v-container>
+                          </v-card-text>
+                        </v-col>
+                        <v-row>
+                          <v-col cols="12" md="6" class="d-flex justify-center py-0">
+                            <v-btn class="ma-4 btn-primary" @click="$emit('clickCreateContract')">
+                              Tạo hợp đồng
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                      </v-row>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-card> -->
+            </v-tab-item>
+          </v-tabs>
         </v-card>
       </v-dialog>
       <v-dialog v-model="contracts.isUpdating" hide-overlay persistent width="300">
@@ -90,6 +233,11 @@ import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader';
 // import pdf from 'vue-pdf';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import snackBarMixin from '../../components/mixins/snackBar';
+import InfomationSection from '../../components/vendor/contract/InfomationSection.vue';
+// import HostelGroupServiceEditor from '../../components/vendor/hostel_management/HostelGroupServiceEditor.vue';
+// import RegulationTable from '../../components/vendor/contract/RegulationTable.vue';
+// import FacilityTable from '../../components/vendor/contract/FacilityTable.vue';
+// import TermsOfContractSection from '../../components/vendor/contract/TermsOfContractSection.vue';
 
 export default {
   name: 'QR-Reader',
@@ -98,6 +246,11 @@ export default {
     QrcodeStream,
     QrcodeDropZone,
     QrcodeCapture,
+    InfomationSection,
+    // HostelGroupServiceEditor,
+    // RegulationTable,
+    // FacilityTable,
+    // TermsOfContractSection,
     // pdf,
   },
   data: () => ({
@@ -114,6 +267,9 @@ export default {
       pdfProgress: 0,
       constract: null,
     },
+    tabs: {
+      index: 0,
+    },
   }),
   methods: {
     ...mapActions({
@@ -123,9 +279,16 @@ export default {
       getContracts: 'user/getContracts',
       updateContract: 'user/updateContract',
     }),
+    startTimeString(time) {
+      return new Date(time).toLocaleDateString('vi-vn');
+    },
     ...mapGetters({
       findContractById: 'user/findContractById',
     }),
+    goToNextTab() {
+      this.tabs.index += 1;
+      document.getElementById('contractView').scrollTop = 0;
+    },
     onDecode(result) {
       this.result = result;
       const [type, content] = this.result.split(':');
@@ -149,10 +312,15 @@ export default {
       this.previewDialog.show = true;
       this.previewDialog.contractId = contractId;
       this.previewDialog.contractSecret = contractSecret;
-      this.getContracts(); // get new created contract
+      this.getContracts().then(() => this.findContract(contractId));
+      // const createdContract = this.findContractById()(contractId);
+      // this.previewDialog.constract = createdContract;
+      this.previewDialog.pdf = 'https://cdn.mozilla.net/pdfjs/tracemonkey.pdf'; // createdContract.pdf;
+    },
+    findContract(contractId) {
+      console.log(contractId);
       const createdContract = this.findContractById()(contractId);
       this.previewDialog.constract = createdContract;
-      this.previewDialog.pdf = 'https://cdn.mozilla.net/pdfjs/tracemonkey.pdf'; // createdContract.pdf;
     },
     activateContract() {
       const payload = {
