@@ -118,6 +118,9 @@ export default {
 .text-gray-dark {
   color: #343a40;
 }
+.text-gray-black {
+  color: #495057;
+}
 .text-danger {
   color: #fa5c7c !important;
 }

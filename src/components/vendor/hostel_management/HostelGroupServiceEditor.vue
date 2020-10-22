@@ -67,6 +67,7 @@
             hide-details
             v-model="addNew.serviceId"
             class="pa-1"
+            solo
           ></v-select>
           <v-text-field
             v-model="addNew.price"
@@ -76,6 +77,7 @@
             type="number"
             class="pa-1"
             suffix="nghìn đ"
+            solo
           />
         </div>
         <div class="d-flex flex-row flex-nowrap">
@@ -156,17 +158,16 @@ export default {
   }),
   computed: {
     groupServiceDesserts() {
-      return this.groupService
-        .map((service) => ({
-          serviceName: service.serviceName,
-          price: service.price,
-          timeUnit: service.timeUnit,
-          userUnit: service.userUnit,
-          serviceId: service.serviceId,
-          select: false,
-          groupServiceId: service.groupServiceId,
-          active: service.active,
-        }));
+      return this.groupService.map((service) => ({
+        serviceName: service.serviceName,
+        price: service.price,
+        timeUnit: service.timeUnit,
+        userUnit: service.userUnit,
+        serviceId: service.serviceId,
+        select: false,
+        groupServiceId: service.groupServiceId,
+        active: service.active,
+      }));
     },
     services() {
       return this.$store.state.renter.common.services.data;

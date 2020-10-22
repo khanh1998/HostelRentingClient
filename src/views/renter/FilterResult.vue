@@ -55,9 +55,8 @@
                         label="Ngày rảnh"
                         hide-details
                         dense
-                        _outlined
                         solo
-                        class="size-sub-2"
+                        class="size-sub-2 hostel-filter"
                       ></v-select>
                     </v-col>
                     <v-spacer></v-spacer>

@@ -7,84 +7,41 @@
             <v-col cols="12" md="6">
               <v-card-text>
                 <v-container>
-                  <h1>BÊN A: BÊN CHO THUÊ</h1>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        label="Ông/Bà"
-                        :value="vendor.username"
-                        required
-                        readonly
-                        disabled
-                        dense
-                      ></v-text-field>
+                  <span class="text-h6">BÊN A: BÊN CHO THUÊ</span>
+                  <v-row class="mt-5">
+                    <v-col cols="12" sm="6" md="6" class="d-flex pb-0">
+                      <span class="font-weight-bold text-gray-black">Ông (Bà): </span
+                      ><span class="ml-2 text-gray-black">{{ vendor.username }}</span>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        label="Năm sinh"
-                        :value="vendor.yearOfBirth"
-                        dense
-                        readonly
-                        disabled
-                      ></v-text-field>
+                    <v-col cols="5" sm="6" md="6" class="d-flex pb-0">
+                      <span class="font-weight-bold text-gray-black">Năm sinh: </span
+                      ><span class="ml-2 text-gray-black">{{ vendor.yearOfBirth }}</span>
                     </v-col>
-                    <v-col cols="12" sm="4" md="4">
-                      <v-text-field
-                        label="Số CMND"
-                        persistent-hint
-                        required
-                        readonly
-                        disabled
-                        dense
-                      ></v-text-field>
+                    <v-col cols="7" sm="12" md="12" class="d-flex pb-2">
+                      <span class="font-weight-bold text-gray-black">Điện thoại: </span
+                      ><span class="ml-2 text-gray-black">{{ vendor.phone }}</span>
                     </v-col>
-                    <v-col cols="12" sm="4" md="4">
-                      <v-text-field
-                        label="Ngày cấp"
-                        dense
-                        required
-                        readonly
-                        disabled
-                        :value="new Date(vendor.idIssuedDate)"
-                      ></v-text-field>
+                    <v-col cols="12" sm="12" md="12" class="d-flex pb-0">
+                      <span class="font-weight-bold text-gray-black">CMND số:</span
+                      ><span class="ml-2 text-gray-black">{{ vendor.idNum }}</span>
                     </v-col>
-                    <v-col cols="12" sm="4" md="4">
-                      <v-text-field
-                        label="Nơi cấp"
-                        dense
-                        required
-                        readonly
-                        disabled
-                        :value="vendor.idIssuedLocation"
-                      ></v-text-field>
+                    <v-col cols="5" sm="6" md="6" class="d-flex pb-0">
+                      <span class="font-weight-bold text-gray-black">Ngày cấp:</span
+                      ><span class="ml-2 text-gray-black">{{
+                        getIdNumber(vendor.idIssuedDate)
+                      }}</span>
                     </v-col>
-                    <v-col cols="12">
-                      <v-textarea rows="2" readonly disabled dense :value="vendor.householdAddress">
-                        <template v-slot:label>
-                          <div>
-                            Hộ khẩu
-                          </div>
-                        </template>
-                      </v-textarea>
+                    <v-col cols="7" sm="6" md="6" class="d-flex pb-2">
+                      <span class="font-weight-bold text-gray-black">Nơi cấp:</span
+                      ><span class="ml-2 text-gray-black">{{ vendor.idIssuedLocation }}</span>
                     </v-col>
-                    <v-col cols="12">
-                      <v-textarea rows="2" readonly disabled dense :value="vendor.currentAddress">
-                        <template v-slot:label>
-                          <div>
-                            Địa chỉ
-                          </div>
-                        </template>
-                      </v-textarea>
+                    <v-col cols="12" class="d-flex pb-0">
+                      <span class="font-weight-bold text-gray-black">Địa chỉ thường trú:</span
+                      ><span class="ml-2 text-gray-black">{{ vendor.householdAddress }}</span>
                     </v-col>
-                    <v-col cols="12" sm="8" md="4">
-                      <v-text-field
-                        label="Điện thoại"
-                        dense
-                        :value="vendor.phone"
-                        required
-                        readonly
-                        disabled
-                      ></v-text-field>
+                    <v-col cols="12" class="d-flex pb-0">
+                      <span class="font-weight-bold text-gray-black">Chỗ ở hiện nay:</span
+                      ><span class="ml-2 text-gray-black">{{ vendor.currentAddress }}</span>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -93,110 +50,48 @@
             <v-col cols="12" md="6">
               <v-card-text>
                 <v-container>
-                  <h1>BÊN B: BÊN THUÊ</h1>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        label="Ông/Bà"
-                        :value="renter.username"
-                        dense
-                        required
-                        readonly
-                        disabled
-                      ></v-text-field>
+                  <span class="text-h6">BÊN A: BÊN CHO THUÊ</span>
+                  <v-row class="mt-5">
+                    <v-col cols="12" sm="6" md="6" class="d-flex pb-0">
+                      <span class="font-weight-bold text-gray-black">Ông (Bà): </span
+                      ><span class="ml-2 text-gray-black">{{ renter.username }}</span>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        label="Năm sinh"
-                        :value="renter.yearOfBirth"
-                        dense
-                        readonly
-                        disabled
-                      ></v-text-field>
+                    <v-col cols="5" sm="6" md="6" class="d-flex pb-0">
+                      <span class="font-weight-bold text-gray-black">Năm sinh: </span
+                      ><span class="ml-2 text-gray-black">{{ renter.yearOfBirth }}</span>
                     </v-col>
-                    <v-col cols="12" sm="4" md="4">
-                      <v-text-field
-                        label="Số CMND"
-                        dense
-                        persistent-hint
-                        required
-                        readonly
-                        disabled
-                        :value="renter.idNum"
-                      ></v-text-field>
+                    <v-col cols="7" sm="12" md="12" class="d-flex pb-2">
+                      <span class="font-weight-bold text-gray-black">Điện thoại: </span
+                      ><span class="ml-2 text-gray-black">{{ renter.phone }}</span>
                     </v-col>
-                    <v-col cols="12" sm="4" md="4">
-                      <v-text-field
-                        label="Ngày cấp"
-                        dense
-                        required
-                        readonly
-                        disabled
-                        :value="new Date(renter.idIssuedDate)"
-                      ></v-text-field>
+                    <v-col cols="12" sm="12" md="12" class="d-flex pb-0">
+                      <span class="font-weight-bold text-gray-black">CMND số:</span
+                      ><span class="ml-2 text-gray-black">{{ renter.idNum }}</span>
                     </v-col>
-                    <v-col cols="12" sm="4" md="4">
-                      <v-text-field
-                        label="Nơi cấp"
-                        dense
-                        required
-                        readonly
-                        disabled
-                        :value="renter.idIssuedLocation"
-                      ></v-text-field>
+                    <v-col cols="5" sm="6" md="6" class="d-flex pb-0">
+                      <span class="font-weight-bold text-gray-black">Ngày cấp:</span
+                      ><span class="ml-2 text-gray-black">{{
+                        getIdNumber(renter.idIssuedDate)
+                      }}</span>
                     </v-col>
-                    <v-col cols="12">
-                      <v-textarea rows="2" readonly disabled dense :value="renter.householdAddress">
-                        <template v-slot:label>
-                          <div>
-                            Hộ khẩu
-                          </div>
-                        </template>
-                      </v-textarea>
+                    <v-col cols="7" sm="6" md="6" class="d-flex pb-2">
+                      <span class="font-weight-bold text-gray-black">Nơi cấp:</span
+                      ><span class="ml-2 text-gray-black">{{ renter.idIssuedLocation }}</span>
                     </v-col>
-                    <v-col cols="12">
-                      <v-textarea rows="2" readonly disabled dense :value="renter.currentAddress">
-                        <template v-slot:label>
-                          <div>
-                            Địa chỉ
-                          </div>
-                        </template>
-                      </v-textarea>
+                    <v-col cols="12" class="d-flex pb-0">
+                      <span class="font-weight-bold text-gray-black">Địa chỉ thường trú:</span
+                      ><span class="ml-2 text-gray-black">{{ renter.householdAddress }}</span>
                     </v-col>
-                    <v-col cols="12" sm="8" md="4">
-                      <v-text-field
-                        label="Điện thoại"
-                        :value="vendor.phone"
-                        required
-                        readonly
-                        dense
-                        disabled
-                      ></v-text-field>
+                    <v-col cols="12" class="d-flex pb-2">
+                      <span class="font-weight-bold text-gray-black">Chỗ ở hiện nay:</span
+                      ><span class="ml-2 text-gray-black">{{ renter.currentAddress }}</span>
                     </v-col>
-                    <v-col cols="12" sm="8" md="4">
-                      <v-text-field
-                        dense
-                        label="Trường đại học (đã và đang học)"
-                        :value="renter.school.schoolName"
-                        required
-                        readonly
-                        disabled
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-textarea
-                        dense
-                        :value="renter.school.address.districtName"
-                        rows="2"
-                        readonly
-                        disabled
+                    <v-col cols="12" class="d-flex pb-2">
+                      <span class="font-weight-bold text-gray-black">Trường đã / đang học:</span
+                      ><span class="ml-2 text-gray-black"
+                        >{{ renter.school.schoolName }} -
+                        {{ renter.school.address.districtName }}</span
                       >
-                        <template v-slot:label>
-                          <div>
-                            Địa chỉ trường
-                          </div>
-                        </template>
-                      </v-textarea>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -214,7 +109,11 @@ export default {
   props: ['vendor', 'renter'],
   data: () => ({}),
   computed: {},
-  methods: {},
+  methods: {
+    getIdNumber(time) {
+      return new Date(time).toLocaleDateString('vi-vn');
+    },
+  },
   created() {},
 };
 </script>

@@ -19,19 +19,19 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <div class="d-flex justify-center" style="font-size: 45px;">{{ heading }}</div>
-    <v-tabs v-model="tabs.index">
+    <!-- <div class="d-flex justify-center title">{{ heading }}</div> -->
+    <v-tabs v-model="tabs.index" class="font-nunito font-weight-bold" color="#727cf5">
       <v-tab>
         1. Thông tin hai bên
       </v-tab>
       <v-tab>
-        2. Điều khoản
+        2. THÔNG TIN HỢP ĐỒNG
       </v-tab>
       <v-tab-item>
-        <div class="d-flex flex-column justify-center align-center">
+        <div class="d-flex flex-column justify-center align-end">
           <InfomationSection :renter="booking.renter" :vendor="booking.vendor" />
-          <v-btn color="primary" large class="ma-2" @click="goToNextTab"
-            >Tiếp tục <v-icon>arrow_forward_ios</v-icon></v-btn
+          <v-btn class="ma-4 btn-primary" @click="goToNextTab"
+            >Tiếp tục <v-icon small>arrow_forward_ios</v-icon></v-btn
           >
         </div>
       </v-tab-item>
@@ -126,5 +126,8 @@ export default {
 <style>
 .headline {
   text-align: center;
+}
+.font-nunito {
+  font-family: 'Nunito', sans-serif !important;
 }
 </style>
