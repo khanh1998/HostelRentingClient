@@ -180,18 +180,25 @@ const mutations = {
 };
 const getters = {
   getHostelGroupById: (state) => (id) => {
-    const result = state.results.data.groups.filter((group) => group.groupId === Number(id));
-    if (result.length > 0) {
-      return result[0];
+    let result = null;
+    if (state.results.data.groups) {
+      result = state.results.data.groups.filter((group) => group.groupId === Number(id));
+      if (result.length > 0) {
+        return result[0];
+      }
     }
-    return null;
+    return result;
   },
   getHostelTypeById: (state) => (id) => {
-    const result = state.results.data.types.filter((type) => type.typeId === Number(id));
-    if (result.length > 0) {
-      return result[0];
+    let result = null;
+    if (state.results.data.types) {
+      result = state.results.data.types.filter((type) => type.typeId === Number(id));
+      if (result.length > 0) {
+        return result[0];
+      }
     }
-    return null;
+    console.log(result);
+    return result;
   },
 };
 const actions = {

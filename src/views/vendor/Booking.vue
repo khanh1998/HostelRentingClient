@@ -24,9 +24,10 @@
     </v-dialog>
     <v-row v-if="!isLoading">
       <v-col>
-        <v-row no-gutters class="hidden-sm-and-up">
-          <v-col cols="6" class="d-flex justify-center">
-            <v-menu bottom right>
+        <v-row no-gutters class="hidden-sm-and-up mb-2">
+              <v-col cols="4"/>
+              <v-col cols="4" class="d-flex justify-center">
+                <v-menu bottom right>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
                   <span>{{ statusToLabel[status] }}</span>
@@ -48,9 +49,9 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-          </v-col>
-          <v-col cols="6" class="d-flex justify-center">
-            <v-menu bottom right>
+              </v-col>
+              <v-col cols="4" class="d-flex justify-center">
+                <v-menu bottom right>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
                   <span>{{ typeToLabel[type] }}</span>
@@ -87,58 +88,52 @@
               {{ $refs.calendar.title }}
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <!-- <v-row no-gutters class="d-flex justify-end"> -->
-            <!-- <v-col cols="12"> -->
             <div class="hidden-sm-and-down">
-              <v-menu bottom right>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
-                    <span>{{ statusToLabel[status] }}</span>
-                    <v-icon right>mdi-menu-down</v-icon>
-                  </v-btn>
-                </template>
-                <v-list>
-                  <v-list-item @click="changeStatus('ALL')">
-                    <v-list-item-title>Tất cả</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="changeStatus('INCOMING')">
-                    <v-list-item-title>Sắp tới</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="changeStatus('DONE')">
-                    <v-list-item-title>Hoàn tất</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="changeStatus('CANCELLED')">
-                    <v-list-item-title>Đã hủy</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-              <!-- </v-col> -->
-              <!-- <v-col cols="12"> -->
-              <v-menu bottom right>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
-                    <span>{{ typeToLabel[type] }}</span>
-                    <v-icon right>mdi-menu-down</v-icon>
-                  </v-btn>
-                </template>
-                <v-list>
-                  <v-list-item @click="type = 'day'">
-                    <v-list-item-title>Ngày</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="type = 'week'">
-                    <v-list-item-title>Tuần</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="type = 'month'">
-                    <v-list-item-title>Tháng</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="type = '4day'">
-                    <v-list-item-title>4 Ngày</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
+                <v-menu bottom right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+                  <span>{{ statusToLabel[status] }}</span>
+                  <v-icon right>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="changeStatus('ALL')">
+                  <v-list-item-title>Tất cả</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="changeStatus('INCOMING')">
+                  <v-list-item-title>Sắp tới</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="changeStatus('DONE')">
+                  <v-list-item-title>Hoàn tất</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="changeStatus('CANCELLED')">
+                  <v-list-item-title>Đã hủy</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+                <v-menu bottom right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+                  <span>{{ typeToLabel[type] }}</span>
+                  <v-icon right>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="type = 'day'">
+                  <v-list-item-title>Ngày</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = 'week'">
+                  <v-list-item-title>Tuần</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = 'month'">
+                  <v-list-item-title>Tháng</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = '4day'">
+                  <v-list-item-title>4 Ngày</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
             </div>
-            <!-- </v-col>
-            </v-row> -->
           </v-toolbar>
         </v-sheet>
         <v-sheet height="500">
@@ -156,21 +151,19 @@
             @click:date="viewDay"
             @change="getEvents"
           ></v-calendar>
-          <v-menu
+          <v-dialog
             v-model="selectedOpen"
-            :close-on-content-click="false"
-            :activator="selectedElement"
-            offset-x
-            :nudge-width="200"
+            fullscreen
+            hide-overlay
+            transition="dialog-bottom-transition"
           >
-            <v-card color="grey lighten-4" flat>
-              <!-- v-click-outside="onClickOutSide"> -->
+            <v-card color="grey lighten-4" flat class="hidden-sm-and-up">
               <v-toolbar :color="selectedEvent.color" dark>
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
                 <button class="d-flex justify-end" @click="onClickOutSide">X</button>
               </v-toolbar>
-              <v-card-text v-if="selectedEvent && selectedEvent.data">
+              <v-card-text v-if="selectedEvent && selectedEvent.data" class="pt-9">
                 <p class="text-center">
                   <v-avatar>
                     <v-img
@@ -181,26 +174,18 @@
                 </p>
                 <v-row>
                   <v-col cols="6">
-                    <p><v-icon>call</v-icon> {{ selectedEvent.data.renter.phone }}</p>
-                    <p v-if="selectedEvent.data.deal != null">
-                      <span
-                        ><v-icon>money</v-icon> {{ selectedEvent.data.deal.offeredPrice }}
-                        {{ selectedEvent.data.type.priceUnit }}</span
-                      >
-                    </p>
-                    <p v-if="selectedEvent.data.deal == null">
-                      <span
-                        ><v-icon>money</v-icon> {{ selectedEvent.data.type.price }}
-                        {{ selectedEvent.data.type.priceUnit }}</span
-                      >
-                    </p>
+                    <p><v-icon>call</v-icon> {{ selectedEvent.data.renter.phone }} </p>
+                      <p v-if="selectedEvent.data.deal != null"><span>
+                        <v-icon>money</v-icon>  {{ selectedEvent.data.deal.offeredPrice }} {{selectedEvent.data.type.priceUnit}}
+                        </span></p>
+                      <p v-if="selectedEvent.data.deal == null"><span>
+                        <v-icon>money</v-icon>  {{selectedEvent.data.type.price}} {{selectedEvent.data.type.priceUnit}}
+                        </span></p>
                   </v-col>
                   <v-col cols="6">
-                    <div
-                      v-if="selectedEvent.data.status === 'INCOMING'"
-                      v-on="changeToString(selectedEvent.data.bookingId)"
-                    >
-                      <qrcode-vue :value="qrvalue" :size="100" level="H"></qrcode-vue>
+                    <div v-if="selectedEvent.data.status === 'INCOMING'" v-on="changeToString(selectedEvent.data.bookingId)">
+                      <p>Mã xác nhận xem phòng</p>
+                        <qrcode-vue :value="qrvalue" :size="100" level="H"></qrcode-vue>
                     </div>
                   </v-col>
                 </v-row>
@@ -238,16 +223,124 @@
                 >
                   Hủy hẹn
                 </v-btn>
-                <v-btn
-                  v-if="selectedEvent.data.status === 'DONE'"
-                  @click="changeToSContractString(se)"
-                  :to="`/vendor/contract?bookingId=${selectedEvent.data.bookingId}`"
-                >
-                  <v-icon>far fa-handshake</v-icon>
-                </v-btn>
+                <v-btn v-if="selectedEvent.data.status === 'DONE'"
+                      @click="changeToSContractString(se)"
+                      :to="`/vendor/contract?bookingId=${selectedEvent.data.bookingId}`"
+                      title="Xem hợp đồng">
+                      <v-icon left>far fa-handshake</v-icon>
+                      Xem hợp đồng
+                      </v-btn>
               </v-card-actions>
             </v-card>
-          </v-menu>
+            <v-card color="grey lighten-4" flat class="hidden-sm-and-down">
+              <v-toolbar :color="selectedEvent.color" dark>
+                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                <v-spacer></v-spacer>
+                <button class="d-flex justify-end" @click="onClickOutSide">X</button>
+              </v-toolbar>
+              <v-card-text v-if="selectedEvent && selectedEvent.data" class="pt-9">
+                <p class="text-center">
+                  <v-avatar>
+                    <v-img
+                      :src="
+                        selectedEvent.data.renter.avatar || require('@/assets/user.png')
+                      "
+                    />
+                  </v-avatar>
+                  <span class="text-h6 blue--text ml-3"> {{ selectedEvent.data.renter.username }} </span>
+                </p>
+                <v-row style="font-size:20px" v-if="selectedEvent.data.status === 'INCOMING'">
+                  <v-col cols="1"></v-col>
+                  <v-col cols="5">
+                    <p class="font-weight-bold"><v-icon left>call</v-icon> {{ selectedEvent.data.renter.phone }} </p>
+                    <p v-if="selectedEvent.data.deal != null"><span class="font-weight-bold">
+                      <v-icon left>money</v-icon>  {{ selectedEvent.data.deal.offeredPrice }} {{selectedEvent.data.type.priceUnit}}
+                      </span></p>
+                    <p v-if="selectedEvent.data.deal == null"><span class="font-weight-bold">
+                      <v-icon left>money</v-icon>  {{selectedEvent.data.type.price}} {{selectedEvent.data.type.priceUnit}}
+                      </span></p>
+                    <p>
+                      <span class="font-weight-bold">
+                        <v-icon left>today</v-icon>
+                        {{ new Date(selectedEvent.start).toLocaleDateString('vi-vn') }}
+                      </span>
+
+                      <span class="font-weight-bold ml-6">
+                        <v-icon left>schedule</v-icon>
+                        {{ new Date(selectedEvent.start).toLocaleTimeString('vi-vn') }} - {{ new Date(selectedEvent.end).toLocaleTimeString('vi-vn') }}
+                      </span>
+                    </p>
+                    <p class="font-weight-bold"><v-icon left>category</v-icon> {{ selectedEvent.data.type.title }}</p>
+                    <p class="font-weight-bold">
+                      <v-icon left>room</v-icon>
+                      <span class="font-weight-bold">{{ selectedEvent.data.group.groupName }}</span>
+                      , đường
+                      <span class="font-weight-bold">{{
+                        selectedEvent.data.group.address.streetName
+                      }}</span>
+                    </p>
+                  </v-col>
+                  <v-col cols="1"/>
+                  <v-col cols="5">
+                    <div v-if="selectedEvent.data.status === 'INCOMING'" v-on="changeToString(selectedEvent.data.bookingId)">
+                        <p class="mb-3">Mã xác nhận xem phòng</p>
+                        <qrcode-vue :value="qrvalue" :size="230" level="H"></qrcode-vue>
+                    </div>
+                  </v-col>
+                </v-row>
+                <v-row style="font-size:20px" v-if="selectedEvent.data.status === 'CANCELLED' ||selectedEvent.data.status === 'DONE'">
+                  <v-col cols="4"></v-col>
+                  <v-col cols="4">
+                    <p class="font-weight-bold"><v-icon left>call</v-icon> {{ selectedEvent.data.renter.phone }} </p>
+                    <p v-if="selectedEvent.data.deal != null"><span class="font-weight-bold">
+                      <v-icon left>money</v-icon>  {{ selectedEvent.data.deal.offeredPrice }} {{selectedEvent.data.type.priceUnit}}
+                      </span></p>
+                    <p v-if="selectedEvent.data.deal == null"><span class="font-weight-bold">
+                      <v-icon left>money</v-icon>  {{selectedEvent.data.type.price}} {{selectedEvent.data.type.priceUnit}}
+                      </span></p>
+                    <p>
+                      <span class="font-weight-bold">
+                        <v-icon left>today</v-icon>
+                        {{ new Date(selectedEvent.start).toLocaleDateString('vi-vn') }}
+                      </span>
+
+                      <span class="font-weight-bold ml-6">
+                        <v-icon left>schedule</v-icon>
+                        {{ new Date(selectedEvent.start).toLocaleTimeString('vi-vn') }} - {{ new Date(selectedEvent.end).toLocaleTimeString('vi-vn') }}
+                      </span>
+                    </p>
+                    <p class="font-weight-bold"><v-icon left>category</v-icon> {{ selectedEvent.data.type.title }}</p>
+                    <p class="font-weight-bold">
+                      <v-icon left>room</v-icon>
+                      <span class="font-weight-bold">{{ selectedEvent.data.group.groupName }}</span>
+                      , đường
+                      <span class="font-weight-bold">{{
+                        selectedEvent.data.group.address.streetName
+                      }}</span>
+                    </p>
+                  </v-col>
+                  <v-col cols="4"/>
+                </v-row>
+              </v-card-text>
+              <v-card-actions v-if="selectedEvent && selectedEvent.data" class="d-flex justify-center">
+                <v-btn
+                  v-if="selectedEvent.data.status === 'INCOMING'"
+                  dark
+                  color="red"
+                  @click="showCancelDialog(selectedEvent.data.bookingId)"
+                >
+                  Hủy hẹn
+                </v-btn>
+                <v-btn v-if="selectedEvent.data.status === 'DONE'"
+                      @click="changeToSContractString(se)"
+                      :to="`/vendor/contract?bookingId=${selectedEvent.data.bookingId}`"
+                      title="Xem hợp đồng">
+                      <v-icon left>far fa-handshake</v-icon>
+                      Xem hợp đồng
+                      </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-sheet>
       </v-col>
     </v-row>

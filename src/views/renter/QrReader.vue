@@ -52,18 +52,17 @@
         transition="dialog-bottom-transition"
       >
         <v-card :loading="contracts.isLoading">
-          <v-toolbar dark color="primary">
+          <!-- <v-toolbar dark color="primary">
             <v-btn icon dark @click="dialog = false">
               <v-icon>mdi-close</v-icon>
             </v-btn>
-            <!-- <v-toolbar-title>Xem lại hợp đồng</v-toolbar-title> -->
             <v-spacer></v-spacer>
             <v-toolbar-items>
               <v-btn dark text @click="activateContract">
                 Kích hoạt hợp đồng
               </v-btn>
             </v-toolbar-items>
-          </v-toolbar>
+          </v-toolbar> -->
           <!-- <v-progress-linear :value="previewDialog.pdfProgress"></v-progress-linear>
           <pdf :src="previewDialog.pdf" :page="1" @progress="progressPdf" /> -->
           <!-- <span v-if="previewDialog.constract">{{ previewDialog.constract.type.title }}</span> -->
@@ -91,28 +90,23 @@
               </div>
             </v-tab-item>
             <v-tab-item>
-              <!-- <v-card flat>
+              <v-card flat>
                 <v-row no-gutters>
                   <v-col>
                     <v-card>
                       <v-row no-gutters>
                         <v-col cols="12" md="6">
-                          <v-card-text class="d-flex flex-column">
-                            <span class="text-h6 mt-5"
-                              >ĐIỀU 1:
-                              <span class="font-weight-regular">Thông tin phòng trọ</span></span
-                            >
+                          <v-card-text class="py-0">
                             <v-row>
-                              <v-col cols="12" class="d-flex flex-column">
-                                <span class="font-weight-bold text-gray-black">Nhà </span>
+                              <v-col cols="12" class="d-flex flex-column mt-5">
+                                <span class="text-h6">THÔNG TIN PHÒNG TRỌ</span>
+                                <span class="font-weight-bold text-gray-black mt-5">Nhà trọ </span>
                                 <span class="text size-sub-2 px-3 py-2 mt-2">{{
                                   previewDialog.constract.group.groupName
                                 }}</span>
                               </v-col>
                               <v-col cols="12" class="d-flex flex-column">
-                                <span class="font-weight-bold text-gray-black">
-                                  <span class="text-danger">Phòng</span>
-                                </span>
+                                <span class="font-weight-bold text-gray-black">Phòng </span>
                                 <span class="text size-sub-2 px-3 py-2 mt-2">{{
                                   previewDialog.constract.room.roomName
                                 }}</span>
@@ -133,68 +127,92 @@
                                 <span class="font-weight-bold text-gray-black"
                                   >Thời hạn hợp đồng</span
                                 >
-                                <span
-                                  class="text size-sub-2 px-3 py-2 mt-2"
-                                  v-bind="attrs"
-                                  v-on="on"
-                                  >{{ previewDialog.constract.duration }} tháng</span
-                                >
+                                <span class="text size-sub-2 px-3 py-2 mt-2">
+                                  {{ previewDialog.constract.duration }} tháng
+                                </span>
                               </v-col>
                               <v-col cols="6" sm="6" class="d-flex flex-column">
                                 <span class="font-weight-bold text-gray-black">Tiền thuê </span>
                                 <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
-                                  ><span
-                                    >{{ previewDialog.constract.type.price }}
-                                    {{ previewDialog.constract.type.priceUnit }}</span
-                                  >
+                                  ><span>
+                                    {{ previewDialog.constract.type.price }}
+                                    {{ previewDialog.constract.type.priceUnit }}
+                                  </span>
                                 </span>
                               </v-col>
                               <v-col cols="6" sm="6" class="d-flex flex-column">
                                 <span class="font-weight-bold text-gray-black">Tiền cọc</span>
                                 <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
-                                  ><span>{{ previewDialog.constract.type.deposit }}</span>
+                                  ><span>
+                                    {{ previewDialog.constract.type.deposit }}
+                                  </span>
                                   <span class="ml-auto">tháng tiền phòng</span>
                                 </span>
                               </v-col>
+                              <v-col cols="12" class="d-flex flex-column">
+                                <span class="font-weight-bold text-warning">Tổng tiền</span>
+                                <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
+                                  ><span>
+                                    {{
+                                      previewDialog.constract.type.price +
+                                      previewDialog.constract.type.price *
+                                        previewDialog.constract.type.deposit
+                                    }}
+                                    {{ previewDialog.constract.type.priceUnit }}
+                                  </span>
+                                </span>
+                              </v-col>
                             </v-row>
-                            <span class="text-h6 mt-5"
-                              >ĐIỀU 2:
-                              <span class="font-weight-regular">Thông tin dịch vụ</span></span
-                            >
                           </v-card-text>
                         </v-col>
                         <v-col cols="12" md="6">
-                          <v-card-text>
-                            <v-container>
-                              <v-row>
-                                <v-col cols="12"> </v-col>
-                                <v-col cols="12"> </v-col>
-                              </v-row>
-                              <v-row>
-                                <v-col cols="12" class="d-flex flex-column">
+                          <v-card-text class="py-0">
+                            <v-row>
+                              <v-col cols="12" class="d-flex flex-column justify-center">
+                                <span class="text-h6 mt-5">THÔNG TIN DỊCH VỤ</span>
+                                <servicesBox
+                                  :services="previewDialog.constract.group.services"
+                                  class="mt-5"
+                                />
+                              </v-col>
+                              <v-col cols="12" class="d-flex flex-column justify-center">
+                                <span class="text-h6 mt-5">NỘI THẤT</span>
+                                <span class="d-flex flex-wrap">
                                   <span
-                                    >Tiền đặt cọc sẽ được trả lại đầy đủ cho bên B khi hết hợp đồng
-                                    thuê phòng trọ với điều kiện thanh toán đầy đủ tiền điện, nước,
-                                    phí dịch vụ và các khoản khác liên quan.</span
+                                    v-for="item in previewDialog.constract.type.facilities"
+                                    v-bind:key="item.facilityId"
+                                    class="font-nunito text-lowercase mr-2"
+                                    color="#f1f3fa"
                                   >
-                                  <span class="mt-2"
-                                    >Bên A ngưng hợp đồng (lấy lại nhà) trước thời hạn thì bồi
-                                    thường gấp đôi số tiền bên B đã đặt cọc.</span
-                                  >
-                                  <span class="mt-2"
-                                    >Bên B ngưng hợp đồng trước thời hạn thì phải chịu mất tiền thế
-                                    chân.</span
-                                  >
-                                </v-col>
-                                <v-col cols="12"> </v-col>
-                              </v-row>
-                            </v-container>
+                                    {{ item.facilityName }},
+                                  </span>
+                                </span>
+                              </v-col>
+                            </v-row>
+                            <v-row>
+                              <v-col cols="12" class="d-flex flex-column">
+                                <span
+                                  >Tiền đặt cọc sẽ được trả lại đầy đủ cho bên B khi hết hợp đồng
+                                  thuê phòng trọ với điều kiện thanh toán đầy đủ tiền điện, nước,
+                                  phí dịch vụ và các khoản khác liên quan.</span
+                                >
+                                <span class="mt-2"
+                                  >Bên A ngưng hợp đồng (lấy lại nhà) trước thời hạn thì bồi thường
+                                  gấp đôi số tiền bên B đã đặt cọc.</span
+                                >
+                                <span class="mt-2"
+                                  >Bên B ngưng hợp đồng trước thời hạn thì phải chịu mất tiền thế
+                                  chân.</span
+                                >
+                              </v-col>
+                              <v-col cols="12"> </v-col>
+                            </v-row>
                           </v-card-text>
                         </v-col>
                         <v-row>
-                          <v-col cols="12" md="6" class="d-flex justify-center py-0">
-                            <v-btn class="ma-4 btn-primary" @click="$emit('clickCreateContract')">
-                              Tạo hợp đồng
+                          <v-col cols="12" md="6" class="ml-auto pa-0">
+                            <v-btn class="ma-4 btn-primary" @click="activateContract">
+                              Đồng ý với các điều khoản và kích hoạt hợp đồng
                             </v-btn>
                           </v-col>
                         </v-row>
@@ -202,7 +220,7 @@
                     </v-card>
                   </v-col>
                 </v-row>
-              </v-card> -->
+              </v-card>
             </v-tab-item>
           </v-tabs>
         </v-card>
@@ -239,6 +257,7 @@ import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import snackBarMixin from '../../components/mixins/snackBar';
 import InfomationSection from '../../components/vendor/contract/InfomationSection.vue';
+import servicesBox from '../../components/hostel_type/servicesBox.vue';
 // import HostelGroupServiceEditor from '../../components/vendor/hostel_management/HostelGroupServiceEditor.vue';
 // import RegulationTable from '../../components/vendor/contract/RegulationTable.vue';
 // import FacilityTable from '../../components/vendor/contract/FacilityTable.vue';
@@ -252,7 +271,7 @@ export default {
     QrcodeDropZone,
     QrcodeCapture,
     InfomationSection,
-    // HostelGroupServiceEditor,
+    servicesBox,
     // RegulationTable,
     // FacilityTable,
     // TermsOfContractSection,

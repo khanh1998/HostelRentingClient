@@ -176,22 +176,18 @@
               </div>
               <div
                 class="arrow-price d-flex flex-column"
-                v-if="
-                  searchValue &&
-                  (schoolSelected || hometownSelected) &&
-                  (schoolMate !== 0 || compatriot !== 0)
-                "
+                v-if="searchValue && (info.schoolMate !== 0 || info.compatriot !== 0)"
               >
                 <span class="text-caption" v-if="schoolSelected && schoolMate !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
                   <span class="text-caption"
-                    >{{ schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                    >{{ info.schoolMate }} người học {{ schoolSelected.schoolName }}</span
                   >
                 </span>
                 <span class="text-caption" v-if="hometownSelected && compatriot !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
                   <span class="text-caption"
-                    >{{ compatriot }} người quê {{ hometownSelected.provinceName }}</span
+                    >{{ info.compatriot }} người quê {{ hometownSelected.provinceName }}</span
                   >
                 </span>
               </div>
@@ -212,22 +208,18 @@
               </div>
               <div
                 class="arrow-price d-flex flex-column"
-                v-if="
-                  searchValue &&
-                  (schoolSelected || hometownSelected) &&
-                  (schoolMate !== 0 || compatriot !== 0)
-                "
+                v-if="searchValue && (info.schoolMate !== 0 || info.compatriot !== 0)"
               >
                 <span class="text-caption" v-if="schoolSelected && schoolMate !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
                   <span class="text-caption"
-                    >{{ schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                    >{{ info.schoolMate }} người học {{ schoolSelected.schoolName }}</span
                   >
                 </span>
                 <span class="text-caption" v-if="hometownSelected && compatriot !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
                   <span class="text-caption"
-                    >{{ compatriot }} người quê {{ hometownSelected.provinceName }}</span
+                    >{{ info.compatriot }} người quê {{ hometownSelected.provinceName }}</span
                   >
                 </span>
               </div>
@@ -430,6 +422,9 @@ import LoginBox from '../../components/login/loginBox.vue';
 
 export default {
   name: 'HostelDetail',
+  props: {
+    typeInput: Object,
+  },
   components: {
     dateTimePickerBox,
     servicesBox,
@@ -500,7 +495,6 @@ export default {
     },
     getBreadcrumbs() {
       let preURL = '/detail/4';
-      console.log(preURL);
       let disablePreURL = true;
       if (this.prevRoute && this.prevRoute.fullPath) {
         preURL = this.prevRoute.fullPath;
@@ -551,10 +545,22 @@ export default {
       return this.$store.state.renter.common.provinces.isLoading;
     },
     info() {
-      let data = this.$store.getters['renter/home/getHostelTypeById'](this.typeId);
+      let data = null;
+      data = this.$store.state.renter.hostelType.hostelType.data;
+      console.log(data);
+      console.log('hứ');
+      // data = this.$store.getters['renter/home/getHostelTypeById'](this.typeId);
       if (data === null) {
-        data = this.$store.state.renter.hostelType.hostelType.data;
+        console.log('hứ');
+        console.log(this.typeId);
+        data = this.$store.getters['renter/filterResult/getHostelTypeById'](this.typeId);
+        console.log('hé');
+        console.log(data);
+        if (data === null) {
+          data = this.$store.state.renter.hostelType.hostelType.data;
+        }
       }
+      console.log(data);
       return data;
     },
     group() {
@@ -562,6 +568,9 @@ export default {
       if (this.info != null) {
         const { groupId } = this.info;
         data = this.$store.getters['renter/home/getHostelGroupById'](groupId);
+        if (data === null) {
+          data = this.$store.getters['renter/filterResult/getHostelGroupById'](groupId);
+        }
       }
       if (data === null) {
         data = this.$store.state.renter.hostelType.hostelGroup.data;
@@ -648,17 +657,19 @@ export default {
   },
   created() {
     // if home.js store is empty then start to call api
-    this.getTypeAndGroup(this.typeId)
-      .then(() => this.getNearByUtilities())
-      .then(() => this.getAllHostelTypes(this.group.groupId))
-      .then(() => this.getDistrictStatistic(this.group.address.districtId));
-    console.log(
-      this.searchValue &&
-        (this.schoolSelected || this.hometownSelected) &&
-        (this.schoolMate !== 0 || this.compatriot !== 0),
-    );
-    console.log(this.schoolSelected && this.schoolMate !== 0);
-    console.log(this.hometownSelected && this.compatriot !== 0);
+    console.log('thuy điên');
+    console.log(this.info);
+    if (!this.info) {
+      console.log('dô');
+      this.getTypeAndGroup(this.typeId)
+        .then(() => this.getNearByUtilities())
+        .then(() => this.getAllHostelTypes(this.group.groupId))
+        .then(() => this.getDistrictStatistic(this.group.address.districtId));
+    } else {
+      console.log('dao');
+      this.getNearByUtilities();
+      this.getDistrictStatistic(this.group.address.districtId);
+    }
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {

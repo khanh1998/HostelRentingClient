@@ -41,7 +41,7 @@
           <v-row class="d-flex">
             <v-col cols="12" md="8">
               <div class="d-flex flex-column" v-if="list && list.length !== 0">
-                <div
+                <!-- <div
                   class="white d-flex"
                   style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15); border-radius: 0.25rem;"
                 >
@@ -60,7 +60,6 @@
                       ></v-select>
                     </v-col>
                     <v-spacer></v-spacer>
-                    <!-- <span class="font-nunito text-body-2">Sắp xếp theo</span> -->
                     <v-col cols="4">
                       <v-select
                         v-model="filterValue.feature.selected"
@@ -81,7 +80,7 @@
                       }}</v-icon></v-btn
                     >
                   </v-row>
-                </div>
+                </div> -->
                 <ArticleList :list="list" class="mt-4" :page="page" />
               </div>
               <v-card v-else>
