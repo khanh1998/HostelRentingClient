@@ -545,13 +545,22 @@ export default {
       return this.$store.state.renter.common.provinces.isLoading;
     },
     info() {
-      let data = this.$store.getters['renter/home/getHostelTypeById'](this.typeId);
+      let data = null;
+      data = this.$store.state.renter.hostelType.hostelType.data;
+      console.log(data);
+      console.log('hứ');
+      // data = this.$store.getters['renter/home/getHostelTypeById'](this.typeId);
       if (data === null) {
+        console.log('hứ');
+        console.log(this.typeId);
         data = this.$store.getters['renter/filterResult/getHostelTypeById'](this.typeId);
+        console.log('hé');
+        console.log(data);
         if (data === null) {
           data = this.$store.state.renter.hostelType.hostelType.data;
         }
       }
+      console.log(data);
       return data;
     },
     group() {
@@ -648,13 +657,16 @@ export default {
   },
   created() {
     // if home.js store is empty then start to call api
-    console.log(this.typeInput);
-    if (this.info) {
+    console.log('thuy điên');
+    console.log(this.info);
+    if (!this.info) {
+      console.log('dô');
       this.getTypeAndGroup(this.typeId)
         .then(() => this.getNearByUtilities())
         .then(() => this.getAllHostelTypes(this.group.groupId))
         .then(() => this.getDistrictStatistic(this.group.address.districtId));
     } else {
+      console.log('dao');
       this.getNearByUtilities();
       this.getDistrictStatistic(this.group.address.districtId);
     }
