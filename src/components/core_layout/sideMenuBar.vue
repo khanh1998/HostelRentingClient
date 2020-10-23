@@ -29,9 +29,7 @@
           <v-img :src="require('@/assets/' + item.icon + '.png')" max-height="20" max-width="20" />
         </v-list-item-icon>
         <v-list-item-content class="item-text-display flex-1 text-h6 font-weight-regular">
-          {{
-            item.title
-          }}
+          {{ item.title }}
         </v-list-item-content>
       </v-list-item>
 
@@ -45,9 +43,8 @@
           />
         </v-list-item-icon>
 
-        <v-list-item-content class="item-text-display flex-1 text-h6 font-weight-regular">{{
-            itemadd.title
-          }}
+        <v-list-item-content class="item-text-display flex-1 text-h6 font-weight-regular"
+          >{{ itemadd.title }}
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -82,7 +79,7 @@ export default {
       ],
 
       itemadds: [
-        { title: 'Tài khoản', icon: 'menu_profile', link: '#' },
+        { title: 'Tài khoản', icon: 'menu_profile', link: '/user' },
         { title: 'Liên hệ', icon: 'menu_contact', link: '#' },
       ],
       color: 'success',

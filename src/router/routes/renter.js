@@ -39,7 +39,7 @@ const routes = [
         path: 'user',
         name: 'User',
         component: User,
-        meta: { requiresAuth: true, is_renter: true },
+        meta: { requiresAuth: true },
       },
       {
         path: 'cart',

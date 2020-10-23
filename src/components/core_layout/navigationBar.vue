@@ -160,7 +160,7 @@
               </v-list-item>
             </v-list>
             <v-list v-if="isLoggedIn">
-              <v-list-item to="#">
+              <v-list-item to="/user">
                 <v-list-item-icon>
                   <v-icon color="#727cf5">mdi mdi-account-circle</v-icon>
                 </v-list-item-icon>
