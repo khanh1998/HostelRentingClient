@@ -151,6 +151,8 @@ const mutations = {
   },
   GET_USER_REQUEST(state) {
     state.user.isLoading = true;
+    state.user.success = null;
+    state.user.error = null;
   },
   GET_USER_SUCCESS(state, user) {
     state.user.data = user;
@@ -195,6 +197,8 @@ const mutations = {
   },
   GET_BOOKING_REQUEST(state) {
     state.bookings.isLoading = true;
+    state.bookings.success = null;
+    state.bookings.error = null;
   },
   GET_BOOKING_SUCCESS(state, booking) {
     state.bookings.data.unshift(booking);
@@ -237,6 +241,8 @@ const mutations = {
   },
   GET_DEALS_REQUEST(state) {
     state.deals.isLoading = false;
+    state.deals.success = null;
+    state.deals.error = null;
   },
   GET_DEALS_SUCCESS(state, deals) {
     state.deals.data = deals;
@@ -375,9 +381,14 @@ const actions = {
     commit(mutationTypes.GET_USER_REQUEST);
     let res = null;
     try {
-      res = await window.axios.post('/api/v1/login', params);
+      const { phone, password, getTokenIdFromFirebase } = params;
+      res = await window.axios.post('/api/v1/login', { phone, password });
       if (res.status === 200) {
-        commit(mutationTypes.GET_USER_SUCCESS, res.data.data);
+        const userData = res.data.data;
+        const { jwtToken } = userData;
+        const idToken = await getTokenIdFromFirebase(jwtToken);
+        userData.idToken = idToken;
+        commit(mutationTypes.GET_USER_SUCCESS, userData);
       } else {
         commit(mutationTypes.GET_USER_FAILURE);
       }

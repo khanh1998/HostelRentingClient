@@ -215,7 +215,8 @@ export default {
       if (this.loginSuccess) {
         const { jwtToken } = this.userData;
         this.$cookies.set('jwt', jwtToken);
-        const idToken = await this.getTokenIdFromFirebase(jwtToken);
+        // const idToken = await this.getTokenIdFromFirebase(jwtToken);
+        const { idToken } = this.userData;
         this.$cookies.set('firebaseIdToken', idToken);
         console.log('firebase id token', idToken);
         let role = 'admin';
@@ -259,6 +260,7 @@ export default {
       await this.loginRequest({
         phone: this.phone,
         password: this.password,
+        getTokenIdFromFirebase: this.getTokenIdFromFirebase,
       });
       console.log(this.userData);
       await this.afterLogin();

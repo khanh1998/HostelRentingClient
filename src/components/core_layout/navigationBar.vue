@@ -362,6 +362,7 @@ export default {
       this.$cookies.remove('role');
       this.$cookies.remove('userId');
       this.$cookies.remove('jwt');
+      this.$cookies.remove('firebaseIdToken');
       this.clearUserData();
       this.$router.push('/');
     },
