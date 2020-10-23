@@ -2,6 +2,7 @@ const myState = () => ({
   user: {
     data: null,
     isLoading: false,
+    isUpdating: false,
     success: null,
     error: null,
   },
@@ -326,16 +327,21 @@ const mutations = {
   },
   UPDATE_USER_REQUEST(state) {
     state.user.isLoading = true;
+    state.user.isUpdating = true;
+    state.user.error = null;
+    state.user.success = null;
   },
   UPDATE_USER_SUCCESS(state, user) {
     state.user.data = user;
     state.user.success = true;
     state.user.isLoading = false;
+    state.user.isUpdating = false;
   },
   UPDATE_USER_FAILURE(state, error) {
     state.user.error = error;
     state.user.success = false;
     state.user.isLoading = false;
+    state.user.isUpdating = false;
   },
   CLEAR_NEWLY_CREATED_BOOKING(state) {
     state.bookings.newlyCreated = null;
