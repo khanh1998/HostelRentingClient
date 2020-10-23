@@ -38,7 +38,7 @@
               class="font-weight-bold font-nunito"
               :style="{ color: '#656565', fontSize: '1.7rem' }"
             >
-              {{ info.title }} cung que {{ info.compatriot }} truong {{ info.schoolMate }} thuy
+              {{ info.title }}
             </h2>
             <span class="text-muted font-nunito" style="font-size: 0.9rem;">
               {{ group.address.streetName }}, {{ group.address.wardName }},
@@ -208,22 +208,18 @@
               </div>
               <div
                 class="arrow-price d-flex flex-column"
-                v-if="
-                  searchValue &&
-                  (schoolSelected || hometownSelected) &&
-                  (schoolMate !== 0 || compatriot !== 0)
-                "
+                v-if="searchValue && (info.schoolMate !== 0 || info.compatriot !== 0)"
               >
                 <span class="text-caption" v-if="schoolSelected && schoolMate !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
                   <span class="text-caption"
-                    >{{ schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                    >{{ info.schoolMate }} người học {{ schoolSelected.schoolName }}</span
                   >
                 </span>
                 <span class="text-caption" v-if="hometownSelected && compatriot !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
                   <span class="text-caption"
-                    >{{ compatriot }} người quê {{ hometownSelected.provinceName }}</span
+                    >{{ info.compatriot }} người quê {{ hometownSelected.provinceName }}</span
                   >
                 </span>
               </div>
@@ -653,11 +649,14 @@ export default {
   created() {
     // if home.js store is empty then start to call api
     console.log(this.typeInput);
-    if (this.typeInput) {
+    if (this.info) {
       this.getTypeAndGroup(this.typeId)
         .then(() => this.getNearByUtilities())
         .then(() => this.getAllHostelTypes(this.group.groupId))
         .then(() => this.getDistrictStatistic(this.group.address.districtId));
+    } else {
+      this.getNearByUtilities();
+      this.getDistrictStatistic(this.group.address.districtId);
     }
   },
   beforeRouteEnter(to, from, next) {

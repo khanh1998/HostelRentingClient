@@ -1,52 +1,69 @@
 <template>
   <v-card class="mb-2 pa-4">
-    <v-row no-gutters class="d-flex">
-      <v-col cols="3" class="d-flex align-center">
-        <v-avatar color="#727cf5" height="40" width="40" min-width="40">
-          <!-- <v-img
+    <v-row>
+      <v-col cols="3" md="0" class="hidden-sm-and-up pa-0">
+        <v-row no-gutters class="d-flex">
+          <v-col cols="12">
+            <span class="font-nunito text-primary size-sub-2 hidden-sm-and-up">Chủ trọ:</span>
+          </v-col>
+          <v-col cols="12" class="mt-4">
+            <span class="font-nunito text-primary size-sub-2 hidden-sm-and-up">Nhà trọ:</span>
+          </v-col>
+          <v-col cols="12" class="mt-7">
+            <span class="font-nunito text-primary size-sub-2 hidden-sm-and-up">Phòng:</span>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="9" md="12" class="pa-0">
+        <v-row no-gutters class="d-flex">
+          <v-col cols="12" md="3" class="d-flex align-center px-0">
+            <v-avatar color="#727cf5" height="40" width="40" min-width="40" class="hidden-xs-only">
+              <!-- <v-img
             max-height="30"
             max-width="30"
             v-if="contract.vendor.avatar"
             :src="contract.vendor.avatar"
           /> -->
-          <span class="text-overline white--text">{{
-            getAvatarTitle(contract.vendor.username)
-          }}</span>
-        </v-avatar>
-        <span class="d-flex flex-column ml-2">
-          <span class="text-gray font-nunito size9rem font-weight-bold">{{
-            contract.vendor.username
-          }}</span>
-          <span class="text-muted size-sub-3 font-nunito">{{ contract.vendor.phone }}</span>
-        </span>
-      </v-col>
-      <v-col cols="3" class="d-flex flex-column">
-        <span class="text-gray font-nunito size9rem font-weight-bold">{{
-          contract.group.groupName
-        }}</span>
-        <span class="font-nunito text-muted size-caption">
-          {{ contract.group.buildingNo }} {{ contract.group.address.streetName }},
-          {{ contract.group.address.wardName }}, {{ contract.group.address.districtName }},
-          {{ contract.group.address.provinceName }}
-        </span>
-      </v-col>
-      <v-col cols="1" class="d-flex justify-center align-center">
-        <span class="font-nunito text-primary size-sub-2">{{ contract.room.roomName }}</span>
-      </v-col>
-      <v-col cols="2" class="d-flex justify-center align-center">
-        <span class="font-nunito text-gray size-sub-2">{{
-          getDateByTimestamp(contract.startTime)
-        }}</span>
-      </v-col>
-      <v-col cols="2" class="d-flex justify-center align-center">
-        <span class="font-nunito text-gray size-sub-2">{{
-          getDateByTimestamp(getEndDate(contract.startTime, contract.duration))
-        }}</span>
-      </v-col>
-      <v-col cols="1" class="d-flex justify-center align-center">
-        <v-chip small class="font-nunito" :color="getStatus(contract.status).color">{{
-          getStatus(contract.status).contractStatus
-        }}</v-chip>
+              <span class="text-overline white--text">{{
+                getAvatarTitle(contract.vendor.username)
+              }}</span>
+            </v-avatar>
+            <span class="d-flex flex-column ml-2">
+              <span class="text-gray font-nunito size9rem font-weight-bold">{{
+                contract.vendor.username
+              }}</span>
+              <span class="text-muted size-sub-3 font-nunito">{{ contract.vendor.phone }}</span>
+            </span>
+          </v-col>
+          <v-col cols="12" md="3" class="d-flex flex-column">
+            <span class="text-gray font-nunito size9rem font-weight-bold">{{
+              contract.group.groupName
+            }}</span>
+            <span class="font-nunito text-muted size-caption">
+              {{ contract.group.buildingNo }} {{ contract.group.address.streetName }},
+              {{ contract.group.address.wardName }}, {{ contract.group.address.districtName }},
+              {{ contract.group.address.provinceName }}
+            </span>
+          </v-col>
+          <v-col cols="12" md="1" class="d-flex justify-center align-center">
+            <span class="font-nunito text-primary size-sub-2">{{ contract.room.roomName }}</span>
+          </v-col>
+          <v-col cols="6" md="2" class="d-flex justify-center align-center">
+            <span class="font-nunito text-gray size-sub-2">{{
+              getDateByTimestamp(contract.startTime)
+            }}</span>
+          </v-col>
+          <v-col cols="6" md="2" class="d-flex justify-center align-center">
+            <span class="font-nunito text-gray size-sub-2">{{
+              getDateByTimestamp(getEndDate(contract.startTime, contract.duration))
+            }}</span>
+          </v-col>
+          <v-col cols="12" md="1" class="d-flex justify-center align-center">
+            <v-chip small class="font-nunito" :color="getStatus(contract.status).color">{{
+              getStatus(contract.status).contractStatus
+            }}</v-chip>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </v-card>
