@@ -6,9 +6,7 @@
           <v-row no-gutters>
             <v-col cols="12" md="6">
               <v-card-text class="d-flex flex-column">
-                <span class="text-h6 mt-5"
-                  >ĐIỀU 1: <span class="font-weight-regular">Thông tin phòng trọ</span></span
-                >
+                <span class="text-h6 mt-5">THÔNG TIN PHÒNG TRỌ</span>
                 <span class="text-muted font-italic"
                   >Vui lòng nhập đầy đủ các thông tin bắt buộc</span
                 >
@@ -102,9 +100,7 @@
                     </span>
                   </v-col>
                 </v-row>
-                <span class="text-h6 mt-5"
-                  >ĐIỀU 2: <span class="font-weight-regular">Thông tin dịch vụ</span></span
-                >
+                <span class="text-h6 mt-5">THÔNG TIN DỊCH VỤ</span>
                 <span class="text-muted font-italic">Chọn dịch vụ mà bạn sẽ tính tiền</span>
                 <v-row>
                   <v-col class="12">
