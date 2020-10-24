@@ -54,10 +54,10 @@
         <v-col cols="12" md="3">
           <div class="d-flex flex-column justify-center align-center">
             <v-avatar size="128" v-if="!editProfile">
-              <v-img :src="user.data.avatar"> </v-img>
+              <v-img :src="user.data.avatar || noAvatar"> </v-img>
             </v-avatar>
             <v-avatar size="128" v-if="editProfile">
-              <v-img :src="newUser.avatar">
+              <v-img :src="newUser.avatar || noAvatar">
                 <v-row class="fill-height ma-0" align="center" justify="center">
                   <v-btn icon @click="uploadAvatarImage">
                     <v-icon color="white">edit</v-icon>
@@ -84,7 +84,9 @@
             v-model="newUser.yearOfBirth"
           ></v-text-field>
           <div v-if="user.data.role.code === 'RENTER'">
-            <p v-if="!editProfile">Quê quán: {{ user.data.hometown.provinceName }}</p>
+            <p v-if="!editProfile && user.data.hometown">
+              Quê quán: {{ user.data.hometown.provinceName }}
+            </p>
             <v-autocomplete
               v-if="editProfile"
               v-model="newUser.hometown.provinceId"
@@ -95,7 +97,9 @@
               label="Quê quán"
               chips
             ></v-autocomplete>
-            <p v-if="!editProfile">Trường đại học: {{ user.data.school.schoolName }}</p>
+            <p v-if="!editProfile && user.data.school">
+              Trường đại học: {{ user.data.school.schoolName }}
+            </p>
             <v-autocomplete
               v-if="editProfile"
               v-model="newUser.school.schoolId"
@@ -129,12 +133,35 @@
               label="Nơi cấp"
               v-model="newUser.idIssuedLocation"
             ></v-text-field>
-            <p v-if="!editProfile">Thời gian cấp:{{ user.data.idIssuedDate }}</p>
-            <v-text-field
+            <p v-if="!editProfile">
+              Thời gian cấp:{{ new Date(user.data.idIssuedDate).toLocaleDateString('vi') }}
+            </p>
+            <v-menu
               v-if="editProfile"
-              label="Thời gian cấp"
-              v-model="newUser.idIssuedDate"
-            ></v-text-field>
+              v-model="menu2"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="datePicker.value"
+                  label="Thời gian cấp"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                locale="vi-vn"
+                v-model="datePicker.value"
+                @input="menu2 = false"
+              ></v-date-picker>
+            </v-menu>
+
             <p v-if="!editProfile">Địa chỉ thường trú: {{ user.data.householdAddress }}</p>
             <v-text-field
               v-if="editProfile"
@@ -321,6 +348,9 @@ export default {
       provinces: (state) => state.renter.filterResult.filter.hometown,
       schools: (state) => state.renter.filterResult.filter.schools,
     }),
+    noAvatar() {
+      return 'https://www.seekpng.com/png/full/428-4287240_no-avatar-user-circle-icon-png.png';
+    },
   },
   data: () => ({
     editProfile: false,
@@ -336,6 +366,10 @@ export default {
     upload: {
       imageUrls: [],
     },
+    datePicker: {
+      value: '',
+    },
+    menu2: false,
   }),
   watch: {
     newUser: {
@@ -348,10 +382,18 @@ export default {
       },
       deep: true,
     },
+    datePicker: {
+      handler() {
+        this.newUser.idIssuedDate = new Date(this.datePicker.value).getTime();
+      },
+      deep: true,
+    },
   },
   created() {
     this.getUser().then(() => {
       this.newUser = { ...this.user.data };
+      this.newUser.school = {};
+      this.newUser.hometown = {};
     });
     this.getAllProvinces();
     this.getAllSchools();
