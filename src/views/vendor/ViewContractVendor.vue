@@ -1,31 +1,33 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div style="height: 100%; overflow-y:auto">
+  <div style="height: 100%; overflow-y: auto;">
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-container v-if="!isLoading" style="height: 98%">
+    <v-container v-if="!isLoading" style="height: 98%;">
       <v-row justify="center" class="py-10">
         <v-col cols="11" sm="11" md="11" lg="11" xl="10">
-          <v-row class="d-flex px-4">
-            <v-col cols="3" class="d-flex align-center pl-0">
-              <span class="font-nunito text-gray size-sub-2">Chủ trọ</span>
-            </v-col>
-            <v-col cols="3" class="d-flex align-center pl-0">
-              <span class="font-nunito text-gray size-sub-2">Nhà trọ</span>
-            </v-col>
-            <v-col cols="1" class="d-flex justify-center align-center">
-              <span class="font-nunito text-gray size-sub-2">Phòng</span>
-            </v-col>
-            <v-col cols="2" class="d-flex justify-center align-center">
-              <span class="font-nunito text-gray size-sub-2">Ngày bắt đầu</span>
-            </v-col>
-            <v-col cols="2" class="d-flex justify-center align-center">
-              <span class="font-nunito text-gray size-sub-2">Ngày hết hạn</span>
-            </v-col>
-            <v-col cols="1" class="d-flex justify-center align-center">
-              <span class="font-nunito text-gray size-sub-2">Trạng thái</span>
-            </v-col>
+          <v-row class="hidden-xs-only">
+            <div class="d-flex px-4" style="width: 100%;">
+              <v-col cols="3" class="d-flex align-center pl-0">
+                <span class="font-nunito text-gray size-sub-2">Chủ trọ</span>
+              </v-col>
+              <v-col cols="3" class="d-flex align-center pl-0">
+                <span class="font-nunito text-gray size-sub-2">Nhà trọ</span>
+              </v-col>
+              <v-col cols="1" class="d-flex justify-center align-center">
+                <span class="font-nunito text-gray size-sub-2">Phòng</span>
+              </v-col>
+              <v-col cols="2" class="d-flex justify-center align-center">
+                <span class="font-nunito text-gray size-sub-2">Ngày bắt đầu</span>
+              </v-col>
+              <v-col cols="2" class="d-flex justify-center align-center">
+                <span class="font-nunito text-gray size-sub-2">Ngày hết hạn</span>
+              </v-col>
+              <v-col cols="1" class="d-flex justify-center align-center">
+                <span class="font-nunito text-gray size-sub-2">Trạng thái</span>
+              </v-col>
+            </div>
           </v-row>
           <v-row class="mt-2">
             <div
