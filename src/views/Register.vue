@@ -562,8 +562,8 @@ export default {
         const school = { schoolId: this.school };
         renter.school = school;
       }
-      // await this.createRenter(renter);
-      // await this.afterLogin();
+      await this.createRenter(renter);
+      await this.afterLogin();
     },
     async registerVendor() {
       const vendor = {
