@@ -222,6 +222,7 @@ export default {
   methods: {
     ...mapActions({
       getSchedules: 'renter/hostelType/getSchedules',
+      getDeals: 'user/getDeals',
     }),
     getNextDate(date) {
       const nextDate = new Date(date);
@@ -354,7 +355,9 @@ export default {
     },
   },
   created() {
+    this.getDeals();
     this.getSchedules(this.groupId).then(() => this.getGroupSchedule());
+    console.log(this.lastDeal);
   },
   computed: {
     rawSchedule() {

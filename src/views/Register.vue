@@ -507,10 +507,7 @@ export default {
         });
     },
     initReCaptcha() {
-      console.log('vao');
       setTimeout(() => {
-        // const vm = this;
-        // console.log(vm);
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
           size: 'invisible',
           callback(response) {
@@ -558,13 +555,15 @@ export default {
         phone: this.phone,
       };
       if (this.hometown) {
-        renter.provinceId = this.hometown;
+        const hometown = { provinceId: this.hometown };
+        renter.hometown = hometown;
       }
       if (this.school) {
-        renter.schoolId = this.school;
+        const school = { schoolId: this.school };
+        renter.school = school;
       }
-      await this.createRenter(renter);
-      await this.afterLogin();
+      // await this.createRenter(renter);
+      // await this.afterLogin();
     },
     async registerVendor() {
       const vendor = {
@@ -607,24 +606,27 @@ export default {
         this.$cookies.set('role', role);
         this.$cookies.set('userId', id);
         // const { nextUrl, preUrl } = this.$route.params;
-        const preURL = this.prevRoute.fullPath;
-        console.log();
-        if (preURL) {
-          this.$router.push(preURL);
-        } else {
-          switch (role) {
-            case 'vendors':
-              this.$router.push('/vendor');
-              break;
-            case 'renters':
-              this.$router.push('/');
-              break;
-            case 'admin':
-              this.$router.push('/admin');
-              break;
-            default:
-              this.$router.push('/');
+        if (this.prevRoute) {
+          const preURL = this.prevRoute.fullPath;
+          if (preURL) {
+            this.$router.push(preURL);
+          } else {
+            switch (role) {
+              case 'vendors':
+                this.$router.push('/vendor');
+                break;
+              case 'renters':
+                this.$router.push('/');
+                break;
+              case 'admin':
+                this.$router.push('/admin');
+                break;
+              default:
+                this.$router.push('/');
+            }
           }
+        } else {
+          this.$router.push('/');
         }
       } else if (this.duppicateError) {
         this.showRenterInfor = false;
@@ -660,13 +662,10 @@ export default {
     },
   },
   created() {
-    console.log(this.$route.params);
     if (this.filter.schools.items.length === 0) {
       this.getAllSchools();
     }
-    // if (this.filter.hometown.items.length === 0) {
     this.getAllProvinces().then(() => this.initReCaptcha());
-    // }
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {

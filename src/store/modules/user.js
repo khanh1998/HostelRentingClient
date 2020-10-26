@@ -37,9 +37,10 @@ const myGetters = {
   // get lasted deal
   findLastedDeal: (state) => (renterId, vendorId, typeId) => {
     let result = state.deals.data.filter((deal) => {
+      console.log(state.deals.data);
       if (
-        deal.renter.renterId === renterId &&
-        deal.vendor.vendorId === vendorId &&
+        deal.renter.userId === renterId &&
+        deal.vendor.userId === vendorId &&
         deal.type.typeId === typeId &&
         deal.status === 'CREATED'
       ) {
