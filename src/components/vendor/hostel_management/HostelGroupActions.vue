@@ -133,7 +133,7 @@ export default {
   }),
   methods: {
     showChangeGroupName() {
-      alert('ye ye');
+      // alert('ye ye');
     },
     showManageService() {},
     showManagePolicy() {},
