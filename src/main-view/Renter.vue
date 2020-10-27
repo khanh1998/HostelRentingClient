@@ -180,4 +180,7 @@ export default {
 .size-caption {
   font-size: 0.75rem !important;
 }
+.font-weight-600 {
+  font-weight: 600 !important;
+}
 </style>

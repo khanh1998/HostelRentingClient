@@ -2,49 +2,39 @@
   <div
     v-if="!isLoadingRenterList || !isLoadingUser"
     class="d-flex flex-column"
-    style="height: 100%; background: #fff;"
+    style="height: 100%; background: #fff; border-left: 1px solid #dedede;"
   >
-    <v-toolbar color="#6C98C6" dark flat>
+    <div class="d-flex flex-column px-4 py-3">
+      <v-tabs color="#727cf5" height="35" background-color="#EEF2F7" v-model="tab">
+        <v-tab class="size-caption text-capitalize font-nunito font-weight-bold">Tất cả</v-tab>
+        <v-tab class="size-caption text-capitalize font-nunito font-weight-bold">Trả giá</v-tab>
+        <v-tab class="size-caption text-capitalize font-nunito font-weight-bold">Đặt lịch</v-tab>
+      </v-tabs>
       <v-text-field
-        class="ma-3"
-        flat
-        hide-details
-        label="Tìm kiếm tin nhắn"
+        label="Tìm kiếm"
         v-model="searchQuery"
-        prepend-inner-icon="search"
-        solo-inverted
+        append-icon="search"
+        solo
+        hide-details
+        class="mt-3 text-muted pa-0 size-sub-2 chat"
+        height="35"
+        rounded
       ></v-text-field>
-          <!-- <v-menu bottom right>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
-                  <span>aaa</span>
-                  <v-icon right>mdi-menu-down</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item @click="changeStatus('ALL')">
-                  <v-list-item-title>Tất cả</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="changeStatus('INCOMING')">
-                  <v-list-item-title>Trả giá</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="changeStatus('DONE')">
-                  <v-list-item-title>Đặt lịch</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu> -->
-    </v-toolbar>
-    <div style="height: 100%; overflow-y: auto;min-width: 310px">
+    </div>
+    <v-divider></v-divider>
+    <div style="height: 100%; overflow-y: auto; min-width: 310px;">
       <vue-scroll>
-        <v-list two-line nav avatar class="rounded-l">
+        <v-list two-line nav avatar class="rounded-0 pa-0">
           <v-list-item-group color="primary">
             <v-list-item
               dense
               v-for="item in resultQuery"
               :key="item.id"
               @click="$emit('clickChat', getDocRef(item.id))"
+              class="ma-0 rounded-0"
+              style="border-bottom: 1px solid #dedede;"
             >
-            <v-list-item-avatar>
+              <v-list-item-avatar>
                 <v-img :src="getUserById(item.renterId).avatar"></v-img>
                 <v-icon>face</v-icon>
               </v-list-item-avatar>
@@ -107,12 +97,7 @@ export default {
       renterIds: [],
       searchQuery: '',
       idList: [],
-      tab: null,
-      tabItems: [
-        { id: 1, name: 'Tất cả' },
-        { id: 2, name: 'Trả giá' },
-        { id: 3, name: 'Đặt lịch' },
-      ],
+      tab: 1,
     };
   },
   computed: {
@@ -170,16 +155,34 @@ export default {
       }
     },
     resultQuery() {
-      if (this.searchQuery) {
-        const idList = this.renterList.filter((item1) => item1.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1).map((item2) => item2.userId);
-        return this.docs.filter((item) => idList.includes(item.renterId)).filter((item2) => item2.lastedMessage);
+      console.log(this.docs);
+      console.log(this.tab);
+      let listChat = this.docs;
+      switch (this.tab) {
+        case 0:
+          listChat = this.docs;
+          break;
+        case 1:
+          listChat = this.docs.filter((msg) => msg.lastedMessage.bargain);
+          break;
+        case 2:
+          listChat = this.docs.filter((msg) => msg.lastedMessage.book);
+          break;
+        default:
+          listChat = this.docs;
+          break;
       }
-      return this.docs.filter((item) => item.lastedMessage);
-      // if (this.searchQuery) {
-      //   return this.renterList.filter((item) => this.searchQuery.toLowerCase().split(' ').every((v) => item.username.toLowerCase().includes(v)));
-      // }
-      // return this.docs.filter((item) => item.lastedMessage);
-      // return this.docs.filter((item) => item.lastedMessage.getUserById(item.renterId).username.toLowerCase().includes(this.searchQuery));
+      if (this.searchQuery) {
+        const idList = this.renterList
+          .filter(
+            (item1) => item1.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+          )
+          .map((item2) => item2.userId);
+        return listChat
+          .filter((item) => idList.includes(item.renterId))
+          .filter((item2) => item2.lastedMessage);
+      }
+      return listChat.filter((item) => item.lastedMessage);
     },
   },
   methods: {
@@ -287,5 +290,16 @@ export default {
 .text-color {
   color: #0022d5;
   font-size: 18px;
+}
+.v-text-field.v-text-field--solo .v-input__control {
+  min-height: 25px;
+  padding: 0;
+}
+.chat .theme--light.v-label {
+  color: #98a6ad !important;
+  font-family: 'Nunito', sans-serif !important;
+}
+.chat .theme--light.v-icon {
+  color: #98a6ad !important;
 }
 </style>

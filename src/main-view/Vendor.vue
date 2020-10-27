@@ -22,15 +22,39 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar :clipped-left="primaryDrawer.clipped" app dense _height="70">
+    <v-app-bar
+      :clipped-left="primaryDrawer.clipped"
+      app
+      dense
+      height="70"
+      class="white vendor pa-0"
+    >
+      <!-- <router-link to="/">
+        <v-img
+          alt="Hostel Renting"
+          class="shrink mr-2"
+          contain
+          src="@/assets/logo-sac.png"
+          transition="scale-transition"
+          max-width="50"
+          max-height="50"
+        />
+      </router-link> -->
       <v-app-bar-nav-icon @click.stop="primaryDrawer.model = !primaryDrawer.model">
       </v-app-bar-nav-icon>
-      <v-toolbar-title>{{ routeName }}</v-toolbar-title>
+      <v-toolbar-title
+        class="font-nunito text-gray font-weight-bold"
+        style="font-size: 1.125rem;"
+        >{{ routeName }}</v-toolbar-title
+      >
       <v-spacer></v-spacer>
+      <!-- <v-btn icon large @click.stop="chatDrawer.model = !chatDrawer.model">
+        <v-icon color="#727cf5">mdi-chat-processing</v-icon>
+      </v-btn> -->
       <notify-and-profile />
     </v-app-bar>
 
-    <v-main style="max-height: calc(100vh); overflow-y: hidden;">
+    <v-main _style="max-height: calc(100vh); overflow-y: hidden;">
       <v-container
         id="container"
         ref="container"
@@ -94,5 +118,11 @@ export default {
   max-height: 100%;
   height: 100%;
   overflow: hidden;
+}
+.vendor.v-sheet.v-app-bar.v-toolbar:not(.v-sheet--outlined) {
+  box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;
+}
+.font-nunito {
+  font-family: 'Nunito', sans-serif !important;
 }
 </style>

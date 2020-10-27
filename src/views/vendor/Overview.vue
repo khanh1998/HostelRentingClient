@@ -1,5 +1,5 @@
 <template>
-  <div style="overflow-y: hidden; height: calc(100vh - 72px);" class="d-flex flex-column">
+  <div _style="overflow-y: hidden; height: calc(100vh - 72px);" class="d-flex flex-column">
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -26,20 +26,31 @@
           <HostelGroupsOverview />
         </div>
       </div>
-      <div style="width: 30vw; height: 100%;" class="hidden-sm-and-down pa-2">
+      <div
+        style="width: 25vw; position: fixed; z-index: 3; bottom: 0; right: 0; top: 65px;"
+        v-show="showChatList"
+        class="hidden-sm-and-down pa-2"
+      >
         <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
       </div>
     </div>
+    <v-btn
+      class="mx-2"
+      fab
+      dark
+      large
+      color="purple"
+      style="position: fixed; right: 10px; bottom: 25px; z-index: 1031;"
+      @click="showChatList = !showChatList"
+    >
+      <v-icon dark>
+        mdi-chat-processing
+      </v-icon>
+    </v-btn>
     <v-card
-      style="
-        position: absolute;
-        right: 370px;
-        bottom: 0px;
-        height: auto;
-        width: 300px;
-        z-index: 9998;
-      "
+      style="position: fixed; right: 370px; bottom: 0px; height: auto; width: 300px; z-index: 101;"
       elevation="10"
+      class="red"
     >
       <Chatbox
         v-if="this.docs.doc1"
@@ -112,6 +123,7 @@ export default {
       show: false,
       doc: null,
     },
+    showChatList: false,
   }),
   computed: {
     ...mapState('vendor/group', ['groups', 'types', 'rooms']),
