@@ -3,9 +3,38 @@
     <v-overlay :value="provinces.isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <div v-if="!provinces.isLoading">
+    <v-card v-if="!provinces.isLoading">
       <span class="text-h6"><v-icon>directions</v-icon> Xác định vị trí trên bản đồ</span>
-      <div class="gmap-view">
+
+      <div class="hidden-sm-and-down">
+        <v-row>
+          <v-col cols="2">
+            <v-text-field v-model="buildingNo" placeholder="Số nhà"></v-text-field>
+          </v-col>
+          <v-col cols="10">
+            <v-select
+              prepend-icon="confirmation_number"
+              :items="coordsToString.selectableAddresses"
+              label="Chọn địa chỉ"
+              v-model="coordsToString.selectedAddress"
+              messages="Thay đổi danh sách địa chỉ bằng cách xác định vị trí trên bản đồ"
+            ></v-select>
+          </v-col>
+        </v-row>
+        <br />
+      </div>
+      <div class="hidden-sm-and-up ma-1">
+        <v-text-field v-model="buildingNo" placeholder="Số nhà"></v-text-field>
+        <v-select
+          :items="coordsToString.selectableAddresses"
+          label="Chọn địa chỉ"
+          v-model="coordsToString.selectedAddress"
+          messages="Thay đổi danh sách địa chỉ bằng cách xác định vị trí trên bản đồ"
+        ></v-select>
+        <br />
+      </div>
+
+      <div class="gmap-view ma-1">
         <div class="gmap-search-bar">
           <gmap-autocomplete
             @place_changed="setPlace"
@@ -39,18 +68,7 @@
           </gmap-map>
         </div>
       </div>
-      <div>
-        <v-select
-          prepend-icon="confirmation_number"
-          :items="coordsToString.selectableAddresses"
-          label="Chọn địa chỉ"
-          v-model="coordsToString.selectedAddress"
-          messages="Thay đổi danh sách địa chỉ bằng cách xác định vị trí trên bản đồ"
-        ></v-select>
-        <v-text-field v-model="buildingNo" placeholder="Số nhà"></v-text-field>
-        <br />
-      </div>
-    </div>
+    </v-card>
   </div>
 </template>
 <script>
