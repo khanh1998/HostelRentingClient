@@ -143,6 +143,10 @@ const mutationTypes = {
   UPDATE_CONTRACT_REQUEST: 'UPDATE_CONTRACT_REQUEST',
   UPDATE_CONTRACT_SUCCESS: 'UPDATE_CONTRACT_SUCCESS',
   UPDATE_CONTRACT_FAILURE: 'UPDATE_CONTRACT_FAILURE',
+
+  GET_ONE_CONTRACT_REQUEST: 'GET_ONE_CONTRACT_REQUEST',
+  GET_ONE_CONTRACT_SUCCESS: 'GET_ONE_CONTRACT_SUCCESS',
+  GET_ONE_CONTRACT_FAILURE: 'GET_ONE_CONTRACT_FAILURE',
 };
 const mutations = {
   CLEAR_USER_DATA(state) {
@@ -177,6 +181,21 @@ const mutations = {
     state.contracts.success = true;
   },
   GET_CONTRACTS_FAILURE(state, error) {
+    state.contracts.isLoading = false;
+    state.contracts.success = false;
+    state.contracts.error = error;
+  },
+  GET_ONE_CONTRACT_REQUEST(state) {
+    state.contracts.isLoading = true;
+    state.contracts.error = null;
+    state.contracts.success = null;
+  },
+  GET_ONE_CONTRACT_SUCCESS(state, contract) {
+    state.contracts.data.unshift(contract);
+    state.contracts.isLoading = false;
+    state.contracts.success = true;
+  },
+  GET_ONE_CONTRACT_FAILURE(state, error) {
     state.contracts.isLoading = false;
     state.contracts.success = false;
     state.contracts.error = error;
@@ -350,6 +369,7 @@ const mutations = {
     state.contracts.isCreating = true;
     state.contracts.error = null;
     state.contracts.success = null;
+    state.contracts.newlyCreated = null;
   },
   CREATE_CONTRACT_SUCCESS(state, contract) {
     state.contracts.isCreating = false;
@@ -370,8 +390,8 @@ const mutations = {
   UPDATE_CONTRACT_SUCCESS(state, contractId) {
     state.contracts.isUpdating = false;
     console.log(contractId);
-    // const index = state.contracts.data.findIndex((c) => c.contractId === Number(contractId));
-    // state.contracts.data[index].status = 'ACTIVATED';
+    const index = state.contracts.data.findIndex((c) => c.contractId === Number(contractId));
+    state.contracts.data[index].status = 'ACTIVATED';
     state.contracts.success = true;
   },
   UPDATE_CONTRACT_FAILURE(state, error) {
@@ -500,6 +520,20 @@ const actions = {
         } else {
           console.log('this booking is already in store');
         }
+      } catch (error) {
+        commit(mutationTypes.GET_BOOKING_FAILURE, error);
+      }
+    } else {
+      throw new Error('You have to login before get a new booking');
+    }
+  },
+  insertOneBooking({ commit, state }, booking) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role && state.user.data) {
+      try {
+        commit(mutationTypes.GET_BOOKING_REQUEST);
+        commit(mutationTypes.GET_BOOKING_SUCCESS, booking);
       } catch (error) {
         commit(mutationTypes.GET_BOOKING_FAILURE, error);
       }
@@ -682,6 +716,29 @@ const actions = {
       commit(mutationTypes.DONE_BOOKING_FAILURE, error);
     }
   },
+  updateBookingStatusLocal({ commit, state }, bookingId) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    commit(mutationTypes.DONE_BOOKING_REQUEST);
+    if (userId && role && state.user.data) {
+      try {
+        const booking = state.bookings.data.filter((item) => item.bookingId === bookingId)[0];
+        if (booking) {
+          booking.status = 'DONE';
+          commit(mutationTypes.DONE_BOOKING_SUCCESS, bookingId);
+        } else {
+          const error = new Error(`booking ${bookingId} is not existed in store`);
+          console.log(error);
+          commit(mutationTypes.DONE_BOOKING_FAILURE, error);
+        }
+      } catch (error) {
+        commit(mutationTypes.DONE_BOOKING_FAILURE, error);
+      }
+    } else {
+      const error = new Error('you are not loged in');
+      commit(mutationTypes.DONE_BOOKING_FAILURE, error);
+    }
+  },
   clearNewlyCreatedBooking({ commit }) {
     commit(mutationTypes.CLEAR_NEWLY_CREATED_BOOKING);
   },
@@ -747,7 +804,7 @@ const actions = {
         const error = new Error('Loggin to activate contract');
         commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
       } else if (role !== 'renters') {
-        const error = new Error('Only renter have permission to create contract');
+        const error = new Error('Only renter have permission to activate contract');
         commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
       } else {
         const { contractId, qrCode } = contract;
@@ -761,6 +818,43 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
+    }
+  },
+  async updateContractLocal({ commit, state }, contractId) {
+    try {
+      commit(mutationTypes.UPDATE_CONTRACT_REQUEST);
+      const userId = window.$cookies.get('userId');
+      const role = window.$cookies.get('role');
+      if (!userId && !state.user.data) {
+        const error = new Error('Loggin to activate contract');
+        commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
+      } else if (role !== 'vendors') {
+        const error = new Error('Only vendor have permission to update contract locally');
+        commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
+      } else {
+        commit(mutationTypes.UPDATE_CONTRACT_SUCCESS, contractId);
+      }
+    } catch (error) {
+      commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
+    }
+  },
+  async getOneContract({ commit, state }, contractId) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role && state.user.data) {
+      try {
+        commit(mutationTypes.GET_ONE_CONTRACT_REQUEST);
+        const res = await window.axios.get(`/api/v1/contracts/${contractId}`);
+        if (res.status === 200) {
+          commit(mutationTypes.GET_ONE_CONTRACT_SUCCESS, res.data.data);
+        } else {
+          commit(mutationTypes.GET_ONE_CONTRACT_FAILURE);
+        }
+      } catch (error) {
+        commit(mutationTypes.GET_ONE_CONTRACT_FAILURE, error);
+      }
+    } else {
+      throw new Error('You have to login before get contracts');
     }
   },
 };

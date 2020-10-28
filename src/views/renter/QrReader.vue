@@ -1,7 +1,7 @@
 <template>
-  <div v-if="!isLoading" class="d-flex justify-center" style="height: calc(100vh - 120px);">
+  <div v-if="!isLoading" class="d-flex justify-center" style="height: calc(100vh - 120px)">
     <v-col cols="12" md="6">
-      <v-card style="height: 90%;">
+      <v-card style="height: 90%">
         <p></p>
         <p class="error text-center">{{ error }}</p>
         <!-- <p class="decode-result">
@@ -11,7 +11,7 @@
           v-if="!noStreamApiSupport"
           @decode="onDecode"
           @init="onInit"
-          style="height: 100%;"
+          style="height: 100%"
         >
           <qrcode-stream @decode="onDecode" @init="onInit" />
         </qrcode-drop-zone>
@@ -72,12 +72,8 @@
             color="#727cf5"
             v-if="previewDialog.constract"
           >
-            <v-tab>
-              1. Thông tin hai bên
-            </v-tab>
-            <v-tab>
-              2. THÔNG TIN HỢP ĐỒNG
-            </v-tab>
+            <v-tab> 1. Thông tin hai bên </v-tab>
+            <v-tab> 2. THÔNG TIN HỢP ĐỒNG </v-tab>
             <v-tab-item>
               <div class="d-flex flex-column justify-center align-end">
                 <InfomationSection
@@ -243,9 +239,7 @@
         {{ snackBarMixin.message }}
 
         <template v-slot:action="{ attrs }">
-          <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false">
-            Close
-          </v-btn>
+          <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Close </v-btn>
         </template>
       </v-snackbar>
     </v-col>
@@ -301,6 +295,7 @@ export default {
       getBookings: 'user/getBookings',
       updateBookingStatus: 'user/updateBookingStatus',
       getContracts: 'user/getContracts',
+      getOneContract: 'user/getOneContract',
       updateContract: 'user/updateContract',
     }),
     startTimeString(time) {
@@ -315,6 +310,7 @@ export default {
     },
     onDecode(result) {
       this.result = result;
+      console.log(result);
       const [type, content] = this.result.split(':');
       console.log(type, content);
       switch (type) {
@@ -332,11 +328,16 @@ export default {
       }
     },
     showPreviewDialog(content) {
-      const [contractId, contractSecret] = content.split(',');
-      this.previewDialog.show = true;
+      let [contractId, contractSecret] = content.split(',');
+      contractId = contractId.trim();
+      contractSecret = contractSecret.trim();
+      console.log(contractId, contractSecret);
       this.previewDialog.contractId = contractId;
       this.previewDialog.contractSecret = contractSecret;
-      this.getContracts().then(() => this.findContract(contractId));
+      this.getOneContract(contractId).then(() => {
+        this.findContract(contractId);
+        this.previewDialog.show = true;
+      });
       // const createdContract = this.findContractById()(contractId);
       // this.previewDialog.constract = createdContract;
       this.previewDialog.pdf = 'https://cdn.mozilla.net/pdfjs/tracemonkey.pdf'; // createdContract.pdf;

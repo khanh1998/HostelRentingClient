@@ -21,21 +21,21 @@
         :nav="true"
         :avatar="true"
         class="rounded-l"
-        style="height: 405px; width: 300px;"
+        style="height: 405px; width: 300px"
       >
         <v-list-item-group color="primary">
           <v-list-item
             v-for="(item, i) in notifications"
             :key="i"
             class="mb-2 pt-2"
-            style="backgroundcolor: #f2f2f2;"
+            style="backgroundcolor: #f2f2f2"
             @click="$emit('clickedItem', getItemSelected(item))"
           >
             <v-list-item-avatar>
               <v-img :src="item.avatar"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title style="fontsize: 16px;" class="py-1">
+              <v-list-item-title style="fontsize: 16px" class="py-1">
                 {{ item.title }}
               </v-list-item-title>
               <v-list-item-subtitle>Đã đặt lịch hẹn ngày {{ item.message }}</v-list-item-subtitle>
@@ -59,9 +59,7 @@
               <v-list-item-title>
                 {{ user.username }}
               </v-list-item-title>
-              <v-list-item-subtitle>
-                Chủ trọ
-              </v-list-item-subtitle>
+              <v-list-item-subtitle> Chủ trọ </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <template v-for="(item, index) in infoMenu">
@@ -82,76 +80,17 @@
 
 <script>
 import { mapActions } from 'vuex';
-import firebase from '../../../config/firebase';
-
-const { messaging } = firebase;
+import processFCMForegroundMixins from '../../mixins/processFCMForeground';
 
 export default {
   name: 'NotifyAndProfile',
+  mixins: [processFCMForegroundMixins],
   methods: {
     ...mapActions({
       getUser: 'user/getUser',
       clearUserData: 'user/clearUserData',
       getNewCommingBooking: 'user/getOneBooking',
     }),
-    getMessagingToken() {
-      messaging
-        .getToken()
-        .then(async (token) => {
-          if (token) {
-            const currentMessageToken = window.localStorage.getItem('messagingToken');
-            console.log('token will be updated', currentMessageToken !== token);
-            if (currentMessageToken !== token) {
-              await this.saveToken(token);
-            }
-          } else {
-            console.log('No Instance ID token available. Request permission to generate one.');
-            this.notificationsPermisionRequest();
-          }
-        })
-        .catch((err) => {
-          console.log('An error occurred while retrieving token. ', err);
-        });
-    },
-    notificationsPermisionRequest() {
-      messaging
-        .requestPermission()
-        .then(() => {
-          this.getMessagingToken();
-        })
-        .catch((err) => {
-          console.log('Unable to get permission to notify.', err);
-        });
-    },
-    saveToken(token) {
-      console.log('tokens', token);
-      window.axios
-        .post('https://us-central1-cropchien.cloudfunctions.net/GeneralSubscription', { token })
-        .then((response) => {
-          window.localStorage.setItem('messagingToken', token);
-          console.log(response);
-        })
-        .catch((err) => {
-          window.localStorage.setItem('messagingToken', token);
-          console.log(err);
-        });
-    },
-    listenTokenRefresh() {
-      const currentMessageToken = window.localStorage.getItem('messagingToken');
-      console.log('currentMessageToken', currentMessageToken);
-      if (!currentMessageToken) {
-        messaging.onTokenRefresh(() => {
-          messaging
-            .getToken()
-            .then((token) => {
-              this.saveToken(token);
-            })
-            .catch((err) => {
-              console.log('Unable to retrieve refreshed token ', err);
-            });
-        });
-      }
-    },
     addNewNotificaton(payload) {
       const noti = {
         avatar: payload.notification.icon,
@@ -161,7 +100,6 @@ export default {
       this.notifications.unshift(noti);
     },
     receivePayload(payload) {
-      console.log(this);
       console.log(payload);
       if (payload.data) {
         this.getNewCommingBooking(payload.data.bookingId);
@@ -171,9 +109,7 @@ export default {
     changePage() {},
   },
   mounted() {
-    if (messaging) {
-      messaging.onMessage(this.receivePayload);
-    }
+    this.registerMessaging();
   },
   computed: {
     listBookChange() {

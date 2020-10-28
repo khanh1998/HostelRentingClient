@@ -24,9 +24,7 @@
       {{ snackBarMixin.message }}
 
       <template v-slot:action="{ attrs }">
-        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false">
-          Close
-        </v-btn>
+        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Close </v-btn>
       </template>
     </v-snackbar>
     <v-card>
@@ -185,6 +183,8 @@ export default {
       this.getUser().then(() => {
         this.newGroup.vendorId = this.user.userId;
       });
+    } else {
+      this.newGroup.vendorId = this.user.userId;
     }
   },
 };

@@ -30,12 +30,12 @@
       <notify-and-profile />
     </v-app-bar>
 
-    <v-main style="max-height: calc(100vh); overflow-y: hidden;">
+    <v-main style="max-height: calc(100vh); overflow-y: hidden">
       <v-container
         id="container"
         ref="container"
         fluid
-        style="max-height: 100%;"
+        style="max-height: 100%"
         class="d-flex flex-column"
       >
         <router-view />
@@ -82,6 +82,8 @@ export default {
       this.$cookies.remove('role');
       this.$cookies.remove('userId');
       this.$cookies.remove('jwt');
+      this.$cookies.remove('firebaseIdToken');
+      this.$cookies.remove('messagingToken');
       this.clearUserData();
       this.$router.push('/');
     },

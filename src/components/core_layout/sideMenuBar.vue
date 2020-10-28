@@ -7,7 +7,7 @@
     <v-list nav class="py-0 rounded-1" height="100%" dense>
       <v-list-item> </v-list-item>
       <v-list-item v-if="!hasMessagingToken" class="d-flex align-center justify-center">
-        <v-btn dark rounded color="amber" @click="getMessagingToken">
+        <v-btn dark rounded color="amber" @click="doGetMessagingToken">
           <v-icon>notifications_none</v-icon>Bật thông báo
         </v-btn>
       </v-list-item>
@@ -53,12 +53,11 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import firebase from '../../config/firebase';
-
-const { messaging } = firebase;
+import pushNotificationMixins from '../mixins/pushNotification';
 
 export default {
   name: 'SideMenuBar',
+  mixins: [pushNotificationMixins],
   data() {
     return {
       drawer: true,
@@ -96,79 +95,19 @@ export default {
     },
     ...mapActions({
       clearUserData: 'user/clearUserData',
-      updateUser: 'user/updateUser',
     }),
-    getMessagingToken() {
-      messaging
-        .getToken()
-        .then(async (token) => {
-          if (token) {
-            const currentMessageToken = window.localStorage.getItem('messagingToken');
-            console.log('token will be updated', currentMessageToken !== token);
-            if (currentMessageToken !== token) {
-              await this.saveToken(token);
-            }
-          } else {
-            console.log('No Instance ID token available. Request permission to generate one.');
-            this.notificationsPermisionRequest();
-          }
-        })
-        .catch((err) => {
-          console.log('An error occurred while retrieving token. ', err);
-        });
-    },
-    notificationsPermisionRequest() {
-      messaging
-        .requestPermission()
-        .then(() => {
-          this.getMessagingToken();
-        })
-        .catch((err) => {
-          console.log('Unable to get permission to notify.', err);
-        });
-    },
-    saveToken(token) {
-      console.log('tokens', token);
-      const newUser = { ...this.user.data };
-      newUser.firebaseToken = token;
-      this.updateUser(newUser)
-        .then((response) => {
-          window.localStorage.setItem('messagingToken', token);
-          console.log(response);
-        })
-        .catch((err) => {
-          window.localStorage.setItem('messagingToken', token);
-          console.log(err);
-        });
-    },
-    listenTokenRefresh() {
-      const currentMessageToken = window.localStorage.getItem('messagingToken');
-      console.log('currentMessageToken', currentMessageToken);
-      if (!currentMessageToken) {
-        messaging.onTokenRefresh(() => {
-          messaging
-            .getToken()
-            .then((token) => {
-              this.saveToken(token);
-            })
-            .catch((err) => {
-              console.log('Unable to retrieve refreshed token ', err);
-            });
-        });
-      }
-    },
     logout() {
       this.$cookies.remove('role');
       this.$cookies.remove('userId');
       this.$cookies.remove('jwt');
+      this.$cookies.remove('firebaseIdToken');
+      this.$cookies.remove('messagingToken');
       this.clearUserData();
       this.$router.push('/');
     },
   },
   mounted() {
-    if (messaging) {
-      this.getMessagingToken();
-    }
+    this.doGetMessagingToken();
   },
   computed: {
     ...mapState({

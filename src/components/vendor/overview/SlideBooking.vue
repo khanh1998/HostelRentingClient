@@ -1,21 +1,28 @@
 <template>
   <div>
     <v-sheet class="rounded" elevation="0" height="30%" max-width="100%">
-      <v-dialog v-model="dialog" width="400">
+      <v-dialog v-model="dialog" width="400" persistent>
         <v-card>
-          <v-card-title class="headline" style="background-color: #98b7d7; color: white;">
+          <v-card-title class="headline" style="background-color: #98b7d7; color: white">
             Mã quét
           </v-card-title>
           <v-card-text class="d-flex justify-center mt-5">
-            <div class="d-flex flex-column justify-center align-center">
+            <div v-if="!scanQRSuccess" class="d-flex flex-column justify-center align-center">
               <p>Người xem phòng quét mã để xác nhận đã gặp mặt.</p>
               <qrcode-vue :value="qrvalue" :size="200" level="H"></qrcode-vue>
+            </div>
+            <div v-if="scanQRSuccess" class="d-flex flex-column justify-center align-center">
+              <p><v-icon color="green">done_outline</v-icon> Xác nhận gặp mặt thành công!</p>
+              <p>Bạn có muốn tạo hợp đồng ngay?</p>
+              <v-btn :to="`/vendor/contract?bookingId=${newMessage.data.bookingId}`">
+                <v-icon>far fa-handshake</v-icon> Tạo hợp đồng
+              </v-btn>
             </div>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="dialog = false"> Đóng </v-btn>
+            <v-btn color="primary" text @click="closeDialog"> Đóng </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -53,14 +60,14 @@
           >
             <v-col
               cols="12"
-              style="background-color: #98b7d7; height: 28%; width: 100%;"
+              style="background-color: #98b7d7; height: 28%; width: 100%"
               class="d-flex justify-end"
             >
-              <span style="fontweight: bold; color: white;">
+              <span style="fontweight: bold; color: white">
                 {{ getDateString(Number(booking.meetTime)) }}
               </span>
               <v-divider vertical class="mx-3"></v-divider>
-              <span style="fontweight: bold; color: white;">
+              <span style="fontweight: bold; color: white">
                 {{ getTimeString(Number(booking.meetTime)) }}
               </span>
             </v-col>
@@ -70,11 +77,11 @@
               </v-list-item-avatar>
               <v-list-item-content class="pl-4">
                 <v-list-item-title
-                  style="fontsize: 16px; fontweight: bold; color: #1f17ff;"
+                  style="fontsize: 16px; fontweight: bold; color: #1f17ff"
                   class="py-1"
                   >{{ booking.renter.username }}</v-list-item-title
                 >
-                <v-list-item-subtitle style="color: coral;">
+                <v-list-item-subtitle style="color: coral">
                   {{ booking.renter.phone }}</v-list-item-subtitle
                 >
               </v-list-item-content>
@@ -100,7 +107,7 @@
             </v-list-item>
             <div class="text">
               <v-icon class="px-3 pl-3">home</v-icon>
-              <span style="fontweight: bold;">{{ booking.group.groupName }}</span>
+              <span style="fontweight: bold">{{ booking.group.groupName }}</span>
             </div>
           </v-card>
         </v-slide-item>
@@ -110,7 +117,7 @@
       </v-card>
       <v-divider />
       <div class="d-flex align-center justify-center justify-md-right">
-        <span style="color: #818286;" v-if="bookings.length > 0" class="ml-2">
+        <span style="color: #818286" v-if="bookings.length > 0" class="ml-2">
           <router-link to="booking" class="text-decoration-none">Xem thêm >></router-link>
         </span>
       </div>
@@ -120,9 +127,12 @@
 <script>
 import QrcodeVue from 'qrcode.vue';
 import { mapActions } from 'vuex';
+import processFCMForegroundMixins from '../../mixins/processFCMForeground';
+import pushNotificationAction from '../../../config/pushNotificationActions';
 
 export default {
   name: 'SlideBooking',
+  mixins: [processFCMForegroundMixins],
   components: {
     QrcodeVue,
   },
@@ -141,6 +151,10 @@ export default {
     changeToString(bookingId) {
       this.dialog = true;
       this.qrvalue = `booking:${bookingId}`;
+    },
+    closeDialog() {
+      this.dialog = false;
+      this.scanQRSuccess = false;
     },
   },
   computed: {
@@ -193,6 +207,7 @@ export default {
     if (this.bookings.length === 0) {
       this.getBookings();
     }
+    this.registerMessaging(); // from mixins
   },
   data: () => ({
     chipItems: ['Hôm nay', 'Tuần này', 'Tháng này'],
@@ -200,7 +215,19 @@ export default {
     dialog: false,
     qrvalue: null,
     searchQuery: null,
+    scanQRSuccess: false,
   }),
+  watch: {
+    newMessage: {
+      // from mixins
+      handler() {
+        if (this.newMessage.data.action === pushNotificationAction.SCAN_BOOKING) {
+          this.scanQRSuccess = true;
+        }
+      },
+      deep: true,
+    },
+  },
 };
 </script>
 <style>

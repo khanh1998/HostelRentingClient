@@ -8,25 +8,35 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="showQRDialog" width="350">
-      <v-card>
-        <v-card-title style="background-color: #98b7d7; color: white;">Mã quét</v-card-title>
+    <v-dialog v-model="showQRDialog" width="350" persistent>
+      <v-card v-if="!scanQRSuccess">
+        <v-card-title style="background-color: #98b7d7; color: white">Mã quét</v-card-title>
         <v-card-text>
           <p>Người xem phòng quét mã để xem lại và kích hoạt hợp đồng.</p>
           <div class="d-flex justify-center align-center">
             <QrcodeVue :value="qrCodeValue" v-if="contracts.newlyCreated" :size="200" level="H" />
           </div>
         </v-card-text>
+        <v-card-actions>
+          <v-btn to="/vendor">Màn hình chính</v-btn>
+          <v-btn to="/vendor/view-contract">Xem hợp đồng</v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-if="scanQRSuccess">
+        <v-card-title>
+          <v-icon color="green">done_outline</v-icon>
+          Tạo hợp đồng thành công!
+        </v-card-title>
+        <v-card-actions>
+          <v-btn to="/vendor">Màn hình chính</v-btn>
+          <v-btn to="/vendor/view-contract">Xem hợp đồng</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
     <!-- <div class="d-flex justify-center title">{{ heading }}</div> -->
     <v-tabs v-model="tabs.index" class="font-nunito font-weight-bold" color="#727cf5">
-      <v-tab>
-        1. Thông tin hai bên
-      </v-tab>
-      <v-tab>
-        2. THÔNG TIN HỢP ĐỒNG
-      </v-tab>
+      <v-tab> 1. Thông tin hai bên </v-tab>
+      <v-tab> 2. THÔNG TIN HỢP ĐỒNG </v-tab>
       <v-tab-item>
         <div class="d-flex flex-column justify-center align-end">
           <InfomationSection :renter="booking.renter" :vendor="booking.vendor" />
@@ -51,9 +61,12 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import QrcodeVue from 'qrcode.vue';
 import InfomationSection from './InfomationSection.vue';
 import TermsOfContractSection from './TermsOfContractSection.vue';
+import processFCMForegroundMixins from '../../mixins/processFCMForeground';
+import pushNotificationAction from '../../../config/pushNotificationActions';
 
 export default {
   name: 'contract',
+  mixins: [processFCMForegroundMixins],
   components: { InfomationSection, TermsOfContractSection, QrcodeVue },
   data: () => ({
     heading: 'THÔNG TIN HỢP ĐỒNG',
@@ -62,6 +75,7 @@ export default {
     tabs: {
       index: 0,
     },
+    scanQRSuccess: false,
   }),
   methods: {
     ...mapActions({
@@ -89,6 +103,10 @@ export default {
       this.tabs.index += 1;
       document.getElementById('contractView').scrollTop = 0;
     },
+    closeDialog() {
+      this.showQRDialog = false;
+      this.scanQRSuccess = false;
+    },
   },
   computed: {
     ...mapState({
@@ -112,11 +130,21 @@ export default {
     if (this.bookings.data.length === 0) {
       this.getOneBooking(this.bookingId);
     }
+    this.registerMessaging(); // from mixins
   },
   watch: {
     newlyCreatedContract: {
       handler() {
         this.showQRDialog = true;
+      },
+      deep: true,
+    },
+    newMessage: {
+      // from mixins
+      handler() {
+        if (this.newMessage.data.action === pushNotificationAction.SCAN_CONTRACT) {
+          this.scanQRSuccess = true;
+        }
       },
       deep: true,
     },
