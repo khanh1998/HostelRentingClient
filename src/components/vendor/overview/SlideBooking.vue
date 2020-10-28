@@ -1,35 +1,24 @@
 <template>
-  <div>
-    <v-sheet class="rounded" elevation="0" height="30%" max-width="100%">
-      <v-dialog v-model="dialog" width="400" persistent>
-        <v-card>
-          <v-card-title class="headline" style="background-color: #98b7d7; color: white">
-            Mã quét
-          </v-card-title>
-          <v-card-text class="d-flex justify-center mt-5">
-            <div v-if="!scanQRSuccess" class="d-flex flex-column justify-center align-center">
-              <p>Người xem phòng quét mã để xác nhận đã gặp mặt.</p>
-              <qrcode-vue :value="qrvalue" :size="200" level="H"></qrcode-vue>
-            </div>
-            <div v-if="scanQRSuccess" class="d-flex flex-column justify-center align-center">
-              <p><v-icon color="green">done_outline</v-icon> Xác nhận gặp mặt thành công!</p>
-              <p>Bạn có muốn tạo hợp đồng ngay?</p>
-              <v-btn :to="`/vendor/contract?bookingId=${newMessage.data.bookingId}`">
-                <v-icon>far fa-handshake</v-icon> Tạo hợp đồng
-              </v-btn>
-            </div>
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="closeDialog"> Đóng </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <div class="d-flex justify-md-space-between flex-column flex-md-row">
-        <div class="d-flex align-center justify-center justify-md-left">
-          <span class="text-h6 font-weight-bold text-center ml-3">Lịch hẹn xem phòng hôm nay</span>
-        </div>
+  <div class="d-flex flex-column">
+    <v-dialog v-model="dialog" width="400">
+      <v-card>
+        <v-card-title class="headline" style="background-color: #98b7d7; color: white;">
+          Mã quét
+        </v-card-title>
+        <v-card-text class="d-flex justify-center mt-5">
+          <div class="d-flex flex-column justify-center align-center">
+            <p>Người xem phòng quét mã để xác nhận đã gặp mặt.</p>
+            <qrcode-vue :value="qrvalue" :size="200" level="H"></qrcode-vue>
+          </div>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="dialog = false"> Đóng </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- <div class="d-flex justify-md-space-between flex-column flex-md-row">
         <v-row no-gutters class="d-flex justify-end">
           <v-col cols="12" md="5">
             <v-text-field
