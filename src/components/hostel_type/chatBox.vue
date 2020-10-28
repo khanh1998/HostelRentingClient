@@ -489,7 +489,6 @@ export default {
     }),
     myOnScroll() {},
     clickBooking() {
-      console.log(this.hasIncommingBooking);
       if (this.hasIncommingBooking) {
         this.messageTitle = 'Bạn đã có lịch hẹn xem loại phòng này!';
         this.messageAction = 'Để đặt lịch hẹn mới, vui lòng hủy lịch hẹn trước đó';
@@ -554,6 +553,7 @@ export default {
         dealId: lastedDeal ? lastedDeal.dealId : null,
         status: 'INCOMING',
       };
+      console.log(bookingToApi);
       this.createBooking(bookingToApi).then(() => {
         // sendBookingNotification(this.newlyCreatedBooking);
         newContent.book.bookingId = this.newlyCreatedBooking.bookingId;
@@ -815,17 +815,11 @@ export default {
     },
     getLastDeal() {
       let allMsg = this.filteredMessage;
-      console.log(allMsg);
       allMsg.sort((a, b) => a.createdAt - b.createdAt);
-      console.log(allMsg);
       allMsg = allMsg.filter(
         (m) => m.sender === 'renter' && m.bargain && m.bargain.status === 'accept',
       );
-      console.log(allMsg);
-
       if (allMsg && allMsg.length !== 0) {
-        console.log('thuy');
-        console.log(allMsg[allMsg.length - 1]);
         return allMsg[allMsg.length - 1];
       }
       return null;

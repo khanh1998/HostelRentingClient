@@ -8,25 +8,8 @@
       <v-container v-if="!isLoading">
         <v-dialog width="400" v-model="chatBox.show">
           <chatBox v-if="renter" v-on:close="chatBox.show = false" :info="info" :group="group" />
-          <!-- <v-card v-if="!renter">
-            <v-card-title>Đăng nhập để nhắn tin</v-card-title>
-            <v-card-actions>
-              <v-btn :to="registerRouteObject" dark class="green lighten-3">
-                <v-icon>create</v-icon>Tạo tài khoản mới
-              </v-btn>
-              <v-spacer />
-              <v-btn :to="loginRouteObject" dark class="blue lighten-3">
-                <v-icon>login</v-icon>Đăng nhập
-              </v-btn>
-            </v-card-actions>
-          </v-card> -->
           <LoginBox v-if="!renter" />
         </v-dialog>
-        <!-- <v-row>
-          <v-col cols="12" sm="12" md="8" class="pa-0 ml-auto">
-            <v-breadcrumbs :items="breadcrumbs"></v-breadcrumbs>
-          </v-col>
-        </v-row> -->
         <v-row>
           <v-col
             cols="12"
@@ -119,10 +102,12 @@
             </div>
           </v-col>
           <v-col cols="12" sm="12" md="4" class="d-flex flex-column py-0">
-            <v-breadcrumbs
-              :items="getBreadcrumbs"
-              class="font-nunito py-1 d-flex justify-center breadcrumbs"
-            ></v-breadcrumbs>
+            <div v-show="this.showBreadcrumbs">
+              <v-breadcrumbs
+                :items="getBreadcrumbs"
+                class="font-nunito py-1 d-flex justify-center breadcrumbs"
+              ></v-breadcrumbs>
+            </div>
             <span class="font-weight-medium text-h5 text-primary text-center"
               >{{ info.price }} {{ info.priceUnit }}/tháng</span
             >
@@ -243,11 +228,6 @@
             </v-row>
           </v-col>
         </v-row>
-        <!-- <v-row>
-          <v-col cols="12" sm="12" md="8" lg="8" class="pt-0 d-flex flex-column">
-            <div>thuy</div>
-          </v-col>
-        </v-row> -->
         <v-row class="mt-3">
           <v-col cols="12" md="4" v-if="info.facilities.length !== 0">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
@@ -442,22 +422,6 @@ export default {
       show: false,
     },
     prevRoute: null,
-    // breadcrumbs: [
-    //   {
-    //     text: 'Trang chủ',
-    //     disabled: false,
-    //     href: '/',
-    //   },
-    //   {
-    //     text: 'Kết quả tìm kiếm',
-    //     disabled: false,
-    //     href: `${this.prevRoute.fullPath}`,
-    //   },
-    //   {
-    //     text: 'Chi tiết phòng',
-    //     disabled: true,
-    //   },
-    // ],
   }),
   methods: {
     ...mapActions({
@@ -493,8 +457,17 @@ export default {
     typeId() {
       return this.$route.params.typeId;
     },
+    showBreadcrumbs() {
+      if (this.prevRoute && this.prevRoute.fullPath) {
+        const preURL = this.prevRoute.path;
+        return (
+          preURL.includes('result') && preURL.includes('latitude') && preURL.includes('longitude')
+        );
+      }
+      return false;
+    },
     getBreadcrumbs() {
-      let preURL = '/detail/4';
+      let preURL = '';
       let disablePreURL = true;
       if (this.prevRoute && this.prevRoute.fullPath) {
         preURL = this.prevRoute.fullPath;
@@ -547,20 +520,13 @@ export default {
     info() {
       let data = null;
       data = this.$store.state.renter.hostelType.hostelType.data;
-      console.log(data);
-      console.log('hứ');
       // data = this.$store.getters['renter/home/getHostelTypeById'](this.typeId);
       if (data === null) {
-        console.log('hứ');
-        console.log(this.typeId);
         data = this.$store.getters['renter/filterResult/getHostelTypeById'](this.typeId);
-        console.log('hé');
-        console.log(data);
         if (data === null) {
           data = this.$store.state.renter.hostelType.hostelType.data;
         }
       }
-      console.log(data);
       return data;
     },
     group() {
@@ -641,7 +607,6 @@ export default {
       return window.$cookies.get('schoolMate');
     },
     hometown() {
-      console.log(this.$store.state.renter.filterResult.filter.hometown);
       return this.$store.state.renter.filterResult.filter.hometown;
     },
     hometownSelected() {
@@ -657,16 +622,12 @@ export default {
   },
   created() {
     // if home.js store is empty then start to call api
-    console.log('thuy điên');
-    console.log(this.info);
     if (!this.info) {
-      console.log('dô');
       this.getTypeAndGroup(this.typeId)
         .then(() => this.getNearByUtilities())
         .then(() => this.getAllHostelTypes(this.group.groupId))
         .then(() => this.getDistrictStatistic(this.group.address.districtId));
     } else {
-      console.log('dao');
       this.getNearByUtilities();
       this.getDistrictStatistic(this.group.address.districtId);
     }
