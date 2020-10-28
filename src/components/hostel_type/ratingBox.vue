@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- eslint-disable max-len -->
-    <div class="d-flex" style="border: 1px solid #ccc !important; background: #eeeeee !important">
-      <v-col cols="3" class="flex justify-center">
+    <div class="d-flex" style="border: 1px solid #ccc !important; background: #eeeeee !important;">
+      <v-col cols="6" md="3" class="flex justify-center">
         <span class="text-h5 font-nunito font-weight-bold" :style="{ color: '#F9A825' }">
           {{ rating.average }}
           <span class="text-subtitle-1 font-weight-regular">trên 5</span>
@@ -20,79 +20,90 @@
         <span class="text-body-2 font-nunito gray--text">({{ rating.total }} đánh giá)</span>
       </v-col>
       <v-col cols="9" class="d-flexd-flex flex-wrap">
-        <v-btn small depressed class="ma-2 text-caption white--text" tile color="#727cf5">Tất cả</v-btn>
+        <v-btn small depressed class="ma-2 text-caption white--text" tile color="#727cf5"
+          >Tất cả</v-btn
+        >
         <v-btn
           small
           class="ma-2 font-weight-bold"
           tile
           outlined
           color="#727cf5"
-          style="background-color: #fff"
-        >Đã đến xem phòng</v-btn>
+          style="background-color: #fff;"
+          >Đã đến xem phòng</v-btn
+        >
         <v-btn
           small
           class="ma-2 font-weight-bold"
           tile
           outlined
           color="#727cf5"
-          style="background-color: #fff"
-        >Đã ở</v-btn>
+          style="background-color: #fff;"
+          >Đã ở</v-btn
+        >
         <v-btn
           small
           class="ma-2 font-weight-bold"
           tile
           outlined
           color="#727cf5"
-          style="background-color: #fff"
-        >5 sao (20)</v-btn>
+          style="background-color: #fff;"
+          >5 sao (20)</v-btn
+        >
         <v-btn
           small
           class="ma-2 font-weight-bold"
           tile
           outlined
           color="#727cf5"
-          style="background-color: #fff"
-        >4 sao (3)</v-btn>
+          style="background-color: #fff;"
+          >4 sao (3)</v-btn
+        >
         <v-btn
           small
           class="ma-2 font-weight-bold"
           tile
           outlined
           color="#727cf5"
-          style="background-color: #fff"
-        >3 sao (3)</v-btn>
+          style="background-color: #fff;"
+          >3 sao (3)</v-btn
+        >
         <v-btn
           small
           class="ma-2 font-weight-bold"
           tile
           outlined
           color="#727cf5"
-          style="background-color: #fff"
-        >2 sao (3)</v-btn>
+          style="background-color: #fff;"
+          >2 sao (3)</v-btn
+        >
         <v-btn
           small
           class="ma-2 font-weight-bold"
           tile
           outlined
           color="#727cf5"
-          style="background-color: #fff"
-        >1 sao (1)</v-btn>
+          style="background-color: #fff;"
+          >1 sao (1)</v-btn
+        >
         <v-btn
           small
           class="ma-2 font-weight-bold"
           tile
           outlined
           color="#727cf5"
-          style="background-color: #fff"
-        >Có bình luận (12)</v-btn>
+          style="background-color: #fff;"
+          >Có bình luận (12)</v-btn
+        >
         <v-btn
           small
           class="ma-2 font-weight-bold"
           tile
           outlined
           color="#727cf5"
-          style="background-color: #fff"
-        >Có hình ảnh / video (10)</v-btn>
+          style="background-color: #fff;"
+          >Có hình ảnh / video (10)</v-btn
+        >
       </v-col>
     </div>
     <ratingItem class="py-3" />

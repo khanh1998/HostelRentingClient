@@ -127,6 +127,12 @@ export default {
 .text-brown {
   color: #adb5bd !important;
 }
+.text-black {
+  color: #212121;
+}
+.text-info {
+  color: #39afd1 !important;
+}
 .bg-secondary {
   color: #727cf5 !important;
   background-color: rgba(114, 124, 245, 0.18) !important;
@@ -179,5 +185,14 @@ export default {
 }
 .size-caption {
   font-size: 0.75rem !important;
+}
+.size-sub-caption {
+  font-size: 0.6rem !important;
+}
+.font-14 {
+  font-size: 14px !important;
+}
+.font-weight-600 {
+  font-weight: 600 !important;
 }
 </style>

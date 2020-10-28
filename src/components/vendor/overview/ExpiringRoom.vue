@@ -1,25 +1,37 @@
 <template>
   <div v-if="!isLoadingContracts" style="width: 100%;" class="pa-1 d-flex flex-column">
-    <div class="text-h6 font-weight-thin">Các phòng sắp hết hợp đồng ({{ '6 tháng' }} )</div>
-    <v-divider />
-    <vue-scroll v-if="expiringContracts.length > 0">
-      <v-list two-line>
-        <v-list-item v-for="contract in expiringContracts" :key="contract.contractId">
-          <v-list-item-content>
-            <v-list-item-title>{{ contract.room.roomName }}</v-list-item-title>
-            <v-list-item-subtitle
-              >Ngày hết hạn: {{ getExpiringDateString(contract) }}</v-list-item-subtitle
-            >
-            <v-divider />
-          </v-list-item-content>
+    <v-virtual-scroll
+      :items="expiringContracts"
+      :item-height="40"
+      height="200"
+      v-if="expiringContracts.length > 0"
+    >
+      <template v-slot="{ item, index }">
+        <v-list-item
+          :key="item.contractId"
+          class="px-0 py-0 d-flex align-center"
+          v-bind:style="index % 2 === 0 ? 'background-color: #f1f3fa;' : 'background-color: #fff;'"
+        >
+          <v-row class="d-flex align-center ma-0">
+            <v-col cols="5" class="px-3 d-flex align-center">
+              <span class="size-sub-3 font-nunito">{{ item.room.roomName }}</span>
+            </v-col>
+            <v-col cols="4" class="px-3 d-flex align-center">
+              <span class="size-sub-3 font-nunito">{{ item.renter.username }}</span>
+            </v-col>
+            <v-col cols="3" class="px-3 d-flex align-center">
+              <span class="size-sub-3 font-nunito">{{ getExpiringDateString(item) }}</span>
+            </v-col>
+          </v-row>
         </v-list-item>
-      </v-list>
-    </vue-scroll>
-    <v-card v-if="expiringContracts.length === 0">
-      <v-card-title>
-        Không có phòng trọ nào đang trống.
-      </v-card-title>
-    </v-card>
+      </template>
+    </v-virtual-scroll>
+    <span
+      v-if="expiringContracts.length === 0"
+      class="d-flex justify-center font-nunito text-primary size9rem"
+    >
+      Không có hợp đồng sắp hết hạn
+    </span>
   </div>
 </template>
 
@@ -82,3 +94,8 @@ export default {
   },
 };
 </script>
+<style>
+.v-list-item {
+  min-height: 40px;
+}
+</style>

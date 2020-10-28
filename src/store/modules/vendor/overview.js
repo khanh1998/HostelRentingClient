@@ -16,7 +16,7 @@ const myGetters = {
     return {
       isActive: false,
       username: 'Người dùng',
-      avatar: 'https://www.bangkokfightlab.com/wp-content/uploads/2017/05/noavatar.png',
+      avatar: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
     };
   },
 };
