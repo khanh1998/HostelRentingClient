@@ -27,9 +27,9 @@
         </div>
       </div>
       <div
-        style="width: 25vw; position: fixed; z-index: 3; bottom: 0; right: 0; top: 65px;"
+        style="width: 25vw; position: fixed; z-index: 3; bottom: 0; right: 0; top: 70px;"
         v-show="showChatList"
-        class="hidden-sm-and-down pa-2"
+        class="hidden-sm-and-down primary-box-shadown"
       >
         <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
       </div>
@@ -48,26 +48,19 @@
       </v-icon>
     </v-btn>
     <v-card
-      style="position: fixed; right: 370px; bottom: 0px; height: auto; width: 300px; z-index: 101;"
+      style="position: fixed; right: 330px; bottom: 0px; height: auto; width: 300px; z-index: 101;"
       elevation="10"
-      class="red"
     >
       <Chatbox
         v-if="this.docs.doc1"
         :doc="this.docs.doc1"
         :index="1"
         v-on:closeChat="closeChatBox($event)"
+        class="primary-box-shadown"
       />
     </v-card>
     <v-card
-      style="
-        position: absolute;
-        right: 680px;
-        bottom: 0px;
-        height: auto;
-        width: 300px;
-        z-index: 9998;
-      "
+      style="position: fixed; right: 650px; bottom: 0px; height: auto; width: 300px; z-index: 101;"
       elevation="10"
     >
       <Chatbox
@@ -75,17 +68,11 @@
         :doc="this.docs.doc2"
         :index="2"
         v-on:closeChat="closeChatBox($event)"
+        class="primary-box-shadown"
       />
     </v-card>
     <v-card
-      style="
-        position: absolute;
-        right: 990px;
-        bottom: 0px;
-        height: auto;
-        width: 300px;
-        z-index: 9998;
-      "
+      style="position: fixed; right: 970px; bottom: 0px; height: auto; width: 300px; z-index: 101;"
       elevation="10"
     >
       <Chatbox
@@ -93,6 +80,7 @@
         :doc="this.docs.doc3"
         :index="3"
         v-on:closeChat="closeChatBox($event)"
+        class="primary-box-shadown"
       />
     </v-card>
   </div>
@@ -165,6 +153,7 @@ export default {
       this.overlay.show = false;
     },
     showChatBox(event) {
+      console.log(this.docs);
       if (this.isOnMobile) {
         this.showMobileChatBox(event);
         return;

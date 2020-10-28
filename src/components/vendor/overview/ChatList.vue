@@ -34,35 +34,56 @@
               class="ma-0 rounded-0"
               style="border-bottom: 1px solid #dedede;"
             >
-              <v-list-item-avatar>
-                <v-img :src="getUserById(item.renterId).avatar"></v-img>
-                <v-icon>face</v-icon>
+              <v-list-item-avatar
+                color="#727cf5"
+                max-height="35"
+                max-width="35"
+                min-height="35"
+                min-width="35"
+                class="d-flex align-center justify-center"
+              >
+                <v-img
+                  max-height="35"
+                  max-width="35"
+                  min-height="35"
+                  min-width="35"
+                  v-if="getUserById(item.renterId).avatar"
+                  :src="getUserById(item.renterId).avatar"
+                ></v-img>
+                <!-- <v-icon v-else>face</v-icon> -->
+                <span v-else class="text-overline white--text">{{
+                  getAvatarTitle(getUserById(item.renterId).username)
+                }}</span>
               </v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title>{{ getUserById(item.renterId).username }}</v-list-item-title>
-                <v-list-item-subtitle v-if="item.lastedMessage.message">
+                <span class="font-nunito text-gray-black size-sub-2 font-weight-bold">{{
+                  getUserById(item.renterId).username
+                }}</span>
+                <p>
                   <span
-                    v-bind:class="{
-                      'font-weight-bold': !item.lastedMessage.seen,
-                    }"
+                    class="badge-danger-lighten size-caption float-right text-right"
+                    v-if="item.lastedMessage.bargain"
+                    ><v-icon x-small color="#fa5c7c">mdi-arrow-down</v-icon>
+                    {{ item.lastedMessage.bargain.newPrice }} triệu</span
                   >
-                    {{ item.lastedMessage.message }}
-                  </span>
-                </v-list-item-subtitle>
-                <v-list-item-subtitle v-if="item.lastedMessage.book">
-                  Đặt lịch vào
-                  {{ item.lastedMessage.book.time }}
-                  {{ item.lastedMessage.book.date }}
-                </v-list-item-subtitle>
-                <v-list-item-subtitle v-if="item.lastedMessage.bargain"
-                  >Trả giá {{ item.lastedMessage.bargain.newPrice }} triệu
-                </v-list-item-subtitle>
+                  <span
+                    class="badge-success-lighten size-sub-caption pa-1 float-right text-right"
+                    v-if="item.lastedMessage.book"
+                  >
+                    {{ item.lastedMessage.book.date }}, {{ item.lastedMessage.book.time }}</span
+                  >
+                  <span class="text-gray size-sub-3 mr-1">{{ getType(item.typeId).title }}</span>
+                </p>
+                <p
+                  v-bind:class="{
+                    'font-weight-bold': !item.lastedMessage.seen,
+                  }"
+                  class="size-caption mt-1"
+                  style="color: #727cf5;"
+                >
+                  {{ item.lastedMessage.message }}
+                </p>
               </v-list-item-content>
-              <v-list-item-icon>
-                <v-icon v-if="item.lastedMessage.book" color="pink"> event</v-icon>
-                <v-icon v-if="item.lastedMessage.bargain" color="amber"> attach_money</v-icon>
-                <v-icon v-if="item.lastedMessage.message" color="green"> chat</v-icon>
-              </v-list-item-icon>
             </v-list-item>
           </v-list-item-group>
         </v-list>
@@ -87,8 +108,6 @@ export default {
   },
   data() {
     return {
-      tabs: [{ tabName: 'Tin nhắn' }],
-      filter: [{ filterName: 'Giá' }, { filterName: 'Thời gian' }],
       items: [],
       dialogAccept: false,
       dialogDeny: false,
@@ -132,9 +151,6 @@ export default {
     renterList() {
       return this.$store.state.vendor.overview.usersChatList.data;
     },
-    // filterRenterIs() { // tra ve danh sach id
-    //   return this.renterList.filter;
-    // },
     isLoadingRenterList() {
       return this.$store.state.vendor.overview.usersChatList.isLoadings;
     },
@@ -184,6 +200,9 @@ export default {
       }
       return listChat.filter((item) => item.lastedMessage);
     },
+    types() {
+      return this.$store.state.vendor.group.types.data;
+    },
   },
   methods: {
     myOnScroll() {},
@@ -191,6 +210,9 @@ export default {
       getUserByIds: 'vendor/overview/getUserByIds',
       addUserToListById: 'vendor/overview/addUserToListById',
       getOneBooking: 'user/getOneBooking',
+    }),
+    ...mapGetters({
+      findTypesById: 'vendor/group/findTypesById',
     }),
     acceptMessage() {
       // this.visible = true;
@@ -280,6 +302,16 @@ export default {
           });
       });
     },
+    getAvatarTitle(name) {
+      return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
+    },
+    getType(id) {
+      const result = this.types.filter((type) => type.typeId === id);
+      if (result.length > 0) {
+        return result[0];
+      }
+      return null;
+    },
   },
   created() {
     this.fetchConversations();
@@ -301,5 +333,8 @@ export default {
 }
 .chat .theme--light.v-icon {
   color: #98a6ad !important;
+}
+.v-application p {
+  margin-bottom: 0 !important;
 }
 </style>

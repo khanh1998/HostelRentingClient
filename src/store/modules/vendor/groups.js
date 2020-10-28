@@ -157,12 +157,10 @@ const actions = {
   async getTypes({ commit, state, getters }) {
     const userId = window.$cookies.get('userId');
     const role = window.$cookies.get('role');
-    console.log(state.groups);
     if (userId && role === 'vendors' && state.groups.data) {
       commit(mutationTypes.GET_TYPES_REQUEST);
       try {
         const groupIds = state.groups.data.map((group) => group.groupId);
-        console.log(groupIds);
         let types = [];
         await Promise.all(
           groupIds.map(async (groupId) => {
@@ -174,7 +172,6 @@ const actions = {
         );
         commit(mutationTypes.GET_TYPES_SUCCESS, types);
       } catch (error) {
-        console.log(error);
         commit(mutationTypes.GET_TYPES_FAILURE, error);
       }
     } else {
@@ -199,7 +196,6 @@ const actions = {
         );
         commit(mutationTypes.GET_ROOMS_SUCCESS, rooms);
       } catch (error) {
-        console.log(error);
         commit(mutationTypes.GET_ROOMS_FAILURE, error);
       }
     } else {

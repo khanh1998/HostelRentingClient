@@ -126,3 +126,36 @@ export default {
   font-family: 'Nunito', sans-serif !important;
 }
 </style>
+<style>
+.primary-box-shadown {
+  box-shadow: 0 0 40px 0 rgba(154, 161, 171, 0.15) !important;
+}
+.badge-danger-lighten {
+  color: #fa5c7c;
+  background-color: rgba(250, 92, 124, 0.18);
+  padding: 0.25em 0.4em;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+}
+.badge-success-lighten {
+  color: #0acf97;
+  background-color: rgba(10, 207, 151, 0.18);
+  padding: 0.25em 0.4em;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+}
+.text-right {
+  text-align: right !important;
+}
+.float-right {
+  float: right !important;
+}
+</style>
