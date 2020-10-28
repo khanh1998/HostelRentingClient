@@ -130,6 +130,9 @@ export default {
 .text-black {
   color: #212121;
 }
+.text-info {
+  color: #39afd1 !important;
+}
 .bg-secondary {
   color: #727cf5 !important;
   background-color: rgba(114, 124, 245, 0.18) !important;

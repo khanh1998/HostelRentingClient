@@ -18,19 +18,16 @@
         <SlideBooking />
       </v-col>
     </v-row>
+    <v-row v-if="!isLoading" class="d-flex">
+      <v-col cols="12" md="9" class="d-flex flex-column mb-5">
+        <HostelGroupsOverview />
+      </v-col>
+    </v-row>
     <div
       v-if="!isLoading"
       class="d-flex flex-row flex-nowrap"
       style="overflow-y: hidden; height: 100%;"
     >
-      <div style="min-width: 70vw; height: 100%; overflow-y: hidden;" class="d-flex flex-column">
-        <!-- <div class="pa-2">
-          <SlideBooking />
-        </div> -->
-        <div class="d-flex flex-column pa-2" style="height: 100%; overflow-y: hidden;">
-          <HostelGroupsOverview />
-        </div>
-      </div>
       <div
         style="width: 25vw; position: fixed; z-index: 3; bottom: 0; right: 0; top: 70px;"
         v-show="showChatList"
@@ -116,7 +113,7 @@ export default {
       show: false,
       doc: null,
     },
-    showChatList: false,
+    showChatList: true,
   }),
   computed: {
     ...mapState('vendor/group', ['groups', 'types', 'rooms']),
