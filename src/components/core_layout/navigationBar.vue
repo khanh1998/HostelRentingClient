@@ -21,10 +21,10 @@
                   alt="Hostel Renting"
                   class="shrink mr-2"
                   contain
-                  src="@/assets/logo1.png"
+                  src="@/assets/logo-sac.png"
                   transition="scale-transition"
-                  max-width="100"
-                  max-height="80"
+                  max-width="60"
+                  max-height="60"
                 />
               </router-link>
             </v-col>
