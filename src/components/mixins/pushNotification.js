@@ -1,4 +1,4 @@
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import firebase from '../../config/firebase';
 import constant from '../../config/constant';
@@ -71,10 +71,15 @@ const pushNotificationMixins = {
       }
     },
     doGetMessagingToken() {
-      if (messaging) {
+      if (messaging && this.userDataForChecking) {
         this.getMessagingToken();
       }
     },
+  },
+  computed: {
+    ...mapState({
+      userDataForChecking: (state) => state.user.user.data,
+    }),
   },
 };
 
