@@ -13,15 +13,20 @@
         />
       </v-card>
     </v-dialog>
+    <v-row v-if="!isLoading" class="d-flex">
+      <v-col cols="12" md="9" class="d-flex flex-column">
+        <SlideBooking />
+      </v-col>
+    </v-row>
     <div
       v-if="!isLoading"
       class="d-flex flex-row flex-nowrap"
       style="overflow-y: hidden; height: 100%;"
     >
       <div style="min-width: 70vw; height: 100%; overflow-y: hidden;" class="d-flex flex-column">
-        <div class="pa-2">
+        <!-- <div class="pa-2">
           <SlideBooking />
-        </div>
+        </div> -->
         <div class="d-flex flex-column pa-2" style="height: 100%; overflow-y: hidden;">
           <HostelGroupsOverview />
         </div>
@@ -217,9 +222,11 @@ export default {
   },
 };
 </script>
-<style scoped>
-/* body {
-  max-height: calc(100vh);
-  overflow: hidden;
-} */
+<style>
+.div-title {
+  color: #6c757d !important;
+  font-family: 'Nunito', sans-serif !important;
+  font-size: 1.025rem;
+  font-weight: 700;
+}
 </style>
