@@ -5,10 +5,12 @@ const myState = () => ({
     success: null,
     error: null,
     isCreating: false,
+    isUpdating: false,
   },
   types: {
     data: [],
     isLoading: false,
+    isUpdating: false,
     success: null,
     error: null,
   },
@@ -55,9 +57,21 @@ const mutationTypes = {
   CREATE_HOSTEL_GROUP_SUCCESS: 'CREATE_HOSTEL_GROUP_SUCCESS',
   CREATE_HOSTEL_GROUP_FAILURE: 'CREATE_HOSTEL_GROUP_FAILURE',
 
+  UPDATE_HOSTEL_GROUP_REQUEST: 'UPDATE_HOSTEL_GROUP_REQUEST',
+  UPDATE_HOSTEL_GROUP_SUCCESS: 'UPDATE_HOSTEL_GROUP_SUCCESS',
+  UPDATE_HOSTEL_GROUP_FAILURE: 'UPDATE_HOSTEL_GROUP_FAILURE',
+
   GET_TYPES_REQUEST: 'GET_TYPES_REQUEST',
   GET_TYPES_SUCCESS: 'GET_TYPES_SUCCESS',
   GET_TYPES_FAILURE: 'GET_TYPES_FAILURE',
+
+  CREATE_HOSTEL_TYPE_REQUEST: 'CREATE_HOSTEL_TYPE_REQUEST',
+  CREATE_HOSTEL_TYPE_SUCCESS: 'CREATE_HOSTEL_TYPE_SUCCESS',
+  CREATE_HOSTEL_TYPE_FAILURE: 'CREATE_HOSTEL_TYPE_FAILURE',
+
+  UPDATE_HOSTEL_TYPE_REQUEST: 'UPDATE_HOSTEL_TYPE_REQUEST',
+  UPDATE_HOSTEL_TYPE_SUCCESS: 'UPDATE_HOSTEL_TYPE_SUCCESS',
+  UPDATE_HOSTEL_TYPE_FAILURE: 'UPDATE_HOSTEL_TYPE_FAILURE',
 
   GET_ROOMS_REQUEST: 'GET_ROOMS_REQUEST',
   GET_ROOMS_SUCCESS: 'GET_ROOMS_SUCCESS',
@@ -135,6 +149,53 @@ const mutations = {
     state.groups.isCreating = false;
     state.groups.error = error;
   },
+
+  UPDATE_HOSTEL_GROUP_REQUEST: (state) => {
+    state.groups.isUpdating = true;
+    state.groups.success = null;
+    state.groups.error = null;
+  },
+  UPDATE_HOSTEL_GROUP_SUCCESS: (state, updateGroup) => {
+    state.groups.isUpdating = false;
+    state.groups.data = updateGroup;
+    state.groups.success = true;
+  },
+  UPDATE_HOSTEL_GROUP_FAILURE: (state, error) => {
+    state.groups.isUpdating = false;
+    state.groups.success = false;
+    state.groups.error = error;
+  },
+
+  CREATE_HOSTEL_TYPE_REQUEST: (state) => {
+    state.types.isCreating = true;
+    state.types.success = false;
+    state.types.error = null;
+  },
+  CREATE_HOSTEL_TYPE_SUCCESS: (state, createdNewType) => {
+    state.types.isCreating = false;
+    state.types.data.unshift(createdNewType);
+    state.types.success = true;
+  },
+  CREATE_HOSTEL_TYPE_FAILURE: (state, error) => {
+    state.types.isCreating = false;
+    state.types.error = error;
+  },
+
+  // UPDATE_GROUP_SERVICES_REQUEST: (state) => {
+  //   state.groups.isUpdating = true;
+  //   state.groups.success = null;
+  //   state.groups.error = null;
+  // },
+  // UPDATE_GROUP_SERVICES_SUCCESS: (state, updateGroup) => {
+  //   state.groups.isUpdating = false;
+  //   state.groups.data = updateGroup;
+  //   state.groups.success = true;
+  // },
+  // UPDATE_GROUP_SERVICES_FAILURE: (state, error) => {
+  //   state.groups.isUpdating = false;
+  //   state.groups.success = false;
+  //   state.groups.error = error;
+  // },
 };
 
 const actions = {
@@ -231,6 +292,44 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.CREATE_HOSTEL_GROUP_FAILURE, error);
+    }
+  },
+  async updateHostelGroup({ commit }, group) {
+    try {
+      commit(mutationTypes.UPDATE_HOSTEL_GROUP_REQUEST);
+      const { groupId } = group;
+      if (group) {
+        const res = await window.axios.put(`/api/v1/groups/${groupId}`, {
+          groupId,
+          curfewTime: group.curfewTime,
+          downPayment: group.downPayment,
+          groupName: group.groupName,
+          imgUrl: group.imgUrl,
+          managerName: group.managerName,
+          managerPhone: group.managerPhone,
+          ownerJoin: group.ownerJoin,
+        });
+        if (res.status === 200) {
+          commit(mutationTypes.UPDATE_HOSTEL_GROUP_SUCCESS, res.data.data);
+        } else {
+          const error = new Error('Update fail');
+          commit(mutationTypes.UPDATE_HOSTEL_GROUP_FAILURE, error);
+        }
+      }
+    } catch (error) {
+      commit(mutationTypes.CREATE_HOSTEL_GROUP_FAILURE, error);
+    }
+  },
+  async createHostelType({ commit }, newType) {
+    try {
+      commit(mutationTypes.CREATE_HOSTEL_TYPE_REQUEST);
+      const { groupId } = newType;
+      const res = await window.axios.post(`/api/v1/groups/${groupId}/types`, [newType]);
+      if (res.status === 201) {
+        commit(mutationTypes.CREATE_HOSTEL_TYPE_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.CREATE_HOSTEL_TYPE_FAILURE, error);
     }
   },
 };

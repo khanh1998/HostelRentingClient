@@ -23,7 +23,6 @@
     :items-per-page="itemsPerPage"
     hide-default-footer
     @page-count="pageCount = $event"
-    sort-by="renterName"
     class="elevation-1"
   >
     <template v-slot:top>
@@ -313,7 +312,7 @@
     </template>
     <template v-slot:item.status="{ item }">
       <v-chip
-        :color="color"
+        :color="item.color"
       >
         {{ item.status }}
       </v-chip>

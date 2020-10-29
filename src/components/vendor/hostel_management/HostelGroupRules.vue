@@ -13,14 +13,14 @@
           color="success"
           v-model="activeRules[index]"
           hide-details
-          class="ml-15"
+          class="ml-15 filter"
         ></v-switch>
         <v-switch
           label="Giờ giấc tự do"
           v-model="picker.openAllDay"
           hide-details
           color="success"
-          class="ml-15"
+          class="ml-15 filter"
         ></v-switch>
         <div v-if="!picker.openAllDay" class="d-flex flex-column justify-center">
           <p class="ma-1 font-weight-bold ml-15 mt-4 mb-4">Giờ mở cửa</p>
