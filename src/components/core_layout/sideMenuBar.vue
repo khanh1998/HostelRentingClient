@@ -95,6 +95,7 @@ export default {
     },
     ...mapActions({
       clearUserData: 'user/clearUserData',
+      getUser: 'user/getUser',
     }),
     logout() {
       this.$cookies.remove('role');
@@ -107,7 +108,7 @@ export default {
     },
   },
   mounted() {
-    this.doGetMessagingToken();
+    this.getUser().then(() => this.doGetMessagingToken());
   },
   computed: {
     ...mapState({

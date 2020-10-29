@@ -26,13 +26,13 @@ const processFCMForegroundMixins = {
       this.messages.push(this.newMessage);
       switch (this.newMessage.data.action) {
         case actions.NEW_BOOKING:
-          this.getNewCommingBooking(this.newMessage.data.bookingId);
+          this.getNewCommingBooking(Number(this.newMessage.data.bookingId));
           break;
         case actions.SCAN_BOOKING: // vendor side
-          this.updateBookingStatusLocal(this.newMessage.data.bookingId);
+          this.updateBookingStatusLocal(Number(this.newMessage.data.bookingId));
           break;
         case actions.SCAN_CONTRACT: // vendor side
-          this.updateContractLocal(this.newMessage.data.contractId);
+          this.updateContractLocal(Number(this.newMessage.data.contractId));
           break;
         default:
           console.log('default case on receive new notification');

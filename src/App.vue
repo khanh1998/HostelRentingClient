@@ -4,6 +4,7 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import './assets/css/style.css';
 import pushNotificationMixins from './components/mixins/pushNotification';
 
@@ -12,8 +13,13 @@ export default {
   mixins: [pushNotificationMixins],
   components: {},
   mounted() {
-    this.doGetMessagingToken();
+    this.getUser().then(() => this.doGetMessagingToken());
   },
-  methods: {},
+  methods: {
+    ...mapActions({
+      getUser: 'user/getUser',
+    }),
+  },
+  computed: {},
 };
 </script>

@@ -1,4 +1,4 @@
-import { mapActions, mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import firebase from '../../config/firebase';
 import constant from '../../config/constant';
@@ -71,6 +71,9 @@ const pushNotificationMixins = {
       }
     },
     doGetMessagingToken() {
+      if (!this.userDataForChecking) {
+        console.log('user data is null. cannot get and save firebase fcm token.');
+      }
       if (messaging && this.userDataForChecking) {
         this.getMessagingToken();
       }
