@@ -1,6 +1,21 @@
 <template>
-  <div class="d-flex flex-column pa-1" style="height: 100%; width: 100%; overflow-y: auto;">
-    <div style="width: 100%;" elevation="0">
+  <div class="d-flex flex-column" _style="height: 100%; width: 100%; overflow-y: auto;">
+    <v-row class="d-flex ma-0 pa-0">
+      <v-col cols="9" class="pa-0">
+        <v-progress-linear v-model="stat.stat" height="25" color="#727cf5">
+          <span class="font-nunito size-sub-3 white--text mr-auto ml-2" v-if="stat.stat >= 50"
+            >{{ stat.total - stat.empty }} phòng đang thuê</span
+          >
+          <span class="font-nunito size-sub-3 ml-auto mr-2" v-if="stat.stat <= 50"
+            >{{ stat.empty }} phòng trống</span
+          >
+        </v-progress-linear>
+      </v-col>
+      <v-col cols="3" class="pa-0 d-flex justify-end text-gray font-nunito size9rem">
+        <span>{{ stat.total }} phòng</span>
+      </v-col>
+    </v-row>
+    <!-- <div style="width: 100%;" elevation="0">
       <div class="font-weight-thin text-h6">Thống kê</div>
       <v-divider />
       <v-card-text>
@@ -22,7 +37,7 @@
           %
         </div>
       </v-card-text>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -33,6 +48,7 @@ export default {
     stat: {
       total: 0,
       empty: 0,
+      stat: 0,
     },
   }),
   methods: {
@@ -41,12 +57,17 @@ export default {
       this.stat = {
         total: 0,
         empty: 0,
+        stat: 0,
       };
       this.stat = types.reduce((c, type) => {
         const newCount = c;
         if (type.rooms) {
           newCount.total += type.rooms.length;
           newCount.empty += type.rooms.filter((room) => !room.available).length;
+          newCount.stat =
+            newCount.total === 0
+              ? 100 // eslint-disable-line
+              : Number((100 - (newCount.empty / newCount.total) * 100).toFixed(2)); // eslint-disable-line
         }
         return newCount;
       }, this.stat);

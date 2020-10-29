@@ -292,7 +292,7 @@ export default {
     }),
     id() {
       return {
-        typeId: this.info.typeId,
+        typeId: this.type.typeId,
         groupId: this.group.groupId,
         renterId: this.userState.renterId,
         vendorId: this.group.vendorId,

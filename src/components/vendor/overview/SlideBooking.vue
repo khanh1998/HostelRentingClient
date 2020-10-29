@@ -42,86 +42,99 @@
             ></v-text-field>
           </v-col>
         </v-row>
-      </div>
-      <v-divider />
-      <v-slide-group v-if="bookings.length > 0" center-active show-arrows>
-        <v-slide-item
-          v-for="booking in bookings"
-          :key="booking.bookingId"
-          v-slot:default="{ active, toggle }"
+      </div> -->
+    <!-- <v-divider /> -->
+    <v-row class="d-flex justify-space-between ma-0">
+      <v-col cols="12" md="4" class="pl-md-13 py-0 d-flex justify-center justify-md-start">
+        <span class="div-title">Lịch hẹn xem phòng</span>
+      </v-col>
+      <v-col cols="12" md="4" class="pa-0 d-flex justify-center justify-md-end">
+        <v-btn-toggle v-model="filterBooking" tile color="#4250f2" group>
+          <v-btn value="day" small class="font-nunito">
+            Hôm nay
+          </v-btn>
+          <v-btn value="week" small class="font-nunito">
+            Tuần này
+          </v-btn>
+          <v-btn value="month" small class="font-nunito">
+            Tháng này
+          </v-btn>
+        </v-btn-toggle>
+      </v-col>
+    </v-row>
+    <v-slide-group v-if="bookings.length > 0" show-arrows>
+      <v-slide-item
+        v-for="booking in bookings"
+        :key="booking.bookingId"
+        v-slot:default="{ active, toggle }"
+      >
+        <v-card
+          class="ma-5 pa-3"
+          :color="active ? 'indigo lighten-5' : 'white'"
+          max-width="250"
+          @click="toggle"
+          v-if="booking.status !== 'CANCELLED'"
         >
-          <v-card
-            class="ma-3 rounded-l"
-            elevation="1"
-            width="250"
-            :color="active ? 'indigo lighten-5' : 'white'"
-            @click="toggle"
-            v-if="booking.status !== 'CANCELLED'"
+          <span
+            class="text-muted font-nunito d-flex"
+            style="font-weight: 400 !important; color: #98a6ad !important; font-size: 0.9375rem;"
+            ><span>{{ getDateString(Number(booking.meetTime)) }}</span>
+            <span class="ml-auto">{{ getTimeString(Number(booking.meetTime)) }}</span></span
           >
-            <v-col
-              cols="12"
-              style="background-color: #98b7d7; height: 28%; width: 100%"
-              class="d-flex justify-end"
-            >
-              <span style="fontweight: bold; color: white">
-                {{ getDateString(Number(booking.meetTime)) }}
-              </span>
-              <v-divider vertical class="mx-3"></v-divider>
-              <span style="fontweight: bold; color: white">
-                {{ getTimeString(Number(booking.meetTime)) }}
-              </span>
-            </v-col>
-            <v-list-item dense class="">
-              <v-list-item-avatar>
-                <v-img :src="booking.renter.avatar"></v-img>
-              </v-list-item-avatar>
-              <v-list-item-content class="pl-4">
-                <v-list-item-title
-                  style="fontsize: 16px; fontweight: bold; color: #1f17ff"
-                  class="py-1"
-                  >{{ booking.renter.username }}</v-list-item-title
-                >
-                <v-list-item-subtitle style="color: coral">
-                  {{ booking.renter.phone }}</v-list-item-subtitle
-                >
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-btn
-                  v-if="booking.status === 'INCOMING'"
-                  icon
-                  @click="changeToString(booking.bookingId)"
-                >
-                  <v-icon> mdi-qrcode </v-icon>
-                </v-btn>
-                <v-btn
-                  v-if="booking.status === 'DONE' && !booking.contractId"
-                  icon
-                  :to="`/vendor/contract?bookingId=${booking.bookingId}`"
-                >
-                  <v-icon>far fa-handshake</v-icon></v-btn
-                >
-                <v-btn v-if="booking.status === 'DONE' && booking.contractId" icon>
-                  <v-icon>done_all</v-icon></v-btn
-                >
-              </v-list-item-action>
-            </v-list-item>
-            <div class="text">
-              <v-icon class="px-3 pl-3">home</v-icon>
-              <span style="fontweight: bold">{{ booking.group.groupName }}</span>
-            </div>
-          </v-card>
-        </v-slide-item>
-      </v-slide-group>
-      <v-card v-if="bookings.length === 0">
-        <v-card-title> Không có dữ liệu lịch hẹn </v-card-title>
-      </v-card>
-      <v-divider />
-      <div class="d-flex align-center justify-center justify-md-right">
-        <span style="color: #818286" v-if="bookings.length > 0" class="ml-2">
-          <router-link to="booking" class="text-decoration-none">Xem thêm >></router-link>
-        </span>
-      </div>
-    </v-sheet>
+          <v-list-item dense class="pa-0">
+            <v-list-item-avatar>
+              <v-img :src="booking.renter.avatar"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title
+                _style="fontsize: 16px; fontweight: bold; color: #1f17ff;"
+                class="font-nunito text-primary-dark"
+                >{{ booking.renter.username }}</v-list-item-title
+              >
+              <v-list-item-subtitle style="color: coral;">
+                {{ booking.renter.phone }}</v-list-item-subtitle
+              >
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-btn
+                v-if="booking.status === 'INCOMING'"
+                icon
+                @click="changeToString(booking.bookingId)"
+              >
+                <v-icon> mdi-qrcode </v-icon>
+              </v-btn>
+              <v-btn
+                v-if="booking.status === 'DONE' && !booking.contractId"
+                icon
+                :to="`/vendor/contract?bookingId=${booking.bookingId}`"
+              >
+                <v-icon>far fa-handshake</v-icon></v-btn
+              >
+              <v-btn v-if="booking.status === 'DONE' && booking.contractId" icon>
+                <v-icon>done_all</v-icon></v-btn
+              >
+            </v-list-item-action>
+          </v-list-item>
+          <div class="text d-flex align-center">
+            <v-icon class="px-2">home</v-icon>
+            <span class="size9rem font-nunito text-black">{{ booking.group.groupName }}</span>
+          </div>
+        </v-card>
+      </v-slide-item>
+    </v-slide-group>
+    <!-- <v-card v-if="bookings.length === 0">
+      <v-card-title> Không có dữ liệu lịch hẹn </v-card-title>
+    </v-card> -->
+    <span class="font-nunito size1rem text-primary text-center ma-4" v-if="bookings.length === 0"
+      >Bạn không có lịch hẹn xem phòng nào vào thời gian này!</span
+    >
+    <span
+      v-if="bookings.length > 0"
+      class="ml-auto mr-8 font-nunito text-primary-hover size-sub-3 cursor"
+      @click="viewBookings()"
+    >
+      Xem thêm
+    </span>
   </div>
 </template>
 <script>
@@ -152,6 +165,20 @@ export default {
       this.dialog = true;
       this.qrvalue = `booking:${bookingId}`;
     },
+    viewBookings() {
+      this.$router.push('/vendor/booking');
+    },
+    getLastDayOfMonth(year, month) {
+      return new Date(year, month, 0).getDate();
+    },
+    getEndOfWeek(date) {
+      const lastday = date.getDate() - (date.getDay() - 1) + 6;
+      return new Date(date.setDate(lastday));
+    },
+    getStartOfWeek(date) {
+      const diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
+      return new Date(date.setDate(diff));
+    },
     closeDialog() {
       this.dialog = false;
       this.scanQRSuccess = false;
@@ -159,25 +186,55 @@ export default {
   },
   computed: {
     bookings() {
-      // const cur = Date.now();
-      const min = new Date();
-      min.setHours(0, 0, 0, 0);
-      const max = new Date();
-      max.setHours(23, 59, 59, 59);
-      // console.log(this.$store.state.user.bookings.data.filter((item) => item.meetTime >= cur).sort((a, b) => a - b));
-      // console.log(this.searchQuery);
-      if (this.searchQuery) {
-        return this.$store.state.user.bookings.data
-          .filter((item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime())
-          .filter((item2) => {
-            const res =
-              item2.renter.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1;
-            return res;
-          });
+      const today = new Date();
+      let min = new Date(today);
+      let max = new Date(today);
+      switch (this.filterBooking) {
+        case 'day':
+          min.setHours(0, 0, 0, 0);
+          max.setHours(23, 59, 59, 59);
+          break;
+        case 'week':
+          min = new Date(
+            this.getStartOfWeek(today).getUTCFullYear(),
+            this.getStartOfWeek(today).getMonth(),
+            this.getStartOfWeek(today).getDate(),
+          );
+          max = new Date(
+            this.getEndOfWeek(today).getUTCFullYear(),
+            this.getEndOfWeek(today).getMonth(),
+            this.getEndOfWeek(today).getDate(),
+          );
+          min.setHours(0, 0, 0, 0);
+          max.setHours(23, 59, 59, 59);
+          break;
+        case 'month':
+          min = new Date(today.getUTCFullYear(), today.getMonth(), 1);
+          max = new Date(
+            today.getUTCFullYear(),
+            today.getMonth(),
+            this.getLastDayOfMonth(today.getUTCFullYear(), today.getMonth()),
+          );
+          min.setHours(0, 0, 0, 0);
+          max.setHours(23, 59, 59, 59);
+          break;
+
+        default:
+          break;
       }
+      // if (this.searchQuery) {
+      //   return this.$store.state.user.bookings.data
+      //     .filter((item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime())
+      //     .filter((item2) => {
+      //       const res =
+      //         item2.renter.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1;
+      //       return res;
+      //     });
+      // }
       return this.$store.state.user.bookings.data.filter(
         (item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime(),
       );
+      // return this.$store.state.user.bookings.data;
     },
     incommingBookings() {
       return this.bookings.filter((booking) => booking.status === 'INCOMING');
@@ -216,6 +273,7 @@ export default {
     qrvalue: null,
     searchQuery: null,
     scanQRSuccess: false,
+    filterBooking: 'week',
   }),
   watch: {
     newMessage: {

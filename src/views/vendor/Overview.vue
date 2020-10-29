@@ -1,5 +1,5 @@
 <template>
-  <div style="overflow-y: hidden; height: calc(100vh - 72px);" class="d-flex flex-column">
+  <div _style="overflow-y: hidden; height: calc(100vh - 72px);" class="d-flex flex-column">
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -13,32 +13,44 @@
         />
       </v-card>
     </v-dialog>
+    <v-row v-if="!isLoading" class="d-flex">
+      <v-col cols="12" md="9" class="d-flex flex-column">
+        <SlideBooking />
+      </v-col>
+    </v-row>
+    <v-row v-if="!isLoading" class="d-flex">
+      <v-col cols="12" md="9" class="d-flex flex-column mb-5">
+        <HostelGroupsOverview />
+      </v-col>
+    </v-row>
     <div
       v-if="!isLoading"
       class="d-flex flex-row flex-nowrap"
       style="overflow-y: hidden; height: 100%;"
     >
-      <div style="min-width: 70vw; height: 100%; overflow-y: hidden;" class="d-flex flex-column">
-        <div class="pa-2">
-          <SlideBooking />
-        </div>
-        <div class="d-flex flex-column pa-2" style="height: 100%; overflow-y: hidden;">
-          <HostelGroupsOverview />
-        </div>
-      </div>
-      <div style="width: 30vw; height: 100%;" class="hidden-sm-and-down pa-2">
+      <div
+        style="width: 25vw; position: fixed; z-index: 3; bottom: 0; right: 0; top: 70px;"
+        v-show="showChatList"
+        class="hidden-sm-and-down primary-box-shadown"
+      >
         <ChatList :vendorId="user.userId" v-on:clickChat="showChatBox($event)" />
       </div>
     </div>
+    <v-btn
+      class="mx-2 hidden-sm-and-down"
+      fab
+      dark
+      large
+      color="purple"
+      style="position: fixed; right: 10px; bottom: 25px; z-index: 1031;"
+      @click="showChatList = !showChatList"
+    >
+      <v-icon dark>
+        mdi-chat-processing
+      </v-icon>
+    </v-btn>
     <v-card
-      style="
-        position: absolute;
-        right: 370px;
-        bottom: 0px;
-        height: auto;
-        width: 300px;
-        z-index: 9998;
-      "
+      style="position: fixed; right: 330px; bottom: 0px; height: auto; width: 300px; z-index: 101;"
       elevation="10"
     >
       <Chatbox
@@ -46,17 +58,11 @@
         :doc="this.docs.doc1"
         :index="1"
         v-on:closeChat="closeChatBox($event)"
+        class="primary-box-shadown"
       />
     </v-card>
     <v-card
-      style="
-        position: absolute;
-        right: 680px;
-        bottom: 0px;
-        height: auto;
-        width: 300px;
-        z-index: 9998;
-      "
+      style="position: fixed; right: 650px; bottom: 0px; height: auto; width: 300px; z-index: 101;"
       elevation="10"
     >
       <Chatbox
@@ -64,17 +70,11 @@
         :doc="this.docs.doc2"
         :index="2"
         v-on:closeChat="closeChatBox($event)"
+        class="primary-box-shadown"
       />
     </v-card>
     <v-card
-      style="
-        position: absolute;
-        right: 990px;
-        bottom: 0px;
-        height: auto;
-        width: 300px;
-        z-index: 9998;
-      "
+      style="position: fixed; right: 970px; bottom: 0px; height: auto; width: 300px; z-index: 101;"
       elevation="10"
     >
       <Chatbox
@@ -82,6 +82,7 @@
         :doc="this.docs.doc3"
         :index="3"
         v-on:closeChat="closeChatBox($event)"
+        class="primary-box-shadown"
       />
     </v-card>
   </div>
@@ -112,6 +113,7 @@ export default {
       show: false,
       doc: null,
     },
+    showChatList: true,
   }),
   computed: {
     ...mapState('vendor/group', ['groups', 'types', 'rooms']),
@@ -153,6 +155,7 @@ export default {
       this.overlay.show = false;
     },
     showChatBox(event) {
+      console.log(this.docs);
       if (this.isOnMobile) {
         this.showMobileChatBox(event);
         return;
@@ -216,9 +219,11 @@ export default {
   },
 };
 </script>
-<style scoped>
-/* body {
-  max-height: calc(100vh);
-  overflow: hidden;
-} */
+<style>
+.div-title {
+  color: #6c757d !important;
+  font-family: 'Nunito', sans-serif !important;
+  font-size: 1.025rem;
+  font-weight: 700;
+}
 </style>

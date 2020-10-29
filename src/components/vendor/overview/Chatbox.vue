@@ -32,19 +32,43 @@
     <v-card
       v-if="!userState.isLoading && userState.success"
       width="100%"
-      class="d-flex flex-row justify-space-between align-center pa-2"
+      class="d-flex flex-column pa-2"
       style="z-index: 9999;"
     >
-      <div class="d-flex flex-nowrap align-center">
-        <v-avatar>
-          <v-img :src="renter.avatar"></v-img>
+      <div class="d-flex align-center">
+        <v-avatar color="#727cf5" height="30" width="30" min-width="30">
+          <v-img max-height="30" max-width="30" v-if="renter.avatar" :src="renter.avatar" />
+          <span class="text-overline white--text" v-else>{{
+            getAvatarTitle(renter.username)
+          }}</span>
         </v-avatar>
-        <p class="font-weight-medium mb-0 ml-2">{{ renter.username }}</p>
+        <span class="text-subtitle-2 ml-3 text-primary">{{ renter.username }}</span>
+        <v-btn class="ml-auto" small icon color="#727cf5" @click="closeChat()">
+          <v-icon small>clear</v-icon>
+        </v-btn>
       </div>
-      <v-btn icon color="red" @click="closeChat()">
-        <v-icon>clear</v-icon>
-      </v-btn>
+      <div class="d-flex align-center">
+        <span class="size-sub-3 font-nunito mt-1 text-gray font-weight-bold">{{ type.title }}</span>
+        <v-btn class="ml-auto" small icon color="#6c757d" @click="showType = !showType">
+          <v-icon small>
+            {{ showType ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+          </v-icon>
+        </v-btn>
+      </div>
+      <div v-show="showType">
+        <div class="d-flex flex-column justify-center">
+          <span class="size-sub-3 d-flex align-center font-nunito" style="color: #4250f2;"
+            ><v-icon small color="#727cf5" class="mr-1">mdi-home-currency-usd</v-icon
+            >{{ type.price }} {{ type.priceUnit }}</span
+          >
+          <span class="size-sub-3 d-flex align-center font-nunito" style="color: #4250f2;"
+            ><v-icon small color="#727cf5" class="mr-1">mdi-home-group</v-icon
+            >{{ group.groupName }}</span
+          >
+        </div>
+      </div>
     </v-card>
+    <v-divider />
     <div class="chatbox rounded-l overflow-y-auto chatbox" :style="{ height: height }" id="chatbox">
       <v-list
         v-scroll.self="myOnScroll"
@@ -54,7 +78,7 @@
         min-height="300px"
         class="pa-1"
       >
-        <v-list-item color="success" two-line>
+        <!-- <v-list-item color="success" two-line>
           <v-list-item-content>
             <v-list-item-title>{{ type.title }}</v-list-item-title>
             <v-list-item-content>
@@ -70,35 +94,32 @@
             </v-list-item-content>
           </v-list-item-content>
         </v-list-item>
-        <v-divider />
+        <v-divider /> -->
         <v-list-item v-for="(item, i) in filteredMessage" v-bind:key="i">
           <v-list-item-content>
             <div v-if="item.sender === 'renter'" class="d-flex justify-start">
-              <div v-if="item.bargain" class="blue lighten-5 border-deal pa-1" style="width: 75%;">
-                <v-row>
-                  <v-col cols="12">
-                    <v-icon color="amber">attach_money</v-icon>
-                    <span class="font-weight-bold">Trả giá mới</span>
-                  </v-col>
-                </v-row>
-                <v-divider />
-                <v-row>
-                  <v-col cols="12">
-                    Loại phòng:
-                    <span class="mx-2 blue--text font-weight-bold">
-                      {{ item.bargain.typeName }}
-                    </span>
-                    <br />
-                    <span style="color: #98b7d7;">Giá gốc:</span>
-                    <span style="color: red;" class="font-weight-bold"
-                      >{{ item.bargain.originalPrice }} Triệu</span
-                    >
-                    <br />
-                    <span style="color: #98b7d7;">Trả giá:</span>
-                    <span class="font-weight-bold">{{ item.bargain.newPrice }} Triệu</span>
-                  </v-col>
-                </v-row>
-                <v-divider />
+              <div
+                v-if="item.bargain"
+                class="event d-flex flex-column justify-center align-center pa-2"
+                _class="blue lighten-5 border-deal pa-1"
+                style="width: 100%;"
+              >
+                <span
+                  class="font-weight-bold text-primary font-nunito"
+                  style="font-size: 0.9375rem;"
+                  >TRẢ GIÁ MỚI</span
+                >
+                <div class="d-flex justify-space-between align-center my-4" style="width: 100%;">
+                  <span
+                    class="font-nunito font-weight-regular text-gray text-subtitle-2 d-flex align-center"
+                    ><v-icon class="mr-1">mdi-home-currency-usd</v-icon>
+                    {{ item.bargain.originalPrice }} {{ type.priceUnit }}</span
+                  >
+                  <span class="font-nunito font-weight-regular text-warning text-subtitle-2">
+                    <v-icon color="#ffbc00">mdi mdi-arrow-down-bold</v-icon>
+                    {{ item.bargain.newPrice }} {{ type.priceUnit }}
+                  </span>
+                </div>
                 <v-row class="d-flex justify-center">
                   <v-col cols="12" class="d-flex justify-center">
                     <div v-if="item.bargain.status === 'wait'" class="d-flex justify-space-around">
@@ -217,7 +238,7 @@ export default {
     index: Number,
     doc: Object,
     height: {
-      default: '300px',
+      default: '350px',
     },
   },
   data: () => ({
@@ -229,6 +250,7 @@ export default {
     dialogAccept: false,
     dialogDeny: false,
     bargainDocId: null,
+    showType: false,
   }),
   methods: {
     ...mapActions({
@@ -337,6 +359,9 @@ export default {
       // this.chatShow = false;
       this.$emit('closeChat', this.index);
     },
+    getAvatarTitle(name) {
+      return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
+    },
   },
   created() {
     if (!this.userState) {
@@ -365,6 +390,7 @@ export default {
       return false;
     },
     type() {
+      console.log(this.findTypesById(this.doc.data().typeId));
       return this.findTypesById(this.doc.data().typeId);
     },
     group() {
@@ -402,5 +428,8 @@ export default {
 .border-deal {
   border: 1px solid black;
   border-radius: 5px;
+}
+.event {
+  background-color: #fef5e4;
 }
 </style>
