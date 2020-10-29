@@ -42,7 +42,7 @@ const pushNotificationMixins = {
     },
     saveToken(token) {
       console.log('tokens', token);
-      const newUser = { ...this.user.data };
+      const newUser = { ...this.userDataForChecking };
       newUser.firebaseToken = token;
       this.updateUser(newUser)
         .then((response) => {

@@ -1,64 +1,39 @@
 <template>
-  <div>
-    <v-sheet class="rounded" elevation="0" height="30%" max-width="100%">
-      <v-dialog v-model="dialog" width="400" persistent>
-        <v-card>
-          <v-card-title class="headline" style="background-color: #98b7d7; color: white">
-            Mã quét
-          </v-card-title>
-          <v-card-text class="d-flex justify-center mt-5">
-            <div v-if="!scanQRSuccess" class="d-flex flex-column justify-center align-center">
-              <p>Người xem phòng quét mã để xác nhận đã gặp mặt.</p>
-              <qrcode-vue :value="qrvalue" :size="200" level="H"></qrcode-vue>
-            </div>
-            <div v-if="scanQRSuccess" class="d-flex flex-column justify-center align-center">
-              <p><v-icon color="green">done_outline</v-icon> Xác nhận gặp mặt thành công!</p>
-              <p>Bạn có muốn tạo hợp đồng ngay?</p>
-              <v-btn :to="`/vendor/contract?bookingId=${Number(newMessage.data.bookingId)}`">
-                <v-icon>far fa-handshake</v-icon> Tạo hợp đồng
-              </v-btn>
-            </div>
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="closeDialog"> Đóng </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <div class="d-flex justify-md-space-between flex-column flex-md-row">
-        <div class="d-flex align-center justify-center justify-md-left">
-          <span class="text-h6 font-weight-bold text-center ml-3">Lịch hẹn xem phòng hôm nay</span>
-        </div>
-        <v-row no-gutters class="d-flex justify-end">
-          <v-col cols="12" md="5">
-            <v-text-field
-              class="ma-3"
-              style=""
-              hide-details
-              label="Tìm theo tên"
-              v-model="searchQuery"
-              prepend-inner-icon="search"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </div> -->
-    <!-- <v-divider /> -->
+  <div class="d-flex flex-column">
+    <v-dialog v-model="dialog" width="400" persistent>
+      <v-card>
+        <v-card-title class="headline" style="background-color: #98b7d7; color: white">
+          Mã quét
+        </v-card-title>
+        <v-card-text class="d-flex justify-center mt-5">
+          <div v-if="!scanQRSuccess" class="d-flex flex-column justify-center align-center">
+            <p>Người xem phòng quét mã để xác nhận đã gặp mặt.</p>
+            <qrcode-vue :value="qrvalue" :size="200" level="H"></qrcode-vue>
+          </div>
+          <div v-if="scanQRSuccess" class="d-flex flex-column justify-center align-center">
+            <p><v-icon color="green">done_outline</v-icon> Xác nhận gặp mặt thành công!</p>
+            <p>Bạn có muốn tạo hợp đồng ngay?</p>
+            <v-btn :to="`/vendor/contract?bookingId=${Number(newMessage.data.bookingId)}`">
+              <v-icon>far fa-handshake</v-icon> Tạo hợp đồng
+            </v-btn>
+          </div>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="closeDialog"> Đóng </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-row class="d-flex justify-space-between ma-0">
       <v-col cols="12" md="4" class="pl-md-13 py-0 d-flex justify-center justify-md-start">
         <span class="div-title">Lịch hẹn xem phòng</span>
       </v-col>
       <v-col cols="12" md="4" class="pa-0 d-flex justify-center justify-md-end">
         <v-btn-toggle v-model="filterBooking" tile color="#4250f2" group>
-          <v-btn value="day" small class="font-nunito">
-            Hôm nay
-          </v-btn>
-          <v-btn value="week" small class="font-nunito">
-            Tuần này
-          </v-btn>
-          <v-btn value="month" small class="font-nunito">
-            Tháng này
-          </v-btn>
+          <v-btn value="day" small class="font-nunito"> Hôm nay </v-btn>
+          <v-btn value="week" small class="font-nunito"> Tuần này </v-btn>
+          <v-btn value="month" small class="font-nunito"> Tháng này </v-btn>
         </v-btn-toggle>
       </v-col>
     </v-row>
@@ -77,7 +52,7 @@
         >
           <span
             class="text-muted font-nunito d-flex"
-            style="font-weight: 400 !important; color: #98a6ad !important; font-size: 0.9375rem;"
+            style="font-weight: 400 !important; color: #98a6ad !important; font-size: 0.9375rem"
             ><span>{{ getDateString(Number(booking.meetTime)) }}</span>
             <span class="ml-auto">{{ getTimeString(Number(booking.meetTime)) }}</span></span
           >
@@ -91,7 +66,7 @@
                 class="font-nunito text-primary-dark"
                 >{{ booking.renter.username }}</v-list-item-title
               >
-              <v-list-item-subtitle style="color: coral;">
+              <v-list-item-subtitle style="color: coral">
                 {{ booking.renter.phone }}</v-list-item-subtitle
               >
             </v-list-item-content>
@@ -122,9 +97,6 @@
         </v-card>
       </v-slide-item>
     </v-slide-group>
-    <!-- <v-card v-if="bookings.length === 0">
-      <v-card-title> Không có dữ liệu lịch hẹn </v-card-title>
-    </v-card> -->
     <span class="font-nunito size1rem text-primary text-center ma-4" v-if="bookings.length === 0"
       >Bạn không có lịch hẹn xem phòng nào vào thời gian này!</span
     >
