@@ -7,7 +7,7 @@
     class="hidden-md-and-up"
   >
     <v-dialog v-model="groups.isCreating" hide-overlay persistent width="300">
-      <v-card color="primary" dark>
+      <v-card color="#727CF5" dark>
         <v-card-text>
           Đang tạo khu trọ mới
           <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
@@ -28,48 +28,57 @@
       </template>
     </v-snackbar>
     <v-card>
-      <v-toolbar dark color="primary">
+      <v-toolbar dark color="#727CF5">
         <v-btn icon dark @click="$emit('close')">
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-toolbar-title v-if="this.create">Tạo khu phòng trọ mới</v-toolbar-title>
-        <v-toolbar-title v-if="this.create">Cập nhật thông tin khu trọ</v-toolbar-title>
+        <v-toolbar-title v-if="this.update">Cập nhật thông tin khu trọ</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-btn dark text @click="doCreateHostelGroup" v-if="this.create">
-            <v-icon>add</v-icon>
-            Tạo ngay
+            <v-icon left>add</v-icon>
+             Tạo ngay
           </v-btn>
           <v-btn dark text v-if="this.update">
-            <v-icon>update</v-icon>
-            Cập nhật ngay
+            <v-icon left>update</v-icon>
+             Cập nhật ngay
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
       <TableOfContent :toc="toc" class="d-none" />
       <v-container fluid>
         <v-row>
-          <v-col cols="12" md="3" id="name">
-            <span class="text-h6"> <v-icon>info</v-icon> Thông tin </span>
-            <v-text-field
-              v-model="newGroup.groupName"
-              placeholder="Tên của khu phòng trọ"
-              prepend-icon="closed_caption"
-              hide-details
-            ></v-text-field>
-            <v-divider class="mt-6 mb-3" />
-            <HostelGroupRules @newValue="receiveNewRulesData" />
+          <v-col cols="12" md="6">
+            <v-row id="name">
+              <v-col cols="12">
+                <v-card>
+                  <span class="text-h6 ma-1"> <v-icon left>info</v-icon> Thông tin </span>
+                  <v-text-field
+                    v-model="newGroup.groupName"
+                    placeholder="Tên của khu phòng trọ"
+                    prepend-icon="closed_caption"
+                    hide-details
+                    class="ma-1"
+                  ></v-text-field>
+                </v-card>
+                <v-divider class="mt-6 mb-3" />
+                <HostelGroupRules @newValue="receiveNewRulesData" />
+              </v-col>
+            </v-row>
+            <v-row id="service">
+              <v-col cols="12">
+                <HostelGroupServiceEditor
+                  :groupService="[]"
+                  :create="true"
+                  :update="false"
+                  @newValue="receiveNewServiceData"
+                />
+              </v-col>
+            </v-row>
           </v-col>
-          <v-col cols="12" md="4" id="address">
+          <v-col cols="12" md="6" id="address">
             <PlacePicker @newValue="receiveNewAddress" />
-          </v-col>
-          <v-col cols="12" md="5" id="service">
-            <HostelGroupServiceEditor
-              :groupService="[]"
-              :create="true"
-              :update="false"
-              @newValue="receiveNewServiceData"
-            />
           </v-col>
         </v-row>
       </v-container>
@@ -96,7 +105,7 @@ export default {
   },
   data: () => ({
     newGroup: {
-      vendorId: null,
+      vendorId: 0,
       groupName: '',
       buildingNo: '',
       longitude: '',

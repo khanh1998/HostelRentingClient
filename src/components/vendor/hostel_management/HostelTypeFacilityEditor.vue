@@ -2,12 +2,12 @@
   <div>
     <span class="text-h6"><v-icon>king_bed</v-icon> Tiện ích</span>
     <v-chip-group column>
-      <v-chip v-for="facility in type.facilities" :key="facility.facilityId" close>{{
+      <v-chip v-for="facility in type.facilities" :key="facility.facilityId" close @click:close="removeFacility(facility)">{{
         facility.facilityName
       }}</v-chip>
     </v-chip-group>
-    <span>Them tien ich</span>
-    <v-card :loading="facilities.isLoading">
+    <span class="mt-2">Thêm tiện ích</span>
+    <div :loading="facilities.isLoading">
       <v-chip-group column>
         <v-chip
           v-for="facility in addableFacilities"
@@ -16,7 +16,7 @@
           >{{ facility.facilityName }}</v-chip
         >
       </v-chip-group>
-    </v-card>
+    </div>
   </div>
 </template>
 <script>

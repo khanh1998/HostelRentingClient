@@ -3,55 +3,84 @@
     <v-overlay :value="rules.isLoading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <div class="d-flex flex-column inner" v-if="!rules.isLoading">
-      <span class="text-h6 my-2"><v-icon>warning</v-icon> Nội quy khu trọ</span>
-      <v-switch
-        label="Giờ giấc tự do"
-        v-model="picker.openAllDay"
-        hide-details
-        color="red"
-        inset
-      ></v-switch>
-      <div v-if="!picker.openAllDay" class="d-flex flex-column justify-center">
-        <p class="ma-1 text-center">Giờ mở cửa</p>
-        <div class="d-flex flex-row ma-1">
-          <span class="font-weight-bold ma-1">Từ</span>
-          <el-time-select
-            placeholder="Giờ mở cửa"
-            v-model="picker.startTime"
-            :picker-options="{
-              start: '00:00',
-              step: '00:30',
-              end: '23:59',
-            }"
-          >
-          </el-time-select>
-          <span class="font-weight-bold ma-1">đến</span>
-          <el-time-select
-            placeholder="Giờ đóng cửa"
-            v-model="picker.endTime"
-            :picker-options="{
-              start: picker.startTime || '06:00',
-              step: '00:30',
-              end: '23:59',
-              minTime: picker.startTime,
-            }"
-          >
-          </el-time-select>
-        </div>
-      </div>
-      <div class="d-flex flex-row flex-wrap">
+    <v-card class="d-flex flex-column inner" v-if="!rules.isLoading">
+      <span class="text-h6 my-2"><v-icon left>warning</v-icon> Nội quy khu trọ</span>
+      <div class="d-flex flex-row flex-wrap mb-3">
         <v-switch
           v-for="(rule, index) in rules.data"
           :key="rule.regulationId"
           :label="rule.regulationName"
-          color="red"
+          color="success"
           v-model="activeRules[index]"
-          inset
           hide-details
+          class="ml-15"
         ></v-switch>
+        <v-switch
+          label="Giờ giấc tự do"
+          v-model="picker.openAllDay"
+          hide-details
+          color="success"
+          class="ml-15"
+        ></v-switch>
+        <div v-if="!picker.openAllDay" class="d-flex flex-column justify-center">
+          <p class="ma-1 font-weight-bold ml-15 mt-4 mb-4">Giờ mở cửa</p>
+          <div class="ml-15 hidden-sm-and-down">
+            <span class="font-weight-bold ma-1">Từ</span>
+            <el-time-select
+              placeholder="Giờ mở cửa"
+              v-model="picker.startTime"
+              :picker-options="{
+                start: '00:00',
+                step: '00:30',
+                end: '23:59',
+              }"
+            >
+            </el-time-select>
+            <span class="font-weight-bold ma-1 ml-3">đến</span>
+            <el-time-select
+              placeholder="Giờ đóng cửa"
+              v-model="picker.endTime"
+              :picker-options="{
+                start: picker.startTime || '06:00',
+                step: '00:30',
+                end: '23:59',
+                minTime: picker.startTime,
+              }"
+            >
+            </el-time-select>
+          </div>
+          <div class="ml-15 hidden-sm-and-up">
+            <v-col cols="12">
+            <span class="font-weight-bold ma-1">Từ</span>
+            <el-time-select
+              placeholder="Giờ mở cửa"
+              v-model="picker.startTime"
+              :picker-options="{
+                start: '00:00',
+                step: '00:30',
+                end: '23:59',
+              }"
+            >
+            </el-time-select>
+            </v-col>
+            <v-col cols="12">
+            <span class="font-weight-bold ma-1">đến</span>
+            <el-time-select
+              placeholder="Giờ đóng cửa"
+              v-model="picker.endTime"
+              :picker-options="{
+                start: picker.startTime || '06:00',
+                step: '00:30',
+                end: '23:59',
+                minTime: picker.startTime,
+              }"
+            >
+            </el-time-select>
+            </v-col>
+          </div>
+        </div>
       </div>
-    </div>
+    </v-card>
   </div>
 </template>
 <script>

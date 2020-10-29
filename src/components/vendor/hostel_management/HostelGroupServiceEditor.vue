@@ -1,6 +1,117 @@
 <template>
   <v-card class="pa-2" height="100%" elevation="0" :loading="isServiceLoading">
-    <span class="text-h6"><v-icon>room_service</v-icon> Dịch vụ</span>
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="600px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-row>
+          <v-col cols="9">
+            <span class="text-h6"><v-icon left>room_service</v-icon> Dịch vụ</span>
+          </v-col>
+          <v-col cols="3">
+            <v-btn
+              color="#727CF5"
+              dark
+              v-bind="attrs"
+              v-on="on"
+              class="hidden-sm-and-down"
+            >
+              Thêm dịch vụ
+            </v-btn>
+          </v-col>
+        </v-row>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline">Thêm dịch vụ</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-select
+                  :items="services"
+                  label="Dịch vụ"
+                  item-text="serviceName"
+                  item-value="serviceId"
+                  dense
+                  hide-details
+                  v-model="addNew.serviceId"
+                  class="pa-1"
+                  solo
+                ></v-select>
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+              >
+                 <v-text-field
+                  v-model="addNew.price"
+                  dense
+                  hide-details
+                  label="Giá tiền"
+                  type="number"
+                  class="pa-1"
+                  suffix="nghìn đ"
+                  solo
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+              >
+                <v-select
+                  :items="servicesBox.units"
+                  label="Đơn vị"
+                  dense
+                  hide-details
+                  v-model="addNew.userUnit"
+                  class="pa-1"
+                  solo
+                ></v-select>
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+              >
+                <v-select
+                  :items="servicesBox.times"
+                  label="Tần suất thanh toán"
+                  dense
+                  hide-details
+                  v-model="addNew.timeUnit"
+                  class="pa-1"
+                  solo
+                ></v-select>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog = false"
+          >
+            Hủy
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog = false; addService()"
+          >
+            Tạo
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-data-table
       :headers="servicesBox.headers"
       v-model="selects"
@@ -64,7 +175,7 @@
       </v-card-subtitle>
     </v-card>
     <v-divider />
-    <v-card class="pa-1 mt-2" v-if="!select">
+    <v-card class="pa-1 mt-2 hidden-sm-and-up" v-if="!select">
       <p class="text-h6 text-center pa-0 ma-2">Tạo mới dịch vụ</p>
       <div class="d-flex flex-column">
         <div class="d-flex flex-row flex-nowrap">
@@ -98,18 +209,20 @@
             hide-details
             v-model="addNew.userUnit"
             class="pa-1"
+            solo
           ></v-select>
           <v-select
             :items="servicesBox.times"
-            label="Tần suất thanh toán"
+            label="Thời hạn"
             dense
             hide-details
             v-model="addNew.timeUnit"
             class="pa-1"
+            solo
           ></v-select>
         </div>
         <v-btn small color="primary" @click="addService" :disabled="!addable" class="mt-2">
-          <v-icon>add</v-icon>
+          Tạo mới
         </v-btn>
       </div>
     </v-card>
@@ -140,6 +253,7 @@ export default {
   mixins: [snackBarMixin],
   data: () => ({
     selects: [],
+    dialog: false,
     servicesBox: {
       headers: [
         {
@@ -150,7 +264,7 @@ export default {
         },
         { text: 'Giá (Nghìn đồng)', value: 'price', sortable: true },
         { text: 'Đơn vị', value: 'userUnit', sortable: false },
-        { text: 'Tần suất thanh toán', value: 'timeUnit', sortable: false },
+        { text: 'Thời hạn', value: 'timeUnit', sortable: false },
         { text: () => (this.select ? 'Chọn' : 'Xoá'), value: 'delete', sortable: false },
       ],
       units: ['m³', 'kWh', 'người', 'phòng', 'xe'],

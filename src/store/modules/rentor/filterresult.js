@@ -305,7 +305,8 @@ const actions = {
           const minSuperficiality = params.filterProperties.minArea.select.split(' ')[0];
           minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
         }
-        url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=${params.page}&size=${params.size}&sortBy=score`;
+        url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}
+        ${minSuperficialityStr}${schoolStr}${hometownStr}&page=${params.page}&size=${params.size}&sortBy=score`;
       }
       window.$cookies.set('searchValue', url);
 

@@ -33,60 +33,65 @@
       </v-card>
     </v-dialog>
     <span class="text-h6" v-if="images && images.length > 0"
-      ><v-icon>insert_photo</v-icon>Hình ảnh</span
+      ><v-icon left>insert_photo</v-icon>Hình ảnh</span
     >
-    <div
-      style="height: 300px; overflow-y: auto;"
-      class="d-flex flex-row flex-wrap align-start justify-start"
-    >
-      <v-btn class="ml-2" @click="openImageUploadDialog" depressed>
-        <v-icon>add_photo_alternate</v-icon>Tải lên ảnh mới</v-btn
-      >
-      <!-- display input images -->
-      <div v-for="image in images" :key="image.imageId">
-        <v-img
-          :src="image.resourceUrl"
-          :lazy-src="image.resourceUrl"
-          aspect-ratio="1"
-          class="grey lighten-2 ma-2"
-          height="120"
-          width="120"
+    <v-row>
+      <v-col cols="12">
+        <v-btn class="ml-2" @click="openImageUploadDialog" depressed>
+        <v-icon>add_photo_alternate</v-icon>Tải lên ảnh mới</v-btn>
+      </v-col>
+      <v-col cols="12">
+        <div
+          style="height: 300px; overflow-y: auto;"
+          class="d-flex flex-row flex-wrap align-start justify-start"
         >
-          <template v-slot:placeholder>
-            <v-row class="fill-height ma-0" align="center" justify="center">
-              <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-            </v-row>
-          </template>
-          <v-row class="fill-height ma-0" align="center" justify="center">
-            <v-btn icon depressed color="blue-grey">
-              <v-icon color="red">delete_forever</v-icon>
-            </v-btn>
-          </v-row>
-        </v-img>
-      </div>
-      <!-- display uploaded images -->
-      <div v-for="image in upload.imageUrls" :key="image">
-        <v-img
-          :src="image"
-          :lazy-src="image"
-          aspect-ratio="1"
-          class="grey lighten-2 ma-2"
-          height="120"
-          width="120"
-        >
-          <template v-slot:placeholder>
-            <v-row class="fill-height ma-0" align="center" justify="center">
-              <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-            </v-row>
-          </template>
-          <v-row class="fill-height ma-0" align="center" justify="center">
-            <v-btn icon depressed color="blue-grey">
-              <v-icon color="red">delete_forever</v-icon>
-            </v-btn>
-          </v-row>
-        </v-img>
-      </div>
-    </div>
+          <!-- display input images -->
+          <div v-for="image in images" :key="image.imageId">
+            <v-img
+              :src="image.resourceUrl"
+              :lazy-src="image.resourceUrl"
+              aspect-ratio="1"
+              class="grey lighten-2 ma-2"
+              height="120"
+              width="120"
+            >
+              <template v-slot:placeholder>
+                <v-row class="fill-height ma-0" align="center" justify="center">
+                  <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                </v-row>
+              </template>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-btn icon depressed color="blue-grey">
+                  <v-icon color="red">delete_forever</v-icon>
+                </v-btn>
+              </v-row>
+            </v-img>
+          </div>
+          <!-- display uploaded images -->
+          <div v-for="image in upload.imageUrls" :key="image">
+            <v-img
+              :src="image"
+              :lazy-src="image"
+              aspect-ratio="1"
+              class="grey lighten-2 ma-2"
+              height="120"
+              width="120"
+            >
+              <template v-slot:placeholder>
+                <v-row class="fill-height ma-0" align="center" justify="center">
+                  <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                </v-row>
+              </template>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-btn icon depressed color="blue-grey">
+                  <v-icon color="red">delete_forever</v-icon>
+                </v-btn>
+              </v-row>
+            </v-img>
+          </div>
+        </div>
+      </v-col>
+    </v-row>
 
     <v-snackbar
       v-model="snackBarMixin.show"
