@@ -323,7 +323,7 @@ export default {
   color: #0022d5;
   font-size: 18px;
 }
-.v-text-field.v-text-field--solo .v-input__control {
+.chat .v-text-field.v-text-field--solo .v-input__control {
   min-height: 25px;
   padding: 0;
 }

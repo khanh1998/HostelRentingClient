@@ -9,7 +9,7 @@
       <template v-slot="{ item, index }">
         <v-list-item
           :key="item.contractId"
-          class="px-0 py-0 d-flex align-center"
+          class="px-0 py-0 d-flex align-center overview"
           v-bind:style="index % 2 === 0 ? 'background-color: #f1f3fa;' : 'background-color: #fff;'"
         >
           <v-row class="d-flex align-center ma-0">
@@ -95,7 +95,7 @@ export default {
 };
 </script>
 <style>
-.v-list-item {
+.overview.v-list-item {
   min-height: 40px;
 }
 </style>

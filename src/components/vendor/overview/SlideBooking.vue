@@ -111,9 +111,12 @@
         </v-card>
       </v-slide-item>
     </v-slide-group>
-    <v-card v-if="bookings.length === 0">
+    <!-- <v-card v-if="bookings.length === 0">
       <v-card-title> Không có dữ liệu lịch hẹn </v-card-title>
-    </v-card>
+    </v-card> -->
+    <span class="font-nunito size1rem text-primary text-center ma-4" v-if="bookings.length === 0"
+      >Bạn không có lịch hẹn xem phòng nào vào thời gian này!</span
+    >
     <span
       v-if="bookings.length > 0"
       class="ml-auto mr-8 font-nunito text-primary-hover size-sub-3 cursor"
