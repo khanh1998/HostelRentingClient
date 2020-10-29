@@ -34,20 +34,42 @@
               </v-btn-toggle> -->
               <v-row>
                 <v-col cols="4" md="12" class="py-2">
-                  <v-btn min-width="100%" tile color="indigo" dark value="thuy">Sắp tới</v-btn>
+                  <v-btn
+                    v-model="status"
+                    min-width="100%"
+                    class="bg-info-lighten elevation-0 text-info font-nunito size9rem d-flex justify-start"
+                    value="incoming"
+                    style="letter-spacing: 0.01rem !important;"
+                    ><v-icon x-small class="mr-1">stop_circle</v-icon>Sắp tới</v-btn
+                  >
                 </v-col>
                 <v-col cols="4" md="12" class="py-2">
-                  <v-btn
+                  <!-- <v-btn
                     :color="color ? 'red' : 'yellow'"
                     min-width="100%"
                     tile
                     dark
                     @click="saptoi()"
                     >Đã xem phòng</v-btn
+                  > -->
+                  <v-btn
+                    v-model="status"
+                    min-width="100%"
+                    class="bg-warning-lighten elevation-0 text-warning font-nunito size9rem d-flex justify-start"
+                    value="done"
+                    style="letter-spacing: 0.01rem !important;"
+                    ><v-icon x-small class="mr-1">stop_circle</v-icon>Đã xem phòng</v-btn
                   >
                 </v-col>
                 <v-col cols="4" md="12" class="py-2">
-                  <v-btn min-width="100%" tile color="indigo" dark>Bỏ lỡ</v-btn>
+                  <v-btn
+                    v-model="status"
+                    min-width="100%"
+                    class="bg-danger-lighten elevation-0 text-danger font-nunito size9rem d-flex justify-start"
+                    value="done"
+                    style="letter-spacing: 0.01rem !important;"
+                    ><v-icon x-small class="mr-1">stop_circle</v-icon>Đã hủy</v-btn
+                  >
                 </v-col>
               </v-row>
             </v-col>
@@ -180,6 +202,7 @@ export default {
       preNextCalendar: 1,
       typeDislay: '4day',
     },
+    status: '',
     // demo
     types: ['month', 'week', 'day', '4day'],
     mode: 'stack',

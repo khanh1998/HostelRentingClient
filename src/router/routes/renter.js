@@ -57,7 +57,6 @@ const routes = [
         path: 'appointment',
         name: 'Appointment',
         component: Appointment,
-        meta: { requiresAuth: true, is_renter: true },
       },
       {
         path: 'qr',

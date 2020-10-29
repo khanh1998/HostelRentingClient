@@ -39,6 +39,12 @@ export default {
 .bg-danger-lighten {
   background-color: rgba(250, 92, 124, 0.25) !important;
 }
+.bg-info-lighten {
+  background-color: rgba(57, 175, 209, 0.25) !important;
+}
+.bg-warning-lighten {
+  background-color: rgba(255, 188, 0, 0.25) !important;
+}
 .bt-primary-hover:hover {
   color: #fff;
   background-color: #4250f2 !important;
