@@ -6,7 +6,7 @@
       </v-col>
     </v-row>
     <v-row class="d-flex justify-space-between ma-0 pl-md-13 mt-5">
-      <v-col cols="4" class="py-0">
+      <v-col cols="12" md="4" class="py-0 mb-3">
         <v-card class="pa-4">
           <div class="d-flex">
             <span
@@ -15,7 +15,12 @@
               >CÁC KHU TRỌ</span
             >
           </div>
-          <v-virtual-scroll :items="groups.data" :item-height="90" height="280">
+          <v-virtual-scroll
+            :items="groups.data"
+            :item-height="90"
+            height="280"
+            class="hidden-sm-and-down"
+          >
             <template v-slot="{ item, index }">
               <v-list-item :key="item.groupId" class="px-0 d-flex justify-start align-start">
                 <!-- <small
@@ -38,9 +43,41 @@
               </v-list-item>
             </template>
           </v-virtual-scroll>
+          <v-select
+            v-model="selectedGroupInMobile"
+            :items="groups.data"
+            item-value="groupId"
+            label="Nhà trọ"
+            class="text-body-2 hidden-md-and-up"
+            filled
+            dense
+            solo
+            outlined
+            color="#3645f1"
+            background-color="white"
+            :style="{
+              borderTopLeftRadius: '0px',
+              borderTopRightRadius: '0px',
+            }"
+          >
+            <template slot="selection" slot-scope="{ item }">
+              <span class="font-nunito font-weight-medium text-body-2">{{ item.groupName }}</span>
+            </template>
+            <template slot="item" slot-scope="{ item }">
+              <span class="d-flex flex-column" @click="clickGroup(item)">
+                <span class="font-weight-bold size9rem font-nunito cursor text-primary mt-3">{{
+                  item.groupName
+                }}</span>
+                <small class="text-gray font-nunito"
+                  >{{ item.buildingNo }} {{ item.address.streetName }},
+                  {{ item.address.districtName }}, {{ item.address.provinceName }}</small
+                >
+              </span>
+            </template>
+          </v-select>
         </v-card>
       </v-col>
-      <v-col cols="8" class="py-0">
+      <v-col cols="12" md="8" class="py-0 mb-3">
         <v-card class="pa-4">
           <div class="d-flex flex-column">
             <span
@@ -49,13 +86,13 @@
               >THỐNG KÊ</span
             >
             <div style="height: 280px;" class="d-flex flex-column">
-              <HostelGroupStatistic :group="selectedGroup" v-if="!isMobile" />
+              <HostelGroupStatistic :group="selectedGroup" _v-if="!isMobile" />
               <span
                 style="letter-spacing: 0.02em; font-weight: 700;"
                 class="text-gray font-nunito size9rem mt-4 mb-3"
                 >CÁC PHÒNG SẮP HẾT HẠN HỢP ĐỒNG</span
               >
-              <ExpiringRoom :groupId="selectedGroup.groupId" v-if="!isMobile" />
+              <ExpiringRoom :groupId="selectedGroup.groupId" _v-if="!isMobile" />
             </div>
           </div>
         </v-card>
@@ -168,11 +205,13 @@ export default {
     selectedGroup: null,
     mobileOverviewDialog: false,
     groupId: null,
+    selectedGroupInMobile: null,
   }),
   created() {
     if (this.groups.data.length > 0) {
       this.selectedGroupIndex = 0;
       [this.selectedGroup] = this.groups.data;
+      this.selectedGroupInMobile = this.groups.data[0].groupId;
     }
   },
   methods: {

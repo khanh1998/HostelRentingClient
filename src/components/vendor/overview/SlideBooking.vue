@@ -262,7 +262,7 @@ export default {
     qrvalue: null,
     searchQuery: null,
     scanQRSuccess: false,
-    filterBooking: 'day',
+    filterBooking: 'week',
   }),
   watch: {
     newMessage: {

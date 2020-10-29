@@ -37,7 +37,7 @@
       </div>
     </div>
     <v-btn
-      class="mx-2"
+      class="mx-2 hidden-sm-and-down"
       fab
       dark
       large
