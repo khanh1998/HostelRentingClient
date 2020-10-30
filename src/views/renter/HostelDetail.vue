@@ -163,13 +163,13 @@
                 class="arrow-price d-flex flex-column"
                 v-if="searchValue && (info.schoolMate !== 0 || info.compatriot !== 0)"
               >
-                <span class="text-caption" v-if="schoolSelected && schoolMate !== 0">
+                <span class="text-caption" v-if="schoolSelected && info.schoolMate !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
                   <span class="text-caption"
                     >{{ info.schoolMate }} người học {{ schoolSelected.schoolName }}</span
                   >
                 </span>
-                <span class="text-caption" v-if="hometownSelected && compatriot !== 0">
+                <span class="text-caption" v-if="hometownSelected && info.compatriot !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">supervisor_account</v-icon>
                   <span class="text-caption"
                     >{{ info.compatriot }} người quê {{ hometownSelected.provinceName }}</span
