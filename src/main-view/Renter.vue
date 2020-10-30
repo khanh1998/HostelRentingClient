@@ -28,6 +28,9 @@ export default {
 };
 </script>
 <style>
+.bg-main {
+  background-color: #fafbfe !important;
+}
 .bg-primary {
   background-color: #727cf5 !important;
   box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
@@ -179,6 +182,9 @@ export default {
 }
 .size-1rem {
   font-size: 1rem !important;
+}
+.size-h3 {
+  font-size: 1.5rem !important;
 }
 .size9rem {
   font-size: 0.9rem !important;

@@ -156,7 +156,8 @@
                 v-if="item.book"
                 v-ripple
                 style="width: 75%;"
-                class="blue lighten-5 pa-2 rounded border-deal"
+                class="blue lighten-5 pa-2 rounded border-deal cursor"
+                @click="viewListBookings()"
               >
                 <v-icon color="pink">event</v-icon>
                 <span class="font-weight-bold">Lịch hẹn mới</span>
@@ -361,6 +362,9 @@ export default {
     },
     getAvatarTitle(name) {
       return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
+    },
+    viewListBookings() {
+      this.$router.push('/vendor/booking');
     },
   },
   created() {
