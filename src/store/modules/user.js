@@ -413,8 +413,9 @@ const actions = {
       if (res.status === 200) {
         const userData = res.data.data;
         const { jwtToken } = userData;
-        const idToken = await getTokenIdFromFirebase(jwtToken);
+        const { idToken, refreshToken } = await getTokenIdFromFirebase(jwtToken);
         userData.idToken = idToken;
+        userData.refreshToken = refreshToken;
         commit(mutationTypes.GET_USER_SUCCESS, userData);
       } else {
         commit(mutationTypes.GET_USER_FAILURE);

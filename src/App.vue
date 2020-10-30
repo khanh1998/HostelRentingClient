@@ -12,8 +12,11 @@ export default {
   name: 'App',
   mixins: [pushNotificationMixins],
   components: {},
-  mounted() {
-    this.getUser().then(() => this.doGetMessagingToken());
+  created() {
+    this.getUser().then(() => {
+      console.log('get fcm token at app.vue');
+      this.doGetMessagingToken();
+    });
   },
   methods: {
     ...mapActions({

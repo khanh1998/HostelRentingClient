@@ -54,10 +54,11 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import pushNotificationMixins from '../mixins/pushNotification';
+import authenticationMixins from '../mixins/authentication';
 
 export default {
   name: 'SideMenuBar',
-  mixins: [pushNotificationMixins],
+  mixins: [pushNotificationMixins, authenticationMixins],
   data() {
     return {
       drawer: true,
@@ -97,18 +98,12 @@ export default {
       clearUserData: 'user/clearUserData',
       getUser: 'user/getUser',
     }),
-    logout() {
-      this.$cookies.remove('role');
-      this.$cookies.remove('userId');
-      this.$cookies.remove('jwt');
-      this.$cookies.remove('firebaseIdToken');
-      this.$cookies.remove('messagingToken');
-      this.clearUserData();
-      this.$router.push('/');
-    },
   },
-  mounted() {
-    this.getUser().then(() => this.doGetMessagingToken());
+  created() {
+    this.getUser().then(() => {
+      console.log('get fcm token at sideMenuBar.vue');
+      this.doGetMessagingToken();
+    });
   },
   computed: {
     ...mapState({

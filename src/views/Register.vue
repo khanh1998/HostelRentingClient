@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main style="background-color: #fafbfe !important;">
+    <v-main style="background-color: #fafbfe !important">
       <v-overlay :value="isLoading" absolute>
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
@@ -8,7 +8,7 @@
         <v-dialog v-model="dialog" max-width="40%">
           <v-card style="background-color: #fedee5 !important; border-color: #fed1da; !important">
             <v-card-text
-              style="color: #823040 !important; font-family: 'Nunito', sans-serif !important;"
+              style="color: #823040 !important; font-family: 'Nunito', sans-serif !important"
               class="pa-4 d-flex justify-center text-subtitle-1"
             >
               <span class="font-weight-bold mr-1">Lỗi </span>
@@ -16,14 +16,14 @@
             >
           </v-card>
         </v-dialog>
-        <div v-show="!showRenterInfor" style="width: 100%;">
-          <div v-show="!showRole" style="width: 100%;">
-            <v-row class="d-flex justify-center align-center red" style="position: relative;">
-              <v-col cols="11" xl="4" lg="4" sm="8" md="4" class="pa-0" style="position: absolute;">
+        <div v-show="!showRenterInfor" style="width: 100%">
+          <div v-show="!showRole" style="width: 100%">
+            <v-row class="d-flex justify-center align-center red" style="position: relative">
+              <v-col cols="11" xl="4" lg="4" sm="8" md="4" class="pa-0" style="position: absolute">
                 <!-- account -->
                 <v-card
                   v-show="!vetify"
-                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
+                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
                   class="pb-4"
                 >
                   <div
@@ -45,7 +45,7 @@
                   <v-card-text class="d-flex flex-column">
                     <span
                       class="align-self-center font-weight-bold font-nunito brow-text"
-                      style="font-size: 1.125rem;"
+                      style="font-size: 1.125rem"
                       >ĐĂNG KÝ</span
                     >
                     <v-form
@@ -98,7 +98,7 @@
                     </v-form>
                     <span
                       class="font-nunito text-gray align-self-center mt-1"
-                      style="font-size: 16px !important;"
+                      style="font-size: 16px !important"
                       >Đăng ký bằng</span
                     >
                   </v-card-text>
@@ -115,14 +115,14 @@
                   </v-card-actions>
                   <v-card-text class="d-flex justify-center align-center py-0">
                     <span class="text-muted">Đã có tài khoản?</span>
-                    <v-btn text link color="#727cf5" @click="login()">Đăng nhập</v-btn>
+                    <v-btn text link color="#727cf5" @click="goToLoginPage">Đăng nhập</v-btn>
                   </v-card-text>
                 </v-card>
                 <!-- vetify -->
                 <v-card
                   v-show="vetify"
                   _v-show="true"
-                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
+                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
                   class="pb-4"
                 >
                   <div
@@ -144,7 +144,7 @@
                   <v-card-text class="d-flex flex-column px-10 py-4">
                     <span
                       class="align-self-center font-weight-bold font-nunito brow-text mt-4"
-                      style="font-size: 1.125rem;"
+                      style="font-size: 1.125rem"
                       >Nhập mã xác nhận</span
                     >
                     <span
@@ -169,7 +169,7 @@
                       </span>
                       <div class="d-flex justify-space-between">
                         <v-btn
-                          style="letter-spacing: 0.01rem !important;"
+                          style="letter-spacing: 0.01rem !important"
                           class="pl-0"
                           text
                           link
@@ -184,7 +184,7 @@
                           text
                           link
                           color="#727cf5"
-                          style="letter-spacing: 0.01rem !important;"
+                          style="letter-spacing: 0.01rem !important"
                           >Nhập lại số điện thoại</v-btn
                         >
                       </div>
@@ -198,17 +198,17 @@
                   </v-card-text>
                 </v-card>
               </v-col>
-              <div id="recaptcha-container" style="position: absolute;"></div>
+              <div id="recaptcha-container" style="position: absolute"></div>
             </v-row>
           </div>
           <!-- confirm role -->
-          <div v-show="showRole" style="width: 100%;">
+          <div v-show="showRole" style="width: 100%">
             <v-row class="d-flex justify-center mb-4">
               <v-col cols="11" md="11" class="d-flex flex-column justify-center align-center">
-                <span style="color: #4250f2; font-size: 2.125rem;" class="font-nunito"
+                <span style="color: #4250f2; font-size: 2.125rem" class="font-nunito"
                   >Chào mừng bạn đến với tdHostel!</span
                 >
-                <span class="font-nunito text-gray" style="font-size: 1.15rem;"
+                <span class="font-nunito text-gray" style="font-size: 1.15rem"
                   >Để chúng tôi phục vụ nhu cầu của bạn hiệu quả nhất, vui lòng chọn mục đích sử
                   dụng/vai trò của mình trong tdHostel!</span
                 >
@@ -217,7 +217,7 @@
             <v-row class="d-flex justify-space-around align-center">
               <v-col cols="11" xl="4" lg="4" sm="8" md="4">
                 <v-card
-                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
+                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
                   class="pb-4"
                   min-height="300"
                 >
@@ -235,11 +235,11 @@
                       src="@/assets/renter.png"
                       max-height="40"
                     />
-                    <span class="white--text font-nunito" style="font-size: 1.3rem;"
+                    <span class="white--text font-nunito" style="font-size: 1.3rem"
                       >Khách thuê</span
                     >
                   </div>
-                  <v-card-text class="d-flex flex-column px-10 py-4" style="min-height: 250px;">
+                  <v-card-text class="d-flex flex-column px-10 py-4" style="min-height: 250px">
                     <div class="d-flex">
                       <v-icon class="mr-2" color="#727cf5">mdi mdi-check-bold</v-icon>
                       <span class="font-nunito">Tìm kiếm nhà trọ theo nhu cầu</span>
@@ -259,7 +259,7 @@
               </v-col>
               <v-col cols="11" xl="4" lg="4" sm="8" md="4">
                 <v-card
-                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
+                  style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
                   class="pb-4"
                 >
                   <div
@@ -276,11 +276,11 @@
                       src="@/assets/vendor.png"
                       max-height="40"
                     />
-                    <span class="white--text font-nunito" style="font-size: 1.3rem;">Chủ trọ</span>
+                    <span class="white--text font-nunito" style="font-size: 1.3rem">Chủ trọ</span>
                   </div>
                   <v-card-text
                     class="d-flex flex-column align-end px-10 py-4"
-                    style="min-height: 250px;"
+                    style="min-height: 250px"
                   >
                     <div class="d-flex">
                       <v-icon class="mr-2" color="#727cf5">mdi mdi-check-bold</v-icon>
@@ -308,11 +308,11 @@
           </div>
         </div>
         <!-- fill schoolmate and hometown -->
-        <div v-show="showRenterInfor" style="width: 100%;">
+        <div v-show="showRenterInfor" style="width: 100%">
           <v-row v-show="true" v-if="!isLoading" class="d-flex justify-center align-center">
             <v-col cols="11" xl="4" lg="4" sm="8" xs="11" md="6" class="pa-0">
               <v-card
-                style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
+                style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
                 class="pb-4"
               >
                 <div
@@ -410,12 +410,12 @@
 </template>
 <script>
 import { mapActions } from 'vuex';
-import firebase from 'firebase';
-
-const { auth } = firebase;
+import authenticationMixins from '../components/mixins/authentication';
+import firebase from '../config/firebase';
 
 export default {
   name: 'register',
+  mixins: [authenticationMixins],
   data: () => ({
     prevRoute: null,
     appVerifier: '',
@@ -574,68 +574,7 @@ export default {
       await this.createVendor(vendor);
       await this.afterLogin();
     },
-    async getTokenIdFromFirebase(jwtToken) {
-      try {
-        await auth.signInWithCustomToken(jwtToken);
-        const idToken = await auth.currentUser.getIdToken();
-        return idToken;
-      } catch (error) {
-        console.log('firebase login error: ', error);
-      }
-      return null;
-    },
-    async afterLogin() {
-      if (this.registerStatus) {
-        // this.$router.push('/');
-        const { jwtToken } = this.userData;
-        this.$cookies.set('jwt', jwtToken);
-        const idToken = await this.getTokenIdFromFirebase(jwtToken);
-        this.$cookies.set('firebaseIdToken', idToken);
-        let role = 'admin';
-        const id = this.userData.userId;
-        switch (this.userData.role.roleId) {
-          case 1:
-            role = 'vendors';
-            break;
-          case 2:
-            role = 'renters';
-            break;
-          default:
-            break;
-        }
-        this.$cookies.set('role', role);
-        this.$cookies.set('userId', id);
-        // const { nextUrl, preUrl } = this.$route.params;
-        if (this.prevRoute) {
-          const preURL = this.prevRoute.fullPath;
-          if (preURL) {
-            this.$router.push(preURL);
-          } else {
-            switch (role) {
-              case 'vendors':
-                this.$router.push('/vendor');
-                break;
-              case 'renters':
-                this.$router.push('/');
-                break;
-              case 'admin':
-                this.$router.push('/admin');
-                break;
-              default:
-                this.$router.push('/');
-            }
-          }
-        } else {
-          this.$router.push('/');
-        }
-      } else if (this.duppicateError) {
-        this.showRenterInfor = false;
-        this.showRole = false;
-        this.vetify = false;
-        this.dialog = true;
-      }
-    },
-    login() {
+    goToLoginPage() {
       this.$router.push('/login');
     },
   },

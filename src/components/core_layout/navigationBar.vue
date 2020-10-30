@@ -288,9 +288,11 @@
 </style>
 <script>
 import { mapActions } from 'vuex';
+import authenticationMixins from '../mixins/authentication';
 
 export default {
   name: 'MyAppBar',
+  mixins: [authenticationMixins],
   data: () => ({
     overlay: {
       show: false,
@@ -358,15 +360,6 @@ export default {
       clearUserData: 'user/clearUserData',
       searchByCoordinator: 'renter/filterResult/searchByCoordinator',
     }),
-    logout() {
-      this.$cookies.remove('role');
-      this.$cookies.remove('userId');
-      this.$cookies.remove('jwt');
-      this.$cookies.remove('firebaseIdToken');
-      this.$cookies.remove('messagingToken');
-      this.clearUserData();
-      this.$router.push('/');
-    },
   },
   computed: {
     isSearchOptional: {

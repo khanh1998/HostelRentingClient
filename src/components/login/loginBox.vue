@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card
-      style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
+      style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
       class="pb-4"
     >
       <div
@@ -23,7 +23,7 @@
       <v-card-text class="d-flex flex-column">
         <span
           class="align-self-center font-weight-bold font-nunito brow-text"
-          style="font-size: 1.125rem;"
+          style="font-size: 1.125rem"
           >ĐĂNG NHẬP</span
         >
         <v-form
@@ -54,10 +54,10 @@
             :rules="[rules.required, rules.password.minLength]"
             hint="Ít nhất 6 kí tự"
           ></v-text-field>
-          <span class="red--text font-nunito" style="font-size: 0.9rem; font-weight: 400;">{{
+          <span class="red--text font-nunito" style="font-size: 0.9rem; font-weight: 400">{{
             message
           }}</span>
-          <span class="ml-auto font-nunito text-muted" style="font-size: 0.75rem; font-weight: 400;"
+          <span class="ml-auto font-nunito text-muted" style="font-size: 0.75rem; font-weight: 400"
             >Quên mật khẩu</span
           >
           <v-btn
@@ -72,7 +72,7 @@
         </v-form>
         <span
           class="font-nunito text-gray align-self-center mt-1"
-          style="font-size: 16px !important;"
+          style="font-size: 16px !important"
           >Đăng nhập bằng</span
         >
       </v-card-text>
@@ -95,13 +95,11 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex';
-import firebase from '../../config/firebase';
-
-const { auth } = firebase;
+import authenticationMixins from '../mixins/authentication';
 
 export default {
   name: 'loginBox',
+  mixins: [authenticationMixins],
   data: () => ({
     phone: '',
     password: '',
@@ -131,83 +129,10 @@ export default {
     isLoging() {
       return this.$store.state.user.user.isLoading;
     },
-    userData() {
-      return this.$store.state.user.user.data;
-    },
-    loginSuccess() {
-      return this.$store.state.user.user.success;
-    },
   },
   methods: {
-    ...mapActions({
-      loginRequest: 'user/login',
-    }),
     validateFormUsernamePassword() {
       this.$refs.formUsernamePassword.validate();
-    },
-    async getTokenIdFromFirebase(jwtToken) {
-      try {
-        await auth.signInWithCustomToken(jwtToken);
-        const idToken = await auth.currentUser.getIdToken();
-        return idToken;
-      } catch (error) {
-        console.log('firebase login error: ', error);
-      }
-      return null;
-    },
-    async afterLogin() {
-      if (this.loginSuccess) {
-        const { jwtToken, idToken } = this.userData;
-        this.$cookies.set('jwt', jwtToken);
-        // const idToken = await this.getTokenIdFromFirebase(jwtToken);
-        this.$cookies.set('firebaseIdToken', idToken);
-        let role = 'admin';
-        const id = this.userData.userId;
-        switch (this.userData.role.roleId) {
-          case 1:
-            role = 'vendors';
-            break;
-          case 2:
-            role = 'renters';
-            break;
-          default:
-            break;
-        }
-        this.$cookies.set('role', role);
-        this.$cookies.set('userId', id);
-        const { nextUrl, preUrl } = this.$route.params;
-        if (nextUrl) {
-          this.$router.push(nextUrl);
-        } else {
-          switch (role) {
-            case 'vendors':
-              this.$router.push('/vendor');
-              break;
-            case 'renters':
-              if (preUrl) {
-                this.$router.push(preUrl || '/');
-              }
-              break;
-            case 'admin':
-              this.$router.push('/admin');
-              break;
-            default:
-              this.$router.push('/');
-          }
-        }
-      } else {
-        this.message = 'Số điện thoại hoặc mật khẩu không đúng!';
-      }
-    },
-    async login() {
-      this.loging = true;
-      await this.loginRequest({
-        phone: this.phone,
-        password: this.password,
-        getTokenIdFromFirebase: this.getTokenIdFromFirebase,
-      });
-      await this.afterLogin();
-      this.loging = false;
     },
     register() {
       this.$router.push('/register');
