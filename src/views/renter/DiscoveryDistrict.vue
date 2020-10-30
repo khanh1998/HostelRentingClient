@@ -1,29 +1,35 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="white">
+  <div class="bg-main">
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container v-if="!isLoading">
       <v-row class="justify-center">
-        <v-col cols="12" lg="11">
-          <v-row class="d-flex align-center">
-            <v-col cols="12" lg="3">
-              <p class="font-weight-bold text-h4 blue--text mb-2">
-                {{ district.districtName }}
-              </p>
-              <!-- toDo: api district -->
-              <span class="font-weight-bold text-uppercase">thành phố hồ chí minh</span>
-            </v-col>
-            <v-col cols="12" lg="3">
-              <v-card outlined>
+        <v-col cols="11" sm="11" md="11" lg="11">
+          <v-row class="d-flex justify-center align-center">
+            <span class="font-weight-black font-nunito text-primary size-h3">{{
+              district.districtName
+            }}</span>
+            <span class="text-brown size-h3 mx-2">-</span>
+            <span class="font-nunito text-gray size-h3">Thành phố Hồ Chí Minh</span>
+          </v-row>
+          <v-row class="d-flex align-center justify-space-between mt-2">
+            <v-col cols="12" sm="3" md="3" lg="4">
+              <v-card class="px-4">
                 <v-list-item two-line>
                   <v-list-item-content>
-                    <span class="text-uppercase text-h5 mb-4">
-                      {{ districtStat.avgPrice }}
-                      <span class="text-lowercase">triệu</span>
+                    <span class="text-lowercase text-h5 mb-4">
+                      {{
+                        getDownPayment(
+                          getPriceArea(districtStat.avgPrice, districtStat.avgSuperficiality),
+                          'triệu',
+                        )
+                      }}/m<sup>2</sup>
                     </span>
-                    <v-list-item-subtitle>Giá trung bình / phòng</v-list-item-subtitle>
+                    <v-list-item-subtitle class="text-muted font-nunito"
+                      >Giá thuê trung bình / m<sup>2</sup></v-list-item-subtitle
+                    >
                   </v-list-item-content>
                   <v-list-item-avatar tile color="white">
                     <v-icon x-large>attach_money</v-icon>
@@ -31,15 +37,17 @@
                 </v-list-item>
               </v-card>
             </v-col>
-            <v-col cols="12" lg="4">
-              <v-card outlined>
+            <v-col cols="12" sm="4" md="4" lg="4">
+              <v-card class="px-4">
                 <v-list-item two-line>
                   <v-list-item-content>
                     <span class="text-uppercase text-h5 mb-4">
                       {{ districtStat.avgSuperficiality }}
                       <span class="text-lowercase">m<sup>2</sup></span>
                     </span>
-                    <v-list-item-subtitle>Diện tích trung bình / phòng</v-list-item-subtitle>
+                    <v-list-item-subtitle class="text-muted font-nunito"
+                      >Diện tích trung bình / phòng</v-list-item-subtitle
+                    >
                   </v-list-item-content>
                   <v-list-item-avatar tile color="white">
                     <v-img
@@ -51,10 +59,28 @@
                 </v-list-item>
               </v-card>
             </v-col>
+            <v-col cols="12" sm="3" md="3" lg="4">
+              <v-card class="px-4">
+                <v-list-item two-line>
+                  <v-list-item-content>
+                    <span class="text-uppercase text-h5 mb-4">
+                      {{ districtStat.avgPrice }}
+                      <span class="text-lowercase">triệu</span>
+                    </span>
+                    <v-list-item-subtitle class="text-muted font-nunito"
+                      >Giá trung bình / phòng</v-list-item-subtitle
+                    >
+                  </v-list-item-content>
+                  <v-list-item-avatar tile color="white">
+                    <v-icon x-large>attach_money</v-icon>
+                  </v-list-item-avatar>
+                </v-list-item>
+              </v-card>
+            </v-col>
           </v-row>
           <v-row class="d-flex mt-10">
             <v-col cols="12" lg="6">
-              <v-card class="flex" outlined width="100%" style="height: 100%;">
+              <v-card outlined class="flex" width="100%" style="height: 100%;">
                 <v-card-title class="d-flex justify-center" :style="{ backgroundColor: '#f4f4f4' }">
                   <span class="text-body-1 txt-dark text-capitalize font-nunito font-weight-medium"
                     >THEO PHƯỜNG</span
@@ -66,7 +92,7 @@
                     label="Tên phường"
                     single-line
                     hide-details
-                    class="pt-0"
+                    class="pt-0 filter"
                   ></v-text-field>
                 </v-card-title>
                 <v-data-table
@@ -98,7 +124,7 @@
                     label="Tên đường"
                     single-line
                     hide-details
-                    class="pt-0"
+                    class="pt-0 filter"
                   ></v-text-field>
                 </v-card-title>
                 <v-data-table
@@ -256,6 +282,18 @@ export default {
         return { avgPrice: street.avgPrice, avgSuperficality: street.avgSuperficality };
       }
       return { avgPrice: 'Không xác định', avgSuperficality: 'Không xác định' };
+    },
+    getPriceArea(priceAvg, areaAvg) {
+      return priceAvg / areaAvg;
+    },
+    getDownPayment(price, priceUnit) {
+      if (priceUnit === 'triệu') {
+        if (price < 1) {
+          return `${Math.round(price * 1000 * 1000) / 1000} nghìn`;
+        }
+        return `${price} triệu`;
+      }
+      return `${price} triệu`;
     },
   },
   created() {

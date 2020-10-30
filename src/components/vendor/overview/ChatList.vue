@@ -323,8 +323,8 @@ export default {
   color: #0022d5;
   font-size: 18px;
 }
-.chat .v-text-field.v-text-field--solo .v-input__control {
-  min-height: 25px;
+.chat.v-text-field.v-text-field--solo .v-input__control {
+  min-height: 25px !important;
   padding: 0;
 }
 .chat .theme--light.v-label {

@@ -35,8 +35,33 @@
           <v-btn value="week" small class="font-nunito"> Tuần này </v-btn>
           <v-btn value="month" small class="font-nunito"> Tháng này </v-btn>
         </v-btn-toggle>
+        <v-btn icon v-show="!showSearchBar" @click="showSearchBar = !showSearchBar"
+          ><v-icon color="#98a6ad">search</v-icon></v-btn
+        >
       </v-col>
     </v-row>
+    <div v-show="showSearchBar">
+      <v-row no-gutters class="d-flex justify-md-end justify-center">
+        <v-col cols="9" md="4" class="d-flex justify-center align-center">
+          <v-btn icon
+            ><v-icon color="#98a6ad" @click="showSearchBar = !showSearchBar"
+              >mdi-chevron-double-left</v-icon
+            ></v-btn
+          >
+          <v-text-field
+            label="Tìm kiếm theo tên"
+            v-model="searchQuery"
+            append-icon="search"
+            solo
+            hide-details
+            class="text-muted pa-0 size-sub-2 slide-booking"
+            height="10"
+            rounded
+            clearable
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </div>
     <v-slide-group v-if="bookings.length > 0" show-arrows>
       <v-slide-item
         v-for="booking in bookings"
@@ -57,8 +82,17 @@
             <span class="ml-auto">{{ getTimeString(Number(booking.meetTime)) }}</span></span
           >
           <v-list-item dense class="pa-0">
-            <v-list-item-avatar>
-              <v-img :src="booking.renter.avatar"></v-img>
+            <v-list-item-avatar
+              color="#727cf5"
+              height="35"
+              width="35"
+              min-width="35"
+              class="d-flex justify-center"
+            >
+              <v-img :src="booking.renter.avatar" v-if="booking.renter.avatar"></v-img>
+              <span class="text-overline white--text" v-else>{{
+                getAvatarTitle(booking.renter.username)
+              }}</span>
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title
@@ -155,6 +189,9 @@ export default {
       this.dialog = false;
       this.scanQRSuccess = false;
     },
+    getAvatarTitle(name) {
+      return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
+    },
   },
   computed: {
     bookings() {
@@ -194,19 +231,19 @@ export default {
         default:
           break;
       }
-      // if (this.searchQuery) {
-      //   return this.$store.state.user.bookings.data
-      //     .filter((item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime())
-      //     .filter((item2) => {
-      //       const res =
-      //         item2.renter.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1;
-      //       return res;
-      //     });
-      // }
+      if (this.searchQuery && this.searchQuery.trim() !== '') {
+        return this.$store.state.user.bookings.data
+          .filter((item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime())
+          .filter((item2) => {
+            const res =
+              item2.renter.username.toLowerCase().indexOf(this.searchQuery.trim().toLowerCase()) !==
+              -1;
+            return res;
+          });
+      }
       return this.$store.state.user.bookings.data.filter(
         (item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime(),
       );
-      // return this.$store.state.user.bookings.data;
     },
     incommingBookings() {
       return this.bookings.filter((booking) => booking.status === 'INCOMING');
@@ -218,7 +255,6 @@ export default {
       if (!this.timeDiff) {
         return this.bookings;
       }
-      // this.bookings.
       return null;
     },
     getBookingsByRealTime() {
@@ -236,7 +272,7 @@ export default {
     if (this.bookings.length === 0) {
       this.getBookings();
     }
-    this.registerMessaging(); // from mixins
+    this.registerMessaging();
   },
   data: () => ({
     chipItems: ['Hôm nay', 'Tuần này', 'Tháng này'],
@@ -246,10 +282,10 @@ export default {
     searchQuery: null,
     scanQRSuccess: false,
     filterBooking: 'week',
+    showSearchBar: false,
   }),
   watch: {
     newMessage: {
-      // from mixins
       handler() {
         if (this.newMessage.data.action === pushNotificationAction.SCAN_BOOKING) {
           this.scanQRSuccess = true;
@@ -267,5 +303,15 @@ export default {
   display: -webkit-box;
   -webkit-line-clamp: 1; /* number of lines to show */
   -webkit-box-orient: vertical;
+}
+.slide-booking.v-text-field.v-text-field--solo .v-input__control {
+  min-height: 35px;
+}
+.slide-booking .theme--light.v-label {
+  color: #98a6ad !important;
+  font-family: 'Nunito', sans-serif !important;
+}
+.slide-booking .theme--light.v-icon {
+  color: #98a6ad !important;
 }
 </style>
