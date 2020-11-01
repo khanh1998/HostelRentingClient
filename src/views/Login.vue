@@ -158,6 +158,7 @@ const { auth } = firebase;
 export default {
   name: 'login',
   data: () => ({
+    prevRoute: null,
     phone: '',
     password: '',
     showPass: false,
@@ -233,7 +234,7 @@ export default {
         }
         this.$cookies.set('role', role);
         this.$cookies.set('userId', id);
-        const { nextUrl, preUrl } = this.$route.params;
+        const { nextUrl } = this.$route.params;
         if (nextUrl) {
           this.$router.push(nextUrl);
         } else {
@@ -242,7 +243,9 @@ export default {
               this.$router.push('/vendor');
               break;
             case 'renters':
-              this.$router.push(preUrl || '/');
+              this.$router.push(
+                this.prevRoute && this.prevRoute.fullPath ? this.prevRoute.fullPath : '/',
+              );
               break;
             case 'admin':
               this.$router.push('/admin');
@@ -272,6 +275,11 @@ export default {
   },
   created() {
     console.log(this.$route);
+  },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.prevRoute = from; // eslint-disable-line
+    });
   },
 };
 </script>

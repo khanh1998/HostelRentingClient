@@ -330,7 +330,7 @@
             <ratingBox class="mt-5" :rating="{ average: 3.5, total: 30 }" />
           </v-col>
         </v-row> -->
-        <!-- <v-row class="mt-10">
+        <v-row class="mt-10">
           <v-col cols="12" md="8">
             <div class="d-flex">
               <span
@@ -352,10 +352,11 @@
               <div class="line-after" :style="{ width: '15%' }" />
               <div class="line-before" :style="{ width: '85%' }" />
             </div>
-            <SuggestionList :list="types" class="mt-5" />
+            {{ renter }}
+            <!-- <SuggestionList :list="types" class="mt-5" /> -->
           </v-col>
         </v-row>
-        <v-row class="mt-10">
+        <!-- <v-row class="mt-10">
           <v-col cols="12" md="12">
             <div class="d-flex">
               <span
