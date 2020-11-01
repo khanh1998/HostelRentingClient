@@ -183,9 +183,18 @@
           color="white"
           class="d-flex flex-column justify-center align-center pa-1"
         >
-          <v-card-text>
+          <v-card-text v-if="Number(bargainOverlay.price) !== Number(info.price)">
             <span class="text-subtitle-1" style="color: #101526;">
               Bạn đồng ý trả giá
+              <span class="font-weight-bold" style="color: #171c8b;">
+                {{ bargainOverlay.price }}
+              </span>
+              triệu đồng?
+            </span>
+          </v-card-text>
+          <v-card-text v-if="Number(bargainOverlay.price) === Number(info.price)">
+            <span class="text-subtitle-1" style="color: #101526;">
+              Giá đang trả giá bằng với giá gốc!
               <span class="font-weight-bold" style="color: #171c8b;">
                 {{ bargainOverlay.price }}
               </span>
@@ -196,11 +205,21 @@
             <div class="d-flex align-center justify-space-around pb-1">
               <v-btn
                 small
+                v-if="Number(bargainOverlay.price) !== Number(info.price)"
                 color="#4F60C9"
                 class="text-caption px-4 py-2 mx-2"
                 depressed
                 @click="sendMessage('bargain')"
                 >Có</v-btn
+              >
+              <v-btn
+                small
+                v-if="Number(bargainOverlay.price) === Number(info.price)"
+                color="#4F60C9"
+                class="text-caption px-4 py-2 mx-2"
+                depressed
+                @click="bargainOverlay.step = 1"
+                >Quay lại</v-btn
               >
               <v-btn
                 small
@@ -268,7 +287,11 @@
                       {{ info.priceUnit }}</span
                     >
                     <span class="font-nunito font-weight-regular text-warning text-subtitle-2">
-                      <v-icon color="#ffbc00">mdi mdi-arrow-down-bold</v-icon>
+                      <v-icon color="#ffbc00">{{
+                        Number(info.price) >= Number(item.bargain.newPrice)
+                          ? 'mdi mdi-arrow-down-bold'
+                          : 'mdi mdi-arrow-up-bold'
+                      }}</v-icon>
                       {{ item.bargain.newPrice }} {{ info.priceUnit }}
                     </span>
                   </div>
@@ -702,6 +725,9 @@ export default {
       }
       return `${time}, ${date}`;
     },
+    compareBargainPrice(originalPrice, bargainPrice) {
+      return Number(originalPrice) >= Number(bargainPrice);
+    },
   },
   data: () => ({
     rules: {
@@ -752,7 +778,7 @@ export default {
     Promise.all([this.getDeals, this.getBookings]).then(() => {
       this.fetchMessages();
     });
-    this.bargainOverlay.price = this.info.price;
+    this.bargainOverlay.price = this.info.price - 0.1;
   },
   mounted() {},
   computed: {

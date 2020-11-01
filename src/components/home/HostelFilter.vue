@@ -385,7 +385,6 @@ export default {
         this.filter.coordinator.longitude = coordinator[1].split('=')[1]; // eslint-disable-line
       }
 
-      // this.filter.price.disable = this.filterSelected.disabledPrice;
       this.filterSearchByCoordinatorResult({
         filterProperties: this.filter,
         page: 1,

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ml-3 mr-3" :to="'/detail/' + type.typeId">
+  <v-card class="mx-4" max-width="310" min-width="310">
     <!-- eslint-disable max-len -->
     <v-carousel
       height="170"
@@ -28,7 +28,7 @@
     </v-img>
     <v-divider class="mx-4" />
     <v-row class="d-flex align-center justify-center">
-      <v-col cols="10 pt-2">
+      <v-col cols="10 pt-2" @click="getDetail(type.typeId)">
         <span
           v-if="group"
           class="text-body-2 font-nunito"
@@ -42,7 +42,7 @@
             color: #484848;
           "
         >
-          {{ group.address.districtName }}, {{ group.address.provinceName }}thuy
+          {{ group.address.districtName }}, {{ group.address.provinceName }}
         </span>
         <div class="d-flex align-center py-3" style="height: 60px;">
           <p
@@ -112,7 +112,7 @@
                 max-height="23"
               />
               <span class="text-body-1 font-weight-bold" style="color: #656565;">
-                {{ type.capacity }}
+                {{ type.compatriot }}
                 <span class="text-body-2 font-weight-medium" style="color: #656565;">người</span>
               </span>
             </div>
@@ -127,7 +127,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
               "
-              >Đại học FPT</span
+              >{{ renter.school.schoolName }}</span
             >
           </div>
           <div>
@@ -140,11 +140,13 @@
                 max-height="20"
               />
               <span class="text-body-1 font-weight-bold ml-auto" style="color: #656565;">
-                {{ type.capacity }}
+                {{ type.schoolMate }}
                 <span class="text-body-2 font-weight-medium" style="color: #656565;">người</span>
               </span>
             </div>
-            <span class="text-caption" style="color: #656565; float: right;">Lâm Đồng</span>
+            <span class="text-caption" style="color: #656565; float: right;">{{
+              renter.hometown.provinceName
+            }}</span>
           </div>
         </div>
         <!-- <v-card-actions class="px-0 mt-3" md="auto">
@@ -177,31 +179,22 @@ export default {
     group: {
       get() {
         const id = this.type.groupId;
-        return this.$store.getters['renter/home/getTopViewHostelGroupById'](id);
+        return this.$store.getters['renter/hostelType/getHostelGroupById'](id);
       },
     },
-    ward() {
-      const { streetId } = this.group.street;
-      const res = this.$store.getters['renter/common/getWardByStreetId'](streetId);
-      return res;
-    },
-    district() {
-      const { wardId } = this.ward;
-      return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
-    },
-    province() {
-      const { districtId } = this.district;
-      return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
+    renter() {
+      return this.$store.state.user.user.data;
     },
   },
   methods: {
     ...mapActions({
       getProvinces: 'renter/common/getProvinces',
     }),
+    getDetail(typeId) {
+      this.$router.push(`/detail/${typeId}`);
+    },
   },
-  created() {
-    this.getProvinces();
-  },
+  created() {},
 };
 </script>
 <style scoped>

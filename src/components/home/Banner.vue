@@ -519,9 +519,50 @@ export default {
     changeMaxPrice() {
       if (this.filter.price.max < 50) this.filter.price.max += 5;
     },
+    suggestUniversity() {
+      if (this.currentPlace.name.toLowerCase().includes('đại học')) {
+        let universityName = this.currentPlace.name.toLowerCase();
+        universityName = universityName.includes('trường')
+          ? universityName.split('trường ')[1] // eslint-disable-line
+          : universityName; // eslint-disable-line
+        let district = this.currentPlace.address_components.find(
+          (a) => a.types[0] === 'administrative_area_level_2',
+        );
+        if (district) {
+          district = district.short_name.toLowerCase();
+          const university = this.schools.find((u) => {
+            const contain =
+              universityName.includes(u.schoolName.toLowerCase()) ||
+              u.schoolName.toLowerCase().includes(universityName);
+            const sameDistrict = u.address.districtName.toLowerCase().includes(district);
+            return contain && sameDistrict;
+            // console.log(contain);
+            // console.log(sameDistrict);
+            // if (contain && sameDistrict) {
+            //   console.log('vao');
+            //   return contain && sameDistrict;
+            // }
+            // const similarPoint = this.similarity(universityName, u.schoolName.toLowerCase()) >= 0.5;
+            // console.log(similarPoint);
+            // return similarPoint && sameDistrict;
+          });
+          // if (university) {
+          //   university = this.universities.map((u) => {
+          //     u.address, latitude;
+          //   });
+          // }
+          console.log(university);
+          if (university) {
+            this.filter.schools.select = university.schoolId;
+          } else {
+            this.filter.schools.select = '';
+          }
+        }
+      }
+    },
     searchByCoordinates() {
       if (this.currentPlace || this.filter.coordinator.address) {
-        console.log(this.filter.coordinator);
+        this.suggestUniversity();
         if (this.advanceSearch) {
           this.searchLikeFilter({
             filterProperties: this.filter,

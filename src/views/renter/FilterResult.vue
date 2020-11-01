@@ -3,7 +3,7 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-container fluid v-if="!isLoading" class="px-0">
+    <v-container fluid v-if="!isLoading && isSearchError !== 500" class="px-0">
       <v-row justify="center" style="background-color: #f3f4f9;">
         <v-col
           cols="12"
@@ -112,6 +112,11 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-container v-if="isSearchError === 500">
+      <v-row>
+        <span>Lỗi server</span>
+      </v-row>
+    </v-container>
   </div>
 </template>
 <script>
@@ -140,10 +145,10 @@ export default {
     },
   }),
   methods: {
-    onFilterSubmit() {
-      this.getFilterResult({ page: 1, size: 5 });
-      this.bottomSheet.show = false;
-    },
+    // onFilterSubmit() {
+    //   this.getFilterResult({ page: 1, size: 5 });
+    //   this.bottomSheet.show = false;
+    // },
     ...mapActions({
       getFilterResult: 'renter/filterResult/getFilterResult',
     }),
@@ -242,6 +247,9 @@ export default {
       const categories = this.$store.state.renter.filterResult.filter.categories.isLoading;
       const regulation = this.$store.state.renter.filterResult.filter.regulations.isLoading;
       return facilities || categories || regulation || result;
+    },
+    isSearchError() {
+      return this.$store.state.renter.filterResult.results.error;
     },
     searchValue() {
       return this.$route.params.searchValue;

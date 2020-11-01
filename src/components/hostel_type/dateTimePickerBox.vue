@@ -234,7 +234,6 @@ export default {
       this.$router.push(`/group/${this.groupId}`);
     },
     clickBooking() {
-      console.log(this.hasIncommingBooking);
       if (this.hasIncommingBooking) {
         this.messageAction = 'Để đặt lịch hẹn mới, vui lòng hủy lịch hẹn trước đó';
         this.warningDialog = true;
@@ -293,9 +292,9 @@ export default {
     id() {
       return {
         typeId: this.type.typeId,
-        groupId: this.group.groupId,
+        groupId: this.groupId,
         renterId: this.userState.renterId,
-        vendorId: this.group.vendorId,
+        vendorId: this.vendorId,
       };
     },
     hasIncommingBooking() {
@@ -315,17 +314,12 @@ export default {
     },
     getLastDeal() {
       let allMsg = this.filteredMessage;
-      console.log(allMsg);
       allMsg.sort((a, b) => a.createdAt - b.createdAt);
-      console.log(allMsg);
       allMsg = allMsg.filter(
         (m) => m.sender === 'renter' && m.bargain && m.bargain.status === 'accept',
       );
-      console.log(allMsg);
 
       if (allMsg && allMsg.length !== 0) {
-        console.log('thuy');
-        console.log(allMsg[allMsg.length - 1]);
         return allMsg[allMsg.length - 1];
       }
       return null;
