@@ -10,11 +10,11 @@
       min-height="80"
       max-height="160"
       id="top-bar"
-      style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
+      style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
     >
       <v-row height="80" class="d-flex pa-0">
-        <v-col cols="10" md="7" class="pa-0">
-          <v-row class="ma-0 d-flex align-center" style="height: 100%">
+        <v-col cols="10" md="8" class="pa-0">
+          <v-row class="ma-0 d-flex align-center" style="height: 100%;">
             <v-col cols="3" md="2" class="d-flex align-center">
               <router-link to="/">
                 <v-img
@@ -29,8 +29,8 @@
               </router-link>
             </v-col>
             <v-col cols="9" md="7" class="pl-10 pa-0 hidden-xs-only" v-show="!isSearchOptional">
-              <v-row class="pa-0 d-flex align-center">
-                <v-col cols="9" md="10" class="pl-2 searchBar d-flex align-center">
+              <v-row class="pa-0 d-flex align-center px-0">
+                <v-col cols="9" md="10" class="searchBar d-flex align-center">
                   <gmap-autocomplete
                     placeholder="Địa điểm, khu vực... bạn muốn ở gần"
                     class="col-11 gmap-input text-body-2 blue-grey--text"
@@ -66,7 +66,7 @@
           </v-row>
         </v-col>
 
-        <v-col cols="2" md="5" class="ml-auto d-flex justify-end align-center pr-5">
+        <v-col cols="2" md="4" class="ml-auto d-flex justify-end align-center pr-5">
           <v-btn
             color="#727cf5"
             light
@@ -74,7 +74,7 @@
             outlined
             rounded
             class="mr-5 font-weight-regular font-nunito hidden-sm-and-down"
-            style="letter-spacing: 0.01rem !important"
+            style="letter-spacing: 0.01rem !important;"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
           >
             <v-icon left>mdi-home-search</v-icon>Đăng ký tìm phòng
@@ -86,13 +86,13 @@
             class="hidden-sm-and-down navigation"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
           >
-            <v-icon style="font-size: 30px" color="#98a6ad" _color="#727cf5" class="navigation"
+            <v-icon style="font-size: 30px;" color="#98a6ad" _color="#727cf5" class="navigation"
               >mdi-account-clock-outline</v-icon
             >
           </v-btn>
           <v-btn icon depressed class="hidden-sm-and-down">
             <v-badge color="pink" dot overlap>
-              <v-icon style="font-size: 25px" color="#98a6ad">mdi mdi-bell-outline</v-icon>
+              <v-icon style="font-size: 25px;" color="#98a6ad">mdi mdi-bell-outline</v-icon>
             </v-badge>
           </v-btn>
           <v-btn
@@ -105,7 +105,7 @@
           >
             <v-icon left>settings</v-icon>Quản lý phòng trọ
           </v-btn>
-          <v-divider class="mx-3 hidden-xs-only" inset vertical style="height: 60px"></v-divider>
+          <v-divider class="mx-3 hidden-xs-only" inset vertical style="height: 60px;"></v-divider>
           <v-menu transition="slide-x-transition">
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
@@ -313,6 +313,8 @@ export default {
       this.address = `${place.name}-${place.formatted_address}`;
       this.searchValue = place.formatted_address;
       this.filter.coordinator.address = `${place.name}-${place.formatted_address}`;
+      // console.log(place.name, 'place');
+      // console.log(place.formatted_address, 'address');
       this.filter.coordinator.latitude = place.geometry.location.lat();
       this.filter.coordinator.longitude = place.geometry.location.lng();
     },
@@ -328,14 +330,127 @@ export default {
       this.filter.coordinator.latitude = '';
       this.filter.coordinator.longitude = '';
     },
+    similarity(s1, s2) {
+      let longer = s1;
+      let shorter = s2;
+      if (s1.length < s2.length) {
+        longer = s2;
+        shorter = s1;
+      }
+      const longerLength = longer.length;
+      if (longerLength === 0) {
+        return 1.0;
+      }
+      return (longerLength - this.editDistance(longer, shorter)) / parseFloat(longerLength);
+    },
+    editDistance(s1, s2) {
+      s1 = s1.toLowerCase(); // eslint-disable-line
+      s2 = s2.toLowerCase(); // eslint-disable-line
+
+      const costs = [];
+      for (let i = 0; i <= s1.length; i += 1) {
+        let lastValue = i;
+        for (let j = 0; j <= s2.length; j += 1) {
+          if (i === 0) {
+            costs[j] = j;
+          } else if (j > 0) {
+            let newValue = costs[j - 1];
+            if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
+              newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+            }
+            costs[j - 1] = lastValue;
+            lastValue = newValue;
+          }
+        }
+        if (i > 0) {
+          costs[s2.length] = lastValue;
+        }
+      }
+      return costs[s2.length];
+    },
+    getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+      console.log(lat1, lon1, lat2, lon2);
+      const R = 6371; // Radius of the earth in km
+      const dLat = this.deg2rad(lat2 - lat1); // deg2rad below
+      const dLon = this.deg2rad(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(this.deg2rad(lat1)) *
+          Math.cos(this.deg2rad(lat2)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const d = R * c; // Distance in km
+      return d;
+    },
+    // Converts numeric degrees to radians
+    deg2rad(deg) {
+      return deg * (Math.PI / 180);
+    },
+    suggestUniversity() {
+      if (this.currentPlace.name.toLowerCase().includes('đại học')) {
+        let universityName = this.currentPlace.name.toLowerCase();
+        universityName = universityName.includes('trường')
+          ? universityName.split('trường ')[1] // eslint-disable-line
+          : universityName; // eslint-disable-line
+        let district = this.currentPlace.address_components.find(
+          (a) => a.types[0] === 'administrative_area_level_2',
+        );
+        if (district) {
+          district = district.short_name.toLowerCase();
+          const university = this.universities.find((u) => {
+            const contain =
+              universityName.includes(u.schoolName.toLowerCase()) ||
+              u.schoolName.toLowerCase().includes(universityName);
+            const sameDistrict = u.address.districtName.toLowerCase().includes(district);
+            console.log(
+              this.getDistanceFromLatLonInKm(
+                this.currentPlace.geometry.location.lat(),
+                this.currentPlace.geometry.location.lng(),
+                u.latitude,
+                u.longitude,
+              ),
+            );
+            return contain && sameDistrict;
+            // console.log(contain);
+            // console.log(sameDistrict);
+            // if (contain && sameDistrict) {
+            //   console.log('vao');
+            //   return contain && sameDistrict;
+            // }
+            // const similarPoint = this.similarity(universityName, u.schoolName.toLowerCase()) >= 0.5;
+            // console.log(similarPoint);
+            // return similarPoint && sameDistrict;
+          });
+          // if (university) {
+          //   university = this.universities.map((u) => {
+          //     u.address, latitude;
+          //   });
+          // }
+          console.log(university);
+          if (university) {
+            this.filter.schools.select = university.schoolId;
+          } else {
+            this.filter.schools.select = '';
+          }
+        }
+      }
+    },
     searchByCoordinates() {
       if (this.filter.coordinator.latitude && this.filter.coordinator.longitude) {
-        this.searchByCoordinator({
-          lat: this.filter.coordinator.latitude,
-          long: this.filter.coordinator.longitude,
+        this.suggestUniversity();
+        // this.searchByCoordinator({
+        //   lat: this.filter.coordinator.latitude,
+        //   long: this.filter.coordinator.longitude,
+        // });
+        this.searchLikeFilter({
+          filterProperties: this.filter,
+          page: 1,
+          size: 5,
         });
         this.setSearchValue(this.coordinates);
         this.nameAddress = this.searchValue.split('-');
+        // todo
         this.$router.push(
           `/result/latitude=${this.filter.coordinator.latitude}&longitude=${this.filter.coordinator.longitude}`,
         );
@@ -357,6 +472,8 @@ export default {
       getUser: 'user/getUser',
       clearUserData: 'user/clearUserData',
       searchByCoordinator: 'renter/filterResult/searchByCoordinator',
+      searchLikeFilter: 'renter/filterResult/filterSearchByCoordinatorResult',
+      getAllSchools: 'renter/filterResult/getAllSchools',
     }),
     logout() {
       this.$cookies.remove('role');
@@ -380,6 +497,9 @@ export default {
     filter() {
       this.changeSearchValue();
       return this.$store.state.renter.filterResult.filter;
+    },
+    universities() {
+      return this.$store.state.renter.filterResult.filter.schools.items;
     },
     coordinator() {
       return this.$store.state.renter.filterResult.coordinator;
@@ -407,6 +527,9 @@ export default {
   },
   created() {
     this.getUser();
+    if (this.universities.length === 0) {
+      this.getAllSchools();
+    }
   },
 };
 </script>

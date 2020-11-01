@@ -70,6 +70,7 @@ const myState = {
     },
     page: 1,
     isLoading: false,
+    error: null,
   },
 };
 const mutationTypes = {
@@ -117,9 +118,12 @@ const mutations = {
   GET_FILTER_RESULT_SUCCESS: (state, results) => {
     state.results.data = results;
     state.results.isLoading = false;
+    state.results.error = null;
   },
-  GET_FILTER_RESULT_FAILURE: (state) => {
+  GET_FILTER_RESULT_FAILURE: (state, error) => {
+    state.results.data = null;
     state.results.isLoading = false;
+    state.results.error = error;
   },
   // categories
   GET_CATEGORIES_SUCCESS(state, inputData) {
@@ -197,7 +201,6 @@ const getters = {
         return result[0];
       }
     }
-    console.log(result);
     return result;
   },
 };
@@ -211,38 +214,35 @@ const actions = {
   setSearchValue({ commit }, searchValue) {
     commit(mutationTypes.SET_SEARCH_VALUE, searchValue);
   },
-  async getFilterResult({ commit, state }, params) {
-    // params contains page, size and address
-    commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
-    const data = {
-      around: state.filter.around.selects,
-      facility: state.filter.around.selects,
-      price: state.filter.price.select,
-      area: state.filter.area.select,
-    };
-    const convert = {
-      // minPrice: Number(data.price.split('-')[0]),
-      maxPrice: Number(data.price.split(' ')[0]) * 1000000,
-      minSuperficiality: data.area.split(' ')[0],
-      // maxSuperficiality: data.area[1],
-      minCapacity: 0,
-      maxCapacity: 10,
-      address: state.search.value,
-    };
-    let queryString = Object.keys(convert).map((key) => {
-      if (convert[key]) {
-        return `${key}=${convert[key]}&`;
-      }
-      return '';
-    });
-    queryString = `?${queryString.join('')}size=${params.size}&page=${params.page}`;
-    const res = await window.axios.get(`/api/v1/types${queryString}`);
-    if (res.status >= 200 && res.status <= 299) {
-      commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
-    } else {
-      commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
-    }
-  },
+  // async getFilterResult({ commit, state }, params) {
+  //   commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
+  //   const data = {
+  //     around: state.filter.around.selects,
+  //     facility: state.filter.around.selects,
+  //     price: state.filter.price.select,
+  //     area: state.filter.area.select,
+  //   };
+  //   const convert = {
+  //     maxPrice: Number(data.price.split(' ')[0]) * 1000000,
+  //     minSuperficiality: data.area.split(' ')[0],
+  //     minCapacity: 0,
+  //     maxCapacity: 10,
+  //     address: state.search.value,
+  //   };
+  //   let queryString = Object.keys(convert).map((key) => {
+  //     if (convert[key]) {
+  //       return `${key}=${convert[key]}&`;
+  //     }
+  //     return '';
+  //   });
+  //   queryString = `?${queryString.join('')}size=${params.size}&page=${params.page}`;
+  //   const res = await window.axios.get(`/api/v1/types${queryString}`);
+  //   if (res.status >= 200 && res.status <= 299) {
+  //     commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
+  //   } else {
+  //     commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
+  //   }
+  // },
   async searchByCoordinator({ commit }, params) {
     // params = {lat, long}
     try {
@@ -254,7 +254,7 @@ const actions = {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
       }
     } catch (error) {
-      commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
+      commit(mutationTypes.GET_FILTER_RESULT_FAILURE, error);
     }
   },
   async filterSearchByCoordinatorResult({ commit }, params) {
@@ -305,17 +305,18 @@ const actions = {
           const minSuperficiality = params.filterProperties.minArea.select.split(' ')[0];
           minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
         }
-        url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}
-        ${minSuperficialityStr}${schoolStr}${hometownStr}&page=${params.page}&size=${params.size}&sortBy=score`;
+        url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=${params.page}&size=${params.size}&sortBy=score`; // eslint-disable-line
       }
       window.$cookies.set('searchValue', url);
 
       const res = await window.axios.get(url);
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_FILTER_RESULT_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.GET_FILTER_RESULT_FAILURE, res.status);
       }
     } catch (error) {
-      commit(mutationTypes.GET_FILTER_RESULT_FAILURE);
+      commit(mutationTypes.GET_FILTER_RESULT_FAILURE, 500);
     }
   },
   async getAllFacilities({ commit }) {
