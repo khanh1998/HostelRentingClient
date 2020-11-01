@@ -152,7 +152,11 @@
                   >{{ price }} {{ priceUnit }}</span
                 >
                 <span class="font-nunito text-warning text-subtitle-1 ml-auto" v-if="lastDeal">
-                  <v-icon color="#ffbc00">mdi mdi-arrow-down-bold</v-icon>
+                  <v-icon color="#ffbc00">{{
+                    Number(price) >= Number(lastDeal.bargain.newPrice)
+                      ? 'mdi mdi-arrow-down-bold'
+                      : 'mdi mdi-arrow-up-bold'
+                  }}</v-icon>
                   {{ lastDeal.bargain.newPrice }} {{ priceUnit }}
                 </span>
                 <span class="font-nunito text-warning text-subtitle-1 ml-2" v-else>

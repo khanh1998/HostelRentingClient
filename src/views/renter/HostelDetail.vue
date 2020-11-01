@@ -330,7 +330,16 @@
             <ratingBox class="mt-5" :rating="{ average: 3.5, total: 30 }" />
           </v-col>
         </v-row> -->
-        <v-row class="mt-10">
+        <v-row
+          class="mt-10"
+          v-if="
+            renter &&
+            (renter.school || renter.hometown) &&
+            suggestedTypes.data &&
+            suggestedTypes.data.types &&
+            suggestedTypes.data.types.length > 0
+          "
+        >
           <v-col cols="12" md="8">
             <div class="d-flex">
               <span
@@ -352,8 +361,8 @@
               <div class="line-after" :style="{ width: '15%' }" />
               <div class="line-before" :style="{ width: '85%' }" />
             </div>
-            {{ renter }}
-            <!-- <SuggestionList :list="types" class="mt-5" /> -->
+            <!-- {{ suggestedTypes }} -->
+            <SuggestionList :list="suggestedTypes.data.types" class="mt-5" />
           </v-col>
         </v-row>
         <!-- <v-row class="mt-10">
@@ -397,7 +406,7 @@ import facilitiesBox from '../../components/hostel_type/facilitiesBox.vue';
 import servicesBox from '../../components/hostel_type/servicesBox.vue';
 import regulationsBox from '../../components/hostel_type/regulationsBox.vue';
 // import ratingBox from '../../components/hostel_type/ratingBox.vue';
-// import SuggestionList from '../../components/hostel_type/SuggestionList.vue';
+import SuggestionList from '../../components/hostel_type/SuggestionList.vue';
 // import GroupHostelTypes from '../../components/hostel_type/GroupHostelTypes.vue';
 import LoginBox from '../../components/login/loginBox.vue';
 
@@ -414,7 +423,7 @@ export default {
     facilitiesBox,
     regulationsBox,
     // ratingBox,
-    // SuggestionList,
+    SuggestionList,
     // GroupHostelTypes,
     LoginBox,
   },
@@ -432,6 +441,7 @@ export default {
       getAllHostelTypes: 'renter/hostelGroup/getAllHostelTypes',
       getHostelGroup: 'renter/hostelGroup/getHostelGroup',
       getUtilities: 'renter/hostelGroup/getNearByUtilities',
+      getSuggestedTypes: 'renter/hostelType/getSuggestedTypes',
     }),
 
     getNearByUtilities() {
@@ -509,7 +519,7 @@ export default {
       const type = this.$store.state.renter.hostelType.hostelType.isLoading;
       const group = this.$store.state.renter.hostelType.hostelGroup.isLoading;
       const utilities = this.$store.state.renter.hostelGroup.utilities.isLoading;
-      const suggestionList = this.$store.state.renter.hostelGroup.utilities.isLoading;
+      const suggestionList = this.$store.state.renter.hostelType.suggestedTypes.isLoading;
       const types = this.$store.state.renter.hostelGroup.hostelTypes.isLoading;
       const statistic = this.$store.state.renter.discovery.stats.district.isLoading;
       // const loadingBookings = this.$store.state.user.bookings.isLoading;
@@ -545,7 +555,17 @@ export default {
       return data;
     },
     renter() {
-      return this.$store.state.user.user.data;
+      const renter = this.$store.state.user.user.data;
+      if (renter) {
+        // universityId: this.renter.school.schoolId,
+        // provinceId: this.renter.hometown.provinceId,
+        this.getSuggestedTypes({
+          universityId: renter.school.schoolId,
+          provinceId: renter.hometown.provinceId,
+          size: 20,
+        });
+      }
+      return renter;
     },
     loginRouteObject() {
       return {
@@ -619,6 +639,10 @@ export default {
     },
     compatriot() {
       return window.$cookies.get('compatriot');
+    },
+    suggestedTypes() {
+      console.log(this.$store.state.renter.hostelType.suggestedTypes);
+      return this.$store.state.renter.hostelType.suggestedTypes;
     },
   },
   created() {

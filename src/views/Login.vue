@@ -273,9 +273,7 @@ export default {
       this.$router.push('/register');
     },
   },
-  created() {
-    console.log(this.$route);
-  },
+  created() {},
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       vm.prevRoute = from; // eslint-disable-line
