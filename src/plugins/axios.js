@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import axios from 'axios';
-import checkIfTokenNeedsRefresh from '../utils/utils';
+import { checkIfTokenNeedsRefresh, updateToken } from '../utils/utils';
 import checkForUpdates from '../utils/updates';
 import constant from '../config/constant';
 
@@ -9,7 +9,7 @@ axios.defaults.headers.common['Accept-Language'] =
   JSON.parse(localStorage.getItem('locale')) || 'en';
 
 axios.interceptors.request.use(
-  (config) => {
+  async (config) => {
     const myConfig = { ...config };
     // Do something before request is sent
     // If request is different than any of the URLS in urlsExcludedForBearerHeader
@@ -19,6 +19,9 @@ axios.interceptors.request.use(
       '/api/v1/register',
       `${window.location.origin}/version.json`,
     ];
+    if (checkIfTokenNeedsRefresh() === true) {
+      await updateToken();
+    }
     if (urlsExcludedForBearerHeader.indexOf(myConfig.url) === -1) {
       myConfig.headers.Authorization = `Bearer ${window.$cookies.get('firebaseIdToken')}`;
     }

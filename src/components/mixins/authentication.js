@@ -4,7 +4,9 @@ import firebase from '../../config/firebase';
 const { auth } = firebase;
 
 const authenticationMixins = {
-  data: () => ({}),
+  data: () => ({
+    loging: false,
+  }),
   computed: {
     userData() {
       return this.$store.state.user.user.data;
@@ -36,7 +38,8 @@ const authenticationMixins = {
         await auth.signInWithCustomToken(jwtToken);
         const currentUser = await auth.currentUser;
         console.log('firebase user data:', currentUser);
-        const idToken = currentUser.getIdToken();
+        const idToken = await currentUser.getIdToken(true);
+        console.log(idToken);
         const { refreshToken } = currentUser;
         return { idToken, refreshToken };
       } catch (error) {
@@ -74,9 +77,7 @@ const authenticationMixins = {
               this.$router.push('/vendor');
               break;
             case 'renters':
-              if (preUrl) {
-                this.$router.push(preUrl || '/');
-              }
+              this.$router.push(preUrl || '/');
               break;
             case 'admin':
               this.$router.push('/admin');

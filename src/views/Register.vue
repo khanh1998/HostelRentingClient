@@ -413,6 +413,8 @@ import { mapActions } from 'vuex';
 import authenticationMixins from '../components/mixins/authentication';
 import firebase from '../config/firebase';
 
+const { auth, authNamespace } = firebase;
+
 export default {
   name: 'register',
   mixins: [authenticationMixins],
@@ -469,8 +471,7 @@ export default {
       //
       const { appVerifier } = this;
       //
-      firebase
-        .auth()
+      auth
         .signInWithPhoneNumber(phoneNumber, appVerifier)
         .then((confirmationResult) => {
           window.confirmationResult = confirmationResult;
@@ -508,7 +509,7 @@ export default {
     },
     initReCaptcha() {
       setTimeout(() => {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        window.recaptchaVerifier = new authNamespace.RecaptchaVerifier('recaptcha-container', {
           size: 'invisible',
           callback(response) {
             console.log(response);

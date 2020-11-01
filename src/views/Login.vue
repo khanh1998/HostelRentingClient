@@ -170,7 +170,6 @@ export default {
         return pattern.test(value) || 'Số điện thoại không hợp lệ';
       },
     },
-    loging: false,
     valid: {
       usernamePassword: true,
     },
