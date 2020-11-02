@@ -1,17 +1,17 @@
 <template>
-  <div class="d-flex justify-center align-center px-3" style="height: 100%;">
+  <div class="d-flex justify-center align-center px-3" style="height: 100%">
     <v-menu left :offset-y="true" :offset-x="true" @blur="this.notifications = []">
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs" v-on="on" icon class="hidden-sm-and-down">
           <v-badge
             color="red"
-            :content="notifications.length"
+            :content="messages.length"
             bordered
             left
             overlap
             v-bind="attrs"
             v-on="on"
-            v-if="notifications.length !== 0"
+            v-if="messages.length !== 0"
           >
             <v-icon color="#727cf5">mdi-bell-outline</v-icon>
           </v-badge>
@@ -28,20 +28,22 @@
       >
         <v-list-item-group color="primary">
           <v-list-item
-            v-for="(item, i) in notifications"
+            v-for="(item, i) in messages"
             :key="i"
             class="mb-2 pt-2"
             style="backgroundcolor: #f2f2f2"
-            @click="$emit('clickedItem', getItemSelected(item))"
           >
             <v-list-item-avatar>
-              <v-img :src="item.avatar"></v-img>
+              <v-img :src="item.data.icon"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title style="fontsize: 16px" class="py-1">
-                {{ item.title }}
+                {{ item.data.title }}
               </v-list-item-title>
-              <v-list-item-subtitle>Đã đặt lịch hẹn ngày {{ item.message }}</v-list-item-subtitle>
+              <v-list-item-subtitle>
+                <!-- {{ new Date(item.data.time).toLocaleString('vi') }} -->
+                {{ item.data.body }}
+              </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -113,22 +115,6 @@ export default {
       clearUserData: 'user/clearUserData',
       getNewCommingBooking: 'user/getOneBooking',
     }),
-    addNewNotificaton(payload) {
-      const noti = {
-        avatar: payload.notification.icon,
-        message: payload.notification.body,
-        title: payload.data ? payload.data.renterName : 'Bạn có thông báo mới.',
-      };
-      this.notifications.unshift(noti);
-    },
-    receivePayload(payload) {
-      console.log(payload);
-      if (payload.data) {
-        this.getNewCommingBooking(payload.data.bookingId);
-        this.addNewNotificaton(payload);
-      }
-    },
-    changePage() {},
     getAvatarTitle(name) {
       return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
     },
@@ -137,24 +123,17 @@ export default {
     this.registerMessaging();
   },
   computed: {
-    listBookChange() {
-      return this.items.filter((items) => {
-        if (items.book) {
-          return true;
-        }
-        return false;
-      });
-    },
     user() {
       return this.$store.state.user.user.data;
     },
     isLoadingUser() {
       return this.$store.state.user.user.isLoading;
     },
+    messages() {
+      return this.$store.state.user.notifications.data;
+    },
   },
   data: () => ({
-    notifications: [],
-    items: [],
     infoMenu: [
       {
         title: 'Thông tin',

@@ -42,11 +42,9 @@
       </router-link> -->
       <v-app-bar-nav-icon @click.stop="primaryDrawer.model = !primaryDrawer.model">
       </v-app-bar-nav-icon>
-      <v-toolbar-title
-        class="font-nunito text-gray font-weight-bold"
-        style="font-size: 1.125rem;"
-        >{{ routeName }}</v-toolbar-title
-      >
+      <v-toolbar-title class="font-nunito text-gray font-weight-bold" style="font-size: 1.125rem">{{
+        routeName
+      }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <!-- <v-btn icon large @click.stop="chatDrawer.model = !chatDrawer.model">
         <v-icon color="#727cf5">mdi-chat-processing</v-icon>
@@ -72,9 +70,11 @@
 import { mapActions } from 'vuex';
 import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
 import notifyAndProfile from '../components/vendor/overview/NotifyAndProfile.vue';
+import authenticationMixins from '../components/mixins/authentication';
 
 export default {
   name: 'VendorView',
+  mixins: [authenticationMixins],
   components: {
     sideMenuBar,
     notifyAndProfile,
@@ -102,15 +102,6 @@ export default {
       clearUserData: 'user/clearUserData',
       updateUser: 'user/updateUser',
     }),
-    logout() {
-      this.$cookies.remove('role');
-      this.$cookies.remove('userId');
-      this.$cookies.remove('jwt');
-      this.$cookies.remove('firebaseIdToken');
-      this.$cookies.remove('messagingToken');
-      this.clearUserData();
-      this.$router.push('/');
-    },
   },
 };
 </script>

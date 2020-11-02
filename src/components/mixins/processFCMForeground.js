@@ -7,13 +7,13 @@ const { messaging } = firebase;
 const processFCMForegroundMixins = {
   data: () => ({
     newMessage: null,
-    messages: [],
   }),
   methods: {
     ...mapActions({
       getNewCommingBooking: 'user/getOneBooking',
       updateBookingStatusLocal: 'user/updateBookingStatusLocal',
       updateContractLocal: 'user/updateContractLocal',
+      addNotificationLocal: 'user/addNotificationLocal',
     }),
     registerMessaging() {
       if (messaging) {
@@ -23,16 +23,18 @@ const processFCMForegroundMixins = {
     receiveNewMessage(payload) {
       console.log(payload);
       this.newMessage = payload;
-      this.messages.push(this.newMessage);
+      this.addNotificationLocal(payload);
       switch (this.newMessage.data.action) {
         case actions.NEW_BOOKING:
-          this.getNewCommingBooking(Number(this.newMessage.data.bookingId));
+          this.getNewCommingBooking(Number(this.newMessage.data.id));
           break;
         case actions.SCAN_BOOKING: // vendor side
-          this.updateBookingStatusLocal(Number(this.newMessage.data.bookingId));
+          this.updateBookingStatusLocal(Number(this.newMessage.data.id));
           break;
         case actions.SCAN_CONTRACT: // vendor side
           this.updateContractLocal(Number(this.newMessage.data.contractId));
+          break;
+        case actions.NEW_MESSAGE:
           break;
         default:
           console.log('default case on receive new notification');
@@ -40,6 +42,7 @@ const processFCMForegroundMixins = {
       }
     },
   },
+  created() {},
 };
 
 export default processFCMForegroundMixins;

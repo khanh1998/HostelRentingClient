@@ -2,11 +2,11 @@
   <v-app>
     <v-main>
       <v-container class="fill-height d-flex justify-center align-center">
-        <v-row class="d-flex justify-center align-center red" style="position: relative;">
-          <v-col cols="11" xl="4" lg="4" sm="8" md="4" class="pa-0" style="position: absolute;">
+        <v-row class="d-flex justify-center align-center red" style="position: relative">
+          <v-col cols="11" xl="4" lg="4" sm="8" md="4" class="pa-0" style="position: absolute">
             <!-- account -->
             <v-card
-              style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
+              style="width: 100%; box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
               class="pb-4"
             >
               <div
@@ -28,7 +28,7 @@
               <v-card-text class="d-flex flex-column">
                 <span
                   class="align-self-center font-weight-bold font-nunito brow-text"
-                  style="font-size: 1.125rem;"
+                  style="font-size: 1.125rem"
                   >ĐĂNG NHẬP</span
                 >
                 <v-form
@@ -59,14 +59,12 @@
                     :rules="[rules.required, rules.password.minLength]"
                     hint="Ít nhất 6 kí tự"
                   ></v-text-field>
-                  <span
-                    class="red--text font-nunito"
-                    style="font-size: 0.9rem; font-weight: 400;"
-                    >{{ message }}</span
-                  >
+                  <span class="red--text font-nunito" style="font-size: 0.9rem; font-weight: 400">{{
+                    message
+                  }}</span>
                   <span
                     class="ml-auto font-nunito text-muted"
-                    style="font-size: 0.75rem; font-weight: 400;"
+                    style="font-size: 0.75rem; font-weight: 400"
                     >Quên mật khẩu</span
                   >
                   <v-btn
@@ -81,7 +79,7 @@
                 </v-form>
                 <span
                   class="font-nunito text-gray align-self-center mt-1"
-                  style="font-size: 16px !important;"
+                  style="font-size: 16px !important"
                   >Đăng nhập bằng</span
                 >
               </v-card-text>
@@ -150,13 +148,11 @@
   </v-app>
 </template>
 <script>
-import { mapActions } from 'vuex';
-import firebase from '../config/firebase';
-
-const { auth } = firebase;
+import authenticationMixins from '../components/mixins/authentication';
 
 export default {
   name: 'login',
+  mixins: [authenticationMixins],
   data: () => ({
     prevRoute: null,
     phone: '',
@@ -175,7 +171,6 @@ export default {
         return pattern.test(value) || 'Số điện thoại không hợp lệ';
       },
     },
-    loging: false,
     valid: {
       usernamePassword: true,
     },
@@ -183,24 +178,12 @@ export default {
       usernamePassword: false,
     },
   }),
-  computed: {
-    isLoging() {
-      return this.$store.state.user.user.isLoading;
-    },
-    userData() {
-      return this.$store.state.user.user.data;
-    },
-    loginSuccess() {
-      return this.$store.state.user.user.success;
-    },
-  },
+  computed: {},
   methods: {
-    ...mapActions({
-      loginRequest: 'user/login',
-    }),
     validateFormUsernamePassword() {
       this.$refs.formUsernamePassword.validate();
     },
+<<<<<<< HEAD
     async getTokenIdFromFirebase(jwtToken) {
       try {
         await auth.signInWithCustomToken(jwtToken);
@@ -269,6 +252,8 @@ export default {
       await this.afterLogin();
       this.loging = false;
     },
+=======
+>>>>>>> fix/firebase-custom-auth
     register() {
       this.$router.push('/register');
     },

@@ -13,7 +13,7 @@
           <div v-if="scanQRSuccess" class="d-flex flex-column justify-center align-center">
             <p><v-icon color="green">done_outline</v-icon> Xác nhận gặp mặt thành công!</p>
             <p>Bạn có muốn tạo hợp đồng ngay?</p>
-            <v-btn :to="`/vendor/contract?bookingId=${Number(newMessage.data.bookingId)}`">
+            <v-btn :to="`/vendor/contract?bookingId=${Number(newMessage.data.id)}`">
               <v-icon>far fa-handshake</v-icon> Tạo hợp đồng
             </v-btn>
           </div>
@@ -79,8 +79,9 @@
             class="text-muted font-nunito d-flex"
             style="font-weight: 400 !important; color: #98a6ad !important; font-size: 0.9375rem"
             ><span>{{ getDateString(Number(booking.meetTime)) }}</span>
-            <span class="ml-auto">{{ getTimeString(Number(booking.meetTime)) }}</span></span
-          >
+            <span class="ml-auto">{{ getTimeString(Number(booking.meetTime)) }}</span>
+            <v-badge color="red" content="Mới!" bordered left v-if="booking.new"> </v-badge>
+          </span>
           <v-list-item dense class="pa-0">
             <v-list-item-avatar
               color="#727cf5"

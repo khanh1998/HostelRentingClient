@@ -39,4 +39,5 @@ export default {
   store,
   messaging,
   auth,
+  authNamespace: firebase.auth,
 };
