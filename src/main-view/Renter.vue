@@ -139,6 +139,9 @@ export default {
 .text-black {
   color: #212121;
 }
+.text-price {
+  color: #fd7e14;
+}
 .text-info {
   color: #39afd1 !important;
 }

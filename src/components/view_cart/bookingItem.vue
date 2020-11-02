@@ -1,7 +1,7 @@
 <template>
   <v-card class="mb-2">
     <v-row no-gutters justify="center">
-      <v-dialog v-model="dialog" scrollable max-width="500">
+      <v-dialog v-model="detailDialog" scrollable max-width="500">
         <v-card>
           <div class="d-flex py-3 align-center px-4">
             <div>
@@ -21,7 +21,7 @@
               </span>
             </div>
             <v-spacer></v-spacer>
-            <v-btn icon @click="dialog = false"><v-icon small>close</v-icon></v-btn>
+            <v-btn icon @click="detailDialog = false"><v-icon small>close</v-icon></v-btn>
           </div>
 
           <v-divider></v-divider>
@@ -129,15 +129,118 @@
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions class="d-flex justify-start pa-4">
-            <v-btn class="btn btn-danger font-nunito" @click="dialog = false">
+            <v-btn class="btn btn-danger font-nunito">
               Báo cáo
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn class="btn btn-light elevation-0 font-nunito" @click="dialog = false">
+            <v-btn class="btn btn-light elevation-0 font-nunito" @click="detailDialog = false">
               Đóng
             </v-btn>
-            <v-btn class="btn btn-primary font-nunito" @click="dialog = false">
+            <v-btn
+              class="btn btn-primary font-nunito"
+              v-if="booking.status === 'DONE'"
+              @click="feedbackDialog = true"
+            >
               Đánh giá phòng trọ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog
+        v-model="feedbackDialog"
+        max-width="80%"
+        transition="dialog-bottom-transition"
+        scrollable
+      >
+        <v-card>
+          <v-row class="d-flex px-4 py-3 align-center justify-space-between ma-0">
+            <span class="font-nunito text-gray dialog-title" style="font-size: 1.125rem !important;"
+              >Đánh giá phòng trọ
+            </span>
+            <v-btn icon @click="feedbackDialog = false"
+              ><v-icon small color="#6c757d">close</v-icon></v-btn
+            >
+          </v-row>
+
+          <v-divider></v-divider>
+          <v-card-text style="height: 320px;" class="py-0">
+            <v-row class="ma-0 d-flex justify-space-between">
+              <v-col cols="12" md="5" class="pb-0">
+                <v-row>
+                  <v-col cols="3" class="d-flex flex-column justify-start">
+                    <span class="text-gray size9rem font-nunito">Nhà trọ:</span>
+                  </v-col>
+                  <v-col cols="9" class="d-flex flex-column justify-start">
+                    <span class="size9rem font-nunito">{{ booking.group.groupName }}</span>
+                    <span class="size9rem font-nunito text-muted size-caption"
+                      >{{ booking.group.buildingNo }} {{ booking.group.address.streetName }},
+                      {{ booking.group.address.wardName }},
+                      {{ booking.group.address.districtName }},
+                      {{ booking.group.address.provinceName }}</span
+                    >
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="3" class="d-flex flex-column justify-start">
+                    <span class="text-gray size9rem font-nunito">Phòng trọ:</span>
+                  </v-col>
+                  <v-col cols="9" class="d-flex flex-column justify-start">
+                    <span
+                      class="size9rem font-nunito text-primary-hover cursor"
+                      @click="getType()"
+                      >{{ booking.type.title }}</span
+                    >
+                    <span class="size9rem font-nunito text-price"
+                      >{{ booking.deal ? booking.deal.offeredPrice : booking.type.price }}
+                      {{ booking.type.priceUnit }}</span
+                    >
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="3" class="d-flex flex-column justify-start">
+                    <span class="text-gray size9rem font-nunito">Chủ trọ:</span>
+                  </v-col>
+                  <v-col cols="9" class="d-flex flex-column justify-start">
+                    <span class="size9rem font-nunito">{{ booking.vendor.username }}</span>
+                    <span class="size9rem font-nunito text-muted">{{ booking.vendor.phone }}</span>
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col cols="12" md="6" class="pb-0">
+                <v-row>
+                  <v-col cols="12" class="d-flex flex-column align-center">
+                    <span class="text-primary font-weight-bold size9rem font-nunito">ĐÁNH GIÁ</span>
+                  </v-col>
+                  <v-col cols="12" class="d-flex flex-column align-center pt-0">
+                    <v-rating
+                      v-model="rating"
+                      background-color="#ced4da"
+                      color="#fd7e14"
+                      large
+                    ></v-rating>
+                  </v-col>
+                  <v-col cols="12" class="d-flex flex-column pb-0 justify-center">
+                    <v-textarea
+                      full-width
+                      filled
+                      name="input-7-4"
+                      label="Viết nhận xét của bạn ở đây"
+                      v-model="comment"
+                      class="font-nunito size9rem text-gray"
+                    ></v-textarea>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions class="d-flex justify-start pa-4">
+            <v-spacer></v-spacer>
+            <v-btn class="btn btn-light elevation-0 font-nunito" @click="feedbackDialog = false">
+              Đóng
+            </v-btn>
+            <v-btn class="btn btn-primary font-nunito" v-if="booking.status === 'DONE'">
+              Gửi
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -235,7 +338,7 @@
                 <v-list-item
                   style="min-height: 20px !important;"
                   class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                  @click="dialog = true"
+                  @click="detailDialog = true"
                 >
                   <v-icon color="#6c757d" class="mr-2 item-hover" size="20"
                     >mdi-home-map-marker</v-icon
@@ -252,9 +355,11 @@
                 <v-list-item
                   style="min-height: 20px !important;"
                   class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                  v-if="booking.status === 'DONE'"
+                  @click="feedbackDialog = true"
                 >
                   <v-icon color="#6c757d" class="mr-2 item-hover" size="20">mdi-comment-eye</v-icon>
-                  <v-list-item-title class="item-hover">Nhận xét</v-list-item-title>
+                  <v-list-item-title class="item-hover">Đánh giá</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-card>
@@ -297,7 +402,7 @@
               <v-list-item
                 style="min-height: 20px !important;"
                 class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                @click="dialog = true"
+                @click="detailDialog = true"
               >
                 <v-icon color="#6c757d" class="mr-2 item-hover" size="20"
                   >mdi-home-map-marker</v-icon
@@ -314,9 +419,11 @@
               <v-list-item
                 style="min-height: 20px !important;"
                 class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                v-if="booking.status === 'DONE'"
+                @click="feedbackDialog = true"
               >
                 <v-icon color="#6c757d" class="mr-2 item-hover" size="20">mdi-comment-eye</v-icon>
-                <v-list-item-title class="item-hover">Nhận xét</v-list-item-title>
+                <v-list-item-title class="item-hover">Đánh giá</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -335,7 +442,13 @@ export default {
   props: ['booking'],
   components: { GoogleMapsDirection },
   data: () => ({
-    dialog: false,
+    detailDialog: false,
+    feedbackDialog: false,
+    feedbackTabs: {
+      index: 1,
+    },
+    rating: 0,
+    comment: '',
     mapDialog: false,
   }),
   computed: {
@@ -344,19 +457,6 @@ export default {
     },
     group() {
       return this.booking.group;
-    },
-    ward() {
-      const { streetId } = this.group.street;
-      const res = this.$store.getters['renter/common/getWardByStreetId'](streetId);
-      return res;
-    },
-    district() {
-      const { wardId } = this.ward;
-      return this.$store.getters['renter/common/getDistrictByWardId'](wardId);
-    },
-    province() {
-      const { districtId } = this.district;
-      return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
     },
   },
   methods: {
@@ -411,9 +511,7 @@ export default {
       window.open(url, '_blank');
     },
   },
-  created() {
-    this.getProvinces();
-  },
+  created() {},
 };
 </script>
 <style scoped>
@@ -470,5 +568,11 @@ export default {
 }
 .title-content {
   font-size: 0.9rem !important;
+}
+</style>
+<style>
+.feedback .v-tabs-bar {
+  height: 40px;
+  border-bottom: 2px solid rgba(152, 166, 173, 0.2);
 }
 </style>

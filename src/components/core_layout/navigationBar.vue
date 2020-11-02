@@ -313,8 +313,6 @@ export default {
       this.address = `${place.name}-${place.formatted_address}`;
       this.searchValue = place.formatted_address;
       this.filter.coordinator.address = `${place.name}-${place.formatted_address}`;
-      // console.log(place.name, 'place');
-      // console.log(place.formatted_address, 'address');
       this.filter.coordinator.latitude = place.geometry.location.lat();
       this.filter.coordinator.longitude = place.geometry.location.lng();
     },
@@ -330,46 +328,7 @@ export default {
       this.filter.coordinator.latitude = '';
       this.filter.coordinator.longitude = '';
     },
-    similarity(s1, s2) {
-      let longer = s1;
-      let shorter = s2;
-      if (s1.length < s2.length) {
-        longer = s2;
-        shorter = s1;
-      }
-      const longerLength = longer.length;
-      if (longerLength === 0) {
-        return 1.0;
-      }
-      return (longerLength - this.editDistance(longer, shorter)) / parseFloat(longerLength);
-    },
-    editDistance(s1, s2) {
-      s1 = s1.toLowerCase(); // eslint-disable-line
-      s2 = s2.toLowerCase(); // eslint-disable-line
-
-      const costs = [];
-      for (let i = 0; i <= s1.length; i += 1) {
-        let lastValue = i;
-        for (let j = 0; j <= s2.length; j += 1) {
-          if (i === 0) {
-            costs[j] = j;
-          } else if (j > 0) {
-            let newValue = costs[j - 1];
-            if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
-              newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
-            }
-            costs[j - 1] = lastValue;
-            lastValue = newValue;
-          }
-        }
-        if (i > 0) {
-          costs[s2.length] = lastValue;
-        }
-      }
-      return costs[s2.length];
-    },
     getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-      console.log(lat1, lon1, lat2, lon2);
       const R = 6371; // Radius of the earth in km
       const dLat = this.deg2rad(lat2 - lat1); // deg2rad below
       const dLon = this.deg2rad(lon2 - lon1);
@@ -403,31 +362,14 @@ export default {
               universityName.includes(u.schoolName.toLowerCase()) ||
               u.schoolName.toLowerCase().includes(universityName);
             const sameDistrict = u.address.districtName.toLowerCase().includes(district);
-            console.log(
-              this.getDistanceFromLatLonInKm(
-                this.currentPlace.geometry.location.lat(),
-                this.currentPlace.geometry.location.lng(),
-                u.latitude,
-                u.longitude,
-              ),
+            const distance = this.getDistanceFromLatLonInKm(
+              this.currentPlace.geometry.location.lat(),
+              this.currentPlace.geometry.location.lng(),
+              u.latitude,
+              u.longitude,
             );
-            return contain && sameDistrict;
-            // console.log(contain);
-            // console.log(sameDistrict);
-            // if (contain && sameDistrict) {
-            //   console.log('vao');
-            //   return contain && sameDistrict;
-            // }
-            // const similarPoint = this.similarity(universityName, u.schoolName.toLowerCase()) >= 0.5;
-            // console.log(similarPoint);
-            // return similarPoint && sameDistrict;
+            return (contain && sameDistrict) || distance < 0.2;
           });
-          // if (university) {
-          //   university = this.universities.map((u) => {
-          //     u.address, latitude;
-          //   });
-          // }
-          console.log(university);
           if (university) {
             this.filter.schools.select = university.schoolId;
           } else {
@@ -438,16 +380,20 @@ export default {
     },
     searchByCoordinates() {
       if (this.filter.coordinator.latitude && this.filter.coordinator.longitude) {
-        this.suggestUniversity();
-        // this.searchByCoordinator({
-        //   lat: this.filter.coordinator.latitude,
-        //   long: this.filter.coordinator.longitude,
-        // });
+        const filterValue = this.filter;
+        filterValue.around.selects = [];
+        filterValue.facility.select = [];
+        filterValue.price.disable = false;
+        filterValue.minArea.select = '';
+        filterValue.schools.select = '';
+        filterValue.hometown.select = '';
+        filterValue.regulations.select = [];
         this.searchLikeFilter({
-          filterProperties: this.filter,
+          filterProperties: filterValue,
           page: 1,
           size: 5,
         });
+        this.suggestUniversity();
         this.setSearchValue(this.coordinates);
         this.nameAddress = this.searchValue.split('-');
         // todo
@@ -463,7 +409,6 @@ export default {
         lat: '',
         long: '',
       });
-      console.log(this.filter);
       this.$router.push('/filter');
     },
     ...mapActions({

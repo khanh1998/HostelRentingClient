@@ -519,6 +519,24 @@ export default {
     changeMaxPrice() {
       if (this.filter.price.max < 50) this.filter.price.max += 5;
     },
+    getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Radius of the earth in km
+      const dLat = this.deg2rad(lat2 - lat1); // deg2rad below
+      const dLon = this.deg2rad(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(this.deg2rad(lat1)) *
+          Math.cos(this.deg2rad(lat2)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const d = R * c; // Distance in km
+      return d;
+    },
+    // Converts numeric degrees to radians
+    deg2rad(deg) {
+      return deg * (Math.PI / 180);
+    },
     suggestUniversity() {
       if (this.currentPlace.name.toLowerCase().includes('đại học')) {
         let universityName = this.currentPlace.name.toLowerCase();
@@ -535,23 +553,14 @@ export default {
               universityName.includes(u.schoolName.toLowerCase()) ||
               u.schoolName.toLowerCase().includes(universityName);
             const sameDistrict = u.address.districtName.toLowerCase().includes(district);
-            return contain && sameDistrict;
-            // console.log(contain);
-            // console.log(sameDistrict);
-            // if (contain && sameDistrict) {
-            //   console.log('vao');
-            //   return contain && sameDistrict;
-            // }
-            // const similarPoint = this.similarity(universityName, u.schoolName.toLowerCase()) >= 0.5;
-            // console.log(similarPoint);
-            // return similarPoint && sameDistrict;
+            const distance = this.getDistanceFromLatLonInKm(
+              this.currentPlace.geometry.location.lat(),
+              this.currentPlace.geometry.location.lng(),
+              u.latitude,
+              u.longitude,
+            );
+            return (contain && sameDistrict) || distance < 0.2;
           });
-          // if (university) {
-          //   university = this.universities.map((u) => {
-          //     u.address, latitude;
-          //   });
-          // }
-          console.log(university);
           if (university) {
             this.filter.schools.select = university.schoolId;
           } else {
@@ -562,19 +571,22 @@ export default {
     },
     searchByCoordinates() {
       if (this.currentPlace || this.filter.coordinator.address) {
-        this.suggestUniversity();
         if (this.advanceSearch) {
           this.searchLikeFilter({
             filterProperties: this.filter,
             page: 1,
             size: 5,
           });
+          if (!this.filter.schools.select || this.filter.schools.select === '') {
+            this.suggestUniversity();
+          }
         } else {
           this.filter.price.disable = this.disabled;
           this.searchByCoordinator({
             lat: this.filter.coordinator.latitude,
             long: this.filter.coordinator.longitude,
           });
+          this.suggestUniversity();
         }
         this.setSearchValue(this.coordinates);
         this.coordinator.latitude = this.filter.coordinator.latitude.lat;

@@ -5,7 +5,7 @@
       <v-overlay :value="isLoading" absolute>
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
-      <v-container v-if="!isLoading">
+      <v-container v-if="!isLoading && isSearchError !== 500">
         <v-dialog width="400" v-model="chatBox.show">
           <chatBox v-if="renter" v-on:close="chatBox.show = false" :info="info" :group="group" />
           <LoginBox v-if="!renter" />
@@ -393,6 +393,11 @@
           </v-col>
         </v-row> -->
       </v-container>
+      <v-container v-if="isSearchError === 500">
+        <v-row>
+          <span>Lỗi server</span>
+        </v-row>
+      </v-container>
     </v-col>
   </v-row>
 </template>
@@ -524,6 +529,9 @@ export default {
       const statistic = this.$store.state.renter.discovery.stats.district.isLoading;
       // const loadingBookings = this.$store.state.user.bookings.isLoading;
       return type || group || statistic || suggestionList || utilities || types;
+    },
+    isSearchError() {
+      return this.$store.state.renter.hostelType.suggestedTypes.error;
     },
     isLoadingProvinces() {
       return this.$store.state.renter.common.provinces.isLoading;
