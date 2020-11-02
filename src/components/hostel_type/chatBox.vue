@@ -40,7 +40,7 @@
     </v-card-title>
     <v-divider />
     <div
-      style="max-height: 350px; min-height: 300px;"
+      style="max-height: 350px; min-height: 300px"
       class="overflow-y-auto"
       id="chatbox"
       ref="chatbox"
@@ -58,7 +58,7 @@
       </v-overlay>
       <v-overlay :value="bookingCancel.show" absolute opacity="0.8">
         <v-card class="white d-flex flex-column justify-center align-center py-3" width="400">
-          <v-card-title class="font-weight-bold text-body-1" style="color: #171e8d;"
+          <v-card-title class="font-weight-bold text-body-1" style="color: #171e8d"
             >Bạn có muốn hủy lịch hẹn?</v-card-title
           >
           <v-card-actions>
@@ -84,7 +84,7 @@
       </v-overlay>
       <v-overlay :value="bargainCancel.show" absolute opacity="0.8">
         <v-card class="white d-flex flex-column justify-center align-center py-3" width="400">
-          <v-card-title class="font-weight-bold text-body-1" style="color: #171e8d;"
+          <v-card-title class="font-weight-bold text-body-1" style="color: #171e8d"
             >Bạn có muốn hủy trả giả này?</v-card-title
           >
           <v-card-actions>
@@ -126,15 +126,15 @@
           </v-card-text>
           <v-list-item>
             <v-list-item-content class="pa-0">
-              <span class="text-caption" style="color: #b4b6d1;">Giá gốc</span>
+              <span class="text-caption" style="color: #b4b6d1">Giá gốc</span>
               <p class="d-flex align-center mt-1">
                 <v-img max-height="30" max-width="30" src="@/assets/typeDetail/price.png" />
                 <!-- toDo unit -->
-                <span class="text-body-1 ml-2" style="color: #101526;"
+                <span class="text-body-1 ml-2" style="color: #101526"
                   >{{ info.price }} {{ info.priceUnit }} phòng/tháng</span
                 >
               </p>
-              <span class="text-caption mt-3" style="color: #b4b6d1;">Giá bạn muốn đề xuất</span>
+              <span class="text-caption mt-3" style="color: #b4b6d1">Giá bạn muốn đề xuất</span>
               <v-text-field
                 class="mt-1 text-body-2"
                 type="number"
@@ -184,9 +184,9 @@
           class="d-flex flex-column justify-center align-center pa-1"
         >
           <v-card-text>
-            <span class="text-subtitle-1" style="color: #101526;">
+            <span class="text-subtitle-1" style="color: #101526">
               Bạn đồng ý trả giá
-              <span class="font-weight-bold" style="color: #171c8b;">
+              <span class="font-weight-bold" style="color: #171c8b">
                 {{ bargainOverlay.price }}
               </span>
               triệu đồng?
@@ -250,18 +250,18 @@
         <v-list-item v-for="item in filteredMessage" v-bind:key="item.createdAt">
           <v-list-item-content>
             <div v-if="item.sender === 'renter'" class="d-flex flex-column align-end">
-              <div class="d-flex justify-center" v-if="item.bargain" style="width: 100%;">
+              <div class="d-flex justify-center" v-if="item.bargain" style="width: 100%">
                 <div
                   v-ripple
-                  style="width: 85%;"
+                  style="width: 85%"
                   class="d-flex flex-column justify-center align-center renterEvent lighten-5 py-4 px-4 max-w-3/4"
                 >
                   <span
                     class="font-weight-bold text-primary font-nunito"
-                    style="font-size: 0.9375rem;"
+                    style="font-size: 0.9375rem"
                     >TRẢ GIÁ</span
                   >
-                  <div class="d-flex justify-space-between align-center my-4" style="width: 100%;">
+                  <div class="d-flex justify-space-between align-center my-4" style="width: 100%">
                     <span
                       class="font-nunito font-weight-regular text-gray text-subtitle-2 d-flex align-center"
                       ><v-icon class="mr-1">mdi-home-currency-usd</v-icon> {{ info.price }}
@@ -315,18 +315,18 @@
                 </div>
               </div>
 
-              <div class="d-flex justify-center" v-else-if="item.book" style="width: 100%;">
+              <div class="d-flex justify-center" v-else-if="item.book" style="width: 100%">
                 <div
                   v-ripple
-                  style="width: 85%;"
+                  style="width: 85%"
                   class="d-flex flex-column justify-center align-center renterEvent lighten-5 py-4 px-4 max-w-3/4"
                 >
                   <span
                     class="font-weight-bold text-primary font-nunito"
-                    style="font-size: 0.9375rem;"
+                    style="font-size: 0.9375rem"
                     >LỊCH HẸN</span
                   >
-                  <div class="d-flex justify-space-between align-center my-4" style="width: 100%;">
+                  <div class="d-flex justify-space-between align-center my-4" style="width: 100%">
                     <!-- <span class="d-flex flex-column"> -->
                     <span
                       class="font-nunito font-weight-regular text-gray text-subtitle-2 d-flex align-center"
@@ -399,7 +399,7 @@
                 >{{ item.message }}</span
               >
               <span
-                style="width: 75%;"
+                style="width: 75%"
                 v-ripple
                 class="lighten-5 pa-2 rounded max-w-3/4"
                 v-if="item.bargain && item.bargain.dealId"
@@ -408,7 +408,7 @@
                 <!-- <v-btn small color="amber" class="mt-2">Hủy thỏa thuận</v-btn> -->
               </span>
               <span
-                style="width: 75%;"
+                style="width: 75%"
                 v-ripple
                 class="red lighten-5 pa-2 rounded max-w-3/4"
                 v-if="item.bargain && !item.bargain.dealId"
@@ -441,7 +441,7 @@
           <v-icon color="#727cf5">send</v-icon>
         </v-btn>
       </div>
-      <div class="d-flex flex-no-wrap justify-center align-center" style="height: 65px;">
+      <div class="d-flex flex-no-wrap justify-center align-center" style="height: 65px">
         <v-btn
           rounded
           depressed
@@ -486,6 +486,7 @@ export default {
       getDeal: 'user/getDeal',
       cancelDeal: 'user/cancelDeal',
       cancelBooking: 'user/cancelBooking',
+      sendNotification: 'user/sendNotification',
     }),
     myOnScroll() {},
     clickBooking() {
@@ -571,6 +572,15 @@ export default {
         createdAt: Date.now(),
         sender: 'renter',
       };
+      this.sendNotification({
+        title: `Tin nhắn mới từ: ${this.userState.data.username}`,
+        body: `${this.inputChat.text}`,
+        action: 'NEW_MESSAGE',
+        id: '',
+        icon: this.userState.data.avatar,
+        vendorId: Number(this.id.vendorId),
+        renterId: null,
+      });
       console.log(content);
       this.createDoc().then(() => {
         if (type === null) {

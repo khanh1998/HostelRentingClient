@@ -31,6 +31,13 @@ const myState = () => ({
     error: null,
     newlyCreated: null,
   },
+  notifications: {
+    data: [],
+    isCreating: false,
+    success: null,
+    error: null,
+    new: null,
+  },
 });
 
 const myGetters = {
@@ -148,6 +155,14 @@ const mutationTypes = {
   GET_ONE_CONTRACT_REQUEST: 'GET_ONE_CONTRACT_REQUEST',
   GET_ONE_CONTRACT_SUCCESS: 'GET_ONE_CONTRACT_SUCCESS',
   GET_ONE_CONTRACT_FAILURE: 'GET_ONE_CONTRACT_FAILURE',
+
+  SEND_NOTIFICATION_REQUEST: 'SEND_NOTIFICATION_REQUEST',
+  SEND_NOTIFICATION_SUCCESS: 'SEND_NOTIFICATION_SUCCESS',
+  SEND_NOTIFICATION_FAILURE: 'SEND_NOTIFICATION_FAILURE',
+
+  ADD_NOTIFICATION_LOCAL_REQUEST: 'ADD_NOTIFICATION_LOCAL_REQUEST',
+  ADD_NOTIFICATION_LOCAL_SUCCESS: 'ADD_NOTIFICATION_LOCAL_SUCCESS',
+  ADD_NOTIFICATION_LOCAL_FAILURE: 'ADD_NOTIFICATION_LOCAL_FAILURE',
 };
 const mutations = {
   CLEAR_USER_DATA(state) {
@@ -400,6 +415,28 @@ const mutations = {
     state.contracts.error = error;
     state.contracts.success = false;
   },
+  SEND_NOTIFICATION_REQUEST(state) {
+    state.notifications.isCreating = true;
+    state.notifications.error = null;
+    state.notifications.success = null;
+  },
+  SEND_NOTIFICATION_SUCCESS(state) {
+    state.notifications.success = true;
+  },
+  SEND_NOTIFICATION_FAILURE(state, error) {
+    state.notifications.error = error;
+    state.notifications.success = false;
+  },
+
+  ADD_NOTIFICATION_LOCAL_REQUEST(state, noti) {
+    state.notifications.new = noti;
+  },
+  ADD_NOTIFICATION_LOCAL_SUCCESS(state, noti) {
+    state.notifications.data.unshift(noti);
+  },
+  ADD_NOTIFICATION_LOCAL_FAILURE(state, error) {
+    state.notifications.error = error;
+  },
 };
 
 const actions = {
@@ -535,7 +572,8 @@ const actions = {
     if (userId && role && state.user.data) {
       try {
         commit(mutationTypes.GET_BOOKING_REQUEST);
-        commit(mutationTypes.GET_BOOKING_SUCCESS, booking);
+        const editBooking = { ...booking, new: true };
+        commit(mutationTypes.GET_BOOKING_SUCCESS, editBooking);
       } catch (error) {
         commit(mutationTypes.GET_BOOKING_FAILURE, error);
       }
@@ -857,6 +895,39 @@ const actions = {
       }
     } else {
       throw new Error('You have to login before get contracts');
+    }
+  },
+  async sendNotification({ commit }, payload) {
+    // payload = {title, body, action, id, receiver}
+    // receiver of format: renters|vendors-id
+    // vendors-1
+    // eslint-disable-next-line
+    const { title, body, action, id, vendorId, renterId, icon } = payload;
+    commit(mutationTypes.SEND_NOTIFICATION_REQUEST);
+    try {
+      const noti = {
+        vendorId,
+        renterId,
+        data: {
+          title,
+          body,
+          action,
+          id,
+          icon,
+        },
+      };
+      await window.axios.post('/api/v1/notification/token', noti);
+      commit(mutationTypes.SEND_NOTIFICATION_SUCCESS);
+    } catch (error) {
+      commit(mutationTypes.SEND_NOTIFICATION_FAILURE, error);
+    }
+  },
+  addNotificationLocal({ commit }, noti) {
+    try {
+      commit(mutationTypes.ADD_NOTIFICATION_LOCAL_REQUEST);
+      commit(mutationTypes.ADD_NOTIFICATION_LOCAL_SUCCESS, noti);
+    } catch (error) {
+      commit(mutationTypes.ADD_NOTIFICATION_LOCAL_FAILURE, error);
     }
   },
 };

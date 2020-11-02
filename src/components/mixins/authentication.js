@@ -35,6 +35,7 @@ const authenticationMixins = {
     },
     async getTokenIdFromFirebase(jwtToken) {
       try {
+        await auth.setPersistence(firebase.authNamespace.Auth.Persistence.LOCAL);
         await auth.signInWithCustomToken(jwtToken);
         const currentUser = await auth.currentUser;
         console.log('firebase user data:', currentUser);

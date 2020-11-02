@@ -12,7 +12,6 @@ export function checkIfTokenNeedsRefresh() {
       console.log('firebase id token needs to refresh');
       return true;
     }
-    console.log('firebase id token doesnt need to refresh');
     return false;
   }
   return false;
@@ -21,6 +20,6 @@ export function checkIfTokenNeedsRefresh() {
 export async function updateToken() {
   console.log('update firebase id token');
   const newFirebaseIdToken = auth.currentUser.getIdToken(true);
-  // window.$cookies.set('firebaseIdToken', newFirebaseIdToken);
+  window.$cookies.set('firebaseIdToken', newFirebaseIdToken);
   console.log(newFirebaseIdToken);
 }
