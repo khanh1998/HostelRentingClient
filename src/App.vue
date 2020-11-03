@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!refreshFirebaseTokenId">
     <router-view></router-view>
     <v-snackbar
       v-model="snackBarMixin.show"
@@ -18,6 +18,7 @@ import './assets/css/style.css';
 import pushNotificationMixins from './components/mixins/pushNotification';
 import snackBarMixin from './components/mixins/snackBar';
 import processFCMForeground from './components/mixins/processFCMForeground';
+import utils from './utils/utils';
 
 export default {
   name: 'App',
@@ -27,12 +28,19 @@ export default {
     refreshing: false,
     registration: null,
     updateExists: false,
+    refreshFirebaseTokenId: false,
   }),
   created() {
     this.getUser().then(() => {
       console.log('get fcm token at app.vue');
       this.doGetMessagingToken();
     });
+    if (utils.checkIfTokenNeedsRefresh()) {
+      this.refreshFirebaseTokenId = true;
+      utils.updateToken().then(() => {
+        this.refreshFirebaseTokenId = false;
+      });
+    }
     document.addEventListener('swUpdated', this.refreshApp, { once: true });
     if (navigator.serviceWorker) {
       navigator.serviceWorker.addEventListener('controllerchange', () => {

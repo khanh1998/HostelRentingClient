@@ -1,5 +1,6 @@
 import { mapActions } from 'vuex';
 import firebase from '../../config/firebase';
+import pushNotiMixins from './pushNotification';
 
 const { auth } = firebase;
 
@@ -7,6 +8,7 @@ const authenticationMixins = {
   data: () => ({
     loging: false,
   }),
+  mixins: [pushNotiMixins],
   computed: {
     userData() {
       return this.$store.state.user.user.data;
@@ -37,7 +39,7 @@ const authenticationMixins = {
       try {
         await auth.setPersistence(firebase.authNamespace.Auth.Persistence.LOCAL);
         await auth.signInWithCustomToken(jwtToken);
-        const currentUser = await auth.currentUser;
+        const { currentUser } = auth;
         console.log('firebase user data:', currentUser);
         const idToken = await currentUser.getIdToken(true);
         console.log(idToken);
@@ -87,6 +89,7 @@ const authenticationMixins = {
               this.$router.push('/');
           }
         }
+        this.doGetMessagingToken();
       } else {
         this.message = 'Số điện thoại hoặc mật khẩu không đúng!';
       }

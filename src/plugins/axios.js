@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import axios from 'axios';
 import utils from '../utils/utils';
-import checkForUpdates from '../utils/updates';
 import constant from '../config/constant';
 
 axios.defaults.baseURL = process.env.VUE_APP_API_URL || constant.VUE_APP_API_URL;
@@ -25,9 +24,6 @@ axios.interceptors.request.use(
       '/provinces',
       '/utilities',
     ];
-    if (utils.checkIfTokenNeedsRefresh() === true) {
-      await utils.updateToken();
-    }
     if (urlsExcludedForBearerHeader.every((url) => !url.includes(myConfig.url))) {
       myConfig.headers.Authorization = `Bearer ${window.$cookies.get('firebaseIdToken')}`;
     }
@@ -48,14 +44,40 @@ axios.interceptors.response.use(
       response.config.url !== `${process.env.VUE_APP_API_URL}/token` &&
       response.config.url !== `${window.location.origin}/version.json`
     ) {
-      checkForUpdates();
-      utils.checkIfTokenNeedsRefresh();
+      // checkForUpdates();
+      // utils.checkIfTokenNeedsRefresh();
     }
     return response;
   },
   (error) => {
-    // Do something with response error
-    Promise.reject(error);
+    // Return any error which is not due to authentication back to the calling service
+    if (error.response.status !== 401) {
+      return new Promise((resolve, reject) => {
+        reject(error);
+      });
+    }
+    // Try request again with new token
+    return utils
+      .updateToken()
+      .then(() => {
+        // New request with new token
+        const { config } = error;
+        config.headers.Authorization = `Bearer ${window.$cookies.get('firebaseIdToken')}`;
+
+        return new Promise((resolve, reject) => {
+          axios
+            .request(config)
+            .then((response) => {
+              resolve(response);
+            })
+            .catch((e) => {
+              reject(e);
+            });
+        });
+      })
+      .catch((e) => {
+        Promise.reject(e);
+      });
   },
 );
 

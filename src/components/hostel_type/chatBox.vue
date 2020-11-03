@@ -183,13 +183,8 @@
           color="white"
           class="d-flex flex-column justify-center align-center pa-1"
         >
-<<<<<<< HEAD
           <v-card-text v-if="Number(bargainOverlay.price) !== Number(info.price)">
-            <span class="text-subtitle-1" style="color: #101526;">
-=======
-          <v-card-text>
             <span class="text-subtitle-1" style="color: #101526">
->>>>>>> fix/firebase-custom-auth
               Bạn đồng ý trả giá
               <span class="font-weight-bold" style="color: #171c8b">
                 {{ bargainOverlay.price }}
@@ -198,9 +193,9 @@
             </span>
           </v-card-text>
           <v-card-text v-if="Number(bargainOverlay.price) === Number(info.price)">
-            <span class="text-subtitle-1" style="color: #101526;">
+            <span class="text-subtitle-1" style="color: #101526">
               Giá đang trả giá bằng với giá gốc!
-              <span class="font-weight-bold" style="color: #171c8b;">
+              <span class="font-weight-bold" style="color: #171c8b">
                 {{ bargainOverlay.price }}
               </span>
               triệu đồng?
