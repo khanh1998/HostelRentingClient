@@ -163,7 +163,7 @@
           </v-row>
 
           <v-divider></v-divider>
-          <v-card-text style="height: 320px;" class="py-0">
+          <v-card-text style="height: 400px;" class="py-0">
             <v-row class="ma-0 d-flex justify-space-between">
               <v-col cols="12" md="5" class="pb-0">
                 <v-row>
@@ -217,17 +217,24 @@
                       background-color="#ced4da"
                       color="#fd7e14"
                       large
+                      hover
                     ></v-rating>
+                    <span class="size-caption font-nunito text-danger" v-if="mesage">{{
+                      mesage
+                    }}</span>
                   </v-col>
                   <v-col cols="12" class="d-flex flex-column pb-0 justify-center">
                     <v-textarea
-                      full-width
-                      filled
-                      name="input-7-4"
+                      solo
                       label="Viết nhận xét của bạn ở đây"
                       v-model="comment"
-                      class="font-nunito size9rem text-gray"
+                      class="font-nunito size9rem text-muted feedback yellow"
+                      height="120"
+                      hide-details
                     ></v-textarea>
+                    <div class="bg-light">
+                      <v-file-input multiple label="File input"></v-file-input>
+                    </div>
                   </v-col>
                 </v-row>
               </v-col>
@@ -239,7 +246,12 @@
             <v-btn class="btn btn-light elevation-0 font-nunito" @click="feedbackDialog = false">
               Đóng
             </v-btn>
-            <v-btn class="btn btn-primary font-nunito" v-if="booking.status === 'DONE'">
+            <v-btn
+              class="btn btn-primary font-nunito"
+              v-if="booking.status === 'DONE'"
+              @click="sendFeedback()"
+              :loading="isCreateFeedback"
+            >
               Gửi
             </v-btn>
           </v-card-actions>
@@ -448,7 +460,7 @@ export default {
       index: 1,
     },
     rating: 0,
-    comment: '',
+    comment: null,
     mapDialog: false,
   }),
   computed: {
@@ -458,10 +470,23 @@ export default {
     group() {
       return this.booking.group;
     },
+    mesage() {
+      if (this.rating > 0) {
+        return null;
+      }
+      return 'Đừng quên đánh sao nhé!';
+    },
+    isCreateFeedback() {
+      return this.$store.state.user.feedback.isLoading;
+    },
+    renter() {
+      return this.$store.state.user.user.data;
+    },
   },
   methods: {
     ...mapActions({
       getProvinces: 'renter/common/getProvinces',
+      createFeedback: 'user/sendFeedback',
     }),
     padZero(int) {
       return int < 10 ? '0' : '';
@@ -509,6 +534,17 @@ export default {
       const long = this.booking.group.longitude;
       const url = `https://www.google.com/maps/search/${lat},${long}/@${lat},${long},17z?hl=vi`;
       window.open(url, '_blank');
+    },
+    sendFeedback() {
+      if (this.rating > 0) {
+        const feedbackObj = {
+          renterId: this.renter.userId,
+          typeId: this.booking.type.typeId,
+          rating: this.rating,
+          comment: this.comment,
+        };
+        this.createFeedback(feedbackObj).then(() => this.getType());
+      }
     },
   },
   created() {},
@@ -574,5 +610,12 @@ export default {
 .feedback .v-tabs-bar {
   height: 40px;
   border-bottom: 2px solid rgba(152, 166, 173, 0.2);
+}
+.feedback .v-input__slot {
+  margin-bottom: 0px !important;
+}
+.feedback .v-input__control {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
 }
 </style>

@@ -29,6 +29,12 @@ const myState = () => ({
     success: null,
     error: null,
   },
+  feedback: {
+    data: [],
+    isLoading: false,
+    success: null,
+    error: null,
+  },
 });
 
 const getters = {
@@ -61,6 +67,10 @@ const mutationTypes = {
   GET_SUGGESTED_TYPE_REQUEST: 'GET_SUGGESTED_TYPE_REQUEST',
   GET_SUGGESTED_TYPE_SUCCESS: 'GET_SUGGESTED_TYPE_SUCCESS',
   GET_SUGGESTED_TYPE_FAILURE: 'GET_SUGGESTED_TYPE_FAILURE',
+
+  GET_FEEDBACK_REQUEST: 'GET_FEEDBACK_REQUEST',
+  GET_FEEDBACK_SUCCESS: 'GET_FEEDBACK_SUCCESS',
+  GET_FEEDBACK_FAILURE: 'GET_FEEDBACK_FAILURE',
 };
 
 const mutations = {
@@ -113,6 +123,20 @@ const mutations = {
   GET_SUGGESTED_TYPE_FAILURE(state, error) {
     state.suggestedTypes.error = error;
     state.suggestedTypes.data = null;
+  },
+
+  GET_FEEDBACK_REQUEST(state) {
+    state.feedback.isLoading = true;
+  },
+  GET_FEEDBACK_SUCCESS(state, data) {
+    state.feedback.data = data;
+    state.feedback.isLoading = false;
+    state.feedback.success = true;
+    state.feedback.error = null;
+  },
+  GET_FEEDBACK_FAILURE(state, error) {
+    state.feedback.error = error;
+    state.feedback.data = null;
   },
 };
 
@@ -167,6 +191,19 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_SCHEDULES_FAILURE, 500);
+    }
+  },
+  async getFeedbacks({ commit }, typeId) {
+    try {
+      commit(mutationTypes.GET_FEEDBACK_REQUEST);
+      const response = await window.axios.get(`/api/v1/types/${typeId}/feedbacks`);
+      if (response.status >= 200 && response.status <= 299) {
+        commit(mutationTypes.GET_FEEDBACK_SUCCESS, response.data.data);
+      } else {
+        commit(mutationTypes.GET_FEEDBACK_FAILURE);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_FEEDBACK_FAILURE, error);
     }
   },
 };
