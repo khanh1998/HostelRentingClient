@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import axios from 'axios';
-import { checkIfTokenNeedsRefresh, updateToken } from '../utils/utils';
+import utils from '../utils/utils';
 import checkForUpdates from '../utils/updates';
 import constant from '../config/constant';
 
@@ -15,14 +15,20 @@ axios.interceptors.request.use(
     // If request is different than any of the URLS in urlsExcludedForBearerHeader
     // then send Authorization header with token from localstorage
     const urlsExcludedForBearerHeader = [
-      '/api/v1/login',
-      '/api/v1/register',
-      `${window.location.origin}/version.json`,
+      '/login',
+      '/register',
+      '/types',
+      '/schools',
+      '/statistic',
+      '/facilities',
+      '/services',
+      '/provinces',
+      '/utilities',
     ];
-    if (checkIfTokenNeedsRefresh() === true) {
-      await updateToken();
+    if (utils.checkIfTokenNeedsRefresh() === true) {
+      await utils.updateToken();
     }
-    if (urlsExcludedForBearerHeader.indexOf(myConfig.url) === -1) {
+    if (urlsExcludedForBearerHeader.every((url) => !url.includes(myConfig.url))) {
       myConfig.headers.Authorization = `Bearer ${window.$cookies.get('firebaseIdToken')}`;
     }
     return myConfig;
@@ -43,7 +49,7 @@ axios.interceptors.response.use(
       response.config.url !== `${window.location.origin}/version.json`
     ) {
       checkForUpdates();
-      checkIfTokenNeedsRefresh();
+      utils.checkIfTokenNeedsRefresh();
     }
     return response;
   },

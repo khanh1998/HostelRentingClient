@@ -3,7 +3,14 @@ import firebase from '../config/firebase';
 
 const { auth } = firebase;
 
-export function checkIfTokenNeedsRefresh() {
+function isFirebaseLoggedIn() {
+  return auth.currentUser;
+}
+
+async function checkIfTokenNeedsRefresh() {
+  if (!isFirebaseLoggedIn()) {
+    return false;
+  }
   const firebaseIdToken = window.$cookies.get('firebaseIdToken');
   if (firebaseIdToken) {
     const decoded = jwt.decode(firebaseIdToken);
@@ -17,9 +24,17 @@ export function checkIfTokenNeedsRefresh() {
   return false;
 }
 
-export async function updateToken() {
+async function updateToken() {
   console.log('update firebase id token');
   const newFirebaseIdToken = auth.currentUser.getIdToken(true);
   window.$cookies.set('firebaseIdToken', newFirebaseIdToken);
   console.log(newFirebaseIdToken);
 }
+
+const functions = {
+  isFirebaseLoggedIn,
+  checkIfTokenNeedsRefresh,
+  updateToken,
+};
+
+export default functions;

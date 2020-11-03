@@ -5,6 +5,7 @@ import RenterRoutes from './routes/renter';
 import VendorRoutes from './routes/vendor';
 import AdminRoutes from './routes/admin';
 import AuthenticationRoutes from './routes/authentication';
+import utils from '../utils/utils';
 
 Vue.use(VueRouter);
 
@@ -27,7 +28,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (window.$cookies.get('firebaseIdToken') === null) {
+    // if (window.$cookies.get('firebaseIdToken') === null) {
+    if (!utils.isFirebaseLoggedIn()) {
       // not logged in
       next({
         name: 'Login',
