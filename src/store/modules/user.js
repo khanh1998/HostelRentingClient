@@ -31,6 +31,13 @@ const myState = () => ({
     error: null,
     newlyCreated: null,
   },
+  feedback: {
+    data: [],
+    isLoading: false,
+    success: null,
+    error: null,
+    newlyCreated: null,
+  },
 });
 
 const myGetters = {
@@ -148,6 +155,10 @@ const mutationTypes = {
   GET_ONE_CONTRACT_REQUEST: 'GET_ONE_CONTRACT_REQUEST',
   GET_ONE_CONTRACT_SUCCESS: 'GET_ONE_CONTRACT_SUCCESS',
   GET_ONE_CONTRACT_FAILURE: 'GET_ONE_CONTRACT_FAILURE',
+
+  CREATE_FEEDBACK_REQUEST: 'CREATE_FEEDBACK_REQUEST',
+  CREATE_FEEDBACK_SUCCESS: 'CREATE_FEEDBACK_SUCCESS',
+  CREATE_FEEDBACK_FAILURE: 'CREATE_FEEDBACK_FAILURE',
 };
 const mutations = {
   CLEAR_USER_DATA(state) {
@@ -399,6 +410,21 @@ const mutations = {
     state.contracts.isUpdating = false;
     state.contracts.error = error;
     state.contracts.success = false;
+  },
+
+  CREATE_FEEDBACK_REQUEST(state) {
+    state.feedback.isLoading = true;
+  },
+  CREATE_FEEDBACK_SUCCESS(state, feedback) {
+    // state.feedback.data.push(feedback);
+    state.feedback.newlyCreated = feedback;
+    state.feedback.success = true;
+    state.feedback.isLoading = false;
+  },
+  CREATE_FEEDBACK_FAILURE(state, error) {
+    state.feedback.isLoading = true;
+    state.feedback.success = false;
+    state.feedback.error = error;
   },
 };
 
@@ -856,6 +882,30 @@ const actions = {
       }
     } else {
       throw new Error('You have to login before get contracts');
+    }
+  },
+  async sendFeedback({ commit, state }, feedback) {
+    try {
+      commit(mutationTypes.CREATE_FEEDBACK_REQUEST);
+      const userId = window.$cookies.get('userId');
+      const role = window.$cookies.get('role');
+      if (!userId && !state.user.data) {
+        const error = new Error('Loggin to send feedback');
+        commit(mutationTypes.CREATE_FEEDBACK_FAILURE, error);
+      } else if (role !== 'renters') {
+        const error = new Error('Only renter have permission to send feedback');
+        commit(mutationTypes.CREATE_FEEDBACK_FAILURE, error);
+      } else {
+        const res = await window.axios.post('/api/v1/feedbacks', feedback);
+        if (res.status >= 200 && res.status <= 299) {
+          commit(mutationTypes.CREATE_FEEDBACK_SUCCESS, res.data.data);
+        } else {
+          const error = new Error('Cannot receive response from server');
+          commit(mutationTypes.CREATE_FEEDBACK_FAILURE, error);
+        }
+      }
+    } catch (error) {
+      commit(mutationTypes.CREATE_FEEDBACK_FAILURE, error);
     }
   },
 };

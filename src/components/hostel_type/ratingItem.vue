@@ -1,23 +1,36 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="d-flex" style="border-bottom: 1px dashed rgba(0, 0, 0, 0.1)">
-    <v-avatar height="45" width="45">
-      <v-img max-height="45" max-width="45" src="../../assets/home/thumnail.png" />
+  <div class="d-flex align-center" style="border-bottom: 1px dashed rgba(0, 0, 0, 0.1);">
+    <v-avatar max-height="30" max-width="30" min-width="30" min-height="30" color="#727cf5">
+      <v-img
+        max-height="30"
+        max-width="30"
+        min-width="30"
+        min-height="30"
+        :src="feedback.renter.avatar"
+        v-if="feedback.renter.avatar"
+      />
+      <span v-else class="text-overline white--text">{{ getAvatarTitle(user.username) }}</span>
     </v-avatar>
     <div class="ml-5 d-flex flex-column">
-      <span class="text-subtitle-2">Võ Thị Kim Thùy</span>
       <v-rating
-        v-model="rate"
+        _v-model="rate"
         color="yellow darken-3"
         background-color="grey darken-1"
         small
         readonly
         class="pa-0 rating"
+        :value="feedback.rating"
       ></v-rating>
-      <span
-        class="text-body-2 font-italic"
-      >Phòng trọ sạch sẽ, thoáng mát. An ninh tốt. Nhưng xung quanh còn ồn.</span>
-      <span class="text-caption font-nunito">2020-07-28 14:57</span>
+      <span>
+        <span class="font-nunito font-weight-bold size-sub-2 text-primary"
+          >{{ feedback.renter.username }}<span v-if="feedback.comment">:</span></span
+        >
+        <span class="font-nunito size-sub-2 ml-1">{{ feedback.comment }}</span>
+      </span>
+      <span class="text-caption font-nunito text-muted">{{
+        getDateFormat(feedback.createdAt)
+      }}</span>
     </div>
   </div>
 </template>
@@ -27,7 +40,17 @@ export default {
   data: () => ({
     rate: 4,
   }),
-  props: {},
+  props: { feedback: Object },
+  methods: {
+    getAvatarTitle(name) {
+      return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
+    },
+    getDateFormat(createdTime) {
+      const date = new Date(createdTime).toLocaleDateString('vi-vn');
+      const time = new Date(createdTime).toLocaleTimeString('vi-vn').substr(0, 5);
+      return `${date}, ${time}`;
+    },
+  },
 };
 </script>
 <style scoped>

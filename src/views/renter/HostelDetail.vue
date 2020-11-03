@@ -318,7 +318,7 @@
             </v-row>
           </v-col>
         </v-row>
-        <!-- <v-row class="mt-10">
+        <v-row class="mt-10">
           <v-col cols="12" md="8">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
               >ĐÁNH GIÁ PHÒNG TRỌ</span
@@ -329,7 +329,7 @@
             </div>
             <ratingBox class="mt-5" :rating="{ average: 3.5, total: 30 }" />
           </v-col>
-        </v-row> -->
+        </v-row>
         <v-row
           class="mt-10"
           v-if="
@@ -410,7 +410,7 @@ import { mapActions, mapGetters } from 'vuex';
 import facilitiesBox from '../../components/hostel_type/facilitiesBox.vue';
 import servicesBox from '../../components/hostel_type/servicesBox.vue';
 import regulationsBox from '../../components/hostel_type/regulationsBox.vue';
-// import ratingBox from '../../components/hostel_type/ratingBox.vue';
+import ratingBox from '../../components/hostel_type/ratingBox.vue';
 import SuggestionList from '../../components/hostel_type/SuggestionList.vue';
 // import GroupHostelTypes from '../../components/hostel_type/GroupHostelTypes.vue';
 import LoginBox from '../../components/login/loginBox.vue';
@@ -427,7 +427,7 @@ export default {
     chatBox,
     facilitiesBox,
     regulationsBox,
-    // ratingBox,
+    ratingBox,
     SuggestionList,
     // GroupHostelTypes,
     LoginBox,
@@ -447,6 +447,7 @@ export default {
       getHostelGroup: 'renter/hostelGroup/getHostelGroup',
       getUtilities: 'renter/hostelGroup/getNearByUtilities',
       getSuggestedTypes: 'renter/hostelType/getSuggestedTypes',
+      getFeedback: 'renter/hostelType/getFeedbacks',
     }),
 
     getNearByUtilities() {
@@ -527,8 +528,9 @@ export default {
       const suggestionList = this.$store.state.renter.hostelType.suggestedTypes.isLoading;
       const types = this.$store.state.renter.hostelGroup.hostelTypes.isLoading;
       const statistic = this.$store.state.renter.discovery.stats.district.isLoading;
+      const feedback = this.$store.state.renter.hostelType.feedback.isLoading;
       // const loadingBookings = this.$store.state.user.bookings.isLoading;
-      return type || group || statistic || suggestionList || utilities || types;
+      return type || group || statistic || suggestionList || utilities || types || feedback;
     },
     isSearchError() {
       return this.$store.state.renter.hostelType.suggestedTypes.error;
@@ -652,6 +654,10 @@ export default {
       console.log(this.$store.state.renter.hostelType.suggestedTypes);
       return this.$store.state.renter.hostelType.suggestedTypes;
     },
+    feedbacks() {
+      console.log(this.$store.state.renter.hostelType.feedback);
+      return this.$store.state.renter.hostelType.feedback.data;
+    },
   },
   created() {
     // if home.js store is empty then start to call api
@@ -664,6 +670,7 @@ export default {
       this.getNearByUtilities();
       this.getDistrictStatistic(this.group.address.districtId);
     }
+    this.getFeedback(this.typeId);
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {

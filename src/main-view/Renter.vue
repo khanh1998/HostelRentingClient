@@ -48,6 +48,9 @@ export default {
 .bg-warning-lighten {
   background-color: rgba(255, 188, 0, 0.25) !important;
 }
+.bg-light {
+  background-color: #eef2f7 !important;
+}
 .bt-primary-hover:hover {
   color: #fff;
   background-color: #4250f2 !important;
@@ -102,6 +105,11 @@ export default {
 }
 .btn-danger:hover {
   background-color: #f9375e !important;
+}
+.btn-outline-primary {
+  color: #727cf5 !important;
+  border: 1px solid #727cf5 !important;
+  background-color: #fff !important;
 }
 .text-primary {
   color: #727cf5 !important;
