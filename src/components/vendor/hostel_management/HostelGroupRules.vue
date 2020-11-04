@@ -3,9 +3,18 @@
     <v-overlay :value="rules.isLoading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-card class="d-flex flex-column inner" v-if="!rules.isLoading">
+    <v-card class="d-flex flex-column inner pa-5" v-if="!rules.isLoading">
       <span class="text-h6 my-2"><v-icon left>warning</v-icon> Nội quy khu trọ</span>
-      <div class="d-flex flex-row flex-wrap mb-3">
+      <div class="d-flex justify-center">
+        <v-switch
+          label="Bạn có muốn thêm nội quy phòng trọ"
+          color="success"
+          v-model="checkRule"
+          hide-details
+          class="mb-3 filter"
+        ></v-switch>
+      </div>
+      <div class="d-flex flex-row flex-wrap mb-3" v-if="checkRule">
         <v-switch
           v-for="(rule, index) in rules.data"
           :key="rule.regulationId"
@@ -95,6 +104,7 @@ export default {
       openAllDay: true,
     },
     activeRules: [],
+    checkRule: false,
   }),
   computed: {
     ...mapState('renter/common', ['rules']),

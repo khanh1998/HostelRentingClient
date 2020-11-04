@@ -1,17 +1,26 @@
 <template>
-  <v-card elevation="0">
+  <v-card elevation="2">
     <v-card-title>{{ columnName }}</v-card-title>
     <v-list-item-group>
-      <ColumnCell v-for="item in items" :key="item.now" :value="item" />
-      <v-list-item dense v-if="items.length === 0">
-        <v-list-item-subtitle>
-          Lịch rảnh cho <span class="font-weight-bold">{{ columnName }}</span> <br />
-          đang trống
+      <ColumnCell
+        v-for="item in items"
+        :key="item.now"
+        :value="item"
+      />
+      <v-list-item
+        dense
+        v-if="items.length === 0"
+      >
+        <v-list-item-subtitle class="d-flex justify-center">
+          Không có dữ liệu
         </v-list-item-subtitle>
       </v-list-item>
     </v-list-item-group>
-    <v-card-actions>
-      <ColumnCellInput v-on:selected="receiveSelectedTimeRange" :minTime="lastItem.endTime" />
+    <v-card-actions class="d-flex justify-center">
+      <ColumnCellInput
+        v-on:selected="receiveSelectedTimeRange"
+        :minTime="lastItem.endTime"
+      />
     </v-card-actions>
   </v-card>
 </template>
