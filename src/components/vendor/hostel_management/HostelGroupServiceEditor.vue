@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-2" height="100%" elevation="0" :loading="isServiceLoading">
+  <v-card class="pa-5" height="100%" elevation="0" :loading="isServiceLoading">
     <v-dialog
       v-model="dialog"
       persistent
@@ -96,14 +96,14 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="blue darken-1"
+            color="grey darken-1"
             text
             @click="dialog = false"
           >
             Hủy
           </v-btn>
           <v-btn
-            color="blue darken-1"
+            color="green darken-1"
             text
             @click="dialog = false; addService()"
           >
@@ -237,7 +237,7 @@
 
       <template v-slot:action="{ attrs }">
         <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false">
-          Close
+          Đóng
         </v-btn>
       </template>
     </v-snackbar>

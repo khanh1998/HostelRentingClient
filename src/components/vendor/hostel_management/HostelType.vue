@@ -46,7 +46,7 @@
         <!-- <v-icon class="ml-5" @click="deleteItem(item)"> mdi-delete </v-icon> -->
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="desserts">Reset</v-btn>
+        <v-btn color="primary" @click="desserts">Tải lại</v-btn>
       </template>
     </v-data-table>
     <div class="text-center pt-2">

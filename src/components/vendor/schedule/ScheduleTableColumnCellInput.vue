@@ -1,6 +1,9 @@
 <template>
   <div>
-    <v-dialog v-model="dialog.show" max-width="300">
+    <v-dialog
+      v-model="dialog.show"
+      max-width="300"
+    >
       <v-card>
         <v-card-title>Chọn khoảng thời gian</v-card-title>
         <div class="d-flex flex-row ma-1">
@@ -10,8 +13,8 @@
             v-model="picker.startTime"
             :picker-options="{
               start: minTime || '06:00',
-              step: '00:05',
-              end: '23:55',
+              step: '00:15',
+              end: '21:00',
               minTime,
             }"
           >
@@ -22,8 +25,8 @@
             v-model="picker.endTime"
             :picker-options="{
               start: picker.startTime || '06:00',
-              step: '00:05',
-              end: '23:55',
+              step: '00:15',
+              end: '21:00',
               minTime: picker.startTime,
             }"
           >
@@ -31,13 +34,27 @@
         </div>
         <v-card-actions>
           <div class="d-flex flex-row justify-center">
-            <v-btn color="red" text @click="dialog.show = false">Hủy</v-btn>
-            <v-btn color="green" v-if="isValid" text @click="add">Thêm</v-btn>
+            <v-btn
+              color="red"
+              text
+              @click="dialog.show = false"
+            >Hủy</v-btn>
+            <v-btn
+              color="green"
+              v-if="isValid"
+              text
+              @click="add"
+            >Thêm</v-btn>
           </div>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-btn @click="dialog.show = true" color="amber" tile outlined>
+    <v-btn
+      @click="dialog.show = true"
+      outlined
+      small
+      color="#727CF5"
+    >
       <v-icon>add</v-icon>
     </v-btn>
   </div>

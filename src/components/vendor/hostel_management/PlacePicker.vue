@@ -3,71 +3,131 @@
     <v-overlay :value="provinces.isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-card v-if="!provinces.isLoading">
+    <v-card v-if="!provinces.isLoading" class="pa-5">
       <span class="text-h6"><v-icon>directions</v-icon> Xác định vị trí trên bản đồ</span>
+      <v-stepper v-model="e1" class="mt-2">
+        <v-stepper-header>
+          <v-stepper-step
+            :complete="e1 > 1"
+            step="1"
+            color="#727CF5"
+          >
+            Xác định tọa độ trên bản đồ
+          </v-stepper-step>
 
-      <div class="hidden-sm-and-down">
-        <v-row>
-          <v-col cols="2">
-            <v-text-field v-model="buildingNo" placeholder="Số nhà"></v-text-field>
-          </v-col>
-          <v-col cols="10">
-            <v-select
-              prepend-icon="confirmation_number"
-              :items="coordsToString.selectableAddresses"
-              label="Chọn địa chỉ"
-              v-model="coordsToString.selectedAddress"
-              messages="Thay đổi danh sách địa chỉ bằng cách xác định vị trí trên bản đồ"
-            ></v-select>
-          </v-col>
-        </v-row>
-        <br />
-      </div>
-      <div class="hidden-sm-and-up ma-1">
-        <v-text-field v-model="buildingNo" placeholder="Số nhà"></v-text-field>
-        <v-select
-          :items="coordsToString.selectableAddresses"
-          label="Chọn địa chỉ"
-          v-model="coordsToString.selectedAddress"
-          messages="Thay đổi danh sách địa chỉ bằng cách xác định vị trí trên bản đồ"
-        ></v-select>
-        <br />
-      </div>
+          <v-divider></v-divider>
 
-      <div class="gmap-view ma-1">
-        <div class="gmap-search-bar">
-          <gmap-autocomplete
-            @place_changed="setPlace"
-            :options="gmap"
-            :selectFirstOnEnter="true"
-          ></gmap-autocomplete>
-        </div>
-        <div class="gmap-view-map">
-          <gmap-map :center="center" :zoom="12" style="width: 100%; height: 400px;">
-            <gmap-marker
-              :position="marker.position"
-              @click="center = marker.position"
-              :clickable="true"
-              :draggable="true"
-              @dragend="updateMarker"
-            ></gmap-marker>
-            <div slot="visible">
-              <div
-                style="
-                  bottom: 0;
-                  left: 0;
-                  background-color: #0000ff;
-                  color: white;
-                  position: absolute;
-                  z-index: 100;
-                "
+          <v-stepper-step
+            :complete="e1 > 2"
+            step="2"
+            color="#727CF5"
+          >
+            Chọn địa chỉ
+          </v-stepper-step>
+        </v-stepper-header>
+
+        <v-stepper-items>
+          <v-stepper-content step="1">
+            <v-row no-gutters>
+              <v-col cols="12" class="d-flex justify-center">
+                <div style="font-size: 16px; opacity: 0.6;">Nhập địa chỉ trên bản đồ hoặc kéo
+                <v-icon color="red" style="opacity: 1 !important">location_on</v-icon> đến địa điểm chính xác trên bản đồ</div>
+              </v-col>
+              <v-col cols="12">
+                <div
+                  height="300px"
+                >
+                  <div class="gmap-view ma-1">
+                    <div class="gmap-search-bar">
+                      <gmap-autocomplete
+                        @place_changed="setPlace"
+                        :options="gmap"
+                        :selectFirstOnEnter="true"
+                      ></gmap-autocomplete>
+                    </div>
+                    <div class="gmap-view-map">
+                      <gmap-map :center="center" :zoom="12" style="width: 100%; height: 300px;">
+                        <gmap-marker
+                          :position="marker.position"
+                          @click="center = marker.position"
+                          :clickable="true"
+                          :draggable="true"
+                          @dragend="updateMarker"
+                        ></gmap-marker>
+                        <div slot="visible">
+                          <div
+                            style="
+                              bottom: 0;
+                              left: 0;
+                              background-color: #0000ff;
+                              color: white;
+                              position: absolute;
+                              z-index: 100;
+                            "
+                          >
+                            Toạ độ: {{ marker.position.lat }}, {{ marker.position.lng }}
+                          </div>
+                        </div>
+                      </gmap-map>
+                    </div>
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
+
+            <div class="d-flex justify-end">
+              <v-btn
+                color="#727CF5"
+                @click="e1 = 2"
               >
-                Toạ độ: {{ marker.position.lat }}, {{ marker.position.lng }}
+                Tiếp tục
+              </v-btn>
+            </div>
+          </v-stepper-content>
+
+          <v-stepper-content step="2">
+            <div
+              height="300px"
+            >
+              <div class="hidden-sm-and-down">
+                <v-row>
+                  <v-col cols="2">
+                    <v-text-field v-model="buildingNo" placeholder="Số nhà"></v-text-field>
+                  </v-col>
+                  <v-col cols="10">
+                    <v-select
+                      prepend-icon="confirmation_number"
+                      :items="coordsToString.selectableAddresses"
+                      label="Chọn địa chỉ"
+                      v-model="coordsToString.selectedAddress"
+                      messages="Lựa chọn địa chỉ dựa theo vị trí đã chọn"
+                    ></v-select>
+                  </v-col>
+                </v-row>
+                <br />
+              </div>
+              <div class="hidden-sm-and-up">
+                <v-text-field v-model="buildingNo" placeholder="Số nhà"></v-text-field>
+                <v-select
+                  :items="coordsToString.selectableAddresses"
+                  label="Chọn địa chỉ"
+                  v-model="coordsToString.selectedAddress"
+                  messages="Thay đổi danh sách địa chỉ bằng cách xác định vị trí trên bản đồ"
+                ></v-select>
+                <br />
               </div>
             </div>
-          </gmap-map>
-        </div>
-      </div>
+            <div class="d-flex justify-start">
+              <v-btn
+                color="#727CF5"
+                @click="e1 = 1"
+              >
+                Quay lại
+              </v-btn>
+            </div>
+          </v-stepper-content>
+        </v-stepper-items>
+      </v-stepper>
     </v-card>
   </div>
 </template>
@@ -99,6 +159,7 @@ export default {
         selectableAddresses: [],
         selectedAddress: '',
       },
+      e1: 1,
     };
   },
 
@@ -274,7 +335,7 @@ export default {
 <style scoped>
 .gmap-view {
   position: relative;
-  height: 400px;
+  height: 300px;
   border: 1px slateblue solid;
 }
 .gmap-search-bar {

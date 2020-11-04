@@ -36,7 +36,106 @@
                     </v-row>
                   </v-col>
                   <v-col cols="6">
-                    <ImageEditor :images="type.typeImages" />
+                    <v-row>
+                      <v-col cols="12">
+                        <v-data-table
+                                  :headers="headers"
+                                  :items="rooms"
+                                  class="elevation-1"
+                                  hide-default-footer
+                                  locale="vi-VN"
+                                >
+                                  <template v-slot:top>
+                                    <v-toolbar
+                                      flat
+                                    >
+                                      <v-toolbar-title>Phòng</v-toolbar-title>
+                                      <v-spacer></v-spacer>
+                                      <v-dialog
+                                        v-model="dialogR"
+                                        max-width="500px"
+                                      >
+                                        <template v-slot:activator="{ on, attrs }">
+                                          <v-btn
+                                            color="#727CF5"
+                                            dark
+                                            class="mb-2"
+                                            v-bind="attrs"
+                                            v-on="on"
+                                          >
+                                            Thêm phòng
+                                          </v-btn>
+                                        </template>
+                                        <v-card>
+                                          <v-card-title>
+                                            <span class="headline">{{ formTitle }}</span>
+                                          </v-card-title>
+
+                                          <v-card-text>
+                                            <v-container>
+                                              <v-row>
+                                                <v-col
+                                                  cols="12"
+                                                >
+                                                  <v-text-field
+                                                    v-model="editedItem.name"
+                                                    label="Tên phòng"
+                                                    solo
+                                                  ></v-text-field>
+                                                </v-col>
+                                              </v-row>
+                                            </v-container>
+                                          </v-card-text>
+
+                                          <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn
+                                              color="blue darken-1"
+                                              text
+                                              @click="close"
+                                            >
+                                              Hủy
+                                            </v-btn>
+                                            <v-btn
+                                              color="blue darken-1"
+                                              text
+                                              @click="save"
+                                            >
+                                              Tạo
+                                            </v-btn>
+                                          </v-card-actions>
+                                        </v-card>
+                                      </v-dialog>
+                                      <!-- <v-dialog v-model="dialogDelete" max-width="500px">
+                                        <v-card>
+                                          <v-card-title class="headline">Bạn thật sự muốn xóa</v-card-title>
+                                          <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn color="blue darken-1" text @click="closeDelete">Hủy</v-btn>
+                                            <v-btn color="blue darken-1" text @click="deleteItemConfirm">Đồng ý</v-btn>
+                                            <v-spacer></v-spacer>
+                                          </v-card-actions>
+                                        </v-card>
+                                      </v-dialog> -->
+                                    </v-toolbar>
+                                  </template>
+                                  <template v-slot:item.actions="{ item }">
+                                    <v-icon
+                                      small
+                                      @click="deleteItem(item)"
+                                    >
+                                      mdi-delete
+                                    </v-icon>
+                                  </template>
+                                  <template v-slot:no-data>
+                                    Không có phòng trọ
+                                  </template>
+                      </v-data-table>
+                      </v-col>
+                      <v-col cols="12">
+                        <ImageEditor :images="type.typeImages" />
+                      </v-col>
+                    </v-row>
                    </v-col>
                 </v-row>
               </v-card>
