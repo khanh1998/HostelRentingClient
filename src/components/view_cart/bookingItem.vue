@@ -146,6 +146,38 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="dialog.show" width="350">
+        <v-card height="350" :loading="isFileUploading">
+          <div class="d-flex flex-column align-center justify-center">
+            <input
+              type="file"
+              @change="onFileChange"
+              ref="fileSelect"
+              multiple
+              lang="vi"
+              accept="image/*"
+              class="ma-2"
+            />
+            <div class="d-flex flex-wrap" style="height: 250px; overflow-y: auto;">
+              <v-img
+                v-for="url in upload.imageUrls"
+                :key="url"
+                :src="url"
+                height="100"
+                width="100"
+                class="ma-1 elevation-2"
+              ></v-img>
+            </div>
+          </div>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="primary" v-if="this.upload.imageUrls.length > 0" @click="uploadImages">
+              <v-icon>cloud_upload</v-icon> Tải lên
+            </v-btn>
+            <v-spacer />
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-dialog
         v-model="feedbackDialog"
         max-width="80%"
@@ -232,8 +264,38 @@
                       height="120"
                       hide-details
                     ></v-textarea>
-                    <div class="bg-light">
-                      <v-file-input multiple label="File input"></v-file-input>
+                    <div class="bg-light d-flex flex-wrap align-center pa-2">
+                      <v-btn icon @click="openImageUploadDialog" depressed>
+                        <v-icon>mdi-file-image</v-icon></v-btn
+                      >
+                      <v-spacer></v-spacer>
+                      <div v-for="image in images" :key="image.resourceUrl">
+                        <v-badge
+                          bordered
+                          color="rgba(250, 92, 124, 0.5)"
+                          icon="mdi-close"
+                          overlap
+                          class="d-flex justify-center align-center"
+                          offset-x="20"
+                          offset-y="20"
+                        >
+                          <v-img
+                            :src="image.resourceUrl"
+                            :lazy-src="image.resourceUrl"
+                            aspect-ratio="1"
+                            class="ma-2 white image-feedback"
+                          >
+                            <template v-slot:placeholder>
+                              <v-row class="fill-height ma-0" align="center" justify="center">
+                                <v-progress-circular
+                                  indeterminate
+                                  color="grey lighten-5"
+                                ></v-progress-circular>
+                              </v-row>
+                            </template>
+                          </v-img>
+                        </v-badge>
+                      </div>
                     </div>
                   </v-col>
                 </v-row>
@@ -448,11 +510,14 @@
 <script>
 import { mapActions } from 'vuex';
 import GoogleMapsDirection from './GoogleMapsDirection.vue';
+import fileMixins from '../mixins/file';
+import snackBarMixin from '../mixins/snackBar';
 
 export default {
   name: 'BookingItem',
   props: ['booking'],
   components: { GoogleMapsDirection },
+  mixins: [fileMixins, snackBarMixin],
   data: () => ({
     detailDialog: false,
     feedbackDialog: false,
@@ -462,6 +527,14 @@ export default {
     rating: 0,
     comment: null,
     mapDialog: false,
+    dialog: {
+      show: false,
+      files: null,
+    },
+    upload: {
+      imageUrls: [],
+    },
+    images: [],
   }),
   computed: {
     timestamp() {
@@ -535,6 +608,39 @@ export default {
       const url = `https://www.google.com/maps/search/${lat},${long}/@${lat},${long},17z?hl=vi`;
       window.open(url, '_blank');
     },
+    // image
+    openImageUploadDialog() {
+      this.dialog.show = true;
+      this.$nextTick(() => this.$refs.fileSelect.click());
+    },
+    onFileChange(e) {
+      const { files } = e.target;
+      this.files = files;
+      this.upload.imageUrls = Array.from(files).map((file) => URL.createObjectURL(file));
+    },
+    uploadImages() {
+      const fd = new FormData();
+      Array.from(this.files).forEach((file) => {
+        fd.append('files', file, file.data);
+      });
+      this.uploadFile(fd)
+        .then(() => {
+          this.upload.imageUrls = this.listUploadedFiles;
+          this.images = this.upload.imageUrls.map((image) => ({ resourceUrl: image }));
+          this.dialog.show = false;
+          this.showSnackBar('Tải ảnh lên thành công', { color: 'green' });
+        })
+        .catch((error) => {
+          console.log(error);
+          this.showSnackBar('Tải ảnh lên thất bại', { color: 'red' });
+        });
+    },
+    removeImage(url) {
+      if (url) {
+        return this.upload.imageUrls.filter((imgUrl) => imgUrl !== url);
+      }
+      return this.upload.imageUrls;
+    },
     sendFeedback() {
       if (this.rating > 0) {
         const feedbackObj = {
@@ -542,9 +648,24 @@ export default {
           typeId: this.booking.type.typeId,
           rating: this.rating,
           comment: this.comment,
+          images: this.images,
         };
         this.createFeedback(feedbackObj).then(() => this.getType());
       }
+    },
+  },
+  watch: {
+    // upload: {
+    //   handler() {
+    //     this.$emit('newValues', this.upload.imageUrls);
+    //   },
+    //   deep: true,
+    // },
+    dialog(val) {
+      return val || this.close();
+    },
+    dialogDelete(val) {
+      return val || this.closeDelete();
     },
   },
   created() {},
@@ -617,5 +738,10 @@ export default {
 .feedback .v-input__control {
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
+}
+.image-feedback {
+  height: 3rem !important;
+  width: 3rem !important;
+  border-radius: 0.25rem !important;
 }
 </style>

@@ -566,9 +566,9 @@ export default {
     },
     renter() {
       const renter = this.$store.state.user.user.data;
-      if (renter) {
-        // universityId: this.renter.school.schoolId,
-        // provinceId: this.renter.hometown.provinceId,
+      const suggestionTypes = this.$store.state.renter.hostelType.suggestedTypes;
+      console.log(suggestionTypes);
+      if (renter && !suggestionTypes.data.types) {
         this.getSuggestedTypes({
           universityId: renter.school.schoolId,
           provinceId: renter.hometown.provinceId,
@@ -651,11 +651,9 @@ export default {
       return window.$cookies.get('compatriot');
     },
     suggestedTypes() {
-      console.log(this.$store.state.renter.hostelType.suggestedTypes);
       return this.$store.state.renter.hostelType.suggestedTypes;
     },
     feedbacks() {
-      console.log(this.$store.state.renter.hostelType.feedback);
       return this.$store.state.renter.hostelType.feedback.data;
     },
   },

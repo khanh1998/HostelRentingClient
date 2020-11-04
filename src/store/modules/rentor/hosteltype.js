@@ -71,6 +71,8 @@ const mutationTypes = {
   GET_FEEDBACK_REQUEST: 'GET_FEEDBACK_REQUEST',
   GET_FEEDBACK_SUCCESS: 'GET_FEEDBACK_SUCCESS',
   GET_FEEDBACK_FAILURE: 'GET_FEEDBACK_FAILURE',
+
+  SET_FEEDBACKS_VALUES: 'SET_FEEDBACKS_VALUES',
 };
 
 const mutations = {
@@ -137,6 +139,9 @@ const mutations = {
   GET_FEEDBACK_FAILURE(state, error) {
     state.feedback.error = error;
     state.feedback.data = null;
+  },
+  SET_FEEDBACKS_VALUES: (state, list) => {
+    state.feedback.data = list;
   },
 };
 
@@ -205,6 +210,9 @@ const actions = {
     } catch (error) {
       commit(mutationTypes.GET_FEEDBACK_FAILURE, error);
     }
+  },
+  setFeedbacks({ commit }, list) {
+    commit(mutationTypes.SET_FEEDBACKS_VALUES, list);
   },
 };
 

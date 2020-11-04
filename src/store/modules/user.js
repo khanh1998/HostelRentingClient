@@ -43,7 +43,7 @@ const myState = () => ({
     isLoading: false,
     success: null,
     error: null,
-    newlyCreated: null,
+    feedbackUpdate: null,
   },
 });
 
@@ -174,6 +174,14 @@ const mutationTypes = {
   CREATE_FEEDBACK_REQUEST: 'CREATE_FEEDBACK_REQUEST',
   CREATE_FEEDBACK_SUCCESS: 'CREATE_FEEDBACK_SUCCESS',
   CREATE_FEEDBACK_FAILURE: 'CREATE_FEEDBACK_FAILURE',
+
+  DELETE_FEEDBACK_REQUEST: 'DELETE_FEEDBACK_REQUEST',
+  DELETE_FEEDBACK_SUCCESS: 'DELETE_FEEDBACK_SUCCESS',
+  DELETE_FEEDBACK_FAILURE: 'DELETE_FEEDBACK_FAILURE',
+
+  UPDATE_FEEDBACK_REQUEST: 'UPDATE_FEEDBACK_REQUEST',
+  UPDATE_FEEDBACK_SUCCESS: 'UPDATE_FEEDBACK_SUCCESS',
+  UPDATE_FEEDBACK_FAILURE: 'UPDATE_FEEDBACK_FAILURE',
 };
 const mutations = {
   CLEAR_USER_DATA(state) {
@@ -462,6 +470,36 @@ const mutations = {
     state.feedback.isLoading = true;
     state.feedback.success = false;
     state.feedback.error = error;
+  },
+
+  DELETE_FEEDBACK_REQUEST(state) {
+    state.feedback.isLoading = true;
+  },
+  DELETE_FEEDBACK_SUCCESS(state) {
+    state.feedback.success = true;
+    state.feedback.isLoading = false;
+    state.feedback.error = null;
+  },
+  DELETE_FEEDBACK_FAILURE(state, error) {
+    state.feedback.isLoading = true;
+    state.feedback.success = false;
+    state.feedback.error = error;
+  },
+
+  UPDATE_FEEDBACK_REQUEST(state) {
+    state.feedback.isLoading = true;
+    state.feedback.error = null;
+    state.feedback.success = null;
+  },
+  UPDATE_FEEDBACK_SUCCESS(state, feedback) {
+    state.feedbackUpdate = feedback;
+    state.feedback.success = true;
+    state.feedback.isLoading = false;
+  },
+  UPDATE_FEEDBACK_FAILURE(state, error) {
+    state.feedback.error = error;
+    state.feedback.success = false;
+    state.feedback.isLoading = false;
   },
 };
 
@@ -978,6 +1016,57 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.CREATE_FEEDBACK_FAILURE, error);
+    }
+  },
+  async deleteFeedback({ commit, state }, feedbackId) {
+    try {
+      commit(mutationTypes.DELETE_FEEDBACK_REQUEST);
+      const userId = window.$cookies.get('userId');
+      const role = window.$cookies.get('role');
+      if (!userId && !state.user.data) {
+        const error = new Error('Loggin to remove feedback');
+        commit(mutationTypes.DELETE_FEEDBACK_FAILURE, error);
+      } else if (role !== 'renters') {
+        const error = new Error('Only owner  have permission to remove feedback');
+        commit(mutationTypes.DELETE_FEEDBACK_FAILURE, error);
+      } else {
+        const res = await window.axios.delete(`/api/v1/feedbacks/${feedbackId}`);
+        if (res.status >= 200 && res.status <= 299) {
+          commit(mutationTypes.DELETE_FEEDBACK_SUCCESS);
+        } else {
+          const error = new Error('Cannot receive response from server');
+          commit(mutationTypes.DELETE_FEEDBACK_FAILURE, error);
+        }
+      }
+    } catch (error) {
+      commit(mutationTypes.CREATE_FEEDBACK_FAILURE, error);
+    }
+    return feedbackId;
+  },
+  async updateFeedback({ commit, state }, feedback) {
+    try {
+      commit(mutationTypes.UPDATE_FEEDBACK_REQUEST);
+      const userId = window.$cookies.get('userId');
+      const role = window.$cookies.get('role');
+      if (!userId && !state.user.data) {
+        const error = new Error('Loggin to update feedback');
+        commit(mutationTypes.UPDATE_FEEDBACK_FAILURE, error);
+      } else if (role !== 'renters') {
+        const error = new Error('Only owner have permission to activate contract');
+        commit(mutationTypes.UPDATE_FEEDBACK_FAILURE, error);
+      } else {
+        const res = await window.axios.put(`/api/v1/feedbacks/${feedback.feedbackId}`, {
+          feedback,
+        });
+        if (!res) {
+          const error = new Error('Cannot receive response from server');
+          commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
+        } else if (res.status >= 200 && res.status <= 299) {
+          commit(mutationTypes.UPDATE_FEEDBACK_SUCCESS, res.data.data);
+        }
+      }
+    } catch (error) {
+      commit(mutationTypes.UPDATE_USER_FAILURE, error);
     }
   },
 };

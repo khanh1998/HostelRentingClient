@@ -49,7 +49,7 @@
         <v-pagination
           class="ml-auto elevation-0"
           v-model="page"
-          :length="4"
+          :length="pageLength"
           circle
           color="#727cf5"
           prev-icon="mdi-menu-left"
@@ -85,8 +85,35 @@ export default {
       console.log(this.$store.state.renter.hostelType.feedback.data);
       return this.$store.state.renter.hostelType.feedback.data;
     },
+    listFilter() {
+      switch (this.typeFeedback) {
+        case 'all':
+          return this.list;
+        case 'booking':
+          return this.list.filter((feedback) => feedback.bookingId);
+        case 'contract':
+          return this.list.filter((feedback) => feedback.contractId);
+        case 'fiveStar':
+          return this.list.filter((feedback) => feedback.rating === 5);
+        case 'fourStar':
+          return this.list.filter((feedback) => feedback.rating === 4);
+        case 'threeStar':
+          return this.list.filter((feedback) => feedback.rating === 3);
+        case 'twoStar':
+          return this.list.filter((feedback) => feedback.rating === 2);
+        case 'oneStart':
+          return this.list.filter((feedback) => feedback.rating === 1);
+        case 'image':
+          return this.list.filter((feedback) => feedback.feedbackImages);
+        case 'commnet':
+          return this.list.filter((feedback) => feedback.comment);
+        default:
+          break;
+      }
+      return this.list;
+    },
     display() {
-      return this.list.slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+      return this.listFilter.slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
     },
     counter() {
       const all = this.list.length;
@@ -97,7 +124,7 @@ export default {
       let threeStar = 0;
       let twoStar = 0;
       let oneStar = 0;
-      const image = 0;
+      let image = 0;
       let comment = 0;
       this.list.forEach((feedback) => {
         if (feedback.bookingId) {
@@ -111,6 +138,9 @@ export default {
         }
         if (feedback.comment) {
           comment += 1;
+        }
+        if (feedback.feedbackImages) {
+          image += 1;
         }
         switch (feedback.rating) {
           case 5:
@@ -143,6 +173,9 @@ export default {
         image,
         comment,
       };
+    },
+    pageLength() {
+      return Math.ceil(this.list.length / this.pageRange);
     },
   },
 };
