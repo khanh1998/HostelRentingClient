@@ -4,7 +4,8 @@ import firebase from '../config/firebase';
 const { auth } = firebase;
 
 function isFirebaseLoggedIn() {
-  return auth.currentUser;
+  // return auth.currentUser;
+  return window.$cookies.get('firebaseLoggedIn');
 }
 
 async function checkIfTokenNeedsRefresh() {

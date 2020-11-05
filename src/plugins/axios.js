@@ -25,7 +25,6 @@ axios.interceptors.request.use(
       '/utilities',
       '/categories',
     ];
-    console.log(myConfig.url);
     if (urlsExcludedForBearerHeader.every((url) => !myConfig.url.includes(url))) {
       myConfig.headers.Authorization = `Bearer ${window.$cookies.get('firebaseIdToken')}`;
     }

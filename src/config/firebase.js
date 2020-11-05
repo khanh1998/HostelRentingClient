@@ -34,7 +34,18 @@ if (firebase.messaging.isSupported()) {
 }
 
 const auth = firebase.auth();
-
+auth.onAuthStateChanged(
+  (user) => {
+    if (user) {
+      window.$cookies.set('firebaseLoggedIn', true);
+    } else {
+      window.$cookies.set('firebaseLoggedIn', false);
+    }
+  },
+  (error) => {
+    console.log(error);
+  },
+);
 export default {
   store,
   messaging,

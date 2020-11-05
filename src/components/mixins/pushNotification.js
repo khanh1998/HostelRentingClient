@@ -10,13 +10,15 @@ const pushNotificationMixins = {
   methods: {
     ...mapActions({
       updateUser: 'user/updateUser',
+      getUser: 'user/getUser',
     }),
     getMessagingToken() {
       messaging
         .getToken({ vapidKey: constant.PUBLIC_VAPID_KEY })
         .then(async (token) => {
           if (token) {
-            const currentMessageToken = window.localStorage.getItem('messagingToken');
+            // const currentMessageToken = window.localStorage.getItem('messagingToken');
+            const currentMessageToken = this.userDataForChecking.firebaseToken;
             console.log('token will be updated', currentMessageToken !== token);
             if (currentMessageToken !== token) {
               await this.saveToken(token);
