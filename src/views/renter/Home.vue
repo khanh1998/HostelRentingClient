@@ -117,7 +117,7 @@
           <div class="d-flex flex-column justify-center align-center topview-lable mt-16">
             <div class="line-blue mb-5"></div>
             <span>Khám Phá Thành Phố</span>
-            <span style="font-size: 0.9rem; font-weight: 400 !important"
+            <span style="font-size: 0.9rem; font-weight: 400 !important;"
               >Tìm hiểu về giá cả nhà trọ trên từng khu vực để giúp bạn tìm được một căn phòng ưng
               ý</span
             >

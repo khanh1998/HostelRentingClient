@@ -2,7 +2,7 @@
   <div class="d-flex flex-column" _style="height: 100%; width: 100%; overflow-y: auto;">
     <v-row class="d-flex ma-0 pa-0">
       <v-col cols="9" class="pa-0">
-        <v-progress-linear v-model="stat.stat" height="25" color="#727cf5">
+        <v-progress-linear :value="stat.stat" height="25" color="#727cf5">
           <span class="font-nunito size-sub-3 white--text mr-auto ml-2" v-if="stat.stat >= 50"
             >{{ stat.total - stat.empty }} phòng đang thuê</span
           >
@@ -63,7 +63,7 @@ export default {
         const newCount = c;
         if (type.rooms) {
           newCount.total += type.rooms.length;
-          newCount.empty += type.rooms.filter((room) => !room.available).length;
+          newCount.empty += type.rooms.filter((room) => room.available).length;
           newCount.stat =
             newCount.total === 0
               ? 100 // eslint-disable-line

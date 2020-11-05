@@ -189,9 +189,17 @@ export default {
   methods: {
     ...mapActions({
       getProvinces: 'renter/common/getProvinces',
+      getUtilities: 'renter/hostelGroup/getNearByUtilities',
+      getDistrictStatistic: 'renter/discovery/getDistrictStatistic',
     }),
     getDetail(typeId) {
       this.$router.push(`/detail/${typeId}`);
+      this.getUtilities({
+        distance: '10',
+        longitude: this.group.longitude,
+        latitude: this.group.latitude,
+      });
+      this.getDistrictStatistic(this.group.address.districtId);
     },
   },
   created() {},
