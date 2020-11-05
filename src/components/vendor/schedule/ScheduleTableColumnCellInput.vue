@@ -5,9 +5,8 @@
       max-width="300"
     >
       <v-card>
-        <v-card-title>Chọn khoảng thời gian</v-card-title>
+        <v-card-title style="color:#727cf5">Chọn khoảng thời gian</v-card-title>
         <div class="d-flex flex-row ma-1">
-          <span class="font-weight-bold ma-1">Từ</span>
           <el-time-select
             placeholder="Bắt đầu"
             v-model="picker.startTime"
@@ -19,7 +18,7 @@
             }"
           >
           </el-time-select>
-          <span class="font-weight-bold ma-1">đến</span>
+          <v-icon class="mx-1">arrow_right_alt</v-icon>
           <el-time-select
             placeholder="Kết thúc"
             v-model="picker.endTime"
@@ -33,14 +32,14 @@
           </el-time-select>
         </div>
         <v-card-actions>
-          <div class="d-flex flex-row justify-center">
-            <v-btn
-              color="red"
+          <div class="d-flex justify-center">
+              <v-btn
+              color="grey"
               text
               @click="dialog.show = false"
             >Hủy</v-btn>
             <v-btn
-              color="green"
+              color="#727cf5"
               v-if="isValid"
               text
               @click="add"
