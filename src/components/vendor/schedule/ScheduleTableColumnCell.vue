@@ -6,7 +6,7 @@
       <span>{{ value.endTime }}</span>
     </v-list-item-title>
     <v-list-item-action>
-      <v-btn icon small>
+      <v-btn icon small @click="remove(value)">
         <v-icon color="red" small>clear</v-icon>
       </v-btn>
     </v-list-item-action>
@@ -16,6 +16,10 @@
 export default {
   name: 'VendorScheduleTableColumnCell',
   props: ['value'],
-  methods: {},
+  methods: {
+    remove(removeItem) {
+      this.$emit('remove', removeItem);
+    },
+  },
 };
 </script>
