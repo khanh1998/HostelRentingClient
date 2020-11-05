@@ -40,11 +40,16 @@
           max-height="50"
         />
       </router-link> -->
-      <v-app-bar-nav-icon @click.stop="primaryDrawer.model = !primaryDrawer.model">
+      <v-app-bar-nav-icon
+        @click.stop="primaryDrawer.model = !primaryDrawer.model"
+        style="color: #727cf5 !important;"
+      >
       </v-app-bar-nav-icon>
-      <v-toolbar-title class="font-nunito text-gray font-weight-bold" style="font-size: 1.125rem">{{
-        routeName
-      }}</v-toolbar-title>
+      <v-toolbar-title
+        class="font-nunito text-primary font-weight-bold"
+        style="font-size: 1.125rem;"
+        >{{ routeName }}</v-toolbar-title
+      >
       <v-spacer></v-spacer>
       <!-- <v-btn icon large @click.stop="chatDrawer.model = !chatDrawer.model">
         <v-icon color="#727cf5">mdi-chat-processing</v-icon>
@@ -57,7 +62,7 @@
         id="container"
         ref="container"
         fluid
-        style="max-height: 100%"
+        style="max-height: 100%;"
         class="d-flex flex-column"
       >
         <router-view />
@@ -150,5 +155,11 @@ export default {
 }
 .float-right {
   float: right !important;
+}
+.page-title {
+  font-weight: 700 !important;
+  font-family: 'Nunito', sans-serif !important;
+  color: #6c757d !important;
+  font-size: 1.15rem !important;
 }
 </style>

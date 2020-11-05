@@ -466,6 +466,12 @@ export default {
       }
       return `${downPayment} triệu`;
     },
+    getTypeById(listTypes) {
+      return listTypes.find((type) => type.typeId === Number(this.typeId));
+    },
+    getGroupById(listGroup, id) {
+      return listGroup.find((group) => group.groupId === Number(id));
+    },
   },
   computed: {
     ...mapGetters({
@@ -539,36 +545,65 @@ export default {
       return this.$store.state.renter.common.provinces.isLoading;
     },
     info() {
+      console.log(this.typeId);
       let data = null;
-      data = this.$store.state.renter.hostelType.hostelType.data;
-      // data = this.$store.getters['renter/home/getHostelTypeById'](this.typeId);
-      if (data === null) {
-        data = this.$store.getters['renter/filterResult/getHostelTypeById'](this.typeId);
-        if (data === null) {
-          data = this.$store.state.renter.hostelType.hostelType.data;
+      data = this.$store.state.renter.home.topView.data; // get from top view - home page
+      let type = null;
+      type = this.getTypeById(data);
+      if (!type) {
+        data = this.$store.state.renter.home.hostelTypes.data; // get from top suggestion - home page
+        type = this.getTypeById(data);
+        const result = this.$store.state.renter.filterResult.results.data.types;
+        if (!type && result) {
+          data = result;
+          type = this.getTypeById(data);
+        }
+        const suggestionTypes = this.$store.state.renter.hostelType.suggestedTypes.data.types;
+        if (!type && suggestionTypes) {
+          data = suggestionTypes;
+          type = this.getTypeById(data);
+        }
+        if (!type) {
+          type = this.$store.state.renter.hostelType.hostelType.data;
         }
       }
-      return data;
+      return type;
     },
     group() {
       let data = null;
-      if (this.info != null) {
-        const { groupId } = this.info;
-        data = this.$store.getters['renter/home/getHostelGroupById'](groupId);
-        if (data === null) {
-          data = this.$store.getters['renter/filterResult/getHostelGroupById'](groupId);
+      const { groupId } = this.info;
+      data = this.$store.state.renter.home.topViewHostelGroup.data; // get from top view - home page
+      let group = null;
+      group = this.getGroupById(data, groupId);
+      if (!group) {
+        data = this.$store.state.renter.home.hostelGroups.data; // get from top suggestion - home page
+        group = this.getGroupById(data, groupId);
+        const searchResult = this.$store.state.renter.filterResult.results.data.groups;
+        if (!group && searchResult) {
+          data = searchResult; // get from search result
+          group = this.getGroupById(data, groupId);
+        }
+        const suggestionTypes = this.$store.state.renter.hostelType.suggestedTypes.data.groups;
+        if (!group && suggestionTypes) {
+          data = suggestionTypes;
+          group = this.getGroupById(data, groupId);
+        }
+        if (!group) {
+          group = this.$store.state.renter.hostelType.hostelGroup.data;
         }
       }
-      if (data === null) {
-        data = this.$store.state.renter.hostelType.hostelGroup.data;
-      }
-      return data;
+      return group;
     },
     renter() {
       const renter = this.$store.state.user.user.data;
       const suggestionTypes = this.$store.state.renter.hostelType.suggestedTypes;
-      console.log(suggestionTypes);
-      if (renter && !suggestionTypes.data.types) {
+      if (
+        renter &&
+        renter.role.code === 'RENTER' &&
+        !suggestionTypes.data.types &&
+        renter.school &&
+        renter.hometown
+      ) {
         this.getSuggestedTypes({
           universityId: renter.school.schoolId,
           provinceId: renter.hometown.provinceId,
@@ -600,19 +635,23 @@ export default {
       return this.$store.state.renter.hostelGroup.hostelTypes.data;
     },
     statistic() {
+      console.log(this.$store.state.renter.discovery.stats.district.data);
       return this.$store.state.renter.discovery.stats.district.data;
     },
     proviceStat() {
+      console.log(this.group.address);
       return this.statistic.provinces.filter(
         (p) => p.provinceId === this.group.address.provinceId,
       )[0];
     },
     districtStat() {
+      console.log(this.proviceStat);
       return this.proviceStat.districts.filter(
         (d) => d.districtId === this.group.address.districtId,
       )[0];
     },
     wardStat() {
+      console.log(this.districtStat);
       return this.districtStat.wards.filter((w) => w.wardId === this.group.address.wardId)[0];
     },
     streetStat() {

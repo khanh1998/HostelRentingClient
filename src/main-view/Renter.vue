@@ -85,6 +85,11 @@ export default {
   border-color: #0acf97 !important;
   box-shadow: 0 2px 6px 0 rgba(10, 207, 151, 0.5) !important;
 }
+.btn-success:hover {
+  color: #fff !important;
+  background-color: #08ab7c !important;
+  border-color: #089e74 !important;
+}
 .btn-warning {
   color: #313a46 !important;
   background-color: #ffbc00 !important;
@@ -110,6 +115,12 @@ export default {
   color: #727cf5 !important;
   border: 1px solid #727cf5 !important;
   background-color: #fff !important;
+}
+.btn-sm {
+  padding: 0.2rem 0.8rem !important;
+  font-size: 0.875rem !important;
+  border-radius: 0.15rem !important;
+  letter-spacing: 0.01rem !important;
 }
 .text-primary {
   color: #727cf5 !important;

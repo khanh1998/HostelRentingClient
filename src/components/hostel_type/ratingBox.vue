@@ -82,7 +82,6 @@ export default {
   },
   computed: {
     list() {
-      console.log(this.$store.state.renter.hostelType.feedback.data);
       return this.$store.state.renter.hostelType.feedback.data;
     },
     listFilter() {

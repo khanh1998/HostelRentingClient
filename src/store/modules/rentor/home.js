@@ -118,6 +118,8 @@ const mutations = {
   GET_HOSTEL_TYPES_FAILURE(state, error) {
     state.hostelTypes.isLoading = false;
     state.hostelGroups.isLoading = false;
+    state.hostelGroups.data = [];
+    state.hostelTypes.data = [];
     state.hostelTypes.error = error;
     state.hostelGroups.error = error;
   },
@@ -132,9 +134,13 @@ const mutations = {
     state.topViewHostelGroup.data = inputData.groups;
     state.topView.isLoading = false;
   },
-  GET_TOP_VIEW_FAILURE(state) {
+  GET_TOP_VIEW_FAILURE(state, error) {
     state.topView.isLoading = false;
     state.topViewHostelGroup.isLoading = false;
+    state.topView.data = [];
+    state.topViewHostelGroup.data = [];
+    state.topView.error = error;
+    state.topViewHostelGroup.error = error;
   },
   GET_TOP_VIEW_REQUEST(state) {
     state.topView.isLoading = true;
@@ -213,7 +219,7 @@ const actions = {
         commit(mutationTypes.GET_TOP_VIEW_SUCCESS, response.data.data);
       }
     } catch (error) {
-      commit(mutationTypes.GET_TOP_VIEW_FAILURE);
+      commit(mutationTypes.GET_TOP_VIEW_FAILURE, error);
     }
   },
   async getAllCategories({ commit }) {

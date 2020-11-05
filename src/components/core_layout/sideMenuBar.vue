@@ -1,18 +1,34 @@
 <template>
   <v-card
     height="100%"
-    class="overflow-hidden rounded-0 d-flex align-strench"
+    class="overflow-hidden rounded-0 d-flex align-strench pt-3"
     v-if="!user.isLoading"
   >
-    <v-list nav class="py-0 rounded-1" height="100%" dense>
-      <v-list-item> </v-list-item>
-      <v-list-item v-if="!hasMessagingToken" class="d-flex align-center justify-center">
-        <v-btn dark rounded color="amber" @click="doGetMessagingToken">
-          <v-icon>notifications_none</v-icon>Bật thông báo
+    <v-list nav class="py-0 rounded-1" height="100%">
+      <v-list-item class="d-flex">
+        <router-link to="/">
+          <v-img
+            alt="Hostel Renting"
+            class="shrink mr-2"
+            contain
+            src="@/assets/logo-sac.png"
+            transition="scale-transition"
+            max-width="40"
+            max-height="40"
+          />
+        </router-link>
+        <v-spacer></v-spacer>
+        <v-btn
+          @click="doGetMessagingToken"
+          v-if="!hasMessagingToken"
+          class="bg-warning-lighten elevation-0 text-warning font-nunito size9rem d-flex justify-start"
+          style="letter-spacing: 0.01rem !important;"
+        >
+          <v-icon small class="mr-1">notifications_none</v-icon>Bật thông báo
         </v-btn>
       </v-list-item>
 
-      <div class="text-display mt-3 mb-3 ml-7">Danh mục</div>
+      <span class="mt-10 text-gray side-nav-title font-nunito">DANH MỤC</span>
       <v-list-item to="/vendor/mobile-message" v-if="isMobile">
         <v-list-item-icon>
           <v-img :src="require('@/assets/menu_chat.png')" max-height="20" max-width="20" />
@@ -134,5 +150,11 @@ export default {
 }
 .text-display {
   color: #b4b7c8;
+}
+.side-nav-title {
+  font-size: 0.6875rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  font-weight: 700 !important;
 }
 </style>
