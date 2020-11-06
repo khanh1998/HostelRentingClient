@@ -11,7 +11,7 @@
           <Banner />
         </v-col>
       </v-row>
-      <v-row justify="center" class="content" v-if="topView">
+      <v-row justify="center" class="content" v-if="topView && topView.length > 0">
         <v-col cols="12" sm="12" md="11" lg="11" xl="10">
           <div class="d-flex flex-column justify-center align-center topview-lable mt-16">
             <div class="line-blue mb-5"></div>
@@ -19,7 +19,7 @@
           </div>
         </v-col>
       </v-row>
-      <v-row justify="center" class="content" v-if="topView">
+      <v-row justify="center" class="content" v-if="topView && topView.length > 0">
         <v-col cols="9" sm="10" md="10" lg="10" xl="9">
           <TopCarousel :list="topView" />
         </v-col>
@@ -96,23 +96,14 @@
               </div>
             </v-col>
           </v-row>
-          <!-- <v-row>
-            <v-col cols="12" sm="12" md="7" xl="8" lg="8" class="mt-10">
-              <v-pagination
-                light
-                v-model="paging.page"
-                :length="5"
-                :total-visible="5"
-                prev-icon="mdi-menu-left"
-                next-icon="mdi-menu-right"
-                v-on:input="onUpdatePaging"
-              ></v-pagination>
-            </v-col>
-          </v-row> -->
         </v-col>
         <v-col cols="4"></v-col>
       </v-row>
-      <v-row justify="center" class="content" v-if="topView">
+      <v-row
+        justify="center"
+        class="content"
+        v-if="provinceStatistic && provinceStatistic.provinces.length > 0 && districts"
+      >
         <v-col cols="12" sm="12" md="11" lg="11" xl="10">
           <div class="d-flex flex-column justify-center align-center topview-lable mt-16">
             <div class="line-blue mb-5"></div>
@@ -124,7 +115,11 @@
           </div>
         </v-col>
       </v-row>
-      <v-row justify="center" class="content" v-if="provinceStatistic && districts">
+      <v-row
+        justify="center"
+        class="content"
+        v-if="provinceStatistic && provinceStatistic.provinces.length > 0 && districts"
+      >
         <v-col cols="9" sm="10" md="10" lg="10" xl="9">
           <StatisticCity :list="provinceStatistic.provinces[0].districts" />
         </v-col>
@@ -174,7 +169,6 @@ export default {
     paging: {
       page: 1,
     },
-    filterCriteria: null,
   }),
   methods: {
     ...mapActions({
@@ -185,21 +179,6 @@ export default {
       getAllDistricts: 'renter/home/getAllDistricts',
       getProvinceStatistic: 'renter/discovery/getProvinceStatistic',
     }),
-    onFilterSubmit(data) {
-      this.getFilterResult({ page: 1, size: 10 });
-      this.$router.push({
-        path: '/filter',
-        query: {
-          ...data,
-        },
-        params: {
-          criteria: 'criteria',
-        },
-      });
-    },
-    onUpdatePaging(pageNumber) {
-      this.getHostelTypes({ page: pageNumber, size: 5 });
-    },
   },
   computed: {
     categories: {
