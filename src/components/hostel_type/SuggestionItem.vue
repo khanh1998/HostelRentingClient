@@ -17,9 +17,9 @@
         </div>
       </v-carousel-item>
     </v-carousel>
-    <v-img style="height: 170px;" src="@/assets/image-error.png" v-else>
+    <v-img style="height: 170px" src="@/assets/image-error.png" v-else>
       <div class="category">
-        <span class="text-body-2 white--text">{{ type.category.categoryName }}</span>
+        <span class="text-body-2 white--text">{{ group.category.categoryName }}</span>
         <br />
       </div>
       <div class="price">
@@ -44,7 +44,7 @@
         >
           {{ group.address.districtName }}, {{ group.address.provinceName }}
         </span>
-        <div class="d-flex align-center py-3" style="height: 60px;">
+        <div class="d-flex align-center py-3" style="height: 60px">
           <p
             style="
               display: block;
@@ -71,15 +71,15 @@
                 max-width="16"
                 max-height="16"
               />
-              <span class="text-body-1 font-weight-bold" style="color: #656565;">
+              <span class="text-body-1 font-weight-bold" style="color: #656565">
                 {{ type.superficiality }}
-                <span class="text-body-2 font-weight-medium" style="color: #656565;">
+                <span class="text-body-2 font-weight-medium" style="color: #656565">
                   m
                   <sup>2</sup>
                 </span>
               </span>
             </div>
-            <span class="text-caption" style="color: #656565;">Diện tích</span>
+            <span class="text-caption" style="color: #656565">Diện tích</span>
           </div>
           <div>
             <div class="d-flex justify-center align-center">
@@ -90,19 +90,19 @@
                 max-width="17"
                 max-height="17"
               />
-              <span class="text-body-1 font-weight-bold ml-auto" style="color: #656565;">
+              <span class="text-body-1 font-weight-bold ml-auto" style="color: #656565">
                 {{ type.capacity }}
-                <span class="text-body-2 font-weight-medium" style="color: #656565;">người</span>
+                <span class="text-body-2 font-weight-medium" style="color: #656565">người</span>
               </span>
             </div>
-            <span class="text-caption" style="color: #656565; float: right;">Sức chứa</span>
+            <span class="text-caption" style="color: #656565; float: right">Sức chứa</span>
           </div>
         </div>
         <div
           class="d-flex rounded-0 d-flex justify-space-between mt-2 font-nunito"
-          style="height: 70px;"
+          style="height: 70px"
         >
-          <div style="width: 60%;">
+          <div style="width: 60%">
             <div class="d-flex align-center">
               <v-img
                 src="@/assets/home/school.svg"
@@ -111,9 +111,9 @@
                 max-width="23"
                 max-height="23"
               />
-              <span class="text-body-1 font-weight-bold" style="color: #656565;">
+              <span class="text-body-1 font-weight-bold" style="color: #656565">
                 {{ type.compatriot }}
-                <span class="text-body-2 font-weight-medium" style="color: #656565;">người</span>
+                <span class="text-body-2 font-weight-medium" style="color: #656565">người</span>
               </span>
             </div>
             <span
@@ -139,12 +139,12 @@
                 max-width="20"
                 max-height="20"
               />
-              <span class="text-body-1 font-weight-bold ml-auto" style="color: #656565;">
+              <span class="text-body-1 font-weight-bold ml-auto" style="color: #656565">
                 {{ type.schoolMate }}
-                <span class="text-body-2 font-weight-medium" style="color: #656565;">người</span>
+                <span class="text-body-2 font-weight-medium" style="color: #656565">người</span>
               </span>
             </div>
-            <span class="text-caption" style="color: #656565; float: right;">{{
+            <span class="text-caption" style="color: #656565; float: right">{{
               renter.hometown.provinceName
             }}</span>
           </div>
