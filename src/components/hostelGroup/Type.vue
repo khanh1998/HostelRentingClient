@@ -8,9 +8,9 @@
         md="4"
         lg="4"
         class="item-classic-left left"
-        style="background: #f3f4f9;"
+        style="background: #f3f4f9"
       >
-        <div class="item-classic-media" style="padding-right: 0px !important;">
+        <div class="item-classic-media" style="padding-right: 0px !important">
           <v-carousel
             height="180"
             hide-delimiters
@@ -24,7 +24,7 @@
             >
               <div class="top">
                 <span class="text-body-2 amber--text" _style="color: #3476b2">{{
-                  type.category.categoryName
+                  group.category.categoryName
                 }}</span>
                 <br />
                 <span class="text-caption">{{ type.view }} lượt xem</span>
@@ -32,7 +32,7 @@
               <!-- </v-img> -->
             </v-carousel-item>
           </v-carousel>
-          <v-img src="@/assets/image-error.png" v-else style="height: 180px;" class="image-box">
+          <v-img src="@/assets/image-error.png" v-else style="height: 180px" class="image-box">
             <div class="top">
               <span class="text-body-2 amber--text" _style="color: #3476b2">{{
                 type.category.categoryName
@@ -48,7 +48,7 @@
       </v-col>
       <v-col cols="12" sm="8" md="8" lg="8" class="cursor hidden-xs-only" @click="viewHostelType()">
         <v-col cols="12" class="px-6 white">
-          <div class="type-name mt-2" style="height: 40px;">
+          <div class="type-name mt-2" style="height: 40px">
             <p
               style="
                 display: block;
@@ -107,7 +107,7 @@
             </div>
           </div>
           <div class="mt-3 align-center d-flex">
-            <span class="item-text font-nunito" style="color: #656565;">Giới nghiêm:</span>
+            <span class="item-text font-nunito" style="color: #656565">Giới nghiêm:</span>
             <span
               class="item-text font-nunito font-weight-medium ml-1"
               v-if="group.curfewTime === null"
@@ -132,11 +132,11 @@
         md="8"
         lg="8"
         class="no-padding d-flex justify-center align-center cursor d-flex d-sm-none"
-        style="padding-left: 7px !important; background: #f3f4f9;"
+        style="padding-left: 7px !important; background: #f3f4f9"
         @click="viewHostelType()"
       >
         <v-col cols="12" class="px-6 white">
-          <div class="type-name mt-2" style="height: 40px;">
+          <div class="type-name mt-2" style="height: 40px">
             <p
               style="
                 display: block;
@@ -195,7 +195,7 @@
             </div>
           </div>
           <div class="mt-3 d-flex align-center">
-            <span class="item-text" style="color: #656565;">Giới nghiêm:</span>
+            <span class="item-text" style="color: #656565">Giới nghiêm:</span>
             <div class="d-flex ml-1 left">
               <span
                 class="item-text font-nunito font-weight-medium"

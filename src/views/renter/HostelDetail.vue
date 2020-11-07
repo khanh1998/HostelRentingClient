@@ -1,11 +1,14 @@
 <template>
   <v-row no-gutters class="d-flex justify-center white">
     <v-col cols="11" sm="9" md="12">
-      <!-- <v-overlay :value="(isLoading && isLoadingProvinces)" absolute> -->
-      <v-overlay :value="isLoading" absolute>
+      <v-overlay
+        :value="isLoading"
+        absolute
+        v-if="!isLoading && isSearchError !== 500 && !isPageNotFound"
+      >
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
-      <v-container v-if="!isLoading && isSearchError !== 500">
+      <v-container v-if="!isLoading && isSearchError !== 500 && !isPageNotFound">
         <v-dialog width="400" v-model="chatBox.show">
           <chatBox v-if="renter" v-on:close="chatBox.show = false" :info="info" :group="group" />
           <LoginBox v-if="!renter" />
@@ -23,34 +26,34 @@
             >
               {{ info.title }}
             </h2>
-            <span class="text-muted font-nunito" style="font-size: 0.9rem;">
+            <span class="text-muted font-nunito" style="font-size: 0.9rem">
               {{ group.address.streetName }}, {{ group.address.wardName }},
               {{ group.address.districtName }},
               {{ group.address.provinceName }}
             </span>
-            <div style="width: 100%;" class="d-flex flex-wrap mt-3 justify-space-between">
+            <div style="width: 100%" class="d-flex flex-wrap mt-3 justify-space-between">
               <div class="d-flex flex-column">
                 <span
                   class="font-nunito text-body-1 d-flex align-end justify-space-between"
-                  style="color: #333333;"
+                  style="color: #333333"
                 >
                   <v-icon color="#98a6ad" class="mr-1">mdi-vector-square</v-icon>
                   <span>{{ info.superficiality }}</span>
                   <span class="text-caption">m<sup>2</sup></span>
                 </span>
-                <span class="text-uppercase font-nunito text-caption" style="color: #656565;"
+                <span class="text-uppercase font-nunito text-caption" style="color: #656565"
                   >Diện tích</span
                 >
               </div>
               <div class="d-flex flex-column">
                 <span
                   class="font-nunito text-body-1 d-flex align-end justify-space-between"
-                  style="color: #333333;"
+                  style="color: #333333"
                 >
                   <v-icon color="#98a6ad" class="mr-1">mdi-account-group-outline</v-icon>
                   <span class="mr-1">{{ info.capacity }}</span>
                 </span>
-                <span class="text-uppercase font-nunito text-caption" style="color: #656565;"
+                <span class="text-uppercase font-nunito text-caption" style="color: #656565"
                   >Sức chứa</span
                 >
               </div>
@@ -61,14 +64,14 @@
                 >
                   <span
                     class="font-nunito text-body-1 d-flex align-end justify-space-between"
-                    style="color: #333333;"
+                    style="color: #333333"
                   >
                     <v-icon color="#98a6ad" class="mr-1">mdi-human-male-female</v-icon>
                     <span class="mr-1">{{
                       info.facilities.filter((f) => f.facilityName.includes('WC'))[0].facilityName
                     }}</span>
                   </span>
-                  <span class="text-uppercase font-nunito text-caption" style="color: #656565;"
+                  <span class="text-uppercase font-nunito text-caption" style="color: #656565"
                     >Nhà vệ sinh</span
                   >
                 </div>
@@ -76,26 +79,26 @@
               <div class="d-flex flex-column">
                 <span
                   class="font-nunito text-body-1 d-flex align-end justify-space-between"
-                  style="color: #333333;"
+                  style="color: #333333"
                 >
                   <v-icon color="#98a6ad" class="mr-1">mdi-home-account</v-icon>
                   <span v-if="group.ownerJoin == false">Không</span>
                   <span v-else>Có</span>
                 </span>
-                <span class="text-uppercase font-nunito text-caption" style="color: #656565;"
+                <span class="text-uppercase font-nunito text-caption" style="color: #656565"
                   >Chung chủ</span
                 >
               </div>
               <div class="d-flex flex-column">
                 <span
                   class="font-nunito text-body-1 d-flex align-end justify-space-between"
-                  style="color: #333333;"
+                  style="color: #333333"
                 >
                   <v-icon color="#98a6ad" class="mr-1">mdi-clock-check</v-icon>
                   <span v-if="group.curfewTime === null">Tự do</span>
                   <span v-else>{{ group.curfewTime }}</span>
                 </span>
-                <span class="text-uppercase font-nunito text-caption" style="color: #656565;"
+                <span class="text-uppercase font-nunito text-caption" style="color: #656565"
                   >Thời gian ra vào</span
                 >
               </div>
@@ -114,7 +117,7 @@
             <v-row class="d-flex justify-end align-end">
               <v-col cols="12" md="11" class="d-flex rounded-0 d-flex justify-space-around">
                 <div
-                  style="width: 100%; height: 50px; background-color: #f6f7f9;"
+                  style="width: 100%; height: 50px; background-color: #f6f7f9"
                   class="d-flex align-center px-1 rounded-pill"
                 >
                   <v-icon large class="white rounded-circle pa-1" _style="height: 100%;"
@@ -154,7 +157,7 @@
               </v-carousel-item>
               <div class="category">
                 <span class="font-weight-bold text-body-1 yellow--text">
-                  {{ info.category.categoryName }}
+                  {{ group.category.categoryName }}
                 </span>
                 <br />
                 <span class="text-caption">{{ info.view }} lượt xem</span>
@@ -182,7 +185,7 @@
               v-else
               min-height="250"
               max-height="400"
-              style="box-shadow: 0 0 35px 0 rgba(255, 22, 22, 0.15) !important;"
+              style="box-shadow: 0 0 35px 0 rgba(255, 22, 22, 0.15) !important"
             >
               <div class="category">
                 <span class="font-weight-bold text-body-1 yellow--text">
@@ -211,7 +214,7 @@
             </v-img>
           </v-col>
           <v-col cols="12" sm="12" md="4" lg="4" class="d-flex py-0">
-            <v-row class="d-flex justify-end py-0" style="min-height: 350px !important;">
+            <v-row class="d-flex justify-end py-0" style="min-height: 350px !important">
               <v-col cols="12" sm="12" md="11" class="py-0">
                 <dateTimePickerBox
                   :name="group.groupName"
@@ -398,6 +401,11 @@
           <span>Lỗi server</span>
         </v-row>
       </v-container>
+      <v-container v-if="isPageNotFound">
+        <v-row>
+          <span>Loại phòng này không tồn tại</span>
+        </v-row>
+      </v-container>
     </v-col>
   </v-row>
 </template>
@@ -538,6 +546,10 @@ export default {
       // const loadingBookings = this.$store.state.user.bookings.isLoading;
       return type || group || statistic || suggestionList || utilities || types || feedback;
     },
+    isPageNotFound() {
+      const type = this.$store.state.renter.hostelType.hostelType.error;
+      return type;
+    },
     isSearchError() {
       return this.$store.state.renter.hostelType.suggestedTypes.error;
     },
@@ -571,25 +583,28 @@ export default {
     },
     group() {
       let data = null;
-      const { groupId } = this.info;
-      data = this.$store.state.renter.home.topViewHostelGroup.data; // get from top view - home page
       let group = null;
-      group = this.getGroupById(data, groupId);
-      if (!group) {
-        data = this.$store.state.renter.home.hostelGroups.data; // get from top suggestion - home page
+
+      if (this.info) {
+        const { groupId } = this.info;
+        data = this.$store.state.renter.home.topViewHostelGroup.data; // get from top view - home page
         group = this.getGroupById(data, groupId);
-        const searchResult = this.$store.state.renter.filterResult.results.data.groups;
-        if (!group && searchResult) {
-          data = searchResult; // get from search result
-          group = this.getGroupById(data, groupId);
-        }
-        const suggestionTypes = this.$store.state.renter.hostelType.suggestedTypes.data.groups;
-        if (!group && suggestionTypes) {
-          data = suggestionTypes;
-          group = this.getGroupById(data, groupId);
-        }
         if (!group) {
-          group = this.$store.state.renter.hostelType.hostelGroup.data;
+          data = this.$store.state.renter.home.hostelGroups.data; // get from top suggestion - home page
+          group = this.getGroupById(data, groupId);
+          const searchResult = this.$store.state.renter.filterResult.results.data.groups;
+          if (!group && searchResult) {
+            data = searchResult; // get from search result
+            group = this.getGroupById(data, groupId);
+          }
+          const suggestionTypes = this.$store.state.renter.hostelType.suggestedTypes.data.groups;
+          if (!group && suggestionTypes) {
+            data = suggestionTypes;
+            group = this.getGroupById(data, groupId);
+          }
+          if (!group) {
+            group = this.$store.state.renter.hostelType.hostelGroup.data;
+          }
         }
       }
       return group;

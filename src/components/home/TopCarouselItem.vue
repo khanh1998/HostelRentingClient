@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ml-5 mr-5" style="box-shadow: 0 0 20px 0 rgba(154, 161, 171, 0.15) !important;">
+  <v-card class="ml-5 mr-5" style="box-shadow: 0 0 20px 0 rgba(154, 161, 171, 0.15) !important">
     <v-carousel
       height="180"
       hide-delimiters
@@ -19,7 +19,7 @@
           <span class="text-caption">{{ type.view }} lượt xem</span>
         </div>
         <div class="arrow-price">
-          <span class="transition-swing text-caption">{{ type.category.categoryName }}</span>
+          <span class="transition-swing text-caption">{{ group.category.categoryName }}</span>
         </div>
       </v-carousel-item>
     </v-carousel>
@@ -33,7 +33,7 @@
         <span class="text-caption">{{ type.view }} lượt xem</span>
       </div>
       <div class="arrow-price">
-        <span class="transition-swing text-caption">{{ type.category.categoryName }}</span>
+        <span class="transition-swing text-caption">{{ group.category.categoryName }}</span>
       </div>
     </v-img>
     <v-divider class="mx-4" />
@@ -41,7 +41,7 @@
       <v-col cols="10 pt-0">
         <div
           class="text-primary d-flex align-center py-3"
-          style="height: 60px; border-bottom: 1px solid #e2e6ed;"
+          style="height: 60px; border-bottom: 1px solid #e2e6ed"
         >
           <p
             style="
@@ -57,7 +57,7 @@
             {{ type.title }}
           </p>
         </div>
-        <div class="mt-3 d-flex align-center" style="height: 40px;" v-if="group">
+        <div class="mt-3 d-flex align-center" style="height: 40px" v-if="group">
           <v-img
             class="shrink mr-3"
             src="@/assets/home/address.png"
