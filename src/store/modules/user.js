@@ -926,14 +926,16 @@ const actions = {
       const userId = window.$cookies.get('userId');
       const role = window.$cookies.get('role');
       if (!userId && !state.user.data) {
-        const error = new Error('Loggin to activate contract');
+        const error = new Error('Loggin to update contract');
         commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
-      } else if (role !== 'renters') {
-        const error = new Error('Only renter have permission to activate contract');
+      } else if (role !== 'vendors') {
+        const error = new Error('Only vendor have permission to update contract');
         commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
       } else {
-        const { contractId, qrCode } = contract;
-        const res = await window.axios.put(`/api/v1/contracts/${contractId}`, { qrCode });
+        console.log(JSON.stringify(contract));
+
+        const { contractId } = contract;
+        const res = await window.axios.put(`/api/v1/contracts/${contractId}`, contract);
         if (!res) {
           const error = new Error('Cannot receive response from server');
           commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);

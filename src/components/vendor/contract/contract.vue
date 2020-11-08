@@ -17,6 +17,19 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="showQRDialog" width="350" persistent>
+      <v-snackbar
+        v-model="snackBarMixin.show"
+        :multi-line="snackBarMixin.multiLine"
+        :timeout="snackBarMixin.timeout"
+        :absolute="snackBarMixin.absolute"
+        :color="snackBarMixin.color"
+      >
+        {{ snackBarMixin.message }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Close </v-btn>
+        </template>
+      </v-snackbar>
       <v-card v-if="!scanQRSuccess">
         <v-card-title style="background-color: #98b7d7; color: white">Mã quét</v-card-title>
         <v-card-text>
@@ -74,10 +87,11 @@ import InfomationSection from './InfomationSection.vue';
 import TermsOfContractSection from './TermsOfContractSection.vue';
 import processFCMForegroundMixins from '../../mixins/processFCMForeground';
 import pushNotificationAction from '../../../config/pushNotificationActions';
+import snackBarMixin from '../../mixins/snackBar';
 
 export default {
   name: 'contract',
-  mixins: [processFCMForegroundMixins],
+  mixins: [processFCMForegroundMixins, snackBarMixin],
   components: { InfomationSection, TermsOfContractSection, QrcodeVue },
   data: () => ({
     heading: 'THÔNG TIN HỢP ĐỒNG',
@@ -94,6 +108,7 @@ export default {
       getBooking: 'user/getOneBooking',
       getOneBooking: 'user/getOneBooking',
       createContract: 'user/createContract',
+      updateContract: 'user/updateContract',
     }),
     ...mapGetters({
       findBookingById: 'user/findBookingById',
@@ -121,7 +136,16 @@ export default {
       this.scanQRSuccess = false;
     },
     doUpdateContract() {
-      alert('update contract hehehe');
+      console.log('do update contract');
+      this.updateContract(this.contract).then(() => {
+        console.log('update contract success: ', this.contracts.success, this.contracts.error);
+        if (this.contracts.success === true) {
+          this.showSnackBar('cập nhật hợp đồng thành công', { color: 'green' });
+        }
+        if (this.contracts.success === false) {
+          this.showSnackBar(`Lỗi: ${this.contracts.error.message}`, { color: 'red' });
+        }
+      });
     },
   },
   computed: {

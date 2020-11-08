@@ -357,7 +357,12 @@
         </template>
         <template v-slot:item.actions="{ item }">
           <v-btn depressed text @click="findContract(item.contractId)"> Chi tiết </v-btn>
-          <v-btn depressed icon :to="`/vendor/contract?contractId=${item.contractId}&mode=update`">
+          <v-btn
+            depressed
+            icon
+            v-if="item.statusCode === 'INACTIVE'"
+            :to="`/vendor/contract?contractId=${item.contractId}&mode=update`"
+          >
             <v-icon>create</v-icon>
           </v-btn>
         </template>
@@ -558,6 +563,7 @@ export default {
         startTime: this.getDateByTimestamp(item.startTime),
         endTime: this.getDateByTimestamp(this.getEndDate(item.startTime, item.duration)),
         status: this.getStatus(item.status).contractStatus,
+        statusCode: item.status,
         color: this.getStatus(item.status).color,
         buildingNo: item.group.buildingNo,
         streetName: item.group.address.streetName,

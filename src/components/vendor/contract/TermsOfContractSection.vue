@@ -26,35 +26,19 @@
                     <span class="font-weight-bold text-gray-black"
                       >Chọn phòng <span class="text-danger">(*)</span>
                     </span>
-                    <div v-if="!rooms.isLoading">
-                      <v-select
-                        :loading="rooms.isLoading"
-                        v-model="contract.roomId"
-                        :items="availableRooms"
-                        v-if="availableRooms.length > 0"
-                        item-text="roomName"
-                        item-value="roomId"
-                        hide-details
-                        dense
-                        solo
-                        class="size-sub-2 mt-2"
-                      >
-                      </v-select>
-                      <v-select
-                        :loading="rooms.isLoading"
-                        v-model="contract.roomId"
-                        :items="rooms.data"
-                        v-if="availableRooms.length === 0 && rooms.data.length > 0"
-                        item-text="roomName"
-                        :disabled="true"
-                        :hint="outOfRoomHint"
-                        persistent-hint
-                        item-value="roomId"
-                        solo
-                        class="size-sub-2 mt-2"
-                      >
-                      </v-select>
-                    </div>
+                    <v-select
+                      :loading="rooms.isLoading"
+                      v-model="contract.roomId"
+                      :items="availableRooms"
+                      v-if="availableRooms.length > 0"
+                      item-text="roomName"
+                      item-value="roomId"
+                      hide-details
+                      dense
+                      solo
+                      class="size-sub-2 mt-2"
+                    >
+                    </v-select>
                   </v-col>
 
                   <v-col cols="12" sm="6" class="d-flex flex-column">
@@ -159,7 +143,7 @@
             <!-- <v-col cols="12"> -->
             <v-row>
               <v-col cols="12" md="6">
-                <v-img :src="contract.evidenceImgUrl" />
+                <v-img height="300" width="200" :src="contract.evidenceImgUrl" />
                 <ImageEditor @newValues="receiveNewImages" class="pa-0" />
               </v-col>
               <v-col cols="12" md="6" class="d-flex justify-center py-0">
@@ -297,7 +281,9 @@ export default {
       return new Date(this.startTime).toLocaleDateString('vi');
     },
     availableRooms() {
-      return this.rooms.data.filter((r) => r.available);
+      return this.rooms.data.filter(
+        (r) => r.available || r.contractId === this.contract.contractId,
+      );
     },
     outOfRoomHint() {
       if (this.mode === 'create') {
@@ -319,6 +305,7 @@ export default {
         startTime,
         evidenceImgUrl,
         appendixContract,
+        contractId,
       } = this.contractObj;
       this.contract.roomId = roomId;
       this.contract.duration = duration;
@@ -326,6 +313,8 @@ export default {
       this.contract.startTime = startTime;
       this.contract.evidenceImgUrl = evidenceImgUrl;
       this.contract.appendixContract = appendixContract;
+      this.contract.contractId = contractId;
+      this.startTime = new Date(startTime).toISOString().substr(0, 10);
     }
   },
   watch: {
