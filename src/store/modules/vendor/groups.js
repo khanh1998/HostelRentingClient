@@ -26,6 +26,9 @@ const myState = () => ({
     success: null,
     error: null,
   },
+  newGroup: {
+    services: [],
+  },
 });
 
 const myGetters = {
@@ -49,6 +52,7 @@ const myGetters = {
   },
 };
 const mutationTypes = {
+  SET_NEW_GROUP_VALUE: 'SET_NEW_GROUP_VALUE',
   GET_GROUPS_REQUEST: 'GET_GROUPS_REQUEST',
   GET_GROUPS_SUCCESS: 'GET_GROUPS_SUCCESS',
   GET_GROUPS_FAILURE: 'GET_GROUPS_FAILURE',
@@ -82,6 +86,9 @@ const mutationTypes = {
   GET_GROUP_SCHEDULES_FAILURE: 'GET_GROUP_SCHEDULES_FAILURE',
 };
 const mutations = {
+  SET_NEW_GROUP_VALUE: (state, newGroup) => {
+    state.newGroup = newGroup;
+  },
   GET_GROUPS_REQUEST(state) {
     state.groups.isLoading = true;
   },
@@ -199,6 +206,9 @@ const mutations = {
 };
 
 const actions = {
+  setNewGroupValue({ commit }, newGroup) {
+    commit(mutationTypes.SET_NEW_GROUP_VALUE, newGroup);
+  },
   async getGroups({ commit }) {
     const userId = window.$cookies.get('userId');
     const role = window.$cookies.get('role');

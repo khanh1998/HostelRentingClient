@@ -1,11 +1,25 @@
 <template>
   <v-row no-gutters class="d-flex justify-center">
-    <v-container _v-if="!isLoading">
+    <v-overlay :value="isLoading" absolute>
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+    <v-container v-if="!isLoading">
+      <GroupManagement
+        :show="openGroupManagementDialog"
+        @close="openGroupManagementDialog = false"
+        :create="true"
+        :update="false"
+        @check-created="checkCreated"
+      />
       <v-row justify="center">
         <v-col cols="12" sm="12" md="12" lg="12" xl="11">
           <v-row class="d-flex align-center ma-0">
             <span class="page-title">Danh sách nhà trọ</span>
-            <v-btn class="mx-5 btn-success btn-sm font-nunito white--text">Tạo mới</v-btn>
+            <v-btn
+              class="mx-5 btn-success btn-sm font-nunito white--text"
+              @click="openGroupManagementDialog = true"
+              >Tạo mới</v-btn
+            >
             <v-spacer></v-spacer>
             <v-col cols="4" class="pa-0">
               <v-text-field
@@ -19,13 +33,13 @@
                 rounded
                 clearable
                 @input="changeSearchQuery"
-                style="background-color: #f1f3fa !important; border-color: #f1f3fa !important;"
+                style="background-color: #f1f3fa !important; border-color: #f1f3fa !important"
               ></v-text-field>
             </v-col>
           </v-row>
           <v-card class="mt-10 px-5 py-4">
             <v-row class="hidden-xs-only">
-              <div class="d-flex mx-4 py-2" style="width: 100%; border-bottom: 2px solid #eef2f7;">
+              <div class="d-flex mx-4 py-2" style="width: 100%; border-bottom: 2px solid #eef2f7">
                 <v-col cols="2" class="d-flex align-center">
                   <span class="font-nunito text-primary size9rem font-weight-bold"
                     >Tên nhà trọ</span
@@ -70,34 +84,6 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-col cols="11" class="d-flex flex-column">
-      <v-row class="d-flex align-center ma-0">
-        <span class="page-title">Danh sách nhà trọ</span>
-        <v-btn class="mx-5 btn-success btn-sm font-nunito white--text">Tạo mới</v-btn>
-        <v-spacer></v-spacer>
-        <v-text-field
-          label="Tìm kiếm theo tên"
-          v-model="searchGroupQuery"
-          append-icon="search"
-          solo
-          hide-details
-          class="text-muted pa-0 size-sub-2 slide-booking"
-          height="10"
-          rounded
-          clearable
-          style="background-color: #f1f3fa !important; border-color: #f1f3fa !important;"
-        ></v-text-field>
-      </v-row>
-      <v-row class="mx-0 my-10 d-flex flex-column">
-        <v-card class="pa-4 d-flex flex-column">
-          <v-row class="d-flex ma-0">
-            <v-col cols="2" class="red pa-1 d-flex align-center">
-              <span class="yellow">Tên nhà trọ</span>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-row>
-    </v-col>
     <v-col cols="11">
       <div class="d-flex flex-row flex-nowrap red mt-16" _style="height: 100%;">
         <v-card width="100%" height="100%" class="overflow-hidden" :loading="isLoading">
@@ -119,7 +105,7 @@
                 </v-list-item-action>
 
                 <v-list-item-content>
-                  <v-list-item-title style="fontsize: 22px; color: #6c98c6;"
+                  <v-list-item-title style="fontsize: 22px; color: #6c98c6"
                     >Khu trọ</v-list-item-title
                   >
                 </v-list-item-content>
@@ -151,7 +137,7 @@
               />
             </v-navigation-drawer>
             <HostelGroupActions :groupData="getSelectedGroup()" v-if="groupId" />
-            <div style="height: calc(100% - 68px); overflow-y: scroll;">
+            <div style="height: calc(100% - 68px); overflow-y: scroll">
               <HostelType
                 :typesData="getSelectedTypes()"
                 @getTypeIdSelected="typeId = $event"
@@ -198,6 +184,8 @@ import HostelGroupActions from '@/components/vendor/hostel_management/HostelGrou
 import itemGroup from '@/components/vendor/hostel_management/groupItem.vue';
 import { mapActions } from 'vuex';
 import snackBarMixin from '@/components/mixins/snackBar';
+// thuy
+import GroupManagement from '@/components/vendor/hostel_management/group_management/GroupManagement.vue';
 
 export default {
   name: 'HostelManagement',
@@ -207,7 +195,9 @@ export default {
     HostelGroupActions,
     HostelGroupCreator,
     HostelNoData,
+    // thuy
     itemGroup,
+    GroupManagement,
   },
   mixins: [snackBarMixin],
   data: () => ({
@@ -227,6 +217,7 @@ export default {
     searchGroupQuery: '',
     page: 1,
     pageRange: 5,
+    openGroupManagementDialog: false,
   }),
   computed: {
     groups() {
@@ -234,11 +225,10 @@ export default {
       return this.$store.state.vendor.group.groups.data;
     },
     isLoading() {
-      return (
-        this.$store.state.vendor.group.groups.isLoading ||
-        this.$store.state.vendor.group.types.isLoading ||
-        this.$store.state.vendor.group.rooms.isLoading
-      );
+      const groups = this.$store.state.vendor.group.groups.isLoading;
+      const types = this.$store.state.vendor.group.types.isLoading;
+      const rooms = this.$store.state.vendor.group.rooms.isLoading;
+      return groups || types || rooms;
     },
     isMobile() {
       switch (this.$vuetify.breakpoint.name) {
@@ -251,9 +241,9 @@ export default {
       }
     },
     getTotalPage() {
-      return Math.ceil(this.display.length / this.pageRange);
+      return Math.ceil(this.searchResult.length / this.pageRange);
     },
-    display() {
+    searchResult() {
       if (this.searchGroupQuery && this.searchGroupQuery.trim() !== '') {
         return this.groups.filter((item2) => {
           const res =
@@ -262,7 +252,10 @@ export default {
           return res;
         });
       }
-      return this.groups.slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+      return this.groups;
+    },
+    display() {
+      return this.searchResult.slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
     },
   },
   methods: {

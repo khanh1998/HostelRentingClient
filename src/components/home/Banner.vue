@@ -5,14 +5,14 @@
       <!-- search by location -->
       <div v-show="!advanceSearch" style="width: 100%;">
         <v-row class="d-flex flex-column align-center justify-center">
-          <p
-            class="white--text px-2 font-weight-bold slogan hidden-xs-only"
-            style="letter-spacing: 0.001em !important;"
-          >
-            HỖ TRỢ TÌM KIẾM, ĐỀ XUẤT VÀ ĐẶT LỊCH XEM PHÒNG TRỌ PHÙ HỢP NHẤT
+          <p class="text-md-h2 text-h3 font-weight-bold yellow--text">
+            NHÀ TRỌ.SAC
           </p>
-          <p class="white--text text-md-h2 text-h3 font-weight-bold">
-            TD HOSTEL
+          <p
+            class="white--text px-2 mt-4 font-weight-bold slogan hidden-xs-only"
+            style="letter-spacing: 0.001em !important; color: #fdde52;"
+          >
+            Hỗ trọ tìm kiếm, đề xuất và đặt lịch xem phòng trọ phù hợp nhất
           </p>
           <v-row class="d-flex px-0 justify-center align-center" :style="{ width: '100%' }">
             <v-col cols="12" md="7" class="py-0">
@@ -48,7 +48,7 @@
                   boxShadow: 'none',
                   color: '#151515',
                 }"
-                color="#fdde52"
+                color="yellow"
                 @click="searchByCoordinates()"
                 >TÌM KIẾM</v-btn
               >
@@ -398,7 +398,7 @@
                 boxShadow: 'none',
                 color: '#151515',
               }"
-              color="#fdde52"
+              color="yellow"
               @click="searchByCoordinates()"
               >TÌM KIẾM</v-btn
             >
