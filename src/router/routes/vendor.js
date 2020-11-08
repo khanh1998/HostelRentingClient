@@ -55,6 +55,7 @@ const routes = [
         name: 'contract',
         component: CreateContract,
         meta: { requiresAuth: true, is_vendor: true, vi: 'Tạo hợp đồng' },
+        props: true, // Pass route.params to props
       },
       {
         path: 'view-contract',

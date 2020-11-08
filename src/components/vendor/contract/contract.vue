@@ -1,5 +1,13 @@
 <template>
   <v-card class="overflow-y-auto" max-height="100%" ref="contractView" id="contractView">
+    <v-dialog v-model="bookings.isLoading" hide-overlay persistent width="300">
+      <v-card color="primary" dark>
+        <v-card-text>
+          Đang chuẩn bị hợp đồng
+          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="contracts.isCreating" hide-overlay persistent width="300">
       <v-card color="primary" dark>
         <v-card-text>
@@ -34,23 +42,26 @@
       </v-card>
     </v-dialog>
     <!-- <div class="d-flex justify-center title">{{ heading }}</div> -->
-    <v-tabs v-model="tabs.index" class="font-nunito font-weight-bold" color="#727cf5">
+    <v-tabs v-if="ready" v-model="tabs.index" class="font-nunito font-weight-bold" color="#727cf5">
       <v-tab> 1. Thông tin hai bên </v-tab>
       <v-tab> 2. THÔNG TIN HỢP ĐỒNG </v-tab>
-      <v-tab-item>
+      <v-tab-item v-if="contract">
         <div class="d-flex flex-column justify-center align-end">
-          <InfomationSection :renter="booking.renter" :vendor="booking.vendor" />
+          <InfomationSection :renter="renter" :vendor="vendor" />
           <v-btn class="ma-4 btn-primary" @click="goToNextTab"
             >Tiếp tục <v-icon small>arrow_forward_ios</v-icon></v-btn
           >
         </div>
       </v-tab-item>
-      <v-tab-item>
+      <v-tab-item v-if="contract">
         <TermsOfContractSection
           @newValue="receiveNewTermsOfContract"
-          :type="booking.type"
-          :group="booking.group"
+          :type="type"
+          :group="group"
           @clickCreateContract="doCreateContract"
+          @clickUpdateContract="doUpdateContract"
+          :contractObj="contractFull"
+          :mode="mode"
         />
       </v-tab-item>
     </v-tabs>
@@ -71,6 +82,7 @@ export default {
   data: () => ({
     heading: 'THÔNG TIN HỢP ĐỒNG',
     contract: {},
+    contractFull: {},
     showQRDialog: false,
     tabs: {
       index: 0,
@@ -85,6 +97,7 @@ export default {
     }),
     ...mapGetters({
       findBookingById: 'user/findBookingById',
+      findContractById: 'user/findContractById',
     }),
     receiveNewTermsOfContract(terms) {
       this.contract = { ...terms };
@@ -107,14 +120,69 @@ export default {
       this.showQRDialog = false;
       this.scanQRSuccess = false;
     },
+    doUpdateContract() {
+      alert('update contract hehehe');
+    },
   },
   computed: {
     ...mapState({
       bookings: (state) => state.user.bookings,
       contracts: (state) => state.user.contracts,
     }),
+    ready() {
+      switch (this.mode) {
+        case 'create':
+          return !this.bookings.isLoading;
+        case 'update':
+          return Object.entries(this.contractFull).length !== 0;
+        default:
+          return false;
+      }
+    },
     bookingId() {
       return this.$route.query.bookingId;
+    },
+    contractId() {
+      return this.$route.query.contractId;
+    },
+    renter() {
+      if (this.mode === 'create') {
+        return this.booking.renter;
+      }
+      if (this.mode === 'update') {
+        return this.contractFull.renter;
+      }
+      return null;
+    },
+    vendor() {
+      if (this.mode === 'create') {
+        return this.booking.vendor;
+      }
+      if (this.mode === 'update') {
+        return this.contractFull.vendor;
+      }
+      return null;
+    },
+    group() {
+      if (this.mode === 'create') {
+        return this.booking.group;
+      }
+      if (this.mode === 'update') {
+        return this.contractFull.group;
+      }
+      return null;
+    },
+    type() {
+      if (this.mode === 'create') {
+        return this.booking.type;
+      }
+      if (this.mode === 'update') {
+        return this.contractFull.type;
+      }
+      return null;
+    },
+    mode() {
+      return this.$route.query.mode;
     },
     booking() {
       return this.findBookingById()(this.bookingId);
@@ -127,8 +195,15 @@ export default {
     },
   },
   created() {
-    if (this.bookings.data.length === 0) {
+    console.log('contract.vue is created');
+    if (this.mode === 'create') {
       this.getOneBooking(this.bookingId);
+    }
+    if (this.mode === 'update') {
+      this.contractFull = this.findContractById()(this.contractId);
+      if (this.contractFull.room) {
+        this.contractFull.roomId = this.contractFull.room.roomId;
+      }
     }
     this.registerMessaging(); // from mixins
   },

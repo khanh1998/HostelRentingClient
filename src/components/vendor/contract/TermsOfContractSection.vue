@@ -26,18 +26,35 @@
                     <span class="font-weight-bold text-gray-black"
                       >Chọn phòng <span class="text-danger">(*)</span>
                     </span>
-                    <v-select
-                      :loading="rooms.isLoading"
-                      v-model="contract.roomId"
-                      :items="availableRooms"
-                      item-text="roomName"
-                      item-value="roomId"
-                      hide-details
-                      dense
-                      solo
-                      class="size-sub-2 mt-2"
-                    >
-                    </v-select>
+                    <div v-if="!rooms.isLoading">
+                      <v-select
+                        :loading="rooms.isLoading"
+                        v-model="contract.roomId"
+                        :items="availableRooms"
+                        v-if="availableRooms.length > 0"
+                        item-text="roomName"
+                        item-value="roomId"
+                        hide-details
+                        dense
+                        solo
+                        class="size-sub-2 mt-2"
+                      >
+                      </v-select>
+                      <v-select
+                        :loading="rooms.isLoading"
+                        v-model="contract.roomId"
+                        :items="rooms.data"
+                        v-if="availableRooms.length === 0 && rooms.data.length > 0"
+                        item-text="roomName"
+                        :disabled="true"
+                        :hint="outOfRoomHint"
+                        persistent-hint
+                        item-value="roomId"
+                        solo
+                        class="size-sub-2 mt-2"
+                      >
+                      </v-select>
+                    </div>
                   </v-col>
 
                   <v-col cols="12" sm="6" class="d-flex flex-column">
@@ -82,7 +99,6 @@
                       suffix="Tháng"
                       step="1"
                       min="1"
-                      :rules="isPositiveInt"
                     />
                   </v-col>
                   <v-col cols="6" sm="6" class="d-flex flex-column">
@@ -127,18 +143,11 @@
                   </v-row>
                   <v-row>
                     <v-col cols="12" class="d-flex flex-column">
-                      <span
-                        >Tiền đặt cọc sẽ được trả lại đầy đủ cho bên B khi hết hợp đồng thuê phòng
-                        trọ với điều kiện thanh toán đầy đủ tiền điện, nước, phí dịch vụ và các
-                        khoản khác liên quan.</span
-                      >
-                      <span class="mt-2"
-                        >Bên A ngưng hợp đồng (lấy lại nhà) trước thời hạn thì bồi thường gấp đôi số
-                        tiền bên B đã đặt cọc.</span
-                      >
-                      <span class="mt-2"
-                        >Bên B ngưng hợp đồng trước thời hạn thì phải chịu mất tiền thế chân.</span
-                      >
+                      <p class="text-h6">Phụ lục hợp đồng</p>
+                      <TextEditor
+                        @appendixContent="receiveAppendixContent"
+                        :editorContent="contract.appendixContract"
+                      />
                     </v-col>
                     <v-col cols="12">
                       <!-- <ImageEditor @newValues="receiveNewImages" /> -->
@@ -150,11 +159,23 @@
             <!-- <v-col cols="12"> -->
             <v-row>
               <v-col cols="12" md="6">
+                <v-img :src="contract.evidenceImgUrl" />
                 <ImageEditor @newValues="receiveNewImages" class="pa-0" />
               </v-col>
               <v-col cols="12" md="6" class="d-flex justify-center py-0">
-                <v-btn class="ma-4 btn-primary" @click="$emit('clickCreateContract')">
+                <v-btn
+                  v-if="mode === 'create'"
+                  class="ma-4 btn-primary"
+                  @click="$emit('clickCreateContract')"
+                >
                   Tạo hợp đồng
+                </v-btn>
+                <v-btn
+                  v-if="mode === 'update'"
+                  class="ma-4 btn-primary"
+                  @click="$emit('clickUpdateContract')"
+                >
+                  Cập nhật hợp đồng
                 </v-btn>
               </v-col>
             </v-row>
@@ -173,9 +194,7 @@
       {{ snackBarMixin.message }}
 
       <template v-slot:action="{ attrs }">
-        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false">
-          Close
-        </v-btn>
+        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Close </v-btn>
       </template>
     </v-snackbar>
   </v-card>
@@ -187,16 +206,34 @@ import FacilityTable from './FacilityTable.vue';
 import ImageEditor from '../hostel_management/ImageEditor.vue';
 import validateMixins from '../../mixins/validate';
 import SnackBarMixins from '../../mixins/snackBar';
+import TextEditor from './TextEditor.vue';
 
 export default {
   name: 'TermsOfContractSection',
-  props: ['type', 'group'],
+  props: {
+    type: {
+      type: Object,
+    },
+    group: {
+      type: Object,
+    },
+    mode: {
+      type: String,
+      validator(value) {
+        return ['create', 'view', 'update'].indexOf(value) !== -1;
+      },
+    },
+    contractObj: {
+      type: Object,
+    },
+  },
   mixins: [validateMixins, SnackBarMixins],
   components: {
     HostelGroupServiceEditor,
     RegulationTable,
     FacilityTable,
     ImageEditor,
+    TextEditor,
   },
   data: () => ({
     menu1: null,
@@ -207,6 +244,7 @@ export default {
       groupServiceIds: [],
       startTime: new Date().getTime(),
       evidenceImgUrl: null,
+      appendixContract: '',
     },
     rooms: {
       data: [],
@@ -222,6 +260,9 @@ export default {
     },
     receiveNewImages(imageUrls) {
       [this.contract.evidenceImgUrl] = imageUrls;
+    },
+    receiveAppendixContent(appendix) {
+      this.contract.appendixContract = appendix;
     },
     async getRoomsOfType() {
       try {
@@ -258,9 +299,34 @@ export default {
     availableRooms() {
       return this.rooms.data.filter((r) => r.available);
     },
+    outOfRoomHint() {
+      if (this.mode === 'create') {
+        return 'Đã hết phòng trống';
+      }
+      if (this.mode === 'update') {
+        return 'Chỉ còn lại duy nhất một phòng';
+      }
+      return '';
+    },
   },
   created() {
     this.getRoomsOfType();
+    if (this.mode === 'update') {
+      const {
+        roomId,
+        duration,
+        groupServiceIds,
+        startTime,
+        evidenceImgUrl,
+        appendixContract,
+      } = this.contractObj;
+      this.contract.roomId = roomId;
+      this.contract.duration = duration;
+      this.contract.groupServiceIds = groupServiceIds;
+      this.contract.startTime = startTime;
+      this.contract.evidenceImgUrl = evidenceImgUrl;
+      this.contract.appendixContract = appendixContract;
+    }
   },
   watch: {
     contract: {

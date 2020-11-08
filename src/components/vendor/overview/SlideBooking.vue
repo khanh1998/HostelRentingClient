@@ -116,7 +116,7 @@
               <v-btn
                 v-if="booking.status === 'DONE' && !booking.contractId"
                 icon
-                :to="`/vendor/contract?bookingId=${booking.bookingId}`"
+                :to="`/vendor/contract?bookingId=${booking.bookingId}&mode=create`"
               >
                 <v-icon>far fa-handshake</v-icon></v-btn
               >

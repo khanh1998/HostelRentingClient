@@ -50,6 +50,7 @@
         fullscreen
         hide-overlay
         transition="dialog-bottom-transition"
+        id="contractView"
       >
         <v-card :loading="contracts.isLoading">
           <!-- <v-toolbar dark color="primary">
@@ -112,12 +113,9 @@
                                 <span class="font-weight-bold text-gray-black"
                                   >Ngày bắt đầu hợp đồng<span class="text-danger"></span>
                                 </span>
-                                <span
-                                  class="text size-sub-2 px-3 py-2 mt-2"
-                                  v-bind="attrs"
-                                  v-on="on"
-                                  >{{ startTimeString(previewDialog.constract.startTime) }}</span
-                                >
+                                <span class="text size-sub-2 px-3 py-2 mt-2">{{
+                                  startTimeString(previewDialog.constract.startTime)
+                                }}</span>
                               </v-col>
                               <v-col cols="12" sm="6" class="d-flex flex-column">
                                 <span class="font-weight-bold text-gray-black"
@@ -207,7 +205,7 @@
                         </v-col>
                         <v-row>
                           <v-col cols="12" md="6" class="ml-auto pa-0">
-                            <v-btn class="ma-4 btn-primary" @click="activateContract">
+                            <v-btn class="ma-4 btn-primary" @click="doActivateContract">
                               Đồng ý với các điều khoản và kích hoạt hợp đồng
                             </v-btn>
                           </v-col>
@@ -296,7 +294,7 @@ export default {
       updateBookingStatus: 'user/updateBookingStatus',
       getContracts: 'user/getContracts',
       getOneContract: 'user/getOneContract',
-      updateContract: 'user/updateContract',
+      activateContract: 'user/activateContract',
     }),
     startTimeString(time) {
       return new Date(time).toLocaleDateString('vi-vn');
@@ -347,12 +345,12 @@ export default {
       const createdContract = this.findContractById()(contractId);
       this.previewDialog.constract = createdContract;
     },
-    activateContract() {
+    doActivateContract() {
       const payload = {
         contractId: this.previewDialog.contractId.trim(),
         qrCode: this.previewDialog.contractSecret.trim(),
       };
-      this.updateContract(payload).then(() => {
+      this.activateContract(payload).then(() => {
         this.previewDialog.show = false;
         const { success, error } = this.contracts;
         if (success) {

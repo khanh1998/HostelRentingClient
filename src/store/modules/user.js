@@ -159,6 +159,10 @@ const mutationTypes = {
   UPDATE_CONTRACT_SUCCESS: 'UPDATE_CONTRACT_SUCCESS',
   UPDATE_CONTRACT_FAILURE: 'UPDATE_CONTRACT_FAILURE',
 
+  ACTIVATE_CONTRACT_REQUEST: 'ACTIVATE_CONTRACT_REQUEST',
+  ACTIVATE_CONTRACT_SUCCESS: 'ACTIVATE_CONTRACT_SUCCESS',
+  ACTIVATE_CONTRACT_FAILURE: 'ACTIVATE_CONTRACT_FAILURE',
+
   GET_ONE_CONTRACT_REQUEST: 'GET_ONE_CONTRACT_REQUEST',
   GET_ONE_CONTRACT_SUCCESS: 'GET_ONE_CONTRACT_SUCCESS',
   GET_ONE_CONTRACT_FAILURE: 'GET_ONE_CONTRACT_FAILURE',
@@ -422,14 +426,31 @@ const mutations = {
     state.contracts.error = null;
     state.contracts.success = null;
   },
-  UPDATE_CONTRACT_SUCCESS(state, contractId) {
+  UPDATE_CONTRACT_SUCCESS(state, contract) {
+    const { contractId } = contract;
+    state.contracts.isUpdating = false;
+    const index = state.contracts.data.findIndex((c) => c.contractId === Number(contractId));
+    state.contracts.data[index] = contract;
+    state.contracts.success = true;
+  },
+  UPDATE_CONTRACT_FAILURE(state, error) {
+    state.contracts.isUpdating = false;
+    state.contracts.error = error;
+    state.contracts.success = false;
+  },
+  ACTIVATE_CONTRACT_REQUEST(state) {
+    state.contracts.isUpdating = true;
+    state.contracts.error = null;
+    state.contracts.success = null;
+  },
+  ACTIVATE_CONTRACT_SUCCESS(state, contractId) {
     state.contracts.isUpdating = false;
     console.log(contractId);
     const index = state.contracts.data.findIndex((c) => c.contractId === Number(contractId));
     state.contracts.data[index].status = 'ACTIVATED';
     state.contracts.success = true;
   },
-  UPDATE_CONTRACT_FAILURE(state, error) {
+  ACTIVATE_CONTRACT_FAILURE(state, error) {
     state.contracts.isUpdating = false;
     state.contracts.error = error;
     state.contracts.success = false;
@@ -918,6 +939,31 @@ const actions = {
           commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
         } else if (res.status >= 200 && res.status <= 299) {
           commit(mutationTypes.UPDATE_CONTRACT_SUCCESS, contractId);
+        }
+      }
+    } catch (error) {
+      commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
+    }
+  },
+  async activateContract({ commit, state }, payload) {
+    try {
+      commit(mutationTypes.ACTIVATE_CONTRACT_REQUEST);
+      const userId = window.$cookies.get('userId');
+      const role = window.$cookies.get('role');
+      if (!userId && !state.user.data) {
+        const error = new Error('Loggin to activate contract');
+        commit(mutationTypes.ACTIVATE_CONTRACT_FAILURE, error);
+      } else if (role !== 'renters') {
+        const error = new Error('Only renter have permission to activate contract');
+        commit(mutationTypes.ACTIVATE_CONTRACT_FAILURE, error);
+      } else {
+        const { contractId, qrCode } = payload;
+        const res = await window.axios.put(`/api/v1/contracts/confirm/${contractId}`, { qrCode });
+        if (!res) {
+          const error = new Error('Cannot receive response from server');
+          commit(mutationTypes.ACTIVATE_CONTRACT_FAILURE, error);
+        } else if (res.status >= 200 && res.status <= 299) {
+          commit(mutationTypes.ACTIVATE_CONTRACT_SUCCESS, contractId);
         }
       }
     } catch (error) {
