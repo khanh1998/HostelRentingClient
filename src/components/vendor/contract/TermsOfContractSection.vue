@@ -37,6 +37,7 @@
                       dense
                       solo
                       class="size-sub-2 mt-2"
+                      :readonly="mode === 'view'"
                     >
                     </v-select>
                   </v-col>
@@ -52,6 +53,7 @@
                       offset-y
                       max-width="290px"
                       min-width="290px"
+                      :disabled="mode === 'view'"
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <span class="text size-sub-2 px-3 py-2 mt-2" v-bind="attrs" v-on="on">{{
@@ -83,6 +85,7 @@
                       suffix="Tháng"
                       step="1"
                       min="1"
+                      :readonly="mode === 'view'"
                     />
                   </v-col>
                   <v-col cols="6" sm="6" class="d-flex flex-column">
@@ -107,6 +110,7 @@
                     <HostelGroupServiceEditor
                       :groupService="group.services"
                       :select="true"
+                      :mode="mode"
                       @newSelects="receiveSelectServiceIds"
                     />
                   </v-col>
@@ -129,9 +133,11 @@
                     <v-col cols="12" class="d-flex flex-column">
                       <p class="text-h6">Phụ lục hợp đồng</p>
                       <TextEditor
+                        v-if="mode !== 'view'"
                         @appendixContent="receiveAppendixContent"
                         :editorContent="contract.appendixContract"
                       />
+                      <span v-html="contract.appendixContract"></span>
                     </v-col>
                     <v-col cols="12">
                       <!-- <ImageEditor @newValues="receiveNewImages" /> -->
@@ -144,7 +150,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-img height="300" width="200" :src="contract.evidenceImgUrl" />
-                <ImageEditor @newValues="receiveNewImages" class="pa-0" />
+                <ImageEditor v-if="mode !== 'view'" @newValues="receiveNewImages" class="pa-0" />
               </v-col>
               <v-col cols="12" md="6" class="d-flex justify-center py-0">
                 <v-btn
@@ -297,7 +303,7 @@ export default {
   },
   created() {
     this.getRoomsOfType();
-    if (this.mode === 'update') {
+    if (this.mode === 'update' || this.mode === 'view') {
       const {
         roomId,
         duration,

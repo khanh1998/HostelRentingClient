@@ -949,6 +949,7 @@ const actions = {
   },
   async activateContract({ commit, state }, payload) {
     try {
+      console.log('activate contract');
       commit(mutationTypes.ACTIVATE_CONTRACT_REQUEST);
       const userId = window.$cookies.get('userId');
       const role = window.$cookies.get('role');

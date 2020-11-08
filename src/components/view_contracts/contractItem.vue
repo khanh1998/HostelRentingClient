@@ -99,10 +99,30 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="12" md="1" class="d-flex justify-center align-center">
-          <v-chip small class="font-nunito" :color="getStatus(contract.status).color">{{
+        <v-col cols="12" md="1" class="d-flex flex-column justify-center align-center">
+          <v-chip small class="font-nunito mb-2" :color="getStatus(contract.status).color">{{
             getStatus(contract.status).contractStatus
           }}</v-chip>
+          <v-btn
+            small
+            rounded
+            outlined
+            color="green"
+            v-if="contract.status !== 'INACTIVE'"
+            text
+            @click="$emit('viewDetail', contract.contractId)"
+            >Chi tiết</v-btn
+          >
+          <v-btn
+            small
+            rounded
+            outlined
+            color="red"
+            v-if="contract.status === 'INACTIVE'"
+            text
+            @click="$emit('activate', contract.contractId)"
+            >Kích hoạt</v-btn
+          >
         </v-col>
       </v-row>
       <!-- </v-col> -->

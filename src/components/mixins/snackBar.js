@@ -3,7 +3,7 @@ const snackBarMixin = {
     snackBarMixin: {
       show: false,
       message: '',
-      timeout: 3000,
+      timeout: 5000,
       absolute: true,
       color: undefined,
       multiLine: false,

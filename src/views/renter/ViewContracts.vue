@@ -4,11 +4,44 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
+    <v-dialog
+      v-model="contractOverlay.show"
+      fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition"
+    >
+      <v-card v-if="contractOverlay.contract">
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="contractOverlay.show = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>Hợp đồng</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items v-if="contractOverlay.action === 'activate'">
+            <v-btn dark text @click="doActivateContract"> Kích hoạt hợp đồng </v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <contractDetailView :mode="'view'" :contractId="contractOverlay.contract.contractId" />
+      </v-card>
+    </v-dialog>
+    <v-snackbar
+      v-model="snackBarMixin.show"
+      :multi-line="snackBarMixin.multiLine"
+      :timeout="snackBarMixin.timeout"
+      :absolute="snackBarMixin.absolute"
+      :color="snackBarMixin.color"
+    >
+      {{ snackBarMixin.message }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Close </v-btn>
+      </template>
+    </v-snackbar>
     <v-container v-if="!isLoading">
       <v-row justify="center" class="py-10">
         <v-col cols="11" sm="11" md="11" lg="11" xl="10">
           <v-row class="hidden-xs-only">
-            <div class="d-flex px-4" style="width: 100%;">
+            <div class="d-flex px-4" style="width: 100%">
               <v-col cols="3" class="d-flex align-center pl-0">
                 <span class="font-nunito text-gray size-sub-2">Chủ trọ</span>
               </v-col>
@@ -31,11 +64,15 @@
           </v-row>
           <v-row class="mt-2">
             <div
-              v-for="contract in allContracts"
+              v-for="contract in contracts.data"
               v-bind:key="contract.contractId"
-              style="width: 100%;"
+              style="width: 100%"
             >
-              <contractItem :contract="contract" />
+              <contractItem
+                :contract="contract"
+                @viewDetail="viewContractDetail"
+                @activate="openActivateContract"
+              />
             </div>
           </v-row>
         </v-col>
@@ -47,28 +84,58 @@
 <script>
 import { mapActions } from 'vuex';
 import contractItem from '@/components/view_contracts/contractItem.vue';
+import contractDetailView from '../../components/vendor/contract/contract.vue';
+import snackBarMixin from '../../components/mixins/snackBar';
 
 export default {
   name: 'ViewContracts',
-  components: { contractItem },
-  data: () => ({}),
+  components: { contractItem, contractDetailView },
+  mixins: [snackBarMixin],
+  data: () => ({
+    contractOverlay: {
+      show: false,
+      action: null, // view or activate
+      contract: null,
+    },
+  }),
   methods: {
     ...mapActions({
       getContracts: 'user/getContracts',
       getUser: 'user/getUser',
+      activateContract: 'user/activateContract',
     }),
+    doActivateContract() {
+      console.log('doactivatecontract');
+      const payload = {
+        contractId: this.contractOverlay.contract.contractId,
+        qrCode: this.contractOverlay.contract.qrCode,
+      };
+      this.activateContract(payload).then(() => {
+        this.contractOverlay.show = false;
+        const { success, error } = this.contracts;
+        if (success) {
+          console.log(success);
+          this.showSnackBar('Kích hoạt hợp đồng thành công', { color: 'green' });
+        } else {
+          console.log(error);
+          this.showSnackBar(`Kích hoạt hợp đồng thất bại ${error.message}`, { color: 'red' });
+        }
+      });
+    },
+    viewContractDetail(contractId) {
+      console.log(contractId);
+      this.contractOverlay.show = true;
+      this.contractOverlay.action = 'view';
+      this.contractOverlay.contract = this.contracts.data.find((c) => c.contractId === contractId);
+    },
+    openActivateContract(contractId) {
+      console.log(contractId);
+      this.contractOverlay.show = true;
+      this.contractOverlay.action = 'activate';
+      this.contractOverlay.contract = this.contracts.data.find((c) => c.contractId === contractId);
+    },
   },
   created() {
-    // this.getUser().then(() => {
-    //   this.getBookings()
-    //     .then(() => {
-    //       const bookings = this.allBooking;
-    //       this.arrayEvents = bookings.map(
-    //         (booking) => new Date(booking.meetTime).toISOString().substr(0, 10), // eslint-disable-line
-    //       ); // eslint-disable-line
-    //     })
-    //     .then(() => this.initDateRange());
-    // });
     this.getUser().then(() => {
       this.getContracts();
     });
@@ -77,96 +144,10 @@ export default {
     isLoading() {
       const loadingUser = this.$store.state.user.user.isLoading;
       const loadingContracts = this.$store.state.user.contracts.isLoading;
-      // const loadingDeals = this.$store.state.user.deals.isLoading;
-      // const loadingProvinces = this.$store.state.renter.common.provinces.isLoading;
       return loadingUser || loadingContracts;
     },
-    allContracts() {
-      return this.$store.state.user.contracts.data;
-    },
-    bookings() {
-      const list = this.allBooking;
-      let filteredDate = [];
-      filteredDate = list.filter((booking) => {
-        let min = new Date(`${this.date[0]}T00:00:00`).getTime();
-        let max = new Date(`${this.date[0]}T23:59:59`).getTime();
-        if (this.date.length === 2 && this.date[0] !== this.date[1]) {
-          max = new Date(`${this.date[1]}T23:59:59`).getTime();
-          if (min > max) {
-            max = new Date(`${this.date[1]}T00:00:00`).getTime();
-            min = new Date(`${this.date[0]}T23:59:59`).getTime();
-            return booking.meetTime <= min && booking.meetTime >= max;
-          }
-        }
-        return booking.meetTime <= max && booking.meetTime >= min;
-      });
-
-      const result = filteredDate.filter((booking) => {
-        const selectedIdx = this.buttonGroup.selectedBookingStatus;
-        switch (selectedIdx) {
-          case 0:
-            return booking.status === 'INCOMING';
-          case 1:
-            return booking.status === 'DONE';
-          case 2:
-            return booking.status === 'CANCELLED';
-          default:
-            return true;
-        }
-      });
-      return { result, filteredDate };
-    },
-    dateRange() {
-      const start = new Date(this.date[0]);
-      const end = new Date(this.date[1]);
-      if (start.getTime() === end.getTime()) {
-        return `${start.getDate()}/${start.getMonth() + 1}/${start.getFullYear()}`;
-      }
-      if (start.getTime() > end.getTime()) {
-        return `${end.getDate()}/${end.getMonth() + 1}${
-          this.date[1] === undefined // eslint-disable-next-line
-            ? `/${end.getFullYear()}` // eslint-disable-next-line
-            : `${
-                // eslint-disable-line
-                end.getFullYear() === start.getFullYear() // eslint-disable-line
-                  ? ` - ${start.getDate()}/${start.getMonth() + 1}/${start.getFullYear()}` // eslint-disable-line
-                  : `/${end.getFullYear()}` // eslint-disable-line
-              }` // eslint-disable-line
-        }`;
-      }
-      return `${start.getDate()}/${start.getMonth() + 1}${
-        this.date[1] === undefined // eslint-disable-next-line
-          ? `/${start.getFullYear()}` // eslint-disable-next-line
-          : `${
-              // eslint-disable-line
-              start.getFullYear() === end.getFullYear() // eslint-disable-line
-                ? ` - ${end.getDate()}/${end.getMonth() + 1}/${end.getFullYear()}` // eslint-disable-line
-                : `/${start.getFullYear()}` // eslint-disable-line
-            }` // eslint-disable-line
-      }`;
-    },
-    isLoadingBooking() {
-      return this.$store.state.user.bookings.isLoading;
-    },
-    counter() {
-      let incomming = 0;
-      let done = 0;
-      let cancel = 0;
-      this.bookings.filteredDate.forEach((booking) => {
-        switch (booking.status) {
-          case 'INCOMING':
-            incomming += 1;
-            break;
-          case 'DONE':
-            done += 1;
-            break;
-          case 'CANCELLED':
-            cancel += 1;
-            break;
-          default:
-        }
-      });
-      return { incomming, done, cancel };
+    contracts() {
+      return this.$store.state.user.contracts;
     },
   },
 };

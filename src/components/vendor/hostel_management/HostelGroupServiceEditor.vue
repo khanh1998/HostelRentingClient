@@ -1,10 +1,6 @@
 <template>
   <v-card class="pa-5" height="100%" elevation="0" :loading="isServiceLoading">
-    <v-dialog
-      v-model="dialog"
-      persistent
-      max-width="600px"
-    >
+    <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-row>
           <v-col cols="9">
@@ -13,6 +9,7 @@
           <v-col cols="3">
             <v-btn
               color="#727CF5"
+              v-if="mode !== 'view'"
               dark
               v-bind="attrs"
               v-on="on"
@@ -30,11 +27,7 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
+              <v-col cols="12" sm="6" md="4">
                 <v-select
                   :items="services"
                   label="Dịch vụ"
@@ -47,11 +40,8 @@
                   solo
                 ></v-select>
               </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                 <v-text-field
+              <v-col cols="12" sm="6">
+                <v-text-field
                   v-model="addNew.price"
                   dense
                   hide-details
@@ -62,10 +52,7 @@
                   solo
                 />
               </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
+              <v-col cols="12" sm="6">
                 <v-select
                   :items="servicesBox.units"
                   label="Đơn vị"
@@ -76,10 +63,7 @@
                   solo
                 ></v-select>
               </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
+              <v-col cols="12" sm="6">
                 <v-select
                   :items="servicesBox.times"
                   label="Tần suất thanh toán"
@@ -95,17 +79,14 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="grey darken-1"
-            text
-            @click="dialog = false"
-          >
-            Hủy
-          </v-btn>
+          <v-btn color="grey darken-1" text @click="dialog = false"> Hủy </v-btn>
           <v-btn
             color="green darken-1"
             text
-            @click="dialog = false; addService()"
+            @click="
+              dialog = false;
+              addService();
+            "
           >
             Tạo
           </v-btn>
@@ -158,17 +139,13 @@
           <v-icon>clear</v-icon>
         </v-btn>
         <div v-if="select">
-          <span v-if="item.required">
-            bắt buộc
-          </span>
+          <span v-if="item.required"> bắt buộc </span>
         </div>
       </template>
     </v-data-table>
     <v-divider />
     <v-card v-if="select">
-      <v-card-subtitle v-if="selects.length === 0">
-        Chưa có dịch vụ nào được chọn
-      </v-card-subtitle>
+      <v-card-subtitle v-if="selects.length === 0"> Chưa có dịch vụ nào được chọn </v-card-subtitle>
       <v-card-subtitle v-if="selects.length != 0">
         <span class="font-weight-bold">Những dịch vụ được chọn:</span>
         {{ selects.map((s) => s.serviceName).join(', ') }}
@@ -236,9 +213,7 @@
       {{ snackBarMixin.message }}
 
       <template v-slot:action="{ attrs }">
-        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false">
-          Đóng
-        </v-btn>
+        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Đóng </v-btn>
       </template>
     </v-snackbar>
   </v-card>
@@ -249,7 +224,7 @@ import snackBarMixin from '../../mixins/snackBar';
 
 export default {
   name: 'HostelGroupServiceEditor',
-  props: ['groupService', 'create', 'update', 'select'],
+  props: ['groupService', 'create', 'update', 'select', 'mode'],
   mixins: [snackBarMixin],
   data: () => ({
     selects: [],

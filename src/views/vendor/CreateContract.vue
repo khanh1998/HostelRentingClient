@@ -83,16 +83,15 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
 import QrcodeVue from 'qrcode.vue';
-import InfomationSection from './InfomationSection.vue';
-import TermsOfContractSection from './TermsOfContractSection.vue';
-import processFCMForegroundMixins from '../../mixins/processFCMForeground';
-import pushNotificationAction from '../../../config/pushNotificationActions';
-import snackBarMixin from '../../mixins/snackBar';
+import InfomationSection from '../../components/vendor/contract/InfomationSection.vue';
+import TermsOfContractSection from '../../components/vendor/contract/TermsOfContractSection.vue';
+import processFCMForegroundMixins from '../../components/mixins/processFCMForeground';
+import pushNotificationAction from '../../config/pushNotificationActions';
+import snackBarMixin from '../../components/mixins/snackBar';
 
 export default {
-  name: 'contract',
+  name: 'CreateContract',
   mixins: [processFCMForegroundMixins, snackBarMixin],
-  props: ['bookingId', 'contractId', 'mode'],
   components: { InfomationSection, TermsOfContractSection, QrcodeVue },
   data: () => ({
     heading: 'THÔNG TIN HỢP ĐỒNG',
@@ -160,17 +159,21 @@ export default {
           return !this.bookings.isLoading;
         case 'update':
           return Object.entries(this.contractFull).length !== 0;
-        case 'view':
-          return Object.entries(this.contractFull).length !== 0;
         default:
           return false;
       }
+    },
+    bookingId() {
+      return this.$route.query.bookingId;
+    },
+    contractId() {
+      return this.$route.query.contractId;
     },
     renter() {
       if (this.mode === 'create') {
         return this.booking.renter;
       }
-      if (this.mode === 'update' || this.mode === 'view') {
+      if (this.mode === 'update') {
         return this.contractFull.renter;
       }
       return null;
@@ -179,7 +182,7 @@ export default {
       if (this.mode === 'create') {
         return this.booking.vendor;
       }
-      if (this.mode === 'update' || this.mode === 'view') {
+      if (this.mode === 'update') {
         return this.contractFull.vendor;
       }
       return null;
@@ -188,7 +191,7 @@ export default {
       if (this.mode === 'create') {
         return this.booking.group;
       }
-      if (this.mode === 'update' || this.mode === 'view') {
+      if (this.mode === 'update') {
         return this.contractFull.group;
       }
       return null;
@@ -197,10 +200,13 @@ export default {
       if (this.mode === 'create') {
         return this.booking.type;
       }
-      if (this.mode === 'update' || this.mode === 'view') {
+      if (this.mode === 'update') {
         return this.contractFull.type;
       }
       return null;
+    },
+    mode() {
+      return this.$route.query.mode;
     },
     booking() {
       return this.findBookingById()(this.bookingId);
@@ -217,7 +223,7 @@ export default {
     if (this.mode === 'create') {
       this.getOneBooking(this.bookingId);
     }
-    if (this.mode === 'update' || this.mode === 'view') {
+    if (this.mode === 'update') {
       this.contractFull = this.findContractById()(this.contractId);
       if (this.contractFull.room) {
         this.contractFull.roomId = this.contractFull.room.roomId;
