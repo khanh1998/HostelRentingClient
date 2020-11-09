@@ -14,6 +14,7 @@ const processFCMForegroundMixins = {
       updateBookingStatusLocal: 'user/updateBookingStatusLocal',
       updateContractLocal: 'user/updateContractLocal',
       addNotificationLocal: 'user/addNotificationLocal',
+      getOneContract: 'user/getOneContract',
     }),
     registerMessaging() {
       if (messaging) {
@@ -32,9 +33,15 @@ const processFCMForegroundMixins = {
           this.updateBookingStatusLocal(Number(this.newMessage.data.id));
           break;
         case actions.SCAN_CONTRACT: // vendor side
-          this.updateContractLocal(Number(this.newMessage.data.contractId));
+          this.updateContractLocal(Number(this.newMessage.data.id));
           break;
         case actions.NEW_MESSAGE:
+          break;
+        case actions.NEW_CONTRACT:
+          this.getOneContract(Number(this.newMessage.data.id));
+          break;
+        case actions.UPDATE_CONTRACT:
+          this.getOneContract(Number(this.newMessage.data.id));
           break;
         default:
           console.log('default case on receive new notification');

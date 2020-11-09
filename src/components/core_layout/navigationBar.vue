@@ -10,11 +10,11 @@
       min-height="80"
       max-height="160"
       id="top-bar"
-      style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important;"
+      style="box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15) !important"
     >
       <v-row height="80" class="d-flex pa-0">
         <v-col cols="10" md="8" class="pa-0">
-          <v-row class="ma-0 d-flex align-center" style="height: 100%;">
+          <v-row class="ma-0 d-flex align-center" style="height: 100%">
             <v-col cols="3" md="2" class="d-flex align-center">
               <router-link to="/">
                 <v-img
@@ -74,7 +74,7 @@
             outlined
             rounded
             class="mr-5 font-weight-regular font-nunito hidden-sm-and-down"
-            style="letter-spacing: 0.01rem !important;"
+            style="letter-spacing: 0.01rem !important"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
           >
             <v-icon left>mdi-home-search</v-icon>Đăng ký tìm phòng
@@ -86,15 +86,59 @@
             class="hidden-sm-and-down navigation"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
           >
-            <v-icon style="font-size: 30px;" color="#98a6ad" _color="#727cf5" class="navigation"
+            <v-icon style="font-size: 30px" color="#98a6ad" _color="#727cf5" class="navigation"
               >mdi-account-clock-outline</v-icon
             >
           </v-btn>
-          <v-btn icon depressed class="hidden-sm-and-down">
-            <v-badge color="pink" dot overlap>
-              <v-icon style="font-size: 25px;" color="#98a6ad">mdi mdi-bell-outline</v-icon>
-            </v-badge>
-          </v-btn>
+          <v-menu left :offset-y="true" :offset-x="true" @blur="this.notifications = []">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-bind="attrs" v-on="on" depressed icon class="hidden-sm-and-down">
+                <v-badge
+                  color="pink"
+                  :content="messages.length"
+                  bordered
+                  left
+                  overlap
+                  v-bind="attrs"
+                  v-on="on"
+                  v-if="messages.length !== 0"
+                >
+                  <v-icon color="#727cf5">mdi-bell-outline</v-icon>
+                </v-badge>
+                <v-icon v-else color="#98a6ad">mdi-bell-outline</v-icon>
+              </v-btn>
+            </template>
+            <v-list
+              :dense="true"
+              :two-line="true"
+              :nav="true"
+              :avatar="true"
+              class="rounded-l"
+              style="height: 405px; width: 300px"
+            >
+              <v-list-item-group color="primary">
+                <v-list-item
+                  v-for="(item, i) in messages"
+                  :key="i"
+                  class="mb-2 pt-2"
+                  style="backgroundcolor: #f2f2f2"
+                >
+                  <v-list-item-avatar>
+                    <v-img :src="item.data.icon"></v-img>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title style="fontsize: 16px" class="py-1">
+                      {{ item.data.title }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      <!-- {{ new Date(item.data.time).toLocaleString('vi') }} -->
+                      {{ item.data.body }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-menu>
           <v-btn
             to="/vendor"
             depressed
@@ -105,7 +149,7 @@
           >
             <v-icon left>settings</v-icon>Quản lý phòng trọ
           </v-btn>
-          <v-divider class="mx-3 hidden-xs-only" inset vertical style="height: 60px;"></v-divider>
+          <v-divider class="mx-3 hidden-xs-only" inset vertical style="height: 60px"></v-divider>
           <v-menu transition="slide-x-transition">
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon large class="ma-1" v-bind="attrs" v-on="on">
@@ -289,10 +333,11 @@
 <script>
 import { mapActions } from 'vuex';
 import authenticationMixins from '../mixins/authentication';
+import processFCMForegroundMixins from '../mixins/processFCMForeground';
 
 export default {
   name: 'MyAppBar',
-  mixins: [authenticationMixins],
+  mixins: [authenticationMixins, processFCMForegroundMixins],
   data: () => ({
     overlay: {
       show: false,
@@ -431,6 +476,9 @@ export default {
       set(value) {
         this.setIsSearchOptional(value);
       },
+    },
+    messages() {
+      return this.$store.state.user.notifications.data;
     },
     filter() {
       this.changeSearchValue();

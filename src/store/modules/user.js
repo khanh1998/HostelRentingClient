@@ -231,9 +231,16 @@ const mutations = {
     state.contracts.success = null;
   },
   GET_ONE_CONTRACT_SUCCESS(state, contract) {
-    state.contracts.data.unshift(contract);
-    state.contracts.isLoading = false;
-    state.contracts.success = true;
+    const oldContractIndex = state.contracts.data.findIndex(
+      (c) => Number(c.contractId) === Number(contract.contractId),
+    );
+    if (oldContractIndex > -1) {
+      state.contracts.data[oldContractIndex] = contract;
+    } else {
+      state.contracts.data.unshift(contract);
+      state.contracts.isLoading = false;
+      state.contracts.success = true;
+    }
   },
   GET_ONE_CONTRACT_FAILURE(state, error) {
     state.contracts.isLoading = false;
