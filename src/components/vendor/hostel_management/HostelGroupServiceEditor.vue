@@ -356,6 +356,9 @@ export default {
       this.newServices = this.newServices.filter((service) => service.active);
       this.selects = this.newServices.filter((service) => service.required);
     }
+    if (this.mode === 'view') {
+      //
+    }
   },
   watch: {
     newServices: {

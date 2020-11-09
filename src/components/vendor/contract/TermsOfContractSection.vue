@@ -137,7 +137,7 @@
                         @appendixContent="receiveAppendixContent"
                         :editorContent="contract.appendixContract"
                       />
-                      <span v-html="contract.appendixContract"></span>
+                      <span v-if="mode === 'view'" v-html="contract.appendixContract"></span>
                     </v-col>
                     <v-col cols="12">
                       <!-- <ImageEditor @newValues="receiveNewImages" /> -->
@@ -287,9 +287,7 @@ export default {
       return new Date(this.startTime).toLocaleDateString('vi');
     },
     availableRooms() {
-      return this.rooms.data.filter(
-        (r) => r.available || r.contractId === this.contract.contractId,
-      );
+      return this.rooms.data.filter((r) => r.available || r.roomId === this.contract.roomId);
     },
     outOfRoomHint() {
       if (this.mode === 'create') {

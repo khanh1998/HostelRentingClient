@@ -13,7 +13,7 @@
           <div v-if="scanQRSuccess" class="d-flex flex-column justify-center align-center">
             <p><v-icon color="green">done_outline</v-icon> Xác nhận gặp mặt thành công!</p>
             <p>Bạn có muốn tạo hợp đồng ngay?</p>
-            <v-btn :to="`/vendor/contract?bookingId=${Number(newMessage.data.id)}`">
+            <v-btn :to="`/vendor/contract?bookingId=${Number(newMessage.data.id)}&mode=create`">
               <v-icon>far fa-handshake</v-icon> Tạo hợp đồng
             </v-btn>
           </div>

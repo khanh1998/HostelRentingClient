@@ -90,6 +90,7 @@ const myGetters = {
     return result;
   },
   findContractById: (state) => (id) => {
+    console.log('find contract id', id);
     const contract = state.contracts.data.find((c) => c.contractId === Number(id));
     return contract;
   },
