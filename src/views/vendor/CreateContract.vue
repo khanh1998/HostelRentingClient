@@ -82,9 +82,11 @@ export default {
     ...mapActions({
       createContract: 'user/createContract',
       updateContract: 'user/updateContract',
+      getOneBooking: 'user/getOneBooking',
     }),
     ...mapGetters({
       findContractById: 'user/findContractById',
+      findBookingById: 'user/findBookingById',
     }),
     receiveNewTermsOfContract(terms) {
       this.contract = { ...terms };
@@ -123,6 +125,7 @@ export default {
   computed: {
     ...mapState({
       contracts: (state) => state.user.contracts,
+      bookings: (state) => state.user.bookings,
     }),
     ready() {
       switch (this.mode) {
