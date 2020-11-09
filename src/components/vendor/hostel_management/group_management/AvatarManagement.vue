@@ -11,6 +11,18 @@
         trọ của bạn.</span
       >
     </v-row>
+    <v-row class="ma-0 d-flex justify-center">
+      <v-img
+        :src="images[0].resourceUrl"
+        :lazy-src="images[0].resourceUrl"
+        aspect-ratio="1"
+        v-if="images[0]"
+        max-width="200"
+        contain
+      ></v-img>
+      <!-- {{ images[0].resourceUrl }} -->
+      <!-- <span v-if="images">{{ images[0].resourceUrl }}</span> -->
+    </v-row>
     <v-dialog v-model="dialog.show" width="350">
       <v-card height="350" :loading="isFileUploading">
         <div class="d-flex flex-column align-center justify-center">
@@ -18,7 +30,6 @@
             type="file"
             @change="onFileChange"
             ref="fileSelect"
-            multiple
             lang="vi"
             accept="image/*"
             class="ma-2"
@@ -69,10 +80,14 @@ export default {
       console.log(this.$store.state.renter.common.rules.data);
       return this.$store.state.renter.common.rules.data;
     },
+    newGroup() {
+      return this.$store.state.vendor.group.newGroup;
+    },
   },
   methods: {
     ...mapActions({
       getAllRules: 'renter/common/getAllRules',
+      setNewGroupValue: 'vendor/group/setNewGroupValue',
     }),
     openImageUploadDialog() {
       this.dialog.show = true;
@@ -94,6 +109,8 @@ export default {
           this.dialog.show = false;
           this.showSnackBar('Tải ảnh lên thành công', { color: 'green' });
           this.images = this.upload.imageUrls.map((image) => ({ resourceUrl: image }));
+          this.newGroup.avatar = this.images[0].resourceUrl;
+          this.setNewGroupValue(this.newGroup);
         })
         .catch((error) => {
           console.log(error);

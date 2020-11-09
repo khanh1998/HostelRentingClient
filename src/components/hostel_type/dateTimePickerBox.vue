@@ -2,7 +2,7 @@
   <div
     class="d-flex flex-column align-center justify-center pa-4"
     v-if="!isLoading"
-    style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%;"
+    style="background-color: #f7f7f7; border-bottom: 1px solid #eee; height: 100%"
   >
     <v-dialog v-model="dateTimePicker.isOpenPicker" width="400">
       <LoginBox v-if="!userState.data" />
@@ -58,7 +58,7 @@
       <v-img v-if="avatar" max-height="70" max-width="70" :src="avatar" />
       <span v-else class="text-h4 white--text">{{ getAvatarTitle() }}</span>
     </v-avatar>
-    <span class="text-body-1 font-weight-bold text-center font-nunito mt-2" style="color: #222;">
+    <span class="text-body-1 font-weight-bold text-center font-nunito mt-2" style="color: #222">
       {{ name }}
     </span>
     <!-- <div class="d-flex align-center font-nunito my-3">
@@ -76,7 +76,7 @@
             rounded
             :disabled="userState.data && isVendor"
             class="font-nunito font-weight-bold"
-            style="letter-spacing: 0.05rem !important; background-color: #fff;"
+            style="letter-spacing: 0.05rem !important; background-color: #fff"
             v-bind="attrs"
             v-on="on"
           >
@@ -123,12 +123,12 @@
         </template>
       </v-snackbar>
     </div>
-    <span class="font-nunito text-caption mt-4" style="text-align: end !important;"
-      >TRẠNG THÁI:
-      <span class="text-subtitle-2" style="color: #1edb4c !important;" v-if="availableRoom !== 0">
+    <span class="font-nunito text-caption mt-4" style="text-align: end !important"
+      >TRẠNG THÁI: {{ availableRoom }}
+      <span class="text-subtitle-2" style="color: #1edb4c !important" v-if="availableRoom !== 0">
         {{ availableRoom }} phòng trống / {{ currentBooking }} lịch hẹn
       </span>
-      <span class="text-subtitle-2" style="color: #1edb4c !important;" v-else>
+      <span class="text-subtitle-2" style="color: #1edb4c !important" v-else>
         Không còn phòng trống
       </span>
     </span>

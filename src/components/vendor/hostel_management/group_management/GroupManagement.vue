@@ -39,7 +39,8 @@
                     dense
                     light
                     hide-details
-                    v-model="groupInfo.groupName"
+                    v-model="newGroupValue.groupName"
+                    @input="setNewGroupValue(newGroupValue)"
                   />
                 </v-col>
                 <v-col cols="4" class="d-flex flex-column">
@@ -47,7 +48,8 @@
                     >Loại nhà trọ<span class="text-danger ml-1">(*)</span></span
                   >
                   <v-select
-                    v-model="groupInfo.category"
+                    v-model="newGroupValue.categoryId"
+                    @change="setNewGroupValue(newGroupValue)"
                     :items="categories"
                     item-text="categoryName"
                     item-value="categoryId"
@@ -62,7 +64,14 @@
                   <span class="field-name font-weight-medium"
                     >Địa chỉ<span class="text-danger ml-1">(*)</span></span
                   >
-                  <v-text-field
+                  <gmap-autocomplete
+                    @place_changed="setPlace"
+                    :options="gmap"
+                    :selectFirstOnEnter="true"
+                    style="border: 1px solid #dee2e6 !important; border-radius: 4px"
+                    class="pa-2"
+                  ></gmap-autocomplete>
+                  <!-- <v-text-field
                     class="size-sub-2 form"
                     color="#727cf5"
                     solo
@@ -70,12 +79,13 @@
                     light
                     hide-details
                     v-model="groupInfo.address"
-                  />
+                  /> -->
                 </v-col>
                 <v-col cols="4" class="d-flex flex-column">
                   <span></span>
                   <v-checkbox
-                    v-model="groupInfo.ownerJoin"
+                    v-model="newGroupValue.ownerJoin"
+                    @click="setNewGroupValue(newGroupValue)"
                     label="Chung chủ"
                     color="#727cf5"
                     class="filter font-nunito size-sub-2 mt-auto checkbox"
@@ -88,6 +98,7 @@
                     hide-details
                     row
                     class="filter ma-0"
+                    @change="setCurfewtime()"
                   >
                     <v-radio
                       label="Giờ giấc tự do"
@@ -107,12 +118,14 @@
                   <div class="d-flex flex-row mt-2">
                     <el-time-select
                       placeholder="Mở cổng"
-                      v-model="groupInfo.curfewTime.startTime"
+                      v-model="newGroupValue.curfewTime.startTime"
                       :picker-options="{
                         start: '00:00',
                         step: '00:15',
                         end: '23:30',
                       }"
+                      @change="setNewGroupValue(newGroupValue)"
+                      v-show="showCurfewTime"
                     >
                     </el-time-select>
                   </div>
@@ -120,19 +133,21 @@
                 <v-col cols="4">
                   <div class="d-flex flex-row mt-2">
                     <el-time-select
+                      v-show="showCurfewTime"
                       placeholder="Đóng cổng"
-                      v-model="groupInfo.curfewTime.endTime"
+                      v-model="newGroupValue.curfewTime.endTime"
                       :picker-options="{
                         start: '00:00',
                         step: '00:15',
                         end: '23:30',
                       }"
+                      @change="setNewGroupValue(newGroupValue)"
                     >
                     </el-time-select>
                   </div>
                 </v-col>
                 <v-col cols="8" class="d-flex flex-column">
-                  <span class="field-name font-weight-medium d-flex align-center mb-0"
+                  <span class="field-name font-weight-medium d-flex align-center mb-0 font-nunito"
                     >Người liên lạc<v-tooltip right>
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn icon v-bind="attrs" v-on="on">
@@ -154,7 +169,8 @@
                         solo
                         dense
                         light
-                        v-model="groupInfo.manager.name"
+                        v-model="newGroupValue.managerName"
+                        @input="setNewGroupValue(newGroupValue)"
                       />
                     </v-col>
                     <v-col cols="5" class="py-0 pr-0">
@@ -166,13 +182,14 @@
                         dense
                         light
                         hide-details
-                        v-model="groupInfo.manager.phone"
+                        v-model="newGroupValue.managerPhone"
+                        @input="setNewGroupValue(newGroupValue)"
                       />
                     </v-col>
                   </div>
                 </v-col>
                 <v-col cols="4" class="d-flex flex-column">
-                  <span class="field-name font-weight-medium d-flex align-center mb-0"
+                  <span class="field-name font-weight-medium d-flex align-center mb-0 font-nunito"
                     >Cọc giữ chân<v-tooltip right>
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn icon v-bind="attrs" v-on="on">
@@ -186,7 +203,7 @@
                     </v-tooltip>
                   </span>
                   <div class="d-flex">
-                    <v-col cols="12" class="py-0 pl-0">
+                    <v-col cols="12" class="pa-0">
                       <v-text-field
                         class="size-sub form"
                         type="number"
@@ -195,11 +212,12 @@
                         dense
                         light
                         hide-details
-                        v-model="groupInfo.downPayment"
+                        v-model="newGroupValue.downPayment"
                         suffix="VNĐ"
                         step="100000"
                         min="0"
                         :rules="[rules.min(groupInfo.downPayment)]"
+                        @input="setNewGroupValue(newGroupValue)"
                       />
                     </v-col>
                   </div>
@@ -225,6 +243,12 @@
                     class="font-nunito text-gray size9rem text-capitalize utilities-category"
                     style="letter-spacing: 0.01rem !important"
                   >
+                    <span>Lịch rảnh</span>
+                  </v-tab>
+                  <v-tab
+                    class="font-nunito text-gray size9rem text-capitalize utilities-category"
+                    style="letter-spacing: 0.01rem !important"
+                  >
                     <span>Nội quy</span>
                   </v-tab>
                   <v-tab
@@ -239,8 +263,48 @@
                   >
                     <span>Hợp đồng mẫu</span>
                   </v-tab>
-                  <v-tab-item> vi tri tren ban do </v-tab-item>
+                  <v-tab-item>
+                    <span class="font-nunito size9rem text-danger">Xác nhận lại địa chỉ</span>
+                    <v-row>
+                      <v-col cols="4" class="d-flex">
+                        <v-text-field
+                          class="size-sub-2 font-nunito form"
+                          solo
+                          dense
+                          light
+                          label="Số nhà"
+                          hide-details
+                          v-model="newGroupValue.buildingNo"
+                          @input="setNewGroupValue(newGroupValue)"
+                        />
+                      </v-col>
+                      <v-col cols="8" class="d-flex">
+                        <v-select
+                          :items="coordsToString.selectableAddresses"
+                          label="Chọn địa chỉ"
+                          v-model="coordsToString.selectedAddress"
+                          messages="Lựa chọn địa chỉ dựa theo vị trí đã chọn"
+                          dense
+                          hide-details
+                          solo
+                          class="size-sub-2 font-nunito form"
+                        ></v-select>
+                      </v-col>
+                    </v-row>
+                    <div class="gmap-view-map">
+                      <gmap-map :center="center" :zoom="12" style="width: 100%; height: 300px">
+                        <gmap-marker
+                          :position="marker.position"
+                          @click="center = marker.position"
+                          :clickable="true"
+                          :draggable="true"
+                          @dragend="updateMarker"
+                        ></gmap-marker>
+                      </gmap-map>
+                    </div>
+                  </v-tab-item>
                   <v-tab-item> <ServiceManagement /></v-tab-item>
+                  <v-tab-item><ScheduleManagement /></v-tab-item>
                   <v-tab-item><RegulationManagement /></v-tab-item>
                   <v-tab-item><AvatarManagement /></v-tab-item>
                   <v-tab-item>Hợp đồng</v-tab-item>
@@ -252,7 +316,7 @@
         <v-divider></v-divider>
         <v-card-actions class="d-flex justify-end pa-4">
           <v-btn class="btn btn-light elevation-0 font-nunito" @click="closeDialog()"> Đóng </v-btn>
-          <v-btn class="btn btn-primary font-nunito"> Lưu </v-btn>
+          <v-btn class="btn btn-primary font-nunito" @click="insertGroup()"> Lưu </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -263,6 +327,7 @@ import { mapActions, mapState } from 'vuex';
 import ServiceManagement from './ServiceManagement.vue';
 import RegulationManagement from './RegulationManagement.vue';
 import AvatarManagement from './AvatarManagement.vue';
+import ScheduleManagement from './ScheduleManagement.vue';
 // import snackBarMixin from '../../mixins/snackBar';
 // import PlacePicker from './PlacePicker.vue';
 // import HostelGroupRules from './HostelGroupRules.vue';
@@ -278,6 +343,7 @@ export default {
     ServiceManagement,
     RegulationManagement,
     AvatarManagement,
+    ScheduleManagement,
     // PlacePicker,
     // HostelGroupRules,
     // HostelGroupServiceEditor,
@@ -343,6 +409,28 @@ export default {
         return (value || 'Giá không hợp lệ') > 0 || 'Không hợp lệ';
       },
     },
+    showCurfewTime: true,
+    // map
+    center: { lat: 10.8230989, lng: 106.6296638 },
+    marker: { position: { lat: 10.8230989, lng: 106.6296638 } },
+    place: { position: { lat: 10.8230989, lng: 106.6296638 } },
+    addressString: 'Thành phố Hồ Chí Minh',
+    gmap: {
+      bounds: {
+        north: 11.1602136,
+        south: 10.3493704,
+        east: 107.0265769,
+        west: 106.3638784,
+      },
+      strictBounds: true,
+    },
+    buildingNo: '',
+    coordsToString: {
+      addressComponents: [],
+      selectableAddresses: [],
+      selectedAddress: '',
+    },
+    e1: 1,
   }),
   methods: {
     ...mapActions({
@@ -351,6 +439,8 @@ export default {
       getAllCategories: 'renter/filterResult/getAllCategories',
       getAllServices: 'renter/common/getAllServices1',
       getAllRules: 'renter/common/getAllRules',
+      setNewGroupValue: 'vendor/group/setNewGroupValue',
+      getProvinces: 'renter/common/getProvinces',
     }),
     receiveNewServiceData(serviceList) {
       if (this.create) {
@@ -398,6 +488,138 @@ export default {
     closeDialog() {
       this.$emit('close');
     },
+    setCurfewtime() {
+      if (this.groupInfo.curfewTime.radiogroup === 'free') {
+        this.newGroupValue.curfewTime.limit = false;
+        this.showCurfewTime = false;
+      } else {
+        this.newGroupValue.curfewTime.limit = true;
+        this.showCurfewTime = true;
+      }
+    },
+    setPlace(place) {
+      this.place = place;
+      this.addMarker();
+      this.addressString = `${this.place.formatted_address}`;
+    },
+    addMarker() {
+      const marker = {
+        lat: this.place.geometry.location.lat(),
+        lng: this.place.geometry.location.lng(),
+      };
+      this.marker = { position: marker };
+      this.center = marker;
+      console.log(this.marker);
+      this.newGroupValue.latitude = this.marker.position.lat;
+      this.newGroupValue.longitude = this.marker.position.lng;
+      this.setNewGroupValue(this.newGroupValue);
+    },
+    geolocate() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const coord = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          this.center = coord;
+          this.place = { position: coord };
+          this.marker = { position: coord };
+        });
+      }
+    },
+    updateMarker(mouseEvent) {
+      // https://developers.google.com/maps/documentation/javascript/reference/map#MouseEvent
+      const { latLng } = mouseEvent;
+      const coord = { lat: latLng.lat(), lng: latLng.lng() };
+      this.place = { position: coord };
+      this.marker = { position: coord };
+      this.center = coord;
+      this.newGroupValue.latitude = this.marker.position.lat;
+      this.newGroupValue.longitude = this.marker.position.lng;
+      this.setNewGroupValue(this.newGroupValue);
+    },
+    async searchByCoord(coords) {
+      const key = 'AIzaSyDNBmxVGbZ4Je5XHPRqqaZPmDFKjKPPhXk';
+      const { lat, lng } = coords;
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${key}`;
+      let res = await fetch(url);
+      if (res.status === 200) {
+        res = await res.json();
+        const includeRoutes = res.results.filter((item) => {
+          const indexR = item.address_components.findIndex((compo) => {
+            const includeRoute = compo.types.includes('route');
+            return includeRoute;
+          });
+          return indexR > -1;
+        });
+        let formattedAddresses = includeRoutes.map((item) => {
+          const addressComponents = item.address_components;
+          const streetNumber = addressComponents.find((compo) => {
+            const isInclude = compo.types.includes('street_number');
+            return isInclude;
+          });
+          if (streetNumber) {
+            const shortName = streetNumber.short_name;
+            return item.formatted_address.substring(shortName.length + 1);
+          }
+          return item.formatted_address;
+        });
+        formattedAddresses = new Set(formattedAddresses);
+        return Array.from(formattedAddresses);
+      }
+      console.log(this.marker);
+      return null;
+    },
+    updateSelectableAddress() {
+      const { position } = this.marker;
+      this.searchByCoord(position).then((formattedAddresses) => {
+        this.coordsToString.selectableAddresses = formattedAddresses;
+      });
+    },
+    findDistrictByName(districtName) {
+      const district = this.districts.data.find((d) => {
+        const include = d.districtName
+          .trim()
+          .toLowerCase()
+          .includes(districtName.trim().toLowerCase());
+        return include;
+      });
+      return district;
+    },
+    findWardByName(wardName, wards) {
+      const ward = wards.find((w) => {
+        const include = w.wardName.trim().toLowerCase().includes(wardName.trim().toLowerCase());
+        return include;
+      });
+      return ward;
+    },
+    findStreetByName(streetName) {
+      const street = this.streets.data.find((s) => {
+        const include = s.streetName.trim().toLowerCase().includes(streetName.trim().toLowerCase());
+        return include;
+      });
+      return street;
+    },
+    emitNewAddress() {
+      this.newGroupValue.address = this.addressObjForApi;
+      this.setNewGroupValue(this.newGroupValue);
+      this.$emit('newValue', {
+        coords: {
+          longitude: this.marker.position.lng,
+          latitude: this.marker.position.lat,
+        },
+        address: this.addressObjForApi,
+      });
+      console.log(this.addressObjForApi);
+    },
+    insertGroup() {
+      console.log(this.newGroupValue);
+      console.log(this.user);
+      // this.createHostelGroup({
+      //   vendorId: this.user.userId,
+
+      // });
+    },
   },
   computed: {
     ...mapState({
@@ -421,6 +643,57 @@ export default {
       const allRules = this.$store.state.renter.common.rules.isLoading;
       return allServices || allCategories || allRules;
     },
+    newGroupValue() {
+      return this.$store.state.vendor.group.newGroup;
+    },
+    ...mapState('renter/common', ['provinces', 'wards', 'districts', 'streets']),
+    addressObjForApi() {
+      // eslint-disable-next-line
+      let [streetName, wardName, districtName] = this.coordsToString.selectedAddress.split(',');
+      console.log(streetName, wardName, districtName);
+      if (streetName.startsWith('Đ. ')) {
+        streetName = streetName.substring(3);
+      }
+      const district = this.findDistrictByName(districtName);
+      const ward = this.findWardByName(wardName, district.wards);
+      const street = this.findStreetByName(streetName);
+      const obj = {
+        provinceId: 1,
+        districtId: district.districtId,
+        wardId: ward.wardId,
+        streetName,
+        buildingNo: this.buildingNo,
+      };
+      if (street) {
+        obj.streetId = street.streetId;
+      } else {
+        obj.streetId = null;
+      }
+      return obj;
+    },
+  },
+  watch: {
+    marker: {
+      handler() {
+        this.updateSelectableAddress();
+      },
+      deep: true,
+    },
+    'coordsToString.selectedAddress': {
+      handler() {
+        this.emitNewAddress();
+      },
+      deep: true,
+    },
+    buildingNo: {
+      handler() {
+        this.emitNewAddress();
+      },
+    },
+  },
+  mounted() {
+    this.geolocate();
+    this.updateSelectableAddress();
   },
   created() {
     if (!this.user) {
@@ -432,13 +705,16 @@ export default {
     }
     // if (this.categories.length === 0) {
     this.getAllCategories().then(() => {
-      this.groupInfo.category = this.$store.state.renter.filterResult.filter.categories.select;
+      this.newGroupValue.categoryId = this.$store.state.renter.filterResult.filter.categories.select;
     });
     if (this.allServices.length === 0) {
       this.getAllServices();
     }
     if (this.allRules.length === 0) {
       this.getAllRules();
+    }
+    if (this.provinces.data.length === 0) {
+      this.getProvinces();
     }
     // }
   },

@@ -357,10 +357,14 @@ export default {
     allServices() {
       return this.$store.state.renter.common.services.data;
     },
+    newGroup() {
+      return this.$store.state.vendor.group.newGroup;
+    },
   },
   methods: {
     ...mapActions({
       getAllServices: 'renter/common/getAllServices1',
+      setNewGroupValue: 'vendor/group/setNewGroupValue',
     }),
     initUserUnit() {
       const { serviceName } = this.allServices.find(
@@ -475,6 +479,8 @@ export default {
           });
           this.dialog.addGroupService = false;
           this.resetAddnewValue();
+          this.newGroup.services = this.groupService;
+          this.setNewGroupValue(this.newGroup);
         } else {
           console.log(this.otherService);
         }

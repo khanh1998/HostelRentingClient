@@ -28,6 +28,23 @@ const myState = () => ({
   },
   newGroup: {
     services: [],
+    avatar: null,
+    regulation: [],
+    groupName: '',
+    categoryId: null,
+    ownerJoin: false,
+    curfewTime: {
+      limit: true,
+      startTime: '',
+      endTime: '',
+    },
+    managerName: null,
+    managerPhone: null,
+    downPayment: 0,
+    buildingNo: '',
+    latitude: 0,
+    longitude: 0,
+    address: null,
   },
 });
 
