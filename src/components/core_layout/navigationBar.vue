@@ -92,7 +92,7 @@
           </v-btn>
           <v-menu left :offset-y="true" :offset-x="true" @blur="this.notifications = []">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn v-bind="attrs" v-on="on" depressed icon class="hidden-sm-and-down">
+              <v-btn v-bind="attrs" v-on="on" depressed icon>
                 <v-badge
                   color="pink"
                   :content="messages.length"

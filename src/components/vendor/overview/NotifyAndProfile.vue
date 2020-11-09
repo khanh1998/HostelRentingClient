@@ -2,7 +2,7 @@
   <div class="d-flex justify-center align-center px-3" style="height: 100%">
     <v-menu left :offset-y="true" :offset-x="true" @blur="this.notifications = []">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on" icon class="hidden-sm-and-down">
+        <v-btn v-bind="attrs" v-on="on" icon>
           <v-badge
             color="red"
             :content="messages.length"
