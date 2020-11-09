@@ -17,19 +17,6 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="showQRDialog" width="350" persistent>
-      <v-snackbar
-        v-model="snackBarMixin.show"
-        :multi-line="snackBarMixin.multiLine"
-        :timeout="snackBarMixin.timeout"
-        :absolute="snackBarMixin.absolute"
-        :color="snackBarMixin.color"
-      >
-        {{ snackBarMixin.message }}
-
-        <template v-slot:action="{ attrs }">
-          <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Close </v-btn>
-        </template>
-      </v-snackbar>
       <v-card v-if="!scanQRSuccess">
         <v-card-title style="background-color: #98b7d7; color: white">Mã quét</v-card-title>
         <v-card-text>
@@ -54,6 +41,19 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar
+      v-model="snackBarMixin.show"
+      :multi-line="snackBarMixin.multiLine"
+      :timeout="snackBarMixin.timeout"
+      :absolute="snackBarMixin.absolute"
+      :color="snackBarMixin.color"
+    >
+      {{ snackBarMixin.message }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Close </v-btn>
+      </template>
+    </v-snackbar>
     <!-- <div class="d-flex justify-center title">{{ heading }}</div> -->
     <v-tabs v-if="ready" v-model="tabs.index" class="font-nunito font-weight-bold" color="#727cf5">
       <v-tab> 1. Thông tin hai bên </v-tab>

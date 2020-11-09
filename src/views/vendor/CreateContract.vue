@@ -1,52 +1,14 @@
 <template>
   <v-card class="overflow-y-auto" max-height="100%" ref="contractView" id="contractView">
-    <v-dialog v-model="bookings.isLoading" hide-overlay persistent width="300">
-      <v-card color="primary" dark>
-        <v-card-text>
-          Đang chuẩn bị hợp đồng
-          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="contracts.isCreating" hide-overlay persistent width="300">
-      <v-card color="primary" dark>
-        <v-card-text>
-          Hợp đồng đang được tạo
-          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="showQRDialog" width="350" persistent>
-      <v-snackbar
-        v-model="snackBarMixin.show"
-        :multi-line="snackBarMixin.multiLine"
-        :timeout="snackBarMixin.timeout"
-        :absolute="snackBarMixin.absolute"
-        :color="snackBarMixin.color"
-      >
-        {{ snackBarMixin.message }}
-
-        <template v-slot:action="{ attrs }">
-          <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Close </v-btn>
-        </template>
-      </v-snackbar>
-      <v-card v-if="!scanQRSuccess">
-        <v-card-title style="background-color: #98b7d7; color: white">Mã quét</v-card-title>
-        <v-card-text>
-          <p>Người xem phòng quét mã để xem lại và kích hoạt hợp đồng.</p>
-          <div class="d-flex justify-center align-center">
-            <QrcodeVue :value="qrCodeValue" v-if="contracts.newlyCreated" :size="200" level="H" />
-          </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn to="/vendor">Màn hình chính</v-btn>
-          <v-btn to="/vendor/view-contract">Xem hợp đồng</v-btn>
-        </v-card-actions>
-      </v-card>
-      <v-card v-if="scanQRSuccess">
-        <v-card-title>
+    <v-dialog v-model="showUpdateSuccess" width="350" persistent>
+      <v-card>
+        <v-card-title v-if="updateSuccess">
           <v-icon color="green">done_outline</v-icon>
-          Tạo hợp đồng thành công!
+          Cập nhật hợp đồng thành công
+        </v-card-title>
+        <v-card-title v-if="!updateSuccess">
+          <v-icon color="green">done_outline</v-icon>
+          Cập nhật hợp đồng thành công
         </v-card-title>
         <v-card-actions>
           <v-btn to="/vendor">Màn hình chính</v-btn>
@@ -54,6 +16,19 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar
+      v-model="snackBarMixin.show"
+      :multi-line="snackBarMixin.multiLine"
+      :timeout="snackBarMixin.timeout"
+      :absolute="snackBarMixin.absolute"
+      :color="snackBarMixin.color"
+    >
+      {{ snackBarMixin.message }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Close </v-btn>
+      </template>
+    </v-snackbar>
     <!-- <div class="d-flex justify-center title">{{ heading }}</div> -->
     <v-tabs v-if="ready" v-model="tabs.index" class="font-nunito font-weight-bold" color="#727cf5">
       <v-tab> 1. Thông tin hai bên </v-tab>
@@ -82,7 +57,6 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
-import QrcodeVue from 'qrcode.vue';
 import InfomationSection from '../../components/vendor/contract/InfomationSection.vue';
 import TermsOfContractSection from '../../components/vendor/contract/TermsOfContractSection.vue';
 import processFCMForegroundMixins from '../../components/mixins/processFCMForeground';
@@ -92,26 +66,24 @@ import snackBarMixin from '../../components/mixins/snackBar';
 export default {
   name: 'CreateContract',
   mixins: [processFCMForegroundMixins, snackBarMixin],
-  components: { InfomationSection, TermsOfContractSection, QrcodeVue },
+  components: { InfomationSection, TermsOfContractSection },
   data: () => ({
     heading: 'THÔNG TIN HỢP ĐỒNG',
     contract: {},
     contractFull: {},
-    showQRDialog: false,
     tabs: {
       index: 0,
     },
-    scanQRSuccess: false,
+    updating: false,
+    updateSuccess: null,
+    showUpdateSuccess: false,
   }),
   methods: {
     ...mapActions({
-      getBooking: 'user/getOneBooking',
-      getOneBooking: 'user/getOneBooking',
       createContract: 'user/createContract',
       updateContract: 'user/updateContract',
     }),
     ...mapGetters({
-      findBookingById: 'user/findBookingById',
       findContractById: 'user/findContractById',
     }),
     receiveNewTermsOfContract(terms) {
@@ -131,18 +103,18 @@ export default {
       this.tabs.index += 1;
       document.getElementById('contractView').scrollTop = 0;
     },
-    closeDialog() {
-      this.showQRDialog = false;
-      this.scanQRSuccess = false;
-    },
     doUpdateContract() {
+      this.updateSuccess = null;
       console.log('do update contract');
       this.updateContract(this.contract).then(() => {
-        console.log('update contract success: ', this.contracts.success, this.contracts.error);
+        this.showUpdateSuccess = true;
         if (this.contracts.success === true) {
+          console.log('update contract success: ', this.contracts.success, this.contracts.error);
           this.showSnackBar('cập nhật hợp đồng thành công', { color: 'green' });
+          this.updateSuccess = true;
         }
         if (this.contracts.success === false) {
+          this.updateSuccess = false;
           this.showSnackBar(`Lỗi: ${this.contracts.error.message}`, { color: 'red' });
         }
       });
@@ -150,7 +122,6 @@ export default {
   },
   computed: {
     ...mapState({
-      bookings: (state) => state.user.bookings,
       contracts: (state) => state.user.contracts,
     }),
     ready() {
