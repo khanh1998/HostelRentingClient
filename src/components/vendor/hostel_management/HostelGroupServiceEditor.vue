@@ -1,7 +1,7 @@
 <template>
   <v-card class="pa-5" height="100%" elevation="0" :loading="isServiceLoading">
     <v-dialog v-model="dialog" persistent max-width="600px">
-      <template v-slot:activator="{ on, attrs }">
+      <!-- <template v-slot:activator="{ on, attrs }">
         <v-row>
           <v-col cols="9">
             <span class="text-h6"><v-icon left>room_service</v-icon> Dịch vụ</span>
@@ -19,7 +19,7 @@
             </v-btn>
           </v-col>
         </v-row>
-      </template>
+      </template> -->
       <v-card>
         <v-card-title>
           <span class="headline">Thêm dịch vụ</span>

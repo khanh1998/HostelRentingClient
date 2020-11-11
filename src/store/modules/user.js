@@ -595,6 +595,25 @@ const actions = {
       throw new Error('userId, role or user.data null');
     }
   },
+  async updateUserFirebaseToken({ commit, state }, firebaseToken) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role && state.user.data) {
+      try {
+        commit(mutationTypes.UPDATE_USER_REQUEST);
+        const res = await window.axios.put(`/api/v1/${role}/${userId}/token`, { firebaseToken });
+        if (res.status === 200) {
+          commit(mutationTypes.UPDATE_USER_SUCCESS, res.data.data);
+        } else {
+          commit(mutationTypes.UPDATE_USER_FAILURE);
+        }
+      } catch (error) {
+        commit(mutationTypes.UPDATE_USER_FAILURE, error);
+      }
+    } else {
+      throw new Error('userId, role or user.data null');
+    }
+  },
   async getBookings({ commit, state }) {
     console.log(window.$cookies);
     const userId = window.$cookies.get('userId');
@@ -1117,13 +1136,13 @@ const actions = {
         });
         if (!res) {
           const error = new Error('Cannot receive response from server');
-          commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
+          commit(mutationTypes.UPDATE_FEEDBACK_FAILURE, error);
         } else if (res.status >= 200 && res.status <= 299) {
           commit(mutationTypes.UPDATE_FEEDBACK_SUCCESS, res.data.data);
         }
       }
     } catch (error) {
-      commit(mutationTypes.UPDATE_USER_FAILURE, error);
+      commit(mutationTypes.UPDATE_FEEDBACK_FAILURE, error);
     }
   },
 };

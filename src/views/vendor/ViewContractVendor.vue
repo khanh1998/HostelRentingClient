@@ -34,310 +34,27 @@
               hide-overlay
               transition="dialog-bottom-transition"
             >
-              <v-card>
+              <v-card v-if="currentContract">
                 <v-toolbar dark color="primary">
                   <v-btn icon dark @click="dialog = false">
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
                   <v-toolbar-title>Thông tin hợp đồng</v-toolbar-title>
                 </v-toolbar>
-                <!-- detail -->
-                <v-tabs v-model="tabs.index" class="font-nunito font-weight-bold" color="#727cf5">
-                  <v-tab> 1. Thông tin hai bên </v-tab>
-                  <v-tab> 2. THÔNG TIN HỢP ĐỒNG </v-tab>
-                  <v-tab-item>
-                    <div class="d-flex flex-column justify-center align-end">
-                      <v-card flat>
-                        <v-row no-gutters>
-                          <v-col>
-                            <v-card>
-                              <v-row no-gutters>
-                                <v-col cols="12" md="6">
-                                  <v-card-text>
-                                    <v-container>
-                                      <span class="text-h6">BÊN A: BÊN CHO THUÊ</span>
-                                      <v-row class="mt-5">
-                                        <v-col cols="12" sm="6" md="6" class="d-flex pb-0">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Ông (Bà): </span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            vendor.username
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="5" sm="6" md="6" class="d-flex pb-0">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Năm sinh: </span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            vendor.yearOfBirth
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="7" sm="12" md="12" class="d-flex pb-2">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Điện thoại: </span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            vendor.phone
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="12" sm="12" md="12" class="d-flex pb-0">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >CMND số:</span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            vendor.idNum
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="5" sm="6" md="6" class="d-flex pb-0">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Ngày cấp:</span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            getIdNumber(vendor.idIssuedDate)
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="7" sm="6" md="6" class="d-flex pb-2">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Nơi cấp:</span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            vendor.idIssuedLocation
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="12" class="d-flex pb-0">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Địa chỉ thường trú:</span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            vendor.householdAddress
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="12" class="d-flex pb-0">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Chỗ ở hiện nay:</span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            vendor.currentAddress
-                                          }}</span>
-                                        </v-col>
-                                      </v-row>
-                                    </v-container>
-                                  </v-card-text>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                  <v-card-text>
-                                    <v-container>
-                                      <span class="text-h6">BÊN B: BÊN THUÊ</span>
-                                      <v-row class="mt-5">
-                                        <v-col cols="12" sm="6" md="6" class="d-flex pb-0">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Ông (Bà): </span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            renter.username
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="5" sm="6" md="6" class="d-flex pb-0">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Năm sinh: </span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            renter.yearOfBirth
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="7" sm="12" md="12" class="d-flex pb-2">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Điện thoại: </span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            renter.phone
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="12" sm="12" md="12" class="d-flex pb-0">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >CMND số:</span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            renter.idNum
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="5" sm="6" md="6" class="d-flex pb-0">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Ngày cấp:</span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            getIdNumber(renter.idIssuedDate)
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="7" sm="6" md="6" class="d-flex pb-2">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Nơi cấp:</span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            renter.idIssuedLocation
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="12" class="d-flex pb-0">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Địa chỉ thường trú:</span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            renter.householdAddress
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="12" class="d-flex pb-2">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Chỗ ở hiện nay:</span
-                                          ><span class="ml-2 text-gray-black">{{
-                                            renter.currentAddress
-                                          }}</span>
-                                        </v-col>
-                                        <v-col cols="12" class="d-flex pb-2">
-                                          <span class="font-weight-bold text-gray-black"
-                                            >Trường đã / đang học:</span
-                                          ><span class="ml-2 text-gray-black"
-                                            >{{ school.schoolName }} -
-                                            {{ address.districtName }}</span
-                                          >
-                                        </v-col>
-                                      </v-row>
-                                    </v-container>
-                                  </v-card-text>
-                                </v-col>
-                              </v-row>
-                            </v-card>
-                          </v-col>
-                        </v-row>
-                      </v-card>
-                      <v-btn class="ma-4 btn-primary" @click="goToNextTab"
-                        >Tiếp tục <v-icon small>arrow_forward_ios</v-icon></v-btn
-                      >
-                    </div>
-                  </v-tab-item>
-                  <v-tab-item>
-                    <v-card>
-                      <v-row no-gutters>
-                        <v-col cols="12" md="6">
-                          <v-card-text class="d-flex flex-column">
-                            <span class="text-h6 mt-5">THÔNG TIN PHÒNG TRỌ</span>
-                            <v-row>
-                              <v-col cols="12" class="d-flex flex-column">
-                                <span class="font-weight-bold text-gray-black">Nhà trọ </span>
-                                <span class="text size-sub-2 px-3 py-2 mt-2">{{ groupName }}</span>
-                              </v-col>
-                              <v-col cols="12" class="d-flex flex-column">
-                                <span class="font-weight-bold text-gray-black">Phòng </span>
-                                <span class="text size-sub-2 px-3 py-2 mt-2">{{ roomName }}</span>
-                              </v-col>
-
-                              <v-col cols="12" sm="6" class="d-flex flex-column">
-                                <span class="font-weight-bold text-gray-black"
-                                  >Ngày bắt đầu hợp đồng
-                                </span>
-                                <span class="text size-sub-2 px-3 py-2 mt-2">{{ startTime }}</span>
-                              </v-col>
-                              <v-col cols="12" sm="6" class="d-flex flex-column">
-                                <span class="font-weight-bold text-gray-black"
-                                  >Thời hạn hợp đồng
-                                </span>
-                                <span class="text size-sub-2 px-3 py-2 mt-2">{{ duration }}</span>
-                              </v-col>
-                              <v-col cols="6" sm="6" class="d-flex flex-column">
-                                <span class="font-weight-bold text-gray-black">Tiền thuê </span>
-                                <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
-                                  ><span>{{ price }}</span>
-                                  <span class="ml-auto">triệu/tháng</span>
-                                </span>
-                              </v-col>
-                              <v-col cols="6" sm="6" class="d-flex flex-column">
-                                <span class="font-weight-bold text-gray-black">Tiền cọc</span>
-                                <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
-                                  ><span>{{ deposit }}</span>
-                                  <span class="ml-auto">tháng tiền phòng</span>
-                                </span>
-                              </v-col>
-                            </v-row>
-                            <span class="text-h6 mt-5">THÔNG TIN DỊCH VỤ</span>
-                            <v-row>
-                              <v-col class="12">
-                                <!-- hostel group service -->
-                                <v-card class="pa-2" height="100%" elevation="0">
-                                  <v-data-table
-                                    :headers="headersS"
-                                    :items="itemsS"
-                                    item-key="serviceId"
-                                    hide-default-footer
-                                    dense
-                                    locale="vi-VN"
-                                    class="mt-2"
-                                  >
-                                    <template v-slot:top>
-                                      <v-toolbar flat>
-                                        <v-toolbar-title>Dịch vụ</v-toolbar-title>
-                                      </v-toolbar>
-                                    </template>
-                                  </v-data-table>
-                                </v-card>
-                              </v-col>
-                            </v-row>
-                          </v-card-text>
-                        </v-col>
-                        <v-col cols="12" md="6">
-                          <v-card-text>
-                            <v-container>
-                              <v-row>
-                                <v-col cols="12">
-                                  <!-- facility -->
-                                  <v-data-table
-                                    :headers="headersF"
-                                    dense
-                                    hide-default-footer
-                                    :items="itemsF"
-                                    class="elevation-1"
-                                  >
-                                    <template v-slot:top>
-                                      <v-toolbar flat>
-                                        <v-toolbar-title>Nội thất</v-toolbar-title>
-                                      </v-toolbar>
-                                    </template>
-                                  </v-data-table>
-                                </v-col>
-                                <v-col cols="12">
-                                  <!-- rule -->
-                                  <v-data-table
-                                    dense
-                                    :headers="headersR"
-                                    hide-default-footer
-                                    :items="rules"
-                                    class="elevation-1"
-                                  >
-                                    <template v-slot:item.allowed="{ item }">
-                                      <v-simple-checkbox
-                                        v-model="item.allowed"
-                                        disabled
-                                      ></v-simple-checkbox>
-                                    </template>
-                                    <template v-slot:top>
-                                      <v-toolbar flat>
-                                        <v-toolbar-title>Quy định</v-toolbar-title>
-                                      </v-toolbar>
-                                    </template>
-                                  </v-data-table>
-                                </v-col>
-                              </v-row>
-                              <v-row>
-                                <v-col cols="12" class="d-flex flex-column">
-                                  <span
-                                    >Tiền đặt cọc sẽ được trả lại đầy đủ cho bên B khi hết hợp đồng
-                                    thuê phòng trọ với điều kiện thanh toán đầy đủ tiền điện, nước,
-                                    phí dịch vụ và các khoản khác liên quan.</span
-                                  >
-                                  <span class="mt-2"
-                                    >Bên A ngưng hợp đồng (lấy lại nhà) trước thời hạn thì bồi
-                                    thường gấp đôi số tiền bên B đã đặt cọc.</span
-                                  >
-                                  <span class="mt-2"
-                                    >Bên B ngưng hợp đồng trước thời hạn thì phải chịu mất tiền thế
-                                    chân.</span
-                                  >
-                                </v-col>
-                                <v-col cols="12">
-                                  <!-- image -->
-                                </v-col>
-                              </v-row>
-                            </v-container>
-                          </v-card-text>
-                        </v-col>
-                      </v-row>
-                    </v-card>
-                  </v-tab-item>
-                </v-tabs>
+                <div style="height: calc(100% - 64px)">
+                  <v-progress-linear
+                    v-model="progressBar.value"
+                    :active="true"
+                    :indeterminate="false"
+                    :query="true"
+                  ></v-progress-linear>
+                  <pdf
+                    :src="currentContract.contractUrl"
+                    @progress="updateProgressBar"
+                    :page="5"
+                    color="deep-orange"
+                  ></pdf>
+                </div>
               </v-card>
             </v-dialog>
           </v-toolbar>
@@ -378,13 +95,14 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import pdf from 'vue-pdf';
 // import InfomationSection from '@/components/vendor/contract/InfomationSection.vue';
 // import TermsOfContractSection from '@/components/vendor/contract/TermsOfContractSection.vue';
 // import ContractItemVendor from '@/components/view_contracts/ContractItemVendor.vue';
 
 export default {
   name: 'ViewContractVendor',
-  // components: { InfomationSection, TermsOfContractSection },
+  components: { pdf },
   data: () => ({
     // search
     search: '',
@@ -455,6 +173,7 @@ export default {
         value: 'facilityName',
       },
     ],
+    currentContract: null,
     color: undefined,
     vendor: {},
     renter: {},
@@ -469,6 +188,9 @@ export default {
     deposit: 0,
     services: [],
     facilities: [],
+    progressBar: {
+      value: 0,
+    },
   }),
   methods: {
     ...mapActions({
@@ -478,6 +200,10 @@ export default {
     ...mapGetters({
       findContractById: 'user/findContractById',
     }),
+    updateProgressBar(p) {
+      console.log(p);
+      this.progressBar.value = Math.ceil(p * 100);
+    },
     getAvatarTitle(name) {
       return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
     },
@@ -516,19 +242,20 @@ export default {
     findContract(contractId) {
       // console.log(contractId);
       const createdContract = this.findContractById()(contractId);
+      this.currentContract = createdContract;
       this.vendor = createdContract.vendor;
       this.renter = createdContract.renter;
-      this.school = createdContract.renter.school;
-      this.address = createdContract.renter.school.address;
-      this.rules = createdContract.group.regulations;
+      // this.school = createdContract.renter.school;
+      // this.address = createdContract.renter.school.address;
+      // this.rules = createdContract.group.regulations;
       this.groupName = createdContract.group.groupName;
       this.roomName = createdContract.room.roomName;
-      this.startTime = this.getDateByTimestamp(createdContract.startTime);
-      this.duration = createdContract.duration;
+      // this.startTime = this.getDateByTimestamp(createdContract.startTime);
+      // this.duration = createdContract.duration;
       this.price = createdContract.type.price;
       this.deposit = createdContract.type.deposit;
-      this.services = createdContract.group.services;
-      this.facilities = createdContract.type.facilities;
+      // this.services = createdContract.group.services;
+      // this.facilities = createdContract.type.facilities;
       // console.log(this.contractDetail);
       // console.log(this.rules);
       this.dialog = true;
@@ -570,91 +297,8 @@ export default {
         wardName: item.group.address.wardName,
         districtName: item.group.address.districtName,
         provinceName: item.group.address.provinceName,
+        contractUrl: item.contractUrl,
       }));
-    },
-    bookings() {
-      const list = this.allBooking;
-      let filteredDate = [];
-      filteredDate = list.filter((booking) => {
-        let min = new Date(`${this.date[0]}T00:00:00`).getTime();
-        let max = new Date(`${this.date[0]}T23:59:59`).getTime();
-        if (this.date.length === 2 && this.date[0] !== this.date[1]) {
-          max = new Date(`${this.date[1]}T23:59:59`).getTime();
-          if (min > max) {
-            max = new Date(`${this.date[1]}T00:00:00`).getTime();
-            min = new Date(`${this.date[0]}T23:59:59`).getTime();
-            return booking.meetTime <= min && booking.meetTime >= max;
-          }
-        }
-        return booking.meetTime <= max && booking.meetTime >= min;
-      });
-
-      const result = filteredDate.filter((booking) => {
-        const selectedIdx = this.buttonGroup.selectedBookingStatus;
-        switch (selectedIdx) {
-          case 0:
-            return booking.status === 'INCOMING';
-          case 1:
-            return booking.status === 'DONE';
-          case 2:
-            return booking.status === 'CANCELLED';
-          default:
-            return true;
-        }
-      });
-      return { result, filteredDate };
-    },
-    dateRange() {
-      const start = new Date(this.date[0]);
-      const end = new Date(this.date[1]);
-      if (start.getTime() === end.getTime()) {
-        return `${start.getDate()}/${start.getMonth() + 1}/${start.getFullYear()}`;
-      }
-      if (start.getTime() > end.getTime()) {
-        return `${end.getDate()}/${end.getMonth() + 1}${
-          this.date[1] === undefined // eslint-disable-next-line
-            ? `/${end.getFullYear()}` // eslint-disable-next-line
-            : `${
-                // eslint-disable-line
-                end.getFullYear() === start.getFullYear() // eslint-disable-line
-                  ? ` - ${start.getDate()}/${start.getMonth() + 1}/${start.getFullYear()}` // eslint-disable-line
-                  : `/${end.getFullYear()}` // eslint-disable-line
-              }` // eslint-disable-line
-        }`;
-      }
-      return `${start.getDate()}/${start.getMonth() + 1}${
-        this.date[1] === undefined // eslint-disable-next-line
-          ? `/${start.getFullYear()}` // eslint-disable-next-line
-          : `${
-              // eslint-disable-line
-              start.getFullYear() === end.getFullYear() // eslint-disable-line
-                ? ` - ${end.getDate()}/${end.getMonth() + 1}/${end.getFullYear()}` // eslint-disable-line
-                : `/${start.getFullYear()}` // eslint-disable-line
-            }` // eslint-disable-line
-      }`;
-    },
-    isLoadingBooking() {
-      return this.$store.state.user.bookings.isLoading;
-    },
-    counter() {
-      let incomming = 0;
-      let done = 0;
-      let cancel = 0;
-      this.bookings.filteredDate.forEach((booking) => {
-        switch (booking.status) {
-          case 'INCOMING':
-            incomming += 1;
-            break;
-          case 'DONE':
-            done += 1;
-            break;
-          case 'CANCELLED':
-            cancel += 1;
-            break;
-          default:
-        }
-      });
-      return { incomming, done, cancel };
     },
     items() {
       return this.rules.map((item) => ({

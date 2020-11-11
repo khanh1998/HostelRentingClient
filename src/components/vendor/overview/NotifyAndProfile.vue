@@ -32,6 +32,8 @@
             :key="i"
             class="mb-2 pt-2"
             style="backgroundcolor: #f2f2f2"
+            two-line
+            :to="getDestination(message)"
           >
             <v-list-item-avatar>
               <v-img :src="item.data.icon"></v-img>
@@ -41,7 +43,6 @@
                 {{ item.data.title }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                <!-- {{ new Date(item.data.time).toLocaleString('vi') }} -->
                 {{ item.data.body }}
               </v-list-item-subtitle>
             </v-list-item-content>
@@ -105,10 +106,12 @@
 <script>
 import { mapActions } from 'vuex';
 import processFCMForegroundMixins from '../../mixins/processFCMForeground';
+import action from '../../../config/pushNotificationActions';
+import mobileMixin from '../../mixins/mobile';
 
 export default {
   name: 'NotifyAndProfile',
-  mixins: [processFCMForegroundMixins],
+  mixins: [processFCMForegroundMixins, mobileMixin],
   methods: {
     ...mapActions({
       getUser: 'user/getUser',
@@ -117,6 +120,45 @@ export default {
     }),
     getAvatarTitle(name) {
       return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
+    },
+    getDestination(message) {
+      switch (this.user.role.code) {
+        case 'RENTER':
+          return this.getDestinationForRenter(message);
+        case 'VENDOR':
+          return this.getDestinationForVendor(message);
+        default:
+          return Error('');
+      }
+    },
+    getDestinationForRenter(message) {
+      switch (message.action) {
+        case action.NEW_CONTRACT:
+          return '/contract';
+        case action.UPDATE_CONTRACT:
+          return '/contract';
+        default:
+          return '/';
+      }
+    },
+    getDestinationForVendor(message) {
+      switch (message.action) {
+        case action.NEW_CONTRACT:
+          return '/vendor/view-contract';
+        case action.SCAN_CONTRACT:
+          return '/vendor/view-contract';
+        case action.NEW_MESSAGE:
+          if (this.isMobile) {
+            return '/vendor/mobile-message';
+          }
+          return '/vendor';
+        case action.NEW_BOOKING:
+          return '/vendor/booking';
+        case action.SCAN_BOOKING:
+          return '/vendor/booking';
+        default:
+          return '/';
+      }
     },
   },
   mounted() {

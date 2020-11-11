@@ -13,7 +13,7 @@
           <div v-if="scanQRSuccess" class="d-flex flex-column justify-center align-center">
             <p><v-icon color="green">done_outline</v-icon> Xác nhận gặp mặt thành công!</p>
             <p>Bạn có muốn tạo hợp đồng ngay?</p>
-            <v-btn :to="`/vendor/contract?bookingId=${Number(newMessage.data.id)}&mode=create`">
+            <v-btn :to="`/vendor/contract?bookingId=${scanedBookingId}&mode=create`">
               <v-icon>far fa-handshake</v-icon> Tạo hợp đồng
             </v-btn>
           </div>
@@ -282,6 +282,7 @@ export default {
     qrvalue: null,
     searchQuery: null,
     scanQRSuccess: false,
+    scanedBookingId: null,
     filterBooking: 'week',
     showSearchBar: false,
   }),
@@ -290,6 +291,7 @@ export default {
       handler() {
         if (this.newMessage.data.action === pushNotificationAction.SCAN_BOOKING) {
           this.scanQRSuccess = true;
+          this.scanedBookingId = Number(this.newMessage.data.id);
         }
       },
       deep: true,

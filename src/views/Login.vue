@@ -72,7 +72,7 @@
                     :disabled="!valid.usernamePassword"
                     class="bg-primary white--text font-nunito align-self-center text-body-2 py-5 bt-primary-hover d-flex align-center mt-2"
                     :loading="loging"
-                    @click="login"
+                    @click="login(false)"
                   >
                     <v-icon small class="mr-2">mdi mdi-account-arrow-right-outline</v-icon>Đăng nhập
                   </v-btn>

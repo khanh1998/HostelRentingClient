@@ -50,7 +50,7 @@ const authenticationMixins = {
       }
       return null;
     },
-    async afterLogin() {
+    async afterLogin(keepCurrentRoute) {
       if (this.loginSuccess) {
         const { jwtToken, idToken, refreshToken } = this.userData;
         this.$cookies.set('jwt', jwtToken);
@@ -71,22 +71,25 @@ const authenticationMixins = {
         }
         this.$cookies.set('role', role);
         this.$cookies.set('userId', id);
-        const { nextUrl, preUrl } = this.$route.params;
-        if (nextUrl) {
-          this.$router.push(nextUrl);
-        } else {
-          switch (role) {
-            case 'vendors':
-              this.$router.push('/vendor');
-              break;
-            case 'renters':
-              this.$router.push(preUrl || '/');
-              break;
-            case 'admin':
-              this.$router.push('/admin');
-              break;
-            default:
-              this.$router.push('/');
+        if (!keepCurrentRoute) {
+          console.log(this.$route.params);
+          const { nextUrl, preUrl } = this.$route.params;
+          if (nextUrl) {
+            this.$router.push(nextUrl);
+          } else {
+            switch (role) {
+              case 'vendors':
+                this.$router.push('/vendor');
+                break;
+              case 'renters':
+                this.$router.push(preUrl || '/');
+                break;
+              case 'admin':
+                this.$router.push('/admin');
+                break;
+              default:
+                this.$router.push('/');
+            }
           }
         }
         this.doGetMessagingToken();
@@ -94,14 +97,14 @@ const authenticationMixins = {
         this.message = 'Số điện thoại hoặc mật khẩu không đúng!';
       }
     },
-    async login() {
+    async login(keepCurrentRoute) {
       this.loging = true;
       await this.loginRequest({
         phone: this.phone,
         password: this.password,
         getTokenIdFromFirebase: this.getTokenIdFromFirebase,
       });
-      await this.afterLogin();
+      await this.afterLogin(keepCurrentRoute);
       this.loging = false;
     },
   },

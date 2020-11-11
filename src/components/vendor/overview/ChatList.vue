@@ -2,7 +2,7 @@
   <div
     v-if="!isLoadingRenterList || !isLoadingUser"
     class="d-flex flex-column"
-    style="height: 100%; background: #fff; border-left: 1px solid #dedede;"
+    style="height: 100%; background: #fff; border-left: 1px solid #dedede"
   >
     <div class="d-flex flex-column px-4 py-3">
       <v-tabs color="#727cf5" height="35" background-color="#EEF2F7" v-model="tab">
@@ -22,7 +22,7 @@
       ></v-text-field>
     </div>
     <v-divider></v-divider>
-    <div style="height: 100%; overflow-y: auto; min-width: 310px;">
+    <div style="height: 100%; overflow-y: auto; min-width: 310px">
       <vue-scroll>
         <v-list two-line nav avatar class="rounded-0 pa-0">
           <v-list-item-group color="primary">
@@ -32,7 +32,7 @@
               :key="item.id"
               @click="$emit('clickChat', getDocRef(item.id))"
               class="ma-0 rounded-0"
-              style="border-bottom: 1px solid #dedede;"
+              style="border-bottom: 1px solid #dedede"
             >
               <v-list-item-avatar
                 color="#727cf5"
@@ -72,14 +72,19 @@
                   >
                     {{ item.lastedMessage.book.date }}, {{ item.lastedMessage.book.time }}</span
                   >
-                  <span class="text-gray size-sub-3 mr-1">{{ getType(item.typeId).title }}</span>
+                  <span v-if="getType(item.typeId)" class="text-gray size-sub-3 mr-1">{{
+                    getType(item.typeId).title || 'Phòng đã bị xoá'
+                  }}</span>
+                  <span v-if="!getType(item.typeId)" class="text-gray size-sub-3 mr-1"
+                    >Phòng đã bị xoá</span
+                  >
                 </p>
                 <p
                   v-bind:class="{
                     'font-weight-bold': !item.lastedMessage.seen,
                   }"
                   class="size-caption mt-1"
-                  style="color: #727cf5;"
+                  style="color: #727cf5"
                 >
                   {{ item.lastedMessage.message }}
                 </p>

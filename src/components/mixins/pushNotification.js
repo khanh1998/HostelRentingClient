@@ -10,6 +10,7 @@ const pushNotificationMixins = {
   methods: {
     ...mapActions({
       updateUser: 'user/updateUser',
+      updateUserFirebaseToken: 'user/updateUserFirebaseToken',
       getUser: 'user/getUser',
     }),
     getMessagingToken() {
@@ -46,7 +47,7 @@ const pushNotificationMixins = {
       console.log('tokens', token);
       const newUser = { ...this.userDataForChecking };
       newUser.firebaseToken = token;
-      this.updateUser(newUser)
+      this.updateUserFirebaseToken(token)
         .then((response) => {
           window.localStorage.setItem('messagingToken', token);
           console.log(response);

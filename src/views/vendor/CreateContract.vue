@@ -7,13 +7,64 @@
           Cập nhật hợp đồng thành công
         </v-card-title>
         <v-card-title v-if="!updateSuccess">
-          <v-icon color="green">done_outline</v-icon>
-          Cập nhật hợp đồng thành công
+          <v-icon color="red">clear</v-icon>
+          Cập nhật hợp đồng không thành công
         </v-card-title>
+        <v-card-text>
+          {{ contracts.error }}
+        </v-card-text>
         <v-card-actions>
           <v-btn to="/vendor">Màn hình chính</v-btn>
           <v-btn to="/vendor/view-contract">Xem hợp đồng</v-btn>
+          <v-btn @click="showUpdateSuccess = false">
+            <v-icon>close</v-icon>
+          </v-btn>
         </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="showEmptyFields" width="350" persistent>
+      <v-card>
+        <v-card-title>Điền đầy đủ thông tin trước khi tạo hợp đồng</v-card-title>
+        <v-card-text>
+          <p>Chọn phòng</p>
+          <p>Ngày bắt đầu hợp đồng</p>
+          <p>Thời hạn hợp đồng</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="showEmptyFields = false"> <v-icon>clear</v-icon> Đóng </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="showCreateSuccess" width="350" persistent>
+      <v-card>
+        <v-card-title v-if="createSuccess">
+          <v-icon color="green">done_outline</v-icon>
+          Tạo hợp đồng thành công
+        </v-card-title>
+        <v-card-title v-if="!createSuccess">
+          <v-icon color="red">clear</v-icon>
+          Tạo hợp đồng không thành công
+        </v-card-title>
+        <v-card-text>
+          {{ contracts.error }}
+        </v-card-text>
+        <v-card-actions>
+          <v-btn to="/vendor">Màn hình chính</v-btn>
+          <v-btn to="/vendor/view-contract">Xem hợp đồng</v-btn>
+          <v-btn @click="showCreateSuccess = false">
+            <v-icon>close</v-icon>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="showDoingPopup" hide-overlay persistent width="300">
+      <v-card color="primary" dark>
+        <v-card-text>
+          <span v-if="contracts.isCreating"> Hợp đồng đang được tạo </span>
+          <span v-if="contracts.isUpdating"> Hợp đồng đang được cập nhật </span>
+          <span v-if="contracts.isLoading"> Hợp đồng đang được tải </span>
+          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+        </v-card-text>
       </v-card>
     </v-dialog>
     <v-snackbar
@@ -77,6 +128,9 @@ export default {
     updating: false,
     updateSuccess: null,
     showUpdateSuccess: false,
+    createSuccess: null,
+    showCreateSuccess: null,
+    showEmptyFields: false,
   }),
   methods: {
     ...mapActions({
@@ -91,7 +145,17 @@ export default {
     receiveNewTermsOfContract(terms) {
       this.contract = { ...terms };
     },
+    isEmptyField() {
+      const room = this.contract.roomId === null;
+      const duration = this.contract.duration === null;
+      const startTime = this.contract.startTime === null;
+      return room || duration || startTime;
+    },
     doCreateContract() {
+      if (this.isEmptyField()) {
+        this.showEmptyFields = true;
+        return;
+      }
       this.contract.bookingId = this.bookingId;
       const { deal } = this.booking;
       this.contract.dealId = deal ? deal.dealId : null;
@@ -99,13 +163,20 @@ export default {
       this.contract.vendorId = this.booking.vendor.userId;
       this.contract.duration = Number(this.contract.duration);
       console.log(this.contract);
-      this.createContract(this.contract);
+      this.createContract(this.contract).then(() => {
+        this.showCreateSuccess = true;
+        this.createSuccess = this.contracts.success;
+      });
     },
     goToNextTab() {
       this.tabs.index += 1;
       document.getElementById('contractView').scrollTop = 0;
     },
     doUpdateContract() {
+      if (this.isEmptyField()) {
+        this.showEmptyFields = true;
+        return;
+      }
       this.updateSuccess = null;
       console.log('do update contract');
       this.updateContract(this.contract).then(() => {
@@ -127,6 +198,9 @@ export default {
       contracts: (state) => state.user.contracts,
       bookings: (state) => state.user.bookings,
     }),
+    showDoingPopup() {
+      return this.contracts.isLoading || this.contracts.isUpdating || this.contracts.isCreating;
+    },
     ready() {
       switch (this.mode) {
         case 'create':

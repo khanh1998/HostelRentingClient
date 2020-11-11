@@ -4,6 +4,28 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
+    <v-dialog v-model="signing" hide-overlay persistent width="300">
+      <v-card color="primary" dark>
+        <v-card-text>
+          Đang ký hợp đồng
+          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="signingResult.show" hide-overlay persistent width="300">
+      <v-card color="primary" dark>
+        <v-card-title>
+          <span v-if="signingResult.success"> Ký hợp đồng thành công </span>
+          <span v-if="!signingResult.success"> Ký hợp đồng thất bại </span>
+        </v-card-title>
+        <v-card-text> </v-card-text>
+        <v-card-actions>
+          <v-btn icon @click="signingResult.show = false">
+            <v-icon>clear</v-icon>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog
       v-model="contractOverlay.show"
       fullscreen
@@ -17,11 +39,15 @@
           </v-btn>
           <v-toolbar-title>Hợp đồng</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-toolbar-items v-if="contractOverlay.action === 'activate'">
-            <v-btn dark text @click="doActivateContract"> Kích hoạt hợp đồng </v-btn>
-          </v-toolbar-items>
         </v-toolbar>
-        <contractDetailView :mode="'view'" :contractId="contractOverlay.contract.contractId" />
+        <div class="d-flex flex-column justify-center pa-2">
+          <pdf :src="contractOverlay.contract.contractUrl"></pdf>
+          <div v-if="contractOverlay.action === 'activate'" class="d-flex justify-center">
+            <v-btn outlined x-large color="red" text @click="doActivateContract">
+              Ký hợp đồng
+            </v-btn>
+          </div>
+        </div>
       </v-card>
     </v-dialog>
     <v-snackbar
@@ -83,19 +109,24 @@
 <style scoped></style>
 <script>
 import { mapActions } from 'vuex';
+import pdf from 'vue-pdf';
 import contractItem from '@/components/view_contracts/contractItem.vue';
-import contractDetailView from '../../components/vendor/contract/contract.vue';
+// import contractDetailView from '../../components/vendor/contract/contract.vue';
 import snackBarMixin from '../../components/mixins/snackBar';
 
 export default {
   name: 'ViewContracts',
-  components: { contractItem, contractDetailView },
+  components: { contractItem, pdf },
   mixins: [snackBarMixin],
   data: () => ({
     contractOverlay: {
       show: false,
       action: null, // view or activate
       contract: null,
+    },
+    signingResult: {
+      show: false,
+      success: null,
     },
   }),
   methods: {
@@ -112,11 +143,14 @@ export default {
       };
       this.activateContract(payload).then(() => {
         this.contractOverlay.show = false;
+        this.signingResult.show = true;
         const { success, error } = this.contracts;
         if (success) {
+          this.signingResult.success = true;
           console.log(success);
           this.showSnackBar('Kích hoạt hợp đồng thành công', { color: 'green' });
         } else {
+          this.signingResult.success = false;
           console.log(error);
           this.showSnackBar(`Kích hoạt hợp đồng thất bại ${error.message}`, { color: 'red' });
         }
@@ -145,6 +179,9 @@ export default {
       const loadingUser = this.$store.state.user.user.isLoading;
       const loadingContracts = this.$store.state.user.contracts.isLoading;
       return loadingUser || loadingContracts;
+    },
+    signing() {
+      return this.$store.state.user.contracts.isUpdating;
     },
     contracts() {
       return this.$store.state.user.contracts;

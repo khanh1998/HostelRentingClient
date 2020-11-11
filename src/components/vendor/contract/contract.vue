@@ -8,10 +8,12 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="contracts.isCreating" hide-overlay persistent width="300">
+    <v-dialog v-model="showDoingPopup" hide-overlay persistent width="300">
       <v-card color="primary" dark>
         <v-card-text>
-          Hợp đồng đang được tạo
+          <span v-if="contracts.isCreating"> Hợp đồng đang được tạo </span>
+          <span v-if="contracts.isUpdating"> Hợp đồng đang được cập nhật </span>
+          <span v-if="contracts.isLoading"> Hợp đồng đang được tải </span>
           <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
         </v-card-text>
       </v-card>
@@ -28,6 +30,9 @@
         <v-card-actions>
           <v-btn to="/vendor">Màn hình chính</v-btn>
           <v-btn to="/vendor/view-contract">Xem hợp đồng</v-btn>
+          <v-btn @click="showQRDialog = false">
+            <v-icon>close</v-icon>
+          </v-btn>
         </v-card-actions>
       </v-card>
       <v-card v-if="scanQRSuccess">
@@ -38,6 +43,9 @@
         <v-card-actions>
           <v-btn to="/vendor">Màn hình chính</v-btn>
           <v-btn to="/vendor/view-contract">Xem hợp đồng</v-btn>
+          <v-btn @click="showQRDialog = false">
+            <v-icon>close</v-icon>
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -147,6 +155,9 @@ export default {
           this.showSnackBar(`Lỗi: ${this.contracts.error.message}`, { color: 'red' });
         }
       });
+    },
+    showDoingPopup() {
+      return this.contracts.isLoading || this.contracts.isUpdating || this.contracts.isCreating;
     },
   },
   computed: {
