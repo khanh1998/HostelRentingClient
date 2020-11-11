@@ -15,12 +15,12 @@
             height="180"
             hide-delimiters
             show-arrows-on-hover
-            v-if="type.typeImages.length !== 0"
+            v-if="type.imageUrls.length !== 0"
           >
             <v-carousel-item
-              v-for="(image, i) in type.typeImages"
+              v-for="(image, i) in type.imageUrls"
               :key="i"
-              :src="type.typeImages[i].resourceUrl"
+              :src="type.imageUrls[i].resourceUrl"
             >
               <div class="top">
                 <span class="text-body-2 amber--text" _style="color: #3476b2">{{

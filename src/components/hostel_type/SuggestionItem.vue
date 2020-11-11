@@ -5,7 +5,7 @@
       height="170"
       hide-delimiters
       show-arrows-on-hover
-      v-if="type.typeImages.length !== 0"
+      v-if="type.imageUrls.length !== 0"
     >
       <v-carousel-item v-for="(image, i) in images" :key="i" :src="images[i]">
         <div class="category">
@@ -170,8 +170,8 @@ export default {
     },
     images: {
       get() {
-        if (this.type.typeImages.length !== 0) {
-          return this.type.typeImages.map((item) => item.resourceUrl);
+        if (this.type.imageUrls.length !== 0) {
+          return this.type.imageUrls.map((item) => item.resourceUrl);
         }
         return [];
       },

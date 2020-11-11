@@ -241,8 +241,8 @@
         <div class="d-flex justify-start ml-4 vendorChatMessage" :style="{ width: '70%' }">
           <v-col cols="4">
             <v-img
-              :src="info.typeImages[0].resourceUrl"
-              v-if="info.typeImages.length !== 0"
+              :src="info.imageUrls[0].resourceUrl"
+              v-if="info.imageUrls.length !== 0"
               max-height="50"
             />
           </v-col>
