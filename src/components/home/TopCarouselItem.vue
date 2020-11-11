@@ -4,13 +4,9 @@
       height="180"
       hide-delimiters
       show-arrows-on-hover
-      v-if="type.typeImages.length !== 0"
+      v-if="type.imageUrls.length !== 0"
     >
-      <v-carousel-item
-        v-for="(image, i) in type.typeImages"
-        :key="i"
-        :src="type.typeImages[i].resourceUrl"
-      >
+      <v-carousel-item v-for="(image, i) in type.imageUrls" :key="i" :src="image.resourceUrl">
         <div class="category">
           <span class="font-weight-bold text-body-1 yellow--text"
             >{{ type.price }} {{ type.priceUnit }}</span

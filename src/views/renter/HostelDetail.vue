@@ -525,7 +525,7 @@ export default {
     images: {
       get() {
         if (this.info) {
-          return this.info.typeImages.map((item) => item.resourceUrl);
+          return this.info.imageUrls.map((item) => item.resourceUrl);
         }
         return [];
       },

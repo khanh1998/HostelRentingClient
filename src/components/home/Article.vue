@@ -7,23 +7,19 @@
         md="4"
         lg="4"
         class="item-classic-left left"
-        style="background: #f3f4f9;"
+        style="background: #f3f4f9"
       >
-        <div class="item-classic-media" style="padding-right: 0px !important;">
+        <div class="item-classic-media" style="padding-right: 0px !important">
           <v-carousel
             height="210"
             hide-delimiters
             show-arrows-on-hover
-            v-if="type.typeImages.length !== 0"
+            v-if="type.imageUrls.length !== 0"
           >
-            <v-carousel-item
-              v-for="(image, i) in type.typeImages"
-              :key="i"
-              :src="type.typeImages[0].resourceUrl"
-            >
+            <v-carousel-item v-for="(image, i) in type.imageUrls" :key="i" :src="image.resourceUrl">
             </v-carousel-item>
           </v-carousel>
-          <v-img src="@/assets/image-error.png" v-else style="height: 210px;" class="image-box">
+          <v-img src="@/assets/image-error.png" v-else style="height: 210px" class="image-box">
           </v-img>
           <div class="top">
             Top
@@ -43,7 +39,7 @@
         <div class="d-flex flex-column px-1 pt-2">
           <v-card
             :to="'/detail/' + type.typeId"
-            style="box-shadow: none !important;"
+            style="box-shadow: none !important"
             class="py-0 px-7"
           >
             <span
@@ -61,7 +57,7 @@
               {{ group.address.districtName }},
               {{ group.address.provinceName }}
             </span>
-            <div class="type-name mt-2" style="height: 40px;">
+            <div class="type-name mt-2" style="height: 40px">
               <p
                 style="
                   display: block;
@@ -122,7 +118,7 @@
               </div>
             </div>
             <div class="mt-3 d-flex align-center">
-              <span class="item-text" style="color: #656565;">Giới nghiêm:</span>
+              <span class="item-text" style="color: #656565">Giới nghiêm:</span>
               <div class="d-flex ml-1 left">
                 <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
                 <span class="item-text">{{ group.curfewTime }}</span>
@@ -147,11 +143,11 @@
       <v-col
         cols="12"
         class="no-padding d-flex justify-center align-center cursor d-flex d-sm-none"
-        style="padding-left: 7px !important; background: #f3f4f9;"
+        style="padding-left: 7px !important; background: #f3f4f9"
       >
         <v-col cols="12" class="pa-0">
           <v-card
-            style="box-shadow: none !important;"
+            style="box-shadow: none !important"
             :to="'/detail/' + type.typeId"
             class="pt-5 px-6"
           >
@@ -170,7 +166,7 @@
               {{ group.address.districtName }},
               {{ group.address.provinceName }}
             </span>
-            <div class="type-name mt-2" style="height: 40px;">
+            <div class="type-name mt-2" style="height: 40px">
               <p
                 style="
                   display: block;
@@ -231,7 +227,7 @@
               </div>
             </div>
             <div class="mt-3 d-flex align-center">
-              <span class="item-text" style="color: #656565;">Giới nghiêm:</span>
+              <span class="item-text" style="color: #656565">Giới nghiêm:</span>
               <div class="d-flex ml-1 left">
                 <span class="item-text" v-if="group.curfewTime === null">Giờ giấc tự do</span>
                 <span class="item-text" v-else>{{ group.curfewTime }}</span>
@@ -262,12 +258,12 @@
           (schoolSelected || hometownSelected) &&
           (type.schoolMate !== 0 || type.compatriot !== 0)
         "
-        style="background: #f3f4f9; padding-left: 7px !important;"
+        style="background: #f3f4f9; padding-left: 7px !important"
       >
         <v-col
           cols="12"
           class="d-flex justify-space-around align-center"
-          style="background-color: #e7e9f0 !important;"
+          style="background-color: #e7e9f0 !important"
         >
           <v-row class="d-flex justify-space-around">
             <!-- <v-col cols="11" md="3" style="padding: 0 !important;">
@@ -277,7 +273,7 @@
             <v-col
               cols="11"
               md="7"
-              style="padding: 0 !important;"
+              style="padding: 0 !important"
               v-if="schoolSelected && type.schoolMate !== 0"
               class="d-flex justify-center align-center"
             >
@@ -289,7 +285,7 @@
             <v-col
               cols="11"
               md="4"
-              style="padding: 0 !important;"
+              style="padding: 0 !important"
               v-if="hometownSelected && type.compatriot !== 0"
               class="d-flex justify-center align-center"
             >
