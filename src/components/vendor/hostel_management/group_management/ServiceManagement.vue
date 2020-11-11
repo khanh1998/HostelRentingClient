@@ -560,7 +560,9 @@ export default {
 .otherService .v-text-field__prefix,
 .v-text-field__suffix {
   color: #727cf5 !important;
+  font-family: 'Nunito', sans-serif !important;
   padding-top: 2px !important;
+  font-size: 0.9rem !important;
 }
 .service-checkbox .theme--light.v-label {
   color: #727cf5 !important;

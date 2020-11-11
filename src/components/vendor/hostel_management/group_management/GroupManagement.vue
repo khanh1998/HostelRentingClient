@@ -373,20 +373,6 @@ export default {
       services: [],
       schedules: [],
     },
-    toc: [
-      {
-        to: 'name',
-        text: 'Tên khu trọ',
-      },
-      {
-        to: 'address',
-        text: 'Địa chỉ',
-      },
-      {
-        to: 'service',
-        text: 'Dịch vụ',
-      },
-    ],
     // thuy
     groupInfo: {
       groupName: '',

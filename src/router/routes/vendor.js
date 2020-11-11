@@ -1,6 +1,7 @@
 import VendorView from '../../main-view/Vendor.vue';
 import Overview from '../../views/vendor/Overview.vue';
 import HostelManagement from '../../views/vendor/HostelManagement.vue';
+import RoomManagement from '../../views/vendor/RoomManagement.vue';
 import QRGeneration from '../../components/vendor/overview/QRGeneration.vue';
 import VendorBooking from '../../views/vendor/Booking.vue';
 import VendorSchedule from '../../views/vendor/Schedule.vue';
@@ -25,6 +26,12 @@ const routes = [
         name: 'HostelManagement',
         component: HostelManagement,
         meta: { requiresAuth: true, is_vendor: true, vi: 'Quản lí nhà trọ' },
+      },
+      {
+        path: 'managementRooms/:groupId',
+        name: 'RoomManagement',
+        component: RoomManagement,
+        meta: { requiresAuth: true, is_vendor: true, vi: 'Quản lí phòng' },
       },
       {
         path: 'qrgeneration',

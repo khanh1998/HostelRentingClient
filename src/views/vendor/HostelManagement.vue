@@ -21,24 +21,101 @@
               >Tạo mới</v-btn
             >
             <v-spacer></v-spacer>
-            <v-col cols="4" class="pa-0">
+            <v-col cols="4" class="d-flex align-center">
               <v-text-field
-                label="Tìm kiếm theo tên"
+                v-show="showSearchGroup"
+                label="Tìm theo tên nhà trọ"
                 v-model="searchGroupQuery"
-                append-icon="search"
                 solo
                 hide-details
-                class="text-muted pa-0 size-sub-2 slide-booking"
-                height="10"
-                rounded
+                class="text-muted py-1 size-sub-2 light-text-field"
                 clearable
                 @input="changeSearchQuery"
-                style="background-color: #f1f3fa !important; border-color: #f1f3fa !important"
+                style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
               ></v-text-field>
+              <v-text-field
+                v-show="!showSearchGroup"
+                label="Tìm theo tên quản lý"
+                v-model="searchManagerQuery"
+                prepend-inner-icon="search"
+                solo
+                hide-details
+                class="text-muted py-1 px-3 size-sub-2 light-text-field"
+                clearable
+                @input="changeSearchQuery"
+                style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
+              ></v-text-field>
+              <v-menu open-on-hover offset-y left>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    height="38"
+                    class="font-nunito size9rem btn-dropdown d-flex align-center justify-center px-0"
+                    style="
+                      background-color: #6c757d !important;
+                      border-top-left-radius: 0;
+                      border-bottom-left-radius: 0;
+                      box-shadow: 0 2px 6px 0 rgba(108, 117, 125, 0.5);
+                      border-top-right-radius: 0.15rem !important;
+                      border-bottom-right-radius: 0.15rem !important;
+                    "
+                    ><v-icon small color="#fff">search</v-icon>
+                    <v-icon small color="#fff">arrow_drop_down</v-icon></v-btn
+                  >
+                </template>
+                <v-list>
+                  <v-list-item
+                    style="min-height: 20px !important"
+                    class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                    @click="showSearchGroup = true"
+                  >
+                    <v-list-item-title class="item-hover font-nunito text-gray size9rem"
+                      >Nhà trọ</v-list-item-title
+                    >
+                  </v-list-item>
+                  <v-list-item
+                    style="min-height: 20px !important"
+                    class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                    @click="showSearchGroup = false"
+                  >
+                    <v-list-item-title class="item-hover font-nunito size9rem text-gray"
+                      >Quản lý</v-list-item-title
+                    >
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-col>
+            <v-col cols="1" class="d-flex justify-end align-end">
+              <v-menu offset-y left>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn icon class="btn-hover pa-0" v-bind="attrs" v-on="on"
+                    ><v-icon size="20">mdi-sort-ascending</v-icon></v-btn
+                  >
+                </template>
+                <v-list>
+                  <v-list-item
+                    style="min-height: 20px !important"
+                    class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                  >
+                    <v-list-item-title class="item-hover font-nunito text-gray size9rem"
+                      >Phòng trống</v-list-item-title
+                    >
+                  </v-list-item>
+                  <v-list-item
+                    style="min-height: 20px !important"
+                    class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                  >
+                    <v-list-item-title class="item-hover font-nunito size9rem text-gray"
+                      >Phòng đang thuê</v-list-item-title
+                    >
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </v-col>
           </v-row>
-          <v-card class="mt-10 px-5 py-4">
-            <v-row class="hidden-xs-only">
+          <v-card class="mt-5 px-5 py-4">
+            <v-row>
               <div class="d-flex mx-4 py-2" style="width: 100%; border-bottom: 2px solid #eef2f7">
                 <v-col cols="2" class="d-flex align-center">
                   <span class="font-nunito text-primary size9rem font-weight-bold"
@@ -84,7 +161,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-col cols="11">
+    <!-- <v-col cols="11">
       <div class="d-flex flex-row flex-nowrap red mt-16" _style="height: 100%;">
         <v-card width="100%" height="100%" class="overflow-hidden" :loading="isLoading">
           <template v-if="groups.length > 0">
@@ -172,15 +249,15 @@
           </template>
         </v-card>
       </div>
-    </v-col>
+    </v-col> -->
   </v-row>
 </template>
 <script>
-import HostelGroup from '@/components/vendor/hostel_management/HostelGroup.vue';
-import HostelNoData from '@/components/vendor/hostel_management/HostelNoData.vue';
-import HostelGroupCreator from '@/components/vendor/hostel_management/HostelGroupCreator.vue';
-import HostelType from '@/components/vendor/hostel_management/HostelType.vue';
-import HostelGroupActions from '@/components/vendor/hostel_management/HostelGroupActions.vue';
+// import HostelGroup from '@/components/vendor/hostel_management/HostelGroup.vue';
+// import HostelNoData from '@/components/vendor/hostel_management/HostelNoData.vue';
+// import HostelGroupCreator from '@/components/vendor/hostel_management/HostelGroupCreator.vue';
+// import HostelType from '@/components/vendor/hostel_management/HostelType.vue';
+// import HostelGroupActions from '@/components/vendor/hostel_management/HostelGroupActions.vue';
 import itemGroup from '@/components/vendor/hostel_management/groupItem.vue';
 import { mapActions } from 'vuex';
 import snackBarMixin from '@/components/mixins/snackBar';
@@ -190,11 +267,11 @@ import GroupManagement from '@/components/vendor/hostel_management/group_managem
 export default {
   name: 'HostelManagement',
   components: {
-    HostelGroup,
-    HostelType,
-    HostelGroupActions,
-    HostelGroupCreator,
-    HostelNoData,
+    // HostelGroup,
+    // HostelType,
+    // HostelGroupActions,
+    // HostelGroupCreator,
+    // HostelNoData,
     // thuy
     itemGroup,
     GroupManagement,
@@ -215,11 +292,18 @@ export default {
     showGroupCreator: false,
     // thuy
     searchGroupQuery: '',
+    searchManagerQuery: '',
+    sortEmpty: false,
+    sortRenting: false,
     page: 1,
     pageRange: 5,
     openGroupManagementDialog: false,
+    showSearchGroup: true,
   }),
   computed: {
+    newRoomValue() {
+      return this.$store.state.vendor.group.newRoom.data;
+    },
     groups() {
       console.log(this.$store.state.vendor.group.groups.data);
       return this.$store.state.vendor.group.groups.data;
@@ -249,6 +333,15 @@ export default {
           const res =
             item2.groupName.toLowerCase().indexOf(this.searchGroupQuery.trim().toLowerCase()) !==
             -1;
+          return res;
+        });
+      }
+      if (this.searchManagerQuery && this.searchManagerQuery.trim() !== '') {
+        return this.groups.filter((item2) => {
+          const res =
+            item2.managerName
+              .toLowerCase()
+              .indexOf(this.searchManagerQuery.trim().toLowerCase()) !== -1;
           return res;
         });
       }
@@ -304,4 +397,43 @@ export default {
 .container {
   height: 100%;
 }
+.btn-hover:hover {
+  color: #727cf5 !important;
+}
+.light-text-field .v-input__slot {
+  border: 0px solid #dee2e6 !important;
+  background-color: #f1f3fa !important;
+}
+.light-text-field .theme--light.v-icon {
+  color: #6c757d !important;
+}
+.light-text-field.v-text-field.v-text-field--solo .v-input__control {
+  min-height: 38px;
+}
+.light-text-field .v-icon.v-icon {
+  font-size: 20px !important;
+}
+.light-text-field .theme--light.v-label {
+  color: #98a6ad !important;
+  font-family: 'Nunito', sans-serif !important;
+}
+.bnt-dropdown .theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+  background-color: #727cf5 !important;
+}
+.item-menu:hover {
+  background-color: #f8f9fa;
+}
+.item-hover:hover {
+  color: #272e37 !important;
+}
+.v-menu__content {
+  box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
+  background-color: #fff !important;
+  background-clip: padding-box !important;
+  border: 1px solid #e4eaf2 !important;
+  border-radius: 0.25rem !important;
+  color: #6c757d !important;
+}
+</style>
+<style scoped>
 </style>

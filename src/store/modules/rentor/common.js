@@ -192,7 +192,6 @@ const actions = {
   },
 
   async getAllFacilities1({ commit }) {
-    console.log('get all facilities');
     try {
       commit(mutationTypes.GET_FACILITIES_REQUEST);
       const res = await window.axios.get('/api/v1/facilities');
