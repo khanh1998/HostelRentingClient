@@ -33,7 +33,7 @@
             class="mb-2 pt-2"
             style="backgroundcolor: #f2f2f2"
             two-line
-            :to="getDestination(message)"
+            :to="getDestination(item)"
           >
             <v-list-item-avatar>
               <v-img :src="item.data.icon"></v-img>
@@ -132,7 +132,7 @@ export default {
       }
     },
     getDestinationForRenter(message) {
-      switch (message.action) {
+      switch (message.data.action) {
         case action.NEW_CONTRACT:
           return '/contract';
         case action.UPDATE_CONTRACT:
@@ -142,7 +142,7 @@ export default {
       }
     },
     getDestinationForVendor(message) {
-      switch (message.action) {
+      switch (message.data.action) {
         case action.NEW_CONTRACT:
           return '/vendor/view-contract';
         case action.SCAN_CONTRACT:
