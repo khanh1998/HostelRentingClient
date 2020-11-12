@@ -40,7 +40,7 @@
                 prepend-inner-icon="search"
                 solo
                 hide-details
-                class="text-muted py-1 px-3 size-sub-2 light-text-field"
+                class="text-muted py-1 px-3 size-sub-2 light-text-field text-field-medium"
                 clearable
                 @input="changeSearchQuery"
                 style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"

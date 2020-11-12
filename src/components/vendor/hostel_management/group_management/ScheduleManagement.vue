@@ -4,9 +4,36 @@
       >Cài đặt lịch rảnh các ngày trong tuần để người thuê có thể gặp bạn hoặc quản lý của khu trọ
       để xem phòng trọ.</span
     >
-    <div style="background-color: #f7f7f9" class="d-flex justify-space-between">
-      <div style="width: 14%" class="red">thuy</div>
-    </div>
+    <v-row>
+      <v-col cols="4">
+        <div class="d-flex flex-row mt-2">
+          <el-time-select
+            placeholder="Từ"
+            v-model="from"
+            :picker-options="{
+              start: '00:00',
+              step: '00:30',
+              end: '23:30',
+            }"
+          >
+          </el-time-select>
+        </div>
+      </v-col>
+      <v-col cols="4">
+        <div class="d-flex flex-row mt-2">
+          <el-time-select
+            placeholder="Đến"
+            v-model="to"
+            :picker-options="{
+              start: '00:00',
+              step: '00:30',
+              end: '23:30',
+            }"
+          >
+          </el-time-select>
+        </div>
+      </v-col>
+    </v-row>
   </v-row>
 </template>
 
@@ -19,6 +46,8 @@ export default {
     selected: [],
     recommendList: [],
     values: '',
+    from: '',
+    to: '',
   }),
   computed: {
     allRules() {
