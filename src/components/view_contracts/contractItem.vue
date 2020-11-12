@@ -121,7 +121,7 @@
             v-if="contract.status === 'INACTIVE'"
             text
             @click="$emit('activate', contract.contractId)"
-            >Kích hoạt</v-btn
+            >Ký hợp đồng</v-btn
           >
         </v-col>
       </v-row>

@@ -56,11 +56,6 @@
                   <!-- <pdf :src="currentContract.contractUrl" :page="1">
                     <template slot="loading"> loading content here... </template>
                   </pdf> -->
-                  <v-card>
-                    <div id="pageContainer">
-                      <div id="viewer" class="pdfViewer">aaa</div>
-                    </div>
-                  </v-card>
                 </div>
               </v-card>
             </v-dialog>
