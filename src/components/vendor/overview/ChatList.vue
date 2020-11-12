@@ -121,7 +121,7 @@ export default {
       renterIds: [],
       searchQuery: '',
       idList: [],
-      tab: 1,
+      tab: 0,
     };
   },
   computed: {

@@ -42,6 +42,9 @@
         </v-toolbar>
         <div class="d-flex flex-column justify-center pa-2">
           <pdf :src="contractOverlay.contract.contractUrl"></pdf>
+          <!-- <pdf :src="contractOverlay.contract.contractUrl" :page="1">
+            <template slot="loading"> loading content here... </template>
+          </pdf> -->
           <div v-if="contractOverlay.action === 'activate'" class="d-flex justify-center">
             <v-btn outlined x-large color="red" text @click="doActivateContract">
               Ký hợp đồng
@@ -110,8 +113,8 @@
 <script>
 import { mapActions } from 'vuex';
 import pdf from 'vue-pdf';
+// import pdf from 'pdfvuer';
 import contractItem from '@/components/view_contracts/contractItem.vue';
-// import contractDetailView from '../../components/vendor/contract/contract.vue';
 import snackBarMixin from '../../components/mixins/snackBar';
 
 export default {

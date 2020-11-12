@@ -49,11 +49,18 @@
                     :query="true"
                   ></v-progress-linear>
                   <pdf
-                    :src="currentContract.contractUrl"
+                    src="./src/assets/Agile_Y_2020.pdf"
                     @progress="updateProgressBar"
-                    :page="5"
                     color="deep-orange"
                   ></pdf>
+                  <!-- <pdf :src="currentContract.contractUrl" :page="1">
+                    <template slot="loading"> loading content here... </template>
+                  </pdf> -->
+                  <v-card>
+                    <div id="pageContainer">
+                      <div id="viewer" class="pdfViewer">aaa</div>
+                    </div>
+                  </v-card>
                 </div>
               </v-card>
             </v-dialog>
@@ -96,9 +103,6 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import pdf from 'vue-pdf';
-// import InfomationSection from '@/components/vendor/contract/InfomationSection.vue';
-// import TermsOfContractSection from '@/components/vendor/contract/TermsOfContractSection.vue';
-// import ContractItemVendor from '@/components/view_contracts/ContractItemVendor.vue';
 
 export default {
   name: 'ViewContractVendor',
@@ -190,6 +194,12 @@ export default {
     facilities: [],
     progressBar: {
       value: 0,
+    },
+    pdfViewer: {
+      pdf: null,
+      currentPage: 1,
+      zoom: 1,
+      isLoading: false,
     },
   }),
   methods: {

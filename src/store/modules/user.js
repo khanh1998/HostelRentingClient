@@ -193,6 +193,7 @@ const mutations = {
     state.user.data = null;
     state.user.isLoading = false;
     state.user.success = false;
+    state.notifications.data = [];
   },
   GET_USER_REQUEST(state) {
     state.user.isLoading = true;
@@ -238,9 +239,9 @@ const mutations = {
       state.contracts.data[oldContractIndex] = contract;
     } else {
       state.contracts.data.unshift(contract);
-      state.contracts.isLoading = false;
-      state.contracts.success = true;
     }
+    state.contracts.isLoading = false;
+    state.contracts.success = true;
   },
   GET_ONE_CONTRACT_FAILURE(state, error) {
     state.contracts.isLoading = false;

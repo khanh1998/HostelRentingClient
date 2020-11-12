@@ -137,6 +137,7 @@ export default {
       createContract: 'user/createContract',
       updateContract: 'user/updateContract',
       getOneBooking: 'user/getOneBooking',
+      getOneContract: 'user/getOneContract',
     }),
     ...mapGetters({
       findContractById: 'user/findContractById',
@@ -272,10 +273,12 @@ export default {
       this.getOneBooking(this.bookingId);
     }
     if (this.mode === 'update') {
-      this.contractFull = this.findContractById()(this.contractId);
-      if (this.contractFull.room) {
-        this.contractFull.roomId = this.contractFull.room.roomId;
-      }
+      this.getOneContract(this.contractId).then(() => {
+        this.contractFull = this.findContractById()(this.contractId);
+        if (this.contractFull.room) {
+          this.contractFull.roomId = this.contractFull.room.roomId;
+        }
+      });
     }
     this.registerMessaging(); // from mixins
   },
