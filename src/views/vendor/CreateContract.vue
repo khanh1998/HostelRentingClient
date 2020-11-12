@@ -180,7 +180,8 @@ export default {
       }
       this.updateSuccess = null;
       console.log('do update contract');
-      this.updateContract(this.contract).then(() => {
+      const { images, ...rest } = this.contract;
+      this.updateContract(rest).then(() => {
         this.showUpdateSuccess = true;
         if (this.contracts.success === true) {
           console.log('update contract success: ', this.contracts.success, this.contracts.error);

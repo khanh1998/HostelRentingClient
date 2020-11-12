@@ -49,7 +49,7 @@
                     :query="true"
                   ></v-progress-linear>
                   <pdf
-                    src="./src/assets/Agile_Y_2020.pdf"
+                    :src="currentContract.contractUrl"
                     @progress="updateProgressBar"
                     color="deep-orange"
                   ></pdf>
