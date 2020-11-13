@@ -11,6 +11,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@mdi/font": "^5.8.55",
+    "@pdftron/webviewer": "^7.1.2",
     "apexcharts": "^3.22.0",
     "axios": "^0.19.2",
     "blueimp-load-image": "^5.14.0",

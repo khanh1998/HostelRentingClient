@@ -41,18 +41,19 @@
                   </v-btn>
                   <v-toolbar-title>Thông tin hợp đồng</v-toolbar-title>
                 </v-toolbar>
-                <div style="height: calc(100% - 64px)">
+                <div style="height: calc(100vh - 64px); overflow: hidden">
                   <v-progress-linear
                     v-model="progressBar.value"
                     :active="true"
                     :indeterminate="false"
                     :query="true"
                   ></v-progress-linear>
-                  <pdf
+                  <!-- <pdf
                     :src="currentContract.contractUrl"
                     @progress="updateProgressBar"
                     color="deep-orange"
-                  ></pdf>
+                  ></pdf> -->
+                  <WebViewer :initialDoc="currentContract.contractUrl" />
                   <!-- <pdf :src="currentContract.contractUrl" :page="1">
                     <template slot="loading"> loading content here... </template>
                   </pdf> -->
@@ -97,11 +98,12 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import pdf from 'vue-pdf';
+// import pdf from 'vue-pdf';
+import WebViewer from '../../components/vendor/contract/WebViewer.vue';
 
 export default {
   name: 'ViewContractVendor',
-  components: { pdf },
+  components: { WebViewer },
   data: () => ({
     // search
     search: '',
