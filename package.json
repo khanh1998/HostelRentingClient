@@ -11,7 +11,6 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@mdi/font": "^5.8.55",
-    "@pdftron/webviewer": "^7.1.2",
     "apexcharts": "^3.22.0",
     "axios": "^0.19.2",
     "blueimp-load-image": "^5.14.0",
@@ -19,8 +18,6 @@
     "element-ui": "^2.13.2",
     "firebase": "^7.24.0",
     "jsonwebtoken": "^8.5.1",
-    "pdfjs-dist": "^2.5.207",
-    "pdfvuer": "^1.7.3",
     "qrcode.vue": "^1.7.0",
     "register-service-worker": "^1.7.1",
     "tiptap": "^1.30.0",
@@ -31,7 +28,6 @@
     "vue-google-autocomplete": "^1.1.0",
     "vue-i18n": "^8.22.1",
     "vue-notification-bell": "^0.8.14",
-    "vue-pdf": "^4.2.0",
     "vue-qrcode-reader": "^2.3.14",
     "vue-router": "^3.4.8",
     "vue2-google-maps": "^0.10.7",
@@ -39,7 +35,14 @@
     "vueperslides": "^2.10.9",
     "vuescroll": "^4.16.1",
     "vuetify": "^2.3.15",
-    "vuex": "^3.5.1"
+    "vuex": "^3.5.1",
+    "debug": "^3.1.0",
+    "filestack-js": "^0.11.4",
+    "lodash": "^4.17.10",
+    "module": "^1.2.5",
+    "pdfjs-dist": "2.0.489",
+    "worker-loader": "1.1.1",
+    "node-ensure": "0.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.4.6",
