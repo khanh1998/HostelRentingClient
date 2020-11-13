@@ -48,15 +48,7 @@
                     :indeterminate="false"
                     :query="true"
                   ></v-progress-linear>
-                  <!-- <pdf
-                    :src="currentContract.contractUrl"
-                    @progress="updateProgressBar"
-                    color="deep-orange"
-                  ></pdf> -->
                   <WebViewer :initialDoc="currentContract.contractUrl" />
-                  <!-- <pdf :src="currentContract.contractUrl" :page="1">
-                    <template slot="loading"> loading content here... </template>
-                  </pdf> -->
                 </div>
               </v-card>
             </v-dialog>
@@ -98,7 +90,6 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
-// import pdf from 'vue-pdf';
 import WebViewer from '../../components/vendor/contract/WebViewer.vue';
 
 export default {
