@@ -42,19 +42,20 @@
       </router-link> -->
       <v-app-bar-nav-icon
         @click.stop="primaryDrawer.model = !primaryDrawer.model"
-        style="color: #727cf5 !important;"
+        style="color: #727cf5 !important"
       >
       </v-app-bar-nav-icon>
       <v-toolbar-title
         class="font-nunito text-primary font-weight-bold"
-        style="font-size: 1.125rem;"
+        style="font-size: 1.125rem"
         >{{ routeName }}</v-toolbar-title
       >
       <v-spacer></v-spacer>
       <!-- <v-btn icon large @click.stop="chatDrawer.model = !chatDrawer.model">
         <v-icon color="#727cf5">mdi-chat-processing</v-icon>
       </v-btn> -->
-      <notify-and-profile />
+      <notify />
+      <profile-menu />
     </v-app-bar>
 
     <v-main _style="max-height: calc(100vh); overflow-y: hidden;">
@@ -62,7 +63,7 @@
         id="container"
         ref="container"
         fluid
-        style="max-height: 100%;"
+        style="max-height: 100%"
         class="d-flex flex-column"
       >
         <router-view />
@@ -74,7 +75,8 @@
 <script>
 import { mapActions } from 'vuex';
 import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
-import notifyAndProfile from '../components/vendor/overview/NotifyAndProfile.vue';
+import notify from '../components/vendor/overview/Notify.vue';
+import profileMenu from '../components/vendor/overview/ProfileMenu.vue';
 import authenticationMixins from '../components/mixins/authentication';
 
 export default {
@@ -82,7 +84,8 @@ export default {
   mixins: [authenticationMixins],
   components: {
     sideMenuBar,
-    notifyAndProfile,
+    notify,
+    profileMenu,
   },
   computed: {
     routeName() {

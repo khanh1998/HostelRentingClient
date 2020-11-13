@@ -90,55 +90,7 @@
               >mdi-account-clock-outline</v-icon
             >
           </v-btn>
-          <v-menu left :offset-y="true" :offset-x="true" @blur="this.notifications = []">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn v-bind="attrs" v-on="on" depressed icon>
-                <v-badge
-                  color="pink"
-                  :content="messages.length"
-                  bordered
-                  left
-                  overlap
-                  v-bind="attrs"
-                  v-on="on"
-                  v-if="messages.length !== 0"
-                >
-                  <v-icon color="#727cf5">mdi-bell-outline</v-icon>
-                </v-badge>
-                <v-icon v-else color="#98a6ad">mdi-bell-outline</v-icon>
-              </v-btn>
-            </template>
-            <v-list
-              :dense="true"
-              :two-line="true"
-              :nav="true"
-              :avatar="true"
-              class="rounded-l"
-              style="height: 405px; width: 300px"
-            >
-              <v-list-item-group color="primary">
-                <v-list-item
-                  v-for="(item, i) in messages"
-                  :key="i"
-                  class="mb-2 pt-2"
-                  style="backgroundcolor: #f2f2f2"
-                >
-                  <v-list-item-avatar>
-                    <v-img :src="item.data.icon"></v-img>
-                  </v-list-item-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title style="fontsize: 16px" class="py-1">
-                      {{ item.data.title }}
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      <!-- {{ new Date(item.data.time).toLocaleString('vi') }} -->
-                      {{ item.data.body }}
-                    </v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list-item-group>
-            </v-list>
-          </v-menu>
+          <notify />
           <v-btn
             to="/vendor"
             depressed
@@ -334,10 +286,12 @@
 import { mapActions } from 'vuex';
 import authenticationMixins from '../mixins/authentication';
 import processFCMForegroundMixins from '../mixins/processFCMForeground';
+import notify from '../vendor/overview/Notify.vue';
 
 export default {
   name: 'MyAppBar',
   mixins: [authenticationMixins, processFCMForegroundMixins],
+  components: { notify },
   data: () => ({
     overlay: {
       show: false,
