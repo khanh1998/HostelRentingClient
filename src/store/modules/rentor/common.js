@@ -36,6 +36,12 @@ const myState = () => ({
     error: undefined,
     success: undefined,
   },
+  schedule: {
+    data: [],
+    isLoading: false,
+    error: undefined,
+    success: undefined,
+  },
 });
 const getters = {
   getCategoryId: (state) => (id) => {
@@ -89,6 +95,10 @@ const mutationTypes = {
   GET_RULES_REQUEST: 'GET_RULES_REQUEST',
   GET_RULES_SUCCESS: 'GET_RULES_SUCCESS',
   GET_RULES_FAILURE: 'GET_RULES_FAILURE',
+
+  GET_SCHEDULE_REQUEST: 'GET_SCHEDULE_REQUEST',
+  GET_SCHEDULE_SUCCESS: 'GET_SCHEDULE_SUCCESS',
+  GET_SCHEDULE_FAILURE: 'GET_SCHEDULE_FAILURE',
 };
 const mutations = {
   GET_CATEGORIES_REQUEST(state) {
@@ -166,6 +176,19 @@ const mutations = {
     state.rules.error = error;
     state.rules.success = false;
   },
+  GET_SCHEDULE_REQUEST(state) {
+    state.schedule.isLoading = true;
+  },
+  GET_SCHEDULE_SUCCESS(state, schedule) {
+    state.schedule.isLoading = false;
+    state.schedule.data = schedule;
+    state.schedule.success = true;
+  },
+  GET_SCHEDULE_FAILURE(state, error) {
+    state.schedule.isLoading = false;
+    state.schedule.error = error;
+    state.schedule.success = false;
+  },
 };
 const actions = {
   async getCategories({ commit, state }) {
@@ -224,6 +247,17 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_RULES_FAILURE, error);
+    }
+  },
+  async getAllSchedule({ commit }) {
+    try {
+      commit(mutationTypes.GET_SCHEDULE_REQUEST);
+      const res = await window.axios.get('/api/v1/schedules');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_SCHEDULE_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_SERVICES_FAILURE, error);
     }
   },
 };

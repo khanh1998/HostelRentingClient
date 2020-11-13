@@ -45,7 +45,7 @@
                 </v-col>
                 <v-col cols="4" class="d-flex flex-column">
                   <span class="field-name font-weight-medium"
-                    >Loại nhà trọ<span class="text-danger ml-1">(*)</span></span
+                    >Loại<span class="text-danger ml-1">(*)</span></span
                   >
                   <v-select
                     v-model="newGroupValue.categoryId"
@@ -425,6 +425,7 @@ export default {
       getAllCategories: 'renter/filterResult/getAllCategories',
       getAllServices: 'renter/common/getAllServices1',
       getAllRules: 'renter/common/getAllRules',
+      getAllSchedule: 'renter/common/getAllSchedule',
       setNewGroupValue: 'vendor/group/setNewGroupValue',
       getProvinces: 'renter/common/getProvinces',
     }),
@@ -599,12 +600,52 @@ export default {
       console.log(this.addressObjForApi);
     },
     insertGroup() {
-      console.log(this.newGroupValue);
-      console.log(this.user);
-      // this.createHostelGroup({
-      //   vendorId: this.user.userId,
-
-      // });
+      const regulation = this.newGroupValue.regulation.map((item) => ({ regulationId: item }));
+      const groupService = this.newGroupValue.services.map((item) => ({
+        serviceId: item.serviceId,
+        price: this.getPriceUnit(item.price).servicePrice,
+        priceUnit: this.getPriceUnit(item.price).servicePriceUnit,
+        timeUnit: item.timeUnit,
+        userUnit: item.userUnit,
+      }));
+      const reqObj = {
+        address: this.newGroupValue.address,
+        appendixContract: 'string',
+        buildingNo: this.newGroupValue.buildingNo,
+        categoryId: this.newGroupValue.categoryId,
+        curfewTime:
+          this.newGroupValue.curfewTime.limit === true
+            ? `${this.newGroupValue.curfewTime.startTime}-${this.newGroupValue.curfewTime.endTime}` // eslint-disable-line
+            : null, // eslint-disable-line
+        downPayment: this.newGroupValue.downPayment,
+        groupName: this.newGroupValue.groupName,
+        latitude: this.newGroupValue.latitude,
+        longitude: this.newGroupValue.longitude,
+        managerName: this.newGroupValue.managerName,
+        managerPhone: this.newGroupValue.managerPhone,
+        ownerJoin: this.newGroupValue.ownerJoin,
+        regulations: regulation,
+        schedules: this.newGroupValue.schedules,
+        services: groupService,
+        vendorId: this.user.userId,
+      };
+      // this.createHostelGroup(reqObj);
+      console.log(reqObj);
+    },
+    getPriceUnit(price) {
+      let servicePriceUnit = null;
+      let servicePrice = 0;
+      if (String(price).length <= 6) {
+        servicePrice = price / 1000;
+        servicePriceUnit = 'nghìn';
+      } else if (String(price).length < 10) {
+        servicePrice = price / 1000000;
+        servicePriceUnit = 'triệu';
+      } else {
+        servicePriceUnit = 'tỉ';
+        servicePrice = price / 1000000000;
+      }
+      return { servicePrice, servicePriceUnit };
     },
   },
   computed: {
@@ -623,11 +664,15 @@ export default {
     allRules() {
       return this.$store.state.renter.common.rules.data;
     },
+    allSchedule() {
+      return this.$store.state.renter.common.schedule.data;
+    },
     isLoading() {
       const allServices = this.$store.state.renter.common.services.isLoading;
       const allCategories = this.$store.state.renter.filterResult.filter.categories.isLoading;
       const allRules = this.$store.state.renter.common.rules.isLoading;
-      return allServices || allCategories || allRules;
+      const allSchedule = this.$store.state.renter.common.schedule.isLoading;
+      return allServices || allCategories || allRules || allSchedule;
     },
     newGroupValue() {
       return this.$store.state.vendor.group.newGroup;
@@ -701,6 +746,9 @@ export default {
     }
     if (this.provinces.data.length === 0) {
       this.getProvinces();
+    }
+    if (this.allSchedule.length === 0) {
+      this.getAllSchedule();
     }
     // }
   },

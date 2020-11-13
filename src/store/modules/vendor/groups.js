@@ -46,6 +46,7 @@ const myState = () => ({
     latitude: 0,
     longitude: 0,
     address: null,
+    schedules: [],
   },
   newType: {},
   newRoom: {

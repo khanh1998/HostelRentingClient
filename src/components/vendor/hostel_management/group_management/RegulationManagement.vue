@@ -22,7 +22,7 @@
       <v-btn
         class="bg-danger-lighten elevation-0 text-danger font-nunito size9rem d-flex justify-start ma-auto"
         style="letter-spacing: 0.01rem !important"
-        ><v-icon small class="mr-1">report</v-icon>Bổ xung nội quy mới</v-btn
+        ><v-icon small class="mr-1">report</v-icon>Bổ sung nội quy mới</v-btn
       >
       <!-- {{ values }}
       <v-col cols="4">
