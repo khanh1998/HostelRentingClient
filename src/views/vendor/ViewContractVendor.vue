@@ -287,8 +287,11 @@ export default {
       // const loadingProvinces = this.$store.state.renter.common.provinces.isLoading;
       return loadingUser || loadingContracts;
     },
+    contracts() {
+      return this.$store.state.user.contracts;
+    },
     allContracts() {
-      return this.$store.state.user.contracts.data.map((item) => ({
+      return this.contracts.data.map((item) => ({
         contractId: item.contractId,
         renterName: item.renter.username,
         groupName: item.group.groupName,
