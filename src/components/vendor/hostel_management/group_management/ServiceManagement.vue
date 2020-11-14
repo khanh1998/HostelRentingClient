@@ -20,10 +20,10 @@
       >
         <v-col
           cols="2"
-          class="d-flex py-0 align-center justify-center"
+          class="d-flex py-0 px-0 align-center justify-center"
           style="border-right: 1px solid #eef2f7"
         >
-          <span class="font-nunito text-black size-sub-3">Bắt buộc</span>
+          <span class="font-nunito text-black size-sub-3 d-flex flex-column">Bắt buộc </span>
         </v-col>
         <v-col
           cols="4"
@@ -43,113 +43,148 @@
           <span class="font-nunito text-black size-sub-3">Tần suất</span>
         </v-col>
       </v-row>
-      <v-virtual-scroll
-        :items="groupService"
+      <!-- <v-virtual-scroll
+        :items="newGroup.services"
         :item-height="55"
         height="200"
-        v-if="groupService.length > 0"
+        v-if="newGroup.services.length > 0"
+      > -->
+      <v-card
+        max-height="200"
+        v-if="newGroup.services.length > 0"
+        class="overflow-y-auto d-flex flex-column"
       >
-        <template v-slot="{ item }">
-          <v-list-item :key="item.serviceId" class="px-0 d-flex justify-start align-start">
-            <v-row
-              class="mx-0 pa-0 service-item cursor"
-              style="border-bottom: 1px solid #eef2f7"
-              v-if="groupService.length >= 4"
-            >
-              <v-col
-                cols="2"
-                class="d-flex flex-colum justify-center align-center"
-                style="border-right: 1px solid #eef2f7; border-left: 1px solid #eef2f7"
+        <div
+          :key="index"
+          v-for="(item, index) in newGroup.services"
+          class="px-0 d-flex justify-start align-start"
+        >
+          <v-menu offset-y nudge-width="100px">
+            <template v-slot:activator="{ on, attrs }">
+              <v-row
+                v-bind="attrs"
+                v-on="on"
+                class="mx-0 pa-0 service-item cursor"
+                style="border-bottom: 1px solid #eef2f7"
+                v-if="newGroup.services.length >= 4"
               >
-                <v-checkbox
-                  v-model="required"
-                  color="#727cf5"
-                  :value="item.serviceId"
-                  hide-details
-                  class="filter my-0"
-                ></v-checkbox>
-              </v-col>
-              <v-col
-                cols="4"
-                class="d-flex py-0 align-center"
-                style="border-right: 1px solid #eef2f7"
-              >
-                <span class="font-nunito text-black size-sub-3">{{ item.serviceName }}</span>
-              </v-col>
-              <v-col
-                cols="4"
-                class="d-flex py-0 align-center justify-center"
-                style="border-right: 1px solid #eef2f7"
-              >
-                <span class="font-nunito text-black size-sub-3" v-if="item.price">{{
-                  item.price
-                }}</span>
-                <span
-                  class="font-nunito text-primary size-sub-3 ml-1"
-                  v-if="item.price && !priceSuggestion"
-                  >VNĐ/{{ item.userUnit }}</span
+                <v-col
+                  cols="2"
+                  class="d-flex flex-colum justify-center align-center"
+                  style="border-right: 1px solid #eef2f7; border-left: 1px solid #eef2f7"
                 >
-                <span class="font-nunito text-black size-sub-3" v-if="priceSuggestion">{{
-                  item.priceSuggestion
-                }}</span>
-              </v-col>
-              <v-col cols="2" class="d-flex py-0 align-center justify-center">
-                <span class="font-nunito text-black size-sub-3">{{ item.timeUnit }}</span>
-              </v-col>
-            </v-row>
-            <v-row
-              class="mx-0 py-0 pl-0 pr-4 service-item cursor"
-              style="
-                border-bottom: 1px solid #eef2f7;
-                border-left: 2px solid #eef2f7;
-                border-right: 2px solid #eef2f7;
-              "
-              v-else
-            >
-              <v-col
-                cols="2"
-                class="d-flex flex-colum justify-center align-center"
-                style="border-right: 1px solid #eef2f7"
-              >
-                <v-checkbox
-                  v-model="required"
-                  color="#727cf5"
-                  :value="item.serviceId"
-                  hide-details
-                  class="filter my-0"
-                ></v-checkbox>
-              </v-col>
-              <v-col
-                cols="4"
-                class="d-flex py-0 align-center"
-                style="border-right: 1px solid #eef2f7"
-              >
-                <span class="font-nunito text-black size-sub-3">{{ item.serviceName }}</span>
-              </v-col>
-              <v-col
-                cols="4"
-                class="d-flex py-0 align-center justify-center"
-                style="border-right: 1px solid #eef2f7"
-              >
-                <span class="font-nunito text-black size-sub-3" v-if="item.price">{{
-                  item.price
-                }}</span>
-                <span
-                  class="font-nunito text-primary size-sub-3 ml-1"
-                  v-if="item.price && !priceSuggestion"
-                  >VNĐ/{{ item.userUnit }}</span
+                  <v-checkbox
+                    v-model="required"
+                    color="#727cf5"
+                    :value="item.serviceId"
+                    hide-details
+                    class="filter my-0"
+                  ></v-checkbox>
+                </v-col>
+                <v-col
+                  cols="4"
+                  class="d-flex py-0 align-center"
+                  style="border-right: 1px solid #eef2f7"
                 >
-                <span class="font-nunito text-black size-sub-3" v-if="priceSuggestion">{{
-                  item.priceSuggestion
-                }}</span>
-              </v-col>
-              <v-col cols="2" class="d-flex py-0 align-center justify-center">
-                <span class="font-nunito text-black size-sub-3">{{ item.timeUnit }}</span>
-              </v-col>
-            </v-row>
-          </v-list-item>
-        </template>
-      </v-virtual-scroll>
+                  <span class="font-nunito text-black size-sub-3">{{ item.serviceName }}</span>
+                </v-col>
+                <v-col
+                  cols="4"
+                  class="d-flex py-0 align-center justify-center"
+                  style="border-right: 1px solid #eef2f7"
+                >
+                  <span class="font-nunito text-black size-sub-3" v-if="item.price">{{
+                    item.price
+                  }}</span>
+                  <span class="font-nunito text-primary size-sub-3 ml-1" v-if="item.price"
+                    >VNĐ/{{ item.userUnit }}</span
+                  >
+                  <span
+                    class="font-nunito text-black size-sub-3"
+                    v-if="priceSuggestion && !item.price"
+                    >{{ item.priceSuggestion }}</span
+                  >
+                </v-col>
+                <v-col cols="2" class="d-flex py-0 align-center justify-center">
+                  <span class="font-nunito text-black size-sub-3">{{ item.timeUnit }}</span>
+                </v-col>
+              </v-row>
+              <v-row
+                v-else
+                class="mx-0 py-0 pl-0 pr-4 service-item cursor"
+                style="
+                  border-bottom: 1px solid #eef2f7;
+                  border-left: 2px solid #eef2f7;
+                  border-right: 2px solid #eef2f7;
+                "
+              >
+                <v-col
+                  cols="2"
+                  class="d-flex flex-colum justify-center align-center"
+                  style="border-right: 1px solid #eef2f7"
+                >
+                  <v-checkbox
+                    v-model="required"
+                    color="#727cf5"
+                    :value="item.serviceId"
+                    hide-details
+                    class="filter my-0"
+                  ></v-checkbox>
+                </v-col>
+                <v-col
+                  v-bind="attrs"
+                  v-on="on"
+                  cols="4"
+                  class="d-flex py-0 align-center"
+                  style="border-right: 1px solid #eef2f7"
+                >
+                  <span class="font-nunito text-black size-sub-3">{{ item.serviceName }}</span>
+                </v-col>
+                <v-col
+                  cols="4"
+                  v-bind="attrs"
+                  v-on="on"
+                  class="d-flex py-0 align-center justify-center"
+                  style="border-right: 1px solid #eef2f7"
+                >
+                  <span class="font-nunito text-black size-sub-3" v-if="item.price">{{
+                    item.price
+                  }}</span>
+                  <span class="font-nunito text-primary size-sub-3 ml-1" v-if="item.price"
+                    >VNĐ/{{ item.userUnit }}</span
+                  >
+                  <span
+                    class="font-nunito text-black size-sub-3"
+                    v-if="priceSuggestion && !item.price"
+                    >{{ item.priceSuggestion }}</span
+                  >
+                </v-col>
+                <v-col cols="2" class="d-flex py-0 align-center justify-center">
+                  <span class="font-nunito text-black size-sub-3">{{ item.timeUnit }}</span>
+                </v-col>
+              </v-row>
+            </template>
+            <v-list>
+              <v-list-item
+                style="min-height: 20px !important"
+                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+              >
+                <v-icon color="#6c757d" class="mr-2 item-hover" size="15">mdi mdi-pencil</v-icon>
+                <v-list-item-title class="item-hover">Chỉnh sửa</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                style="min-height: 20px !important"
+                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                @click="removeService(item.serviceName)"
+              >
+                <v-icon color="#6c757d" class="mr-2 item-hover" size="15">mdi mdi-delete</v-icon>
+                <v-list-item-title class="item-hover">Xóa</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+      </v-card>
+      <!-- </v-virtual-scroll> -->
       <span
         v-else
         style="
@@ -176,33 +211,23 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-col cols="6" class="pl-0 pb-0" v-if="!otherService.checkbox">
-                <!-- <v-select
-                  :items="allServices"
-                  label="Chọn dịch vụ"
-                  item-text="serviceName"
-                  item-value="serviceId"
-                  dense
-                  v-model="addNew.serviceId"
-                  class="pa-1 size9rem font-nunito form"
-                  solo
-                  @input="initUserUnit()"
-                ></v-select> -->
+              <v-col cols="6" class="pb-0 pl-0" v-if="!otherService.checkbox">
                 <v-autocomplete
                   v-model="addNew.serviceId"
                   :items="allServices"
                   label="Chọn dịch vụ"
                   item-text="serviceName"
                   item-value="serviceId"
-                  class="size9rem font-nunito form"
+                  class="size9rem font-nunito form mx-1 mt-1 mb-7"
                   solo
                   dense
                   color="indigo"
                   clearable
+                  hide-details
                   background-color="white"
                   no-data-text="Không có kết quả phù hợp"
                   style="border: 1px solid #e1e1e1 !important; border-radius: 4px"
-                  hide-details
+                  @input="initUserUnit(), resetMessage()"
                 ></v-autocomplete>
               </v-col>
               <v-col cols="6" class="pl-0 pb-0" v-else>
@@ -374,7 +399,9 @@
                 ></v-checkbox>
               </v-col>
             </v-row>
-            <span class="text-danger font-nunito size-9rem mt-1">{{ message }}</span>
+            <span class="text-danger font-nunito size-9rem mt-1">{{ message }}</span
+            ><br />
+            <span class="text-danger font-nunito size-9rem mt-1">{{ duplicateMsg }}</span>
           </v-container>
         </v-card-text>
         <v-divider></v-divider>
@@ -407,7 +434,7 @@ export default {
       price: null,
       priceSuggestion: null,
       userUnit: 'phòng',
-      timeUnit: '',
+      timeUnit: '1 tháng',
       serviceName: null,
     },
     otherService: {
@@ -415,7 +442,7 @@ export default {
       serviceName: '',
       price: null,
       userUnit: 'phòng',
-      timeUnit: '',
+      timeUnit: '1 tháng',
       isDynamicPrice: false,
       isProgressivePrice: false,
     },
@@ -433,6 +460,7 @@ export default {
       },
     },
     message: '',
+    duplicateMsg: '',
   }),
   computed: {
     allServices() {
@@ -448,62 +476,100 @@ export default {
       setNewGroupValue: 'vendor/group/setNewGroupValue',
     }),
     initUserUnit() {
-      const { serviceName } = this.allServices.find(
-        (service) => service.serviceId === Number(this.addNew.serviceId),
-      );
-      switch (serviceName) {
-        case 'điện cố định theo đồng hồ':
-          this.userUnitSuggested = 'VNĐ/Kwh';
-          this.addNew.userUnit = 'kwh';
-          break;
-        case 'điện cố định theo người':
-          this.userUnitSuggested = 'VNĐ/Người';
-          this.addNew.userUnit = 'người';
-          break;
-        case 'điện lũy tiến':
-          this.userUnitSuggested = null;
-          this.priceSuggestion = 'Giá bậc thang';
-          this.addNew.price = null;
-          this.addNew.priceSuggestion = this.priceSuggestion;
-          this.addNew.userUnit = 'phòng';
-          break;
-        case 'điện biến động':
-          this.userUnitSuggested = null;
-          this.priceSuggestion = 'Giá không cố định';
-          this.addNew.price = null;
-          this.addNew.priceSuggestion = this.priceSuggestion;
-          this.addNew.userUnit = null;
-          break;
-        case 'nước lũy tiến':
-          this.userUnitSuggested = null;
-          this.priceSuggestion = 'Giá bậc thang';
-          this.addNew.price = null;
-          this.addNew.priceSuggestion = this.priceSuggestion;
-          this.addNew.userUnit = null;
-          break;
-        case 'nước cố định theo người':
-          this.userUnitSuggested = 'VNĐ/Người';
-          this.addNew.userUnit = 'người';
-          break;
-        case 'nước cố định theo đồng hồ':
-          this.userUnitSuggested = 'VNĐ/Khối';
-          this.addNew.userUnit = 'khối';
-          break;
-        case 'nước biến động':
-          this.userUnitSuggested = null;
-          this.priceSuggestion = 'Giá không cố định';
-          this.addNew.price = null;
-          this.addNew.priceSuggestion = this.priceSuggestion;
-          this.addNew.userUnit = null;
-          break;
-        case 'gửi xe':
-          this.userUnitSuggested = 'VNĐ/Chiếc';
-          this.addNew.userUnit = 'chiếc';
-          break;
-        default:
-          this.userUnitSuggested = 'VNĐ/Phòng';
-          this.addNew.userUnit = 'phòng';
-          break;
+      if (this.addNew.serviceId) {
+        const { serviceName } = this.allServices.find(
+          (service) => service.serviceId === Number(this.addNew.serviceId),
+        );
+        switch (serviceName) {
+          case 'điện cố định theo đồng hồ':
+            this.userUnitSuggested = 'VNĐ/Kwh';
+            this.addNew.userUnit = 'kwh';
+            this.addNew.priceSuggestion = null;
+            // this.addNew.priceSuggestion = '';
+            break;
+          case 'điện cố định theo người':
+            this.userUnitSuggested = 'VNĐ/Người';
+            this.addNew.userUnit = 'người';
+            this.addNew.priceSuggestion = null;
+            // this.addNew.priceSuggestion = '';
+            break;
+          case 'điện lũy tiến':
+            this.userUnitSuggested = null;
+            this.priceSuggestion = 'Giá bậc thang';
+            this.addNew.price = null;
+            this.addNew.priceSuggestion = this.priceSuggestion;
+            this.addNew.userUnit = 'phòng';
+            break;
+          case 'điện biến động':
+            this.userUnitSuggested = null;
+            this.priceSuggestion = 'Giá không cố định';
+            this.addNew.price = null;
+            this.addNew.priceSuggestion = this.priceSuggestion;
+            this.addNew.userUnit = null;
+            break;
+          case 'nước lũy tiến':
+            this.userUnitSuggested = null;
+            this.priceSuggestion = 'Giá bậc thang';
+            this.addNew.price = null;
+            this.addNew.priceSuggestion = this.priceSuggestion;
+            this.addNew.userUnit = null;
+            break;
+          case 'nước cố định theo người':
+            this.userUnitSuggested = 'VNĐ/Người';
+            this.addNew.userUnit = 'người';
+            this.addNew.priceSuggestion = null;
+            break;
+          case 'nước cố định theo đồng hồ':
+            this.userUnitSuggested = 'VNĐ/Khối';
+            this.addNew.userUnit = 'khối';
+            this.addNew.priceSuggestion = null;
+            break;
+          case 'nước biến động':
+            this.userUnitSuggested = null;
+            this.priceSuggestion = 'Giá không cố định';
+            this.addNew.price = null;
+            this.addNew.priceSuggestion = this.priceSuggestion;
+            this.addNew.userUnit = null;
+            break;
+          case 'gửi xe':
+            this.userUnitSuggested = 'VNĐ/Chiếc';
+            this.addNew.userUnit = 'chiếc';
+            this.addNew.priceSuggestion = null;
+            break;
+          default:
+            this.userUnitSuggested = 'VNĐ/Phòng';
+            this.addNew.userUnit = 'phòng';
+            this.addNew.priceSuggestion = null;
+            break;
+        }
+      } else {
+        this.addNew.serviceId = 0;
+      }
+    },
+    checkDuplicateService() {
+      if (this.addNew.serviceId) {
+        const { serviceName } = this.allServices.find(
+          (service) => service.serviceId === Number(this.addNew.serviceId),
+        );
+        if (
+          serviceName.includes('điện') &&
+          this.newGroup.services.filter((item) => item.serviceName.includes('điện')).length > 0
+        ) {
+          this.duplicateMsg = 'Bạn không thể tạo 2 loại dịch vụ về điện';
+        }
+        if (
+          serviceName.includes('nước') &&
+          this.newGroup.services.filter((item) => item.serviceName.includes('nước')).length > 0
+        ) {
+          this.duplicateMsg = 'Bạn không thể tạo 2 loại dịch vụ về nước';
+        }
+        if (
+          !serviceName.includes('nước') &&
+          !serviceName.includes('điện') &&
+          this.newGroup.services.filter((item) => item.serviceName.includes(serviceName)).length > 0
+        ) {
+          this.duplicateMsg = `Bạn không thể tạo 2 loại dịch vụ "${serviceName}"`;
+        }
       }
     },
     validate() {
@@ -512,7 +578,7 @@ export default {
         if (this.addNew.serviceId === 0) {
           this.message += 'Vui lòng nhập thông tin (loại dịch vụ';
         }
-        if (!this.addNew.price && !this.priceSuggestion) {
+        if (!this.addNew.price && !this.addNew.priceSuggestion) {
           this.message += this.message === '' ? 'Vui lòng nhập thông tin (giá' : ', giá';
         }
         if (this.addNew.timeUnit === '') {
@@ -544,13 +610,14 @@ export default {
     },
     addService() {
       this.validate();
-      if (this.message === '') {
+      this.checkDuplicateService();
+      if (this.message === '' && this.duplicateMsg === '') {
         if (!this.otherService.checkbox) {
           const { serviceName } = this.allServices.find(
             (service) => service.serviceId === Number(this.addNew.serviceId),
           );
           this.addNew.serviceName = serviceName;
-          this.groupService.push({
+          this.newGroup.services.push({
             serviceId: this.addNew.serviceId,
             serviceName: this.addNew.serviceName,
             price: this.addNew.price,
@@ -560,7 +627,6 @@ export default {
           });
           this.dialog.addGroupService = false;
           this.resetAddnewValue();
-          this.newGroup.services = this.groupService;
           this.setNewGroupValue(this.newGroup);
         } else {
           console.log(this.otherService);
@@ -569,16 +635,24 @@ export default {
     },
     resetMessage() {
       this.message = '';
+      this.duplicateMsg = '';
     },
     resetAddnewValue() {
       const newValue = {
         serviceId: 0,
         price: null,
         userUnit: 'phòng',
-        timeUnit: '',
+        timeUnit: '1 tháng',
         serviceName: null,
       };
       this.addNew = newValue;
+    },
+    removeService(serviceName) {
+      this.newGroup.services = this.newGroup.services.filter(
+        (item) => item.serviceName !== serviceName,
+      );
+      this.setNewGroupValue(this.newGroup);
+      console.log(this.newGroup.services);
     },
   },
   created() {},
