@@ -14,7 +14,7 @@
         />
       </div>
     </v-row>
-    <v-row class="mx-0 pt-3">
+    <v-row class="mx-0 pt-3 d-flex flex-column">
       <span style="text-align: center" class="text-primary-dark font-nunito size9rem mb-2"
         >Nếu nhà trọ của bạn có nội quy không xuất hiện trong danh sách. Hãy ấn nút "Bổ sung nội
         quy" để thêm</span
@@ -22,44 +22,23 @@
       <v-btn
         class="bg-danger-lighten elevation-0 text-danger font-nunito size9rem d-flex justify-start ma-auto"
         style="letter-spacing: 0.01rem !important"
+        @click="addNewRegulation()"
         ><v-icon small class="mr-1">report</v-icon>Bổ sung nội quy mới</v-btn
       >
-      <!-- {{ values }}
-      <v-col cols="4">
-        <v-autocomplete
-          v-model="values"
-          :items="recommendList"
-          item-text="regulationName"
-          item-value="regulationId"
-          dense
-          solo
-        >
-          <template v-slot:no-data>
-            <v-list-item>
-              <v-list-item-title>
-                Nếu như không có gợi ý phù hợp, vui lòng nhấn vào
-                <strong>Cryptocurrency</strong>
-              </v-list-item-title>
-            </v-list-item>
-          </template>
-          <template slot="selection" slot-scope="{ item }">
-            <span class="font-nunito font-weight-medium text-body-2">{{
-              item.regulationName
-            }}</span>
-          </template>
-          <template slot="item" slot-scope="{ item }">
-            <span class="font-nunito font-weight-medium text-body-2">{{
-              item.regulationName
-            }}</span>
-          </template>
-        </v-autocomplete>
-      </v-col> -->
+      <div class="d-flex flex-wrap mt-3" v-if="newGroup.newRegulations.length > 0">
+        <newRegulation
+          v-for="regulation in newGroup.newRegulations"
+          v-bind:key="regulation.index"
+          :regulation="regulation"
+        />
+      </div>
     </v-row>
   </v-row>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
+import newRegulation from './newRegulation.vue';
 
 export default {
   name: 'RegulationManagement',
@@ -68,6 +47,7 @@ export default {
     recommendList: [],
     values: '',
   }),
+  components: { newRegulation },
   computed: {
     allRules() {
       return this.$store.state.renter.common.rules.data;
@@ -83,6 +63,21 @@ export default {
     }),
     selectCheckBox() {
       this.newGroup.regulation = this.selected;
+      this.setNewGroupValue(this.newGroup);
+    },
+    addNewRegulation() {
+      console.log(this.newGroup);
+      if (this.newGroup.newRegulations.length === 0) {
+        this.newGroup.newRegulations.push({
+          index: 0,
+          regulationName: '',
+        });
+      } else {
+        this.newGroup.newRegulations.push({
+          index: this.newGroup.newRegulations[this.newGroup.newRegulations.length - 1].index + 1,
+          regulationName: '',
+        });
+      }
       this.setNewGroupValue(this.newGroup);
     },
   },

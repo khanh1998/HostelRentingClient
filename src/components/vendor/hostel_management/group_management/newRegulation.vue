@@ -6,7 +6,7 @@
       solo
       dense
       light
-      v-model="newValue.facilityName"
+      v-model="newValue.regulationName"
       style="
         border-top-right-radius: 0px !important;
         border-bottom-right-radius: 0px !important;
@@ -32,32 +32,22 @@ export default {
   data: () => ({}),
   props: { regulation: Object },
   computed: {
-    newRoomValue() {
-      return this.$store.state.vendor.group.newRoom.data;
-    },
-    createRooms() {
-      return this.$store.state.vendor.group.creatRooms.rooms;
+    newGroupValue() {
+      return this.$store.state.vendor.group.newGroup;
     },
     newValue() {
       return this.regulation;
     },
-    newTypeValue() {
-      return this.$store.state.vendor.group.createType.data;
-    },
   },
   methods: {
     ...mapActions({
-      setCreateTypeValue: 'vendor/group/setCreateTypeValue',
+      setNewGroupValue: 'vendor/group/setNewGroupValue',
     }),
     removeItem() {
-      const result = this.newTypeValue.newFacilities.filter(
+      this.newGroupValue.newRegulations = this.newGroupValue.newRegulations.filter(
         (item) => item.index !== this.newValue.index,
       );
-      this.setCreateTypeValue(result);
-      console.log(this.createRooms);
-    },
-    changeName() {
-      console.log(this.createRooms);
+      this.setNewGroupValue(this.newGroupValue);
     },
   },
   created() {},
