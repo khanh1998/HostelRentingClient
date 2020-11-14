@@ -6,23 +6,11 @@
     transition="dialog-bottom-transition"
     class="hidden-md-and-up"
   >
-    <v-dialog
-      v-model="groups.isCreating"
-      hide-overlay
-      persistent
-      width="300"
-    >
-      <v-card
-        color="#727CF5"
-        dark
-      >
+    <v-dialog v-model="groups.isCreating" hide-overlay persistent width="300">
+      <v-card color="#727CF5" dark>
         <v-card-text>
           Đang tạo khu trọ mới
-          <v-progress-linear
-            indeterminate
-            color="white"
-            class="mb-0"
-          ></v-progress-linear>
+          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -36,67 +24,38 @@
       {{ snackBarMixin.message }}
 
       <template v-slot:action="{ attrs }">
-        <v-btn
-          color="red"
-          text
-          v-bind="attrs"
-          @click="snackBarMixin.show = false"
-        >
+        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false">
           Close
         </v-btn>
       </template>
     </v-snackbar>
-    <v-card>
-      <v-toolbar
-        dark
-        color="#727CF5"
-      >
-        <v-btn
-          icon
-          dark
-          @click="$emit('close')"
-        >
+    <div class="white">
+      <v-toolbar dark color="#727CF5">
+        <v-btn icon dark @click="$emit('close')">
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-toolbar-title v-if="this.create">Tạo khu phòng trọ mới</v-toolbar-title>
         <v-toolbar-title v-if="this.update">Cập nhật thông tin khu trọ</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn
-            dark
-            text
-            @click="doCreateHostelGroup"
-            v-if="this.create"
-          >
+          <v-btn dark text @click="doCreateHostelGroup" v-if="this.create">
             <v-icon left>add</v-icon>
             Tạo ngay
           </v-btn>
-          <v-btn
-            dark
-            text
-            v-if="this.update"
-          >
+          <v-btn dark text v-if="this.update">
             <v-icon left>update</v-icon>
             Cập nhật ngay
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
-      <TableOfContent
-        :toc="toc"
-        class="d-none"
-      />
-      <v-container fluid>
+      <TableOfContent :toc="toc" class="d-none" />
+      <v-container fluid style="height: 300px;">
         <v-row>
-          <v-col
-            cols="12"
-            md="6"
-          >
+          <v-col cols="12" md="6">
             <v-row id="name">
               <v-col cols="12">
                 <v-card class="pa-5">
-                  <span class="text-h6 ma-1">
-                    <v-icon left>info</v-icon> Thông tin
-                  </span>
+                  <span class="text-h6 ma-1"> <v-icon left>info</v-icon> Thông tin </span>
                   <v-row class="hidden-sm-and-down">
                     <v-col cols="9">
                       <v-text-field
@@ -166,18 +125,10 @@
               </v-col>
             </v-row>
           </v-col>
-          <v-col
-            cols="12"
-            md="6"
-            id="address"
-            class="pa-0"
-          >
+          <v-col cols="12" md="6" id="address" class="pa-0">
             <v-row>
               <v-col cols="12">
-                <HostelGroupRules
-                  @newValue="receiveNewRulesData"
-                  class="mt-3"
-                />
+                <HostelGroupRules @newValue="receiveNewRulesData" class="mt-3" />
               </v-col>
               <v-col cols="12">
                 <HostelGroupServiceEditor
@@ -189,9 +140,7 @@
               </v-col>
               <v-col cols="12">
                 <v-card class="pa-5">
-                  <span class="text-h6 ma-1">
-                    <v-icon left>date_range</v-icon> Lịch rảnh
-                  </span>
+                  <span class="text-h6 ma-1"> <v-icon left>date_range</v-icon> Lịch rảnh </span>
                   <!-- <div class="d-flex justify-center">
                       <v-btn
                       color="#727CF5"
@@ -211,7 +160,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-card>
+    </div>
   </v-dialog>
 </template>
 <script>

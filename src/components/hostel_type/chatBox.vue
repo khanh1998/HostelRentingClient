@@ -903,6 +903,6 @@ export default {
   font-family: 'Nunito', sans-serif !important;
 }
 .v-text-field--outlined >>> fieldset {
-  border-color: #727cf5;
+  border-color: #727cf5 !important;
 }
 </style>
