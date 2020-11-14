@@ -222,24 +222,26 @@ export default {
     return {
       editor: null,
       isLoadingTemplate: false,
+      template: null,
     };
   },
   created() {
     this.editor = this.setEditorContent();
-    if (this.editorContent) {
-      this.editor.setContent(this.editorContent);
-    }
     if (this.templateUrl) {
       try {
         axios.get(this.templateUrl).then((res) => {
           console.log(res);
-          this.editor.setContent(res.data);
+          this.template = res.data;
+          this.editor.setContent(this.template);
           this.isLoadingTemplate = false;
         });
       } catch (error) {
         console.log(error);
         this.isLoadingTemplate = false;
       }
+    }
+    if (this.editorContent) {
+      this.editor.setContent(this.editorContent);
     }
   },
   beforeDestroy() {
