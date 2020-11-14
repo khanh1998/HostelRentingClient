@@ -31,6 +31,7 @@ const myState = () => ({
     services: [],
     avatar: null,
     regulation: [],
+    newRegulations: [],
     groupName: '',
     categoryId: null,
     ownerJoin: false,
