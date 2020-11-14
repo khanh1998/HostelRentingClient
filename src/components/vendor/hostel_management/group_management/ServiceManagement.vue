@@ -177,7 +177,7 @@
           <v-container>
             <v-row>
               <v-col cols="6" class="pl-0 pb-0" v-if="!otherService.checkbox">
-                <v-select
+                <!-- <v-select
                   :items="allServices"
                   label="Chọn dịch vụ"
                   item-text="serviceName"
@@ -187,7 +187,23 @@
                   class="pa-1 size9rem font-nunito form"
                   solo
                   @input="initUserUnit()"
-                ></v-select>
+                ></v-select> -->
+                <v-autocomplete
+                  v-model="addNew.serviceId"
+                  :items="allServices"
+                  label="Chọn dịch vụ"
+                  item-text="serviceName"
+                  item-value="serviceId"
+                  class="size9rem font-nunito form"
+                  solo
+                  dense
+                  color="indigo"
+                  clearable
+                  background-color="white"
+                  no-data-text="Không có kết quả phù hợp"
+                  style="border: 1px solid #e1e1e1 !important; border-radius: 4px"
+                  hide-details
+                ></v-autocomplete>
               </v-col>
               <v-col cols="6" class="pl-0 pb-0" v-else>
                 <v-text-field
@@ -198,6 +214,24 @@
                   outlined
                   color="#727cf5"
                 />
+              </v-col>
+              <v-col cols="6" v-if="otherService.checkbox" class="d-flex">
+                <v-checkbox
+                  v-model="otherService.isDynamicPrice"
+                  label="Giá biến động"
+                  hide-details
+                  class="filter service-checkbox"
+                  color="#727cf5"
+                  @change="otherService.isProgressivePrice = false"
+                ></v-checkbox>
+                <v-checkbox
+                  v-model="otherService.isProgressivePrice"
+                  label="Giá lũy tiến"
+                  hide-details
+                  class="filter service-checkbox"
+                  color="#727cf5"
+                  @change="otherService.isDynamicPrice = false"
+                ></v-checkbox>
               </v-col>
               <v-col cols="6" class="pr-0 d-flex pb-0" v-if="!otherService.checkbox">
                 <v-text-field
@@ -219,6 +253,7 @@
                   filled
                   prefix="VNĐ/"
                   v-if="userUnitSuggested && userUnitSuggested === 'VNĐ/Phòng'"
+                  append-icon="mdi mdi-pencil"
                 />
                 <span
                   v-if="userUnitSuggested && userUnitSuggested !== 'VNĐ/Phòng'"
@@ -240,26 +275,70 @@
                   >{{ priceSuggestion }}</span
                 >
               </v-col>
-              <v-col cols="6" class="pr-0 d-flex pb-0" v-else>
-                <v-text-field
-                  v-model="otherService.price"
-                  dense
-                  label="Giá tiền"
-                  type="number"
-                  class="py-1 form size9rem font-nunito addnew-service other-service"
-                  solo
-                  step="10000"
-                  min="0"
-                  height="40"
-                  :rules="[rules.min(otherService.price)]"
-                />
-                <v-text-field
-                  v-model="otherService.userUnit"
-                  dense
-                  class="py-1 size9rem font-nunito other-service-textfield"
-                  filled
-                  prefix="VNĐ/"
-                />
+              <v-col
+                cols="12"
+                class="d-flex py-0 px-0"
+                v-if="
+                  otherService.checkbox &&
+                  !otherService.isDynamicPrice &&
+                  !otherService.isProgressivePrice
+                "
+              >
+                <v-col cols="6" class="pa-0 pr-3">
+                  <v-text-field
+                    v-model="otherService.price"
+                    dense
+                    label="Giá tiền"
+                    type="number"
+                    class="py-1 form size9rem font-nunito addnew-service other-service"
+                    solo
+                    step="10000"
+                    min="0"
+                    height="40"
+                    :rules="[rules.min(otherService.price)]"
+                  />
+                </v-col>
+                <v-col cols="4" class="pa-0 ml-n3">
+                  <v-text-field
+                    v-model="otherService.userUnit"
+                    dense
+                    class="py-1 size9rem font-nunito other-service-textfield"
+                    filled
+                    prefix="VNĐ/"
+                    append-icon="mdi mdi-pencil"
+                  />
+                </v-col>
+              </v-col>
+              <v-col
+                cols="12"
+                class="d-flex pt-0 px-0"
+                v-if="
+                  otherService.checkbox &&
+                  (otherService.isDynamicPrice || otherService.isProgressivePrice)
+                "
+              >
+                <v-col cols="6" class="pt-0 pl-0">
+                  <span
+                    class="my-1 mx-0 px-2 d-flex align-center font-nunito text-gray"
+                    style="
+                      border: 1px solid rgba(0, 0, 0, 0.4) !important;
+                      border-radius: 4px;
+                      height: 38px;
+                    "
+                    v-if="otherService.isDynamicPrice"
+                    >Giá không cố định</span
+                  >
+                  <span
+                    class="my-1 mx-0 px-2 d-flex align-center font-nunito text-gray"
+                    style="
+                      border: 1px solid rgba(0, 0, 0, 0.4) !important;
+                      border-radius: 4px;
+                      height: 38px;
+                    "
+                    v-if="otherService.isProgressivePrice"
+                    >Giá bậc thang</span
+                  >
+                </v-col>
               </v-col>
               <v-col cols="6" class="pt-0 pl-0" v-if="!otherService.checkbox">
                 <v-select
@@ -337,6 +416,8 @@ export default {
       price: null,
       userUnit: 'phòng',
       timeUnit: '',
+      isDynamicPrice: false,
+      isProgressivePrice: false,
     },
     service: {
       userUnit: ['VNĐ/Phòng', 'VNĐ/Người'],
@@ -520,6 +601,14 @@ export default {
   border-bottom-right-radius: 4px !important;
   border: 0px !important;
   background-color: rgba(57, 175, 209, 0.25) !important;
+}
+.userUnit-textfield .v-icon.v-icon {
+  font-size: 15px !important;
+  color: #6c757d !important;
+}
+.other-service-textfield .v-icon.v-icon {
+  font-size: 15px !important;
+  color: #6c757d !important;
 }
 .other-service-textfield .v-input__slot {
   border-top-left-radius: 0px !important;
