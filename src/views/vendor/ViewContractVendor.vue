@@ -276,7 +276,7 @@ export default {
   computed: {
     scale() {
       if (this.isMobile) {
-        return 0.75;
+        return 2.5;
       }
       return 1;
     },

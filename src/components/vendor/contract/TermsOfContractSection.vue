@@ -133,6 +133,7 @@
                       v-if="mode !== 'view'"
                       @appendixContent="receiveAppendixContent"
                       :editorContent="contract.appendixContract"
+                      :templateUrl="contractTemplateUrl"
                     />
                     <span v-if="mode === 'view'" v-html="contract.appendixContract"></span>
                   </v-col>
@@ -222,6 +223,8 @@ export default {
     TextEditor,
   },
   data: () => ({
+    contractTemplateUrl:
+      'https://youthhostelstorage.blob.core.windows.net/template/contract_template.html',
     menu1: null,
     startTime: new Date().toISOString().substr(0, 10),
     contract: {
