@@ -1,12 +1,12 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="show" scrollable max-width="98%" transition="dialog-bottom-transition">
+    <v-dialog v-model="show" fullscreen scrollable transition="dialog-bottom-transition">
       <v-overlay :value="isLoading" absolute>
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
-      <v-card class="d-flex flex-column" v-if="!isLoading">
-        <v-row class="d-flex px-4 py-3 align-center ma-0 justify-space-between">
-          <v-img
+      <v-card class="d-flex flex-column" v-if="!isLoading" style="border-radius: 0px !important">
+        <v-row class="d-flex px-4 py-3 align-center ma-0 justify-space-between bg-primary">
+          <!-- <v-img
             alt="Hostel Renting"
             class="shrink mr-2"
             contain
@@ -14,14 +14,16 @@
             transition="scale-transition"
             max-width="40"
             max-height="40"
-          />
+          /> -->
+          <v-icon class="ml-4" color="rgb(255, 255, 255, 0.8)">mdi-home-group</v-icon>
+
           <span
-            class="font-nunito text-primary font-weight-bold"
+            class="font-nunito white--text font-weight-bold"
             style="font-size: 1.125rem !important"
             >Thêm nhà trọ mới
           </span>
           <v-btn icon @click="closeDialog()" class="mr-4"
-            ><v-icon color="#98a6ad">close</v-icon></v-btn
+            ><v-icon color="rgb(255, 255, 255, 0.75)">close</v-icon></v-btn
           >
         </v-row>
         <v-divider></v-divider>
@@ -60,91 +62,127 @@
                     class="size-sub-2 font-nunito form"
                   ></v-select>
                 </v-col>
-                <v-col cols="8" class="d-flex flex-column">
+
+                <v-col cols="12" class="d-flex flex-column">
                   <span class="field-name font-weight-medium"
                     >Địa chỉ<span class="text-danger ml-1">(*)</span></span
                   >
-                  <gmap-autocomplete
-                    @place_changed="setPlace"
-                    :options="gmap"
-                    :selectFirstOnEnter="true"
-                    style="border: 1px solid #dee2e6 !important; border-radius: 4px"
-                    class="pa-2"
-                  ></gmap-autocomplete>
-                  <!-- <v-text-field
-                    class="size-sub-2 form"
-                    color="#727cf5"
-                    solo
-                    dense
-                    light
-                    hide-details
-                    v-model="groupInfo.address"
-                  /> -->
+                  <div class="d-flex">
+                    <v-col cols="4" class="pl-0 py-0">
+                      <v-text-field
+                        class="size-sub-2 font-nunito form"
+                        solo
+                        dense
+                        light
+                        label="Số nhà"
+                        hide-details
+                        v-model="newGroupValue.buildingNo"
+                        @input="setNewGroupValue(newGroupValue)"
+                      />
+                    </v-col>
+                    <v-col cols="8" class="d-flex flex-column pr-0 py-0"
+                      ><gmap-autocomplete
+                        placeholder="Địa chỉ đầy đủ"
+                        @place_changed="setPlace"
+                        :options="gmap"
+                        :selectFirstOnEnter="true"
+                        style="border: 1px solid #dee2e6 !important; border-radius: 4px"
+                        class="pa-2 address-autocomplete"
+                      ></gmap-autocomplete
+                    ></v-col>
+                  </div>
                 </v-col>
-                <v-col cols="4" class="d-flex flex-column">
-                  <span></span>
+                <v-col cols="4" class="d-flex">
                   <v-checkbox
                     v-model="newGroupValue.ownerJoin"
                     @click="setNewGroupValue(newGroupValue)"
                     label="Chung chủ"
                     color="#727cf5"
-                    class="filter font-nunito size-sub-2 mt-auto checkbox"
+                    class="filter font-nunito size-sub-2 mt-1 checkbox"
                     hide-details
                   ></v-checkbox>
+                  <span class="text-danger ml-1 mt-2">(*)</span>
                 </v-col>
-                <v-col cols="4">
-                  <v-radio-group
-                    v-model="groupInfo.curfewTime.radiogroup"
-                    hide-details
-                    row
-                    class="filter ma-0"
-                    @change="setCurfewtime()"
+                <v-col cols="8" class="d-flex flex-column">
+                  <div class="d-flex">
+                    <v-radio-group
+                      v-model="groupInfo.curfewTime.radiogroup"
+                      hide-details
+                      row
+                      class="filter my-0"
+                      @change="setCurfewtime()"
+                    >
+                      <v-radio
+                        label="Giờ giấc tự do"
+                        value="free"
+                        color="#727cf5"
+                        class="radioGroup font-nunito"
+                      ></v-radio>
+                      <v-radio
+                        label="Giới nghiêm"
+                        value="limit"
+                        color="#727cf5"
+                        class="radioGroup font-nunito"
+                        ><span class="text-danger ml-1">(*)</span></v-radio
+                      >
+                    </v-radio-group>
+                    <span class="text-danger mt-1 ml-auto">(*)</span>
+                  </div>
+
+                  <v-row class="ma-0">
+                    <v-col cols="6" class="py-0 pl-0">
+                      <div class="d-flex flex-row mt-2">
+                        <el-time-select
+                          placeholder="Mở cổng"
+                          v-model="newGroupValue.curfewTime.startTime"
+                          :picker-options="{
+                            start: '00:00',
+                            step: '00:15',
+                            end: '23:30',
+                          }"
+                          @change="setNewGroupValue(newGroupValue)"
+                          v-show="showCurfewTime"
+                        >
+                        </el-time-select>
+                      </div>
+                    </v-col>
+                    <v-col cols="6" class="py-0 pr-0">
+                      <div class="d-flex flex-row mt-2">
+                        <el-time-select
+                          v-show="showCurfewTime"
+                          placeholder="Đóng cổng"
+                          v-model="newGroupValue.curfewTime.endTime"
+                          :picker-options="{
+                            start: '00:00',
+                            step: '00:15',
+                            end: '23:30',
+                          }"
+                          @change="setNewGroupValue(newGroupValue)"
+                        >
+                        </el-time-select>
+                      </div>
+                    </v-col>
+                  </v-row>
+                </v-col>
+                <v-col cols="4" class="d-flex flex-column">
+                  <span class="field-name font-weight-medium font-nunito pt-2"
+                    >Cọc giữ chân<span class="text-danger ml-1">(*)</span></span
                   >
-                    <v-radio
-                      label="Giờ giấc tự do"
-                      value="free"
-                      color="#727cf5"
-                      class="radioGroup font-nunito"
-                    ></v-radio>
-                    <v-radio
-                      label="Giới nghiêm"
-                      value="limit"
-                      color="#727cf5"
-                      class="radioGroup font-nunito"
-                    ></v-radio>
-                  </v-radio-group>
-                </v-col>
-                <v-col cols="4">
-                  <div class="d-flex flex-row mt-2">
-                    <el-time-select
-                      placeholder="Mở cổng"
-                      v-model="newGroupValue.curfewTime.startTime"
-                      :picker-options="{
-                        start: '00:00',
-                        step: '00:15',
-                        end: '23:30',
-                      }"
-                      @change="setNewGroupValue(newGroupValue)"
-                      v-show="showCurfewTime"
-                    >
-                    </el-time-select>
-                  </div>
-                </v-col>
-                <v-col cols="4">
-                  <div class="d-flex flex-row mt-2">
-                    <el-time-select
-                      v-show="showCurfewTime"
-                      placeholder="Đóng cổng"
-                      v-model="newGroupValue.curfewTime.endTime"
-                      :picker-options="{
-                        start: '00:00',
-                        step: '00:15',
-                        end: '23:30',
-                      }"
-                      @change="setNewGroupValue(newGroupValue)"
-                    >
-                    </el-time-select>
-                  </div>
+                  <v-text-field
+                    class="size-sub form"
+                    type="number"
+                    color="#727cf5"
+                    solo
+                    dense
+                    light
+                    hide-details
+                    v-model="newGroupValue.downPayment"
+                    suffix="VNĐ"
+                    step="100000"
+                    min="0"
+                    :rules="[rules.min(groupInfo.downPayment)]"
+                    @input="setNewGroupValue(newGroupValue)"
+                  />
                 </v-col>
                 <v-col cols="8" class="d-flex flex-column">
                   <span class="field-name font-weight-medium d-flex align-center mb-0 font-nunito"
@@ -188,51 +226,17 @@
                     </v-col>
                   </div>
                 </v-col>
-                <v-col cols="4" class="d-flex flex-column">
-                  <span class="field-name font-weight-medium d-flex align-center mb-0 font-nunito"
-                    >Cọc giữ chân<v-tooltip right>
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn icon v-bind="attrs" v-on="on">
-                          <v-icon small color="#fa5c7c">mdi-account-question</v-icon>
-                        </v-btn>
-                      </template>
-                      <span class="font-nunito"
-                        >Là người có thể liên lạc khi tới xem phòng, nếu là chủ trọ, bạn có thể để
-                        trống</span
-                      >
-                    </v-tooltip>
-                  </span>
-                  <div class="d-flex">
-                    <v-col cols="12" class="pa-0">
-                      <v-text-field
-                        class="size-sub form"
-                        type="number"
-                        color="#727cf5"
-                        solo
-                        dense
-                        light
-                        hide-details
-                        v-model="newGroupValue.downPayment"
-                        suffix="VNĐ"
-                        step="100000"
-                        min="0"
-                        :rules="[rules.min(groupInfo.downPayment)]"
-                        @input="setNewGroupValue(newGroupValue)"
-                      />
-                    </v-col>
-                  </div>
-                </v-col>
               </v-row>
             </v-col>
             <v-col cols="12" md="6" class="pa-0 d-flex justify-end">
               <v-col cols="11" class="pa-0">
                 <v-tabs background-color="#EEF2F7" show-arrows center-active>
-                  <v-tab
+                  <!-- <v-tab
                     class="font-nunito text-gray size9rem text-capitalize utilities-category"
                     style="letter-spacing: 0.01rem !important"
                   >
                     <span>Vị trí trên bản đồ</span>
-                  </v-tab>
+                  </v-tab> -->
                   <v-tab
                     class="font-nunito text-gray size9rem text-capitalize utilities-category"
                     style="letter-spacing: 0.01rem !important"
@@ -263,7 +267,7 @@
                   >
                     <span>Hợp đồng mẫu</span>
                   </v-tab>
-                  <v-tab-item>
+                  <!-- <v-tab-item>
                     <span class="font-nunito size9rem text-danger">Xác nhận lại địa chỉ</span>
                     <v-row>
                       <v-col cols="4" class="d-flex">
@@ -302,7 +306,7 @@
                         ></gmap-marker>
                       </gmap-map>
                     </div>
-                  </v-tab-item>
+                  </v-tab-item> -->
                   <v-tab-item> <ServiceManagement /></v-tab-item>
                   <v-tab-item><ScheduleManagement /></v-tab-item>
                   <v-tab-item><RegulationManagement /></v-tab-item>
@@ -416,6 +420,7 @@ export default {
       selectableAddresses: [],
       selectedAddress: '',
     },
+    addressComponents: [],
     e1: 1,
   }),
   methods: {
@@ -609,7 +614,7 @@ export default {
         userUnit: item.userUnit,
       }));
       const reqObj = {
-        address: this.newGroupValue.address,
+        address: this.addressObjForApi,
         appendixContract: 'string',
         buildingNo: this.newGroupValue.buildingNo,
         categoryId: this.newGroupValue.categoryId,
@@ -629,7 +634,8 @@ export default {
         services: groupService,
         vendorId: this.user.userId,
       };
-      // this.createHostelGroup(reqObj);
+      console.log(this.addressObjForApi);
+      this.createHostelGroup(reqObj);
       console.log(reqObj);
     },
     getPriceUnit(price) {
@@ -646,6 +652,41 @@ export default {
         servicePrice = price / 1000000000;
       }
       return { servicePrice, servicePriceUnit };
+    },
+    getAddress() {
+      console.log(this.addressString);
+      console.log(this.newGroupValue.buildingNo);
+      const address = this.addressString.split(this.newGroupValue.buildingNo)[1].trim();
+      let [streetName, wardName, districtName] = address.split(',');
+      if (streetName.startsWith('Đường')) {
+        streetName = `${streetName.split('Đường')[1]}`;
+      }
+      wardName = wardName.trim();
+      districtName = districtName.trim(); // let streetName = this.addressComponents.find(
+      //   (item) => item.types.some((type) => type === 'route') === true,
+      // );
+      // if (streetName) {
+      //   streetName = streetName.long_name;
+      //   if (streetName.startsWith('Đường')) {
+      //     streetName = `${streetName.split('Đường')[1]}`;
+      //   }
+      // }
+      // console.log(streetName);
+      // let wardName = this.addressComponents.find(
+      //   (item) => item.types.some((type) => type === 'administrative_area_level_2') === true,
+      // );
+      // if (wardName) {
+      //   wardName = wardName.long_name;
+      // }
+      // console.log(wardName);
+      // let provinceName = this.addressComponents.find(
+      //   (item) => item.types.some((type) => type === 'administrative_area_level_1') === true,
+      // );
+      // if (provinceName) {
+      //   provinceName = provinceName.long_name;
+      // }
+      // console.log(provinceName);
+      return { streetName, wardName, districtName };
     },
   },
   computed: {
@@ -679,12 +720,8 @@ export default {
     },
     ...mapState('renter/common', ['provinces', 'wards', 'districts', 'streets']),
     addressObjForApi() {
-      // eslint-disable-next-line
-      let [streetName, wardName, districtName] = this.coordsToString.selectedAddress.split(',');
+      const { streetName, wardName, districtName } = this.getAddress();
       console.log(streetName, wardName, districtName);
-      if (streetName.startsWith('Đ. ')) {
-        streetName = streetName.substring(3);
-      }
       const district = this.findDistrictByName(districtName);
       const ward = this.findWardByName(wardName, district.wards);
       const street = this.findStreetByName(streetName);
@@ -693,7 +730,7 @@ export default {
         districtId: district.districtId,
         wardId: ward.wardId,
         streetName,
-        buildingNo: this.buildingNo,
+        buildingNo: this.newGroupValue.buildingNo,
       };
       if (street) {
         obj.streetId = street.streetId;
@@ -788,5 +825,13 @@ export default {
 }
 .el-input__inner {
   color: #6c757d !important;
+}
+.address-autocomplete::placeholder {
+  color: #98a6ad;
+  font-family: 'Nunito', sans-serif !important;
+  font-weight: 300 !important;
+}
+.address-autocomplete:focus {
+  outline: none;
 }
 </style>
