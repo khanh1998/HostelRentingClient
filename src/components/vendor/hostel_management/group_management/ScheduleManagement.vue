@@ -4,36 +4,36 @@
       >Cài đặt lịch rảnh các ngày trong tuần để người thuê có thể gặp bạn hoặc quản lý của khu trọ
       để xem phòng trọ.</span
     >
-    {{ getTimes('08:10', '23:00', 'asc') }}
     <v-row>
       <v-col cols="4">
-        <div class="d-flex flex-row">
-          <el-time-select
-            placeholder="Từ"
-            v-model="from"
-            fg-input
-            :picker-options="{
-              start: '00:00',
-              step: '00:30',
-              end: '23:30',
-            }"
-          >
-          </el-time-select>
-        </div>
+        <v-autocomplete
+          v-model="from"
+          :items="getTimes('05:00', '22:00', 'asc')"
+          label="Từ"
+          class="size9rem font-nunito form"
+          solo
+          dense
+          color="indigo"
+          hide-details
+          background-color="white"
+          no-data-text="Không có kết quả phù hợp"
+          style="border: 1px solid #e1e1e1 !important; border-radius: 4px"
+        ></v-autocomplete>
       </v-col>
       <v-col cols="4">
-        <div class="d-flex flex-row">
-          <el-time-select
-            placeholder="Đến"
-            v-model="to"
-            :picker-options="{
-              start: '00:00',
-              step: '00:30',
-              end: '23:30',
-            }"
-          >
-          </el-time-select>
-        </div>
+        <v-autocomplete
+          v-model="to"
+          :items="getTimes(String(from), '22:00', 'asc')"
+          label="Đến"
+          class="size9rem font-nunito form"
+          solo
+          dense
+          color="indigo"
+          hide-details
+          background-color="white"
+          no-data-text="Không có kết quả phù hợp"
+          style="border: 1px solid #e1e1e1 !important; border-radius: 4px"
+        ></v-autocomplete>
       </v-col>
       <v-col cols="4">
         <div v-show="!visibleCreateSchedule">
@@ -89,7 +89,7 @@
         </v-menu>
       </v-col>
     </v-row>
-    <span class="font-nunito text-danger size9rem" v-show="!visibleCreateSchedule"
+    <span class="font-nunito red--text size-caption" v-show="!visibleCreateSchedule"
       >Vui lòng chọn thời gian rảnh</span
     >
     <v-row>
@@ -112,7 +112,7 @@ export default {
     selected: [],
     recommendList: [],
     values: '',
-    from: '',
+    from: '05:00',
     to: '',
     selectAll: false,
     selectDay: [],
@@ -172,10 +172,10 @@ export default {
       this.menu = false;
     },
     getTimes(from, to, sort) {
-      const time24h = new RegExp(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
-      if (!time24h.test(from) || !time24h.test(to)) {
-        return 'invalid format!';
-      }
+      // const time24h = new RegExp(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
+      // if (!time24h.test(from) || !time24h.test(to)) {
+      //   return 'invalid format!';
+      // }
       const [fromH, fromM] = from.split(':').map((m) => Number(m));
       const [toH, toM] = to.split(':').map((m) => Number(m));
       const hourArr = [...Array(toH - fromH + 1)];
@@ -210,9 +210,7 @@ export default {
       return preSort;
     },
   },
-  created() {
-    console.log(this.getTimes('08:01', '10:30', 'asc'));
-  },
+  created() {},
 };
 </script>
 
