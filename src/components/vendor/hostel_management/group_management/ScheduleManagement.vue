@@ -4,6 +4,7 @@
       >Cài đặt lịch rảnh các ngày trong tuần để người thuê có thể gặp bạn hoặc quản lý của khu trọ
       để xem phòng trọ.</span
     >
+    {{ getTimes('08:10', '23:00', 'asc') }}
     <v-row>
       <v-col cols="4">
         <div class="d-flex flex-row">
@@ -170,8 +171,48 @@ export default {
       this.setNewGroupValue(this.newGroup);
       this.menu = false;
     },
+    getTimes(from, to, sort) {
+      const time24h = new RegExp(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
+      if (!time24h.test(from) || !time24h.test(to)) {
+        return 'invalid format!';
+      }
+      const [fromH, fromM] = from.split(':').map((m) => Number(m));
+      const [toH, toM] = to.split(':').map((m) => Number(m));
+      const hourArr = [...Array(toH - fromH + 1)];
+      const preSort = hourArr.flatMap((_, index) => {
+        const indexHour = fromH + index;
+        console.log(fromM);
+        if (index === 0 && fromH === toH) {
+          return fromM === 0 && toM < 30 // eslint-disable-line
+            ? `${indexHour}:00` // eslint-disable-line
+            : fromM === 0 && toM >= 30 // eslint-disable-line
+            ? [`${indexHour}:00`, `${indexHour}:30`] // eslint-disable-line
+            : fromM <= 30 && toM >= 30 // eslint-disable-line
+            ? `${indexHour}:30` // eslint-disable-line
+            : []; // eslint-disable-line
+        }
+        if (index === 0) {
+          return fromM === 0 // eslint-disable-line
+            ? `${indexHour}:00` // eslint-disable-line
+            : fromM <= 30 // eslint-disable-line
+            ? `${indexHour}:30` // eslint-disable-line
+            : []; // eslint-disable-line
+        }
+        if (index === hourArr.length - 1) {
+          return toM < 30 ? `${indexHour}:00` : [`${indexHour}:00`, `${indexHour}:30`];
+        }
+        return [`${indexHour}:00`, `${indexHour}:30`];
+      });
+      if (sort === 'desc') {
+        return preSort.reverse();
+      }
+      console.log('ok');
+      return preSort;
+    },
   },
-  created() {},
+  created() {
+    console.log(this.getTimes('08:01', '10:30', 'asc'));
+  },
 };
 </script>
 

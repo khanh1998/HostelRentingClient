@@ -606,13 +606,40 @@ export default {
     },
     insertGroup() {
       const regulation = this.newGroupValue.regulation.map((item) => ({ regulationId: item }));
-      const groupService = this.newGroupValue.services.map((item) => ({
-        serviceId: item.serviceId,
-        price: this.getPriceUnit(item.price).servicePrice,
-        priceUnit: this.getPriceUnit(item.price).servicePriceUnit,
-        timeUnit: item.timeUnit,
-        userUnit: item.userUnit,
-      }));
+      const groupService = this.newGroupValue.services
+        .filter((item) => item.serviceId)
+        .map((item) => ({
+          serviceId: item.serviceId,
+          price:
+            item.price !== -1 && item.price !== -2
+              ? this.getPriceUnit(item.price).servicePrice // eslint-disable-line
+              : item.price, // eslint-disable-line
+          priceUnit:
+            item.price !== -1 && item.price !== -2
+              ? this.getPriceUnit(item.price).servicePriceUnit // eslint-disable-line
+              : null, // eslint-disable-line
+          timeUnit: item.timeUnit,
+          userUnit: item.price !== -1 && item.price !== -2 ? item.userUnit : null,
+          isRequired: item.isRequired,
+        }));
+      console.log(groupService);
+      const newGroupServices = this.newGroupValue.services
+        .filter((item) => !item.serviceId)
+        .map((item) => ({
+          price:
+            item.price !== -1 && item.price !== -2
+              ? this.getPriceUnit(item.price).servicePrice // eslint-disable-line
+              : item.price, // eslint-disable-line
+          priceUnit:
+            item.price !== -1 && item.price !== -2
+              ? this.getPriceUnit(item.price).servicePriceUnit // eslint-disable-line
+              : null, // eslint-disable-line
+          timeUnit: item.timeUnit,
+          userUnit: item.price !== -1 && item.price !== -2 ? item.userUnit : null,
+          serviceName: item.serviceName,
+          isRequired: item.isRequired,
+        }));
+      console.log(newGroupServices);
       const reqObj = {
         address: this.addressObjForApi,
         appendixContract: 'string',
@@ -630,12 +657,22 @@ export default {
         managerPhone: this.newGroupValue.managerPhone,
         ownerJoin: this.newGroupValue.ownerJoin,
         regulations: regulation,
+        newRegulations: this.newGroupValue.newRegulations.map((item) => ({
+          regulationName: item.regulationName,
+        })),
         schedules: this.newGroupValue.schedules,
         services: groupService,
+        newServices: newGroupServices,
         vendorId: this.user.userId,
       };
       console.log(this.addressObjForApi);
-      this.createHostelGroup(reqObj);
+      this.createHostelGroup(reqObj).then(() => {
+        if (this.isCreatedGroupStatus) {
+          this.closeDialog();
+        } else {
+          console.log('not success');
+        }
+      });
       console.log(reqObj);
     },
     getPriceUnit(price) {
@@ -713,7 +750,11 @@ export default {
       const allCategories = this.$store.state.renter.filterResult.filter.categories.isLoading;
       const allRules = this.$store.state.renter.common.rules.isLoading;
       const allSchedule = this.$store.state.renter.common.schedule.isLoading;
-      return allServices || allCategories || allRules || allSchedule;
+      const isCreatingGroup = this.$store.state.vendor.group.groups.isCreating;
+      return allServices || allCategories || allRules || allSchedule || isCreatingGroup;
+    },
+    isCreatedGroupStatus() {
+      return this.$store.state.vendor.group.groups.success;
     },
     newGroupValue() {
       return this.$store.state.vendor.group.newGroup;

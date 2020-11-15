@@ -1,7 +1,14 @@
 <template>
   <v-col cols="12" class="d-flex align-center py-1">
     <span
-      style="width: 100px; background-color: #e9ecef; opacity: 1; border: 1px solid #e9ecef"
+      style="
+        width: 100px;
+        min-width: 100px;
+        height: 100%;
+        background-color: #e9ecef;
+        opacity: 1;
+        border: 1px solid #e9ecef;
+      "
       class="text-capitalize d-flex justify-center align-center font-nunito text-gray-dark py-1"
       >{{ scheduleName }}</span
     >

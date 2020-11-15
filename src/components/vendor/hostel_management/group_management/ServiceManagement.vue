@@ -66,11 +66,11 @@
                   style="border-right: 1px solid #eef2f7; border-left: 1px solid #eef2f7"
                 >
                   <v-checkbox
-                    v-model="required"
+                    v-model="newGroup.services[index].isRequired"
                     color="#727cf5"
-                    :value="item.serviceId"
                     hide-details
                     class="filter my-0"
+                    @change="setNewGroupValue(newGroup)"
                   ></v-checkbox>
                 </v-col>
                 <v-col
@@ -102,7 +102,8 @@
                   <span
                     class="font-nunito text-black size-sub-3"
                     v-if="
-                      priceSuggestion && (!item.price || item.price === -2 || item.price === -1)
+                      item.priceSuggestion &&
+                      (!item.price || item.price === -2 || item.price === -1)
                     "
                     >{{ item.priceSuggestion }}</span
                   >
@@ -131,11 +132,11 @@
                   style="border-right: 1px solid #eef2f7"
                 >
                   <v-checkbox
-                    v-model="required"
+                    v-model="newGroup.services[index].isRequired"
                     color="#727cf5"
-                    :value="item.serviceId"
                     hide-details
                     class="filter my-0"
+                    @change="setNewGroupValue(newGroup)"
                   ></v-checkbox>
                 </v-col>
                 <v-col
@@ -167,7 +168,8 @@
                   <span
                     class="font-nunito text-black size-sub-3"
                     v-if="
-                      priceSuggestion && (!item.price || item.price === -2 || item.price === -1)
+                      item.priceSuggestion &&
+                      (!item.price || item.price === -2 || item.price === -1)
                     "
                     >{{ item.priceSuggestion }}</span
                   >
@@ -453,6 +455,7 @@ export default {
       userUnit: 'phòng',
       timeUnit: '1 tháng',
       serviceName: null,
+      isRequired: false,
     },
     otherService: {
       checkbox: false,
@@ -462,6 +465,7 @@ export default {
       timeUnit: '1 tháng',
       isDynamicPrice: false,
       isProgressivePrice: false,
+      isRequired: false,
     },
     service: {
       userUnit: ['VNĐ/Phòng', 'VNĐ/Người'],
@@ -590,15 +594,14 @@ export default {
             this.duplicateMsg = `Bạn không thể tạo 2 loại dịch vụ "${serviceName}"`;
           }
         }
+      } else if (
+        this.newGroup.services.filter(
+          (item) => item.serviceName.includes(this.otherService.serviceName), // eslint-disable-line
+        ).length > 0
+      ) {
+        this.duplicateMsg = `Bạn không thể tạo 2 loại dịch vụ "${this.otherService.serviceName}"`;
       } else {
-        const { serviceName } = this.newGroup.services.find(
-          (service) => service.serviceName === this.otherService.serviceName,
-        );
-        if (
-          this.newGroup.services.filter((item) => item.serviceName.includes(serviceName)).length > 0
-        ) {
-          this.duplicateMsg = `Bạn không thể tạo 2 loại dịch vụ "${serviceName}"`;
-        }
+        this.duplicateMsg = '';
       }
     },
     validate() {
@@ -676,6 +679,7 @@ export default {
             priceSuggestion: this.addNew.priceSuggestion,
             timeUnit: this.addNew.timeUnit,
             userUnit: this.addNew.userUnit,
+            isRequired: true,
           });
           this.resetAddnewValue();
           this.setNewGroupValue(this.newGroup);
@@ -697,6 +701,7 @@ export default {
             priceSuggestion: newServicePriceSugg,
             timeUnit: this.addNew.timeUnit,
             userUnit: this.addNew.userUnit,
+            isRequired: true,
           });
           this.setNewGroupValue(this.newGroup);
           this.resetAddnewValue();

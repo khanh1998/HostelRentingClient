@@ -216,7 +216,8 @@ const mutations = {
   },
   CREATE_HOSTEL_GROUP_SUCCESS: (state, createdNewGroup) => {
     state.groups.isCreating = false;
-    state.groups.data.unshift(createdNewGroup);
+    console.log(state.groups.data, createdNewGroup);
+    // state.groups.data.unshift(createdNewGroup);
     state.groups.success = true;
   },
   CREATE_HOSTEL_GROUP_FAILURE: (state, error) => {
