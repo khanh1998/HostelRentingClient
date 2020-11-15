@@ -136,6 +136,7 @@
         </v-btn>
       </div>
     </editor-menu-bar>
+    <v-switch v-model="isUsingTemplate" :label="`Phụ lục hợp đồng mẫu`"></v-switch>
     <v-divider class="my-2" />
     <editor-content class="editor__content" :editor="editor" />
     <v-divider class="mb-2" />
@@ -143,7 +144,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { Editor, EditorContent, EditorMenuBar } from 'tiptap';
 import {
   Blockquote,
@@ -206,14 +206,6 @@ export default {
           <h3>
             Nội dung của phụ lục hợp đồng,
           </h3>
-          <ul>
-            <li>
-              Điều thứ 1
-            </li>
-            <li>
-              Điều thứ 2
-            </li>
-          </ul>
         `,
       });
     },
@@ -223,16 +215,18 @@ export default {
       editor: null,
       isLoadingTemplate: false,
       template: null,
+      isUsingTemplate: false,
+      initContent: null,
     };
   },
   created() {
     this.editor = this.setEditorContent();
     if (this.templateUrl) {
       try {
-        axios.get(this.templateUrl).then((res) => {
+        fetch(this.templateUrl).then(async (res) => {
           console.log(res);
-          this.template = res.data;
-          this.editor.setContent(this.template);
+          this.template = await res.text();
+          // this.editor.setContent(this.template);
           this.isLoadingTemplate = false;
         });
       } catch (error) {
@@ -242,6 +236,7 @@ export default {
     }
     if (this.editorContent) {
       this.editor.setContent(this.editorContent);
+      this.initContent = this.editorContent;
     }
   },
   beforeDestroy() {
@@ -251,6 +246,15 @@ export default {
     htmlContent: {
       handler() {
         this.$emit('appendixContent', this.htmlContent);
+      },
+    },
+    isUsingTemplate: {
+      handler(using) {
+        if (using) {
+          this.editor.setContent(this.template);
+        } else {
+          this.editor.setContent(this.initContent);
+        }
       },
     },
   },
