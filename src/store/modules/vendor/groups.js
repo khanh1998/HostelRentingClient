@@ -216,8 +216,28 @@ const mutations = {
   },
   CREATE_HOSTEL_GROUP_SUCCESS: (state, createdNewGroup) => {
     state.groups.isCreating = false;
-    console.log(state.groups.data, createdNewGroup);
-    // state.groups.data.unshift(createdNewGroup);
+    const newGroup = {
+      address: createdNewGroup[0].address,
+      appendixContract: createdNewGroup[0].appendixContract,
+      buildingNo: createdNewGroup[0].buildingNo,
+      category: createdNewGroup[0].category,
+      curfewTime: createdNewGroup[0].curfewTime,
+      downPayment: createdNewGroup[0].downPayment,
+      groupId: createdNewGroup[0].groupId,
+      groupName: createdNewGroup[0].groupName,
+      imgUrl: createdNewGroup[0].imgUrl,
+      latitude: createdNewGroup[0].latitude,
+      longitude: createdNewGroup[0].longitude,
+      managerName: createdNewGroup[0].managerName,
+      managerPhone: createdNewGroup[0].managerPhone,
+      ownerJoin: createdNewGroup[0].ownerJoin,
+      regulations: createdNewGroup[0].regulations,
+      schedules: createdNewGroup[0].schedules,
+      services: createdNewGroup[0].services,
+      types: [],
+      vendorId: createdNewGroup.vendorId,
+    };
+    state.groups.data.unshift(newGroup);
     state.groups.success = true;
   },
   CREATE_HOSTEL_GROUP_FAILURE: (state, error) => {
