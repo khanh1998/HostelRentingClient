@@ -324,6 +324,34 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="warningDialog" max-width="400" hide-overlay>
+      <v-card>
+        <v-card-title class="d-flex flex-column justify-center px-8">
+          <v-icon large class="material-icons-outlined" color="#ffbc00">report_problem</v-icon>
+          <span
+            class="text-gray font-nunito"
+            style="
+              font-size: 1.125rem !important;
+              text-align: center !important;
+              font-weight: 700 !important;
+            "
+            >Vui lòng điền đầy đủ các thông tin!</span
+          >
+        </v-card-title>
+        <div
+          class="font-nunito"
+          style="
+            font-size: 0.9rem;
+            font-weight: 400;
+            text-align: center !important;
+            color: #ffbc00;
+            padding: 0px 20px 20px;
+          "
+        >
+          {{ emptyElement }}
+        </div>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 <script>
@@ -332,27 +360,15 @@ import ServiceManagement from './ServiceManagement.vue';
 import RegulationManagement from './RegulationManagement.vue';
 import AvatarManagement from './AvatarManagement.vue';
 import ScheduleManagement from './ScheduleManagement.vue';
-// import snackBarMixin from '../../mixins/snackBar';
-// import PlacePicker from './PlacePicker.vue';
-// import HostelGroupRules from './HostelGroupRules.vue';
-// import HostelGroupServiceEditor from './HostelGroupServiceEditor.vue';
-// import TableOfContent from './TableOfContent.vue';
-// import ScheduleForCreated from '../schedule/ScheduleTableForCreated.vue';
 
 export default {
   name: 'GroupManagement',
   props: ['show', 'create', 'update'],
-  // mixins: [snackBarMixin],
   components: {
     ServiceManagement,
     RegulationManagement,
     AvatarManagement,
     ScheduleManagement,
-    // PlacePicker,
-    // HostelGroupRules,
-    // HostelGroupServiceEditor,
-    // TableOfContent,
-    // ScheduleForCreated,
   },
   data: () => ({
     newGroup: {
@@ -404,7 +420,7 @@ export default {
     center: { lat: 10.8230989, lng: 106.6296638 },
     marker: { position: { lat: 10.8230989, lng: 106.6296638 } },
     place: { position: { lat: 10.8230989, lng: 106.6296638 } },
-    addressString: 'Thành phố Hồ Chí Minh',
+    addressString: '',
     gmap: {
       bounds: {
         north: 11.1602136,
@@ -422,6 +438,8 @@ export default {
     },
     addressComponents: [],
     e1: 1,
+    warningDialog: false,
+    emptyElement: '',
   }),
   methods: {
     ...mapActions({
@@ -604,76 +622,174 @@ export default {
       });
       console.log(this.addressObjForApi);
     },
-    insertGroup() {
-      const regulation = this.newGroupValue.regulation.map((item) => ({ regulationId: item }));
-      const groupService = this.newGroupValue.services
-        .filter((item) => item.serviceId)
-        .map((item) => ({
-          serviceId: item.serviceId,
-          price:
-            item.price !== -1 && item.price !== -2
-              ? this.getPriceUnit(item.price).servicePrice // eslint-disable-line
-              : item.price, // eslint-disable-line
-          priceUnit:
-            item.price !== -1 && item.price !== -2
-              ? this.getPriceUnit(item.price).servicePriceUnit // eslint-disable-line
-              : null, // eslint-disable-line
-          timeUnit: item.timeUnit,
-          userUnit: item.price !== -1 && item.price !== -2 ? item.userUnit : null,
-          isRequired: item.isRequired,
-        }));
-      console.log(groupService);
-      const newGroupServices = this.newGroupValue.services
-        .filter((item) => !item.serviceId)
-        .map((item) => ({
-          price:
-            item.price !== -1 && item.price !== -2
-              ? this.getPriceUnit(item.price).servicePrice // eslint-disable-line
-              : item.price, // eslint-disable-line
-          priceUnit:
-            item.price !== -1 && item.price !== -2
-              ? this.getPriceUnit(item.price).servicePriceUnit // eslint-disable-line
-              : null, // eslint-disable-line
-          timeUnit: item.timeUnit,
-          userUnit: item.price !== -1 && item.price !== -2 ? item.userUnit : null,
-          serviceName: item.serviceName,
-          isRequired: item.isRequired,
-        }));
-      console.log(newGroupServices);
-      const reqObj = {
-        address: this.addressObjForApi,
-        appendixContract: 'string',
-        buildingNo: this.newGroupValue.buildingNo,
-        categoryId: this.newGroupValue.categoryId,
-        curfewTime:
-          this.newGroupValue.curfewTime.limit === true
-            ? `${this.newGroupValue.curfewTime.startTime}-${this.newGroupValue.curfewTime.endTime}` // eslint-disable-line
-            : null, // eslint-disable-line
-        downPayment: this.newGroupValue.downPayment,
-        groupName: this.newGroupValue.groupName,
-        latitude: this.newGroupValue.latitude,
-        longitude: this.newGroupValue.longitude,
-        managerName: this.newGroupValue.managerName,
-        managerPhone: this.newGroupValue.managerPhone,
-        ownerJoin: this.newGroupValue.ownerJoin,
-        regulations: regulation,
-        newRegulations: this.newGroupValue.newRegulations.map((item) => ({
-          regulationName: item.regulationName,
-        })),
-        schedules: this.newGroupValue.schedules,
-        services: groupService,
-        newServices: newGroupServices,
-        vendorId: this.user.userId,
-      };
-      console.log(this.addressObjForApi);
-      this.createHostelGroup(reqObj).then(() => {
-        if (this.isCreatedGroupStatus) {
-          this.closeDialog();
-        } else {
-          console.log('not success');
+    validateNewregulation() {
+      let flag = 0;
+      this.newGroupValue.newRegulations.forEach((item) => {
+        if (item.regulationName.trim() === '') {
+          flag += 1;
         }
       });
-      console.log(reqObj);
+      return flag;
+    },
+    checkDuplicateNewRegulation() {
+      let flag = 0;
+      this.newGroupValue.newRegulations.forEach((item) => {
+        if (
+          this.allRules.filter(
+            (rule) =>
+              rule.regulationName.toLowerCase().trim() === item.regulationName.toLowerCase().trim(), // eslint-disable-line
+          ).length > 0
+        ) {
+          flag += 1;
+        }
+      });
+      return flag;
+    },
+    validateFullAddress() {
+      return this.addressString.includes(this.newGroupValue.buildingNo.trim());
+    },
+    validate() {
+      console.log(this.addressString);
+      console.log(this.newGroupValue);
+      this.emptyElement = '';
+      this.emptyElement +=
+        this.newGroupValue.groupName.trim() === '' // eslint-disable-line
+          ? this.emptyElement === '' // eslint-disable-line
+            ? 'Tên nhà trọ' // eslint-disable-line
+            : ', tên nhà trọ' // eslint-disable-line
+          : ''; // eslint-disable-line
+      this.emptyElement +=
+        this.newGroupValue.buildingNo.trim() === '' // eslint-disable-line
+          ? this.emptyElement === '' // eslint-disable-line
+            ? 'Số nhà' // eslint-disable-line
+            : ', số nhà' // eslint-disable-line
+          : ''; // eslint-disable-line
+      if (this.newGroupValue.buildingNo.trim() !== '' && this.addressString.trim() !== '') {
+        console.log(this.validateFullAddress());
+        !this.validateFullAddress() // eslint-disable-line
+          ? this.emptyElement === '' // eslint-disable-line
+            ? 'Vui lòng nhập địa chỉ đầy đủ (bao gồm số nhà, tên đường, tên phường, quận, thành phố)' // eslint-disable-line
+            : ', nhập địa chỉ đầy đủ (bao gồm số nhà, tên đường, tên phường, quận, thành phố)' // eslint-disable-line
+          : ''; // eslint-disable-line
+      }
+      this.emptyElement +=
+        this.addressString.trim() === '' // eslint-disable-line
+          ? this.emptyElement === '' // eslint-disable-line
+            ? 'địa chỉ đầy đủ' // eslint-disable-line
+            : ', địa chỉ đầy đủ' // eslint-disable-line
+          : ''; // eslint-disable-line
+      if (this.newGroupValue.curfewTime.limit) {
+        this.emptyElement +=
+          this.newGroupValue.curfewTime.startTime === '' // eslint-disable-line
+            ? this.emptyElement === '' // eslint-disable-line
+              ? 'Thời gian mở cổng' // eslint-disable-line
+              : ', thời gian mở cổng' // eslint-disable-line
+            : ''; // eslint-disable-line
+        this.emptyElement +=
+          this.newGroupValue.curfewTime.endTime === '' // eslint-disable-line
+            ? this.emptyElement === '' // eslint-disable-line
+              ? 'Thời gian đóng cổng' // eslint-disable-line
+              : ', thời gian đóng cổng' // eslint-disable-line
+            : ''; // eslint-disable-line
+      }
+      this.emptyElement +=
+        this.newGroupValue.schedules.length === 0 // eslint-disable-line
+          ? this.emptyElement === '' // eslint-disable-line
+            ? 'Lịch rảnh' // eslint-disable-line
+            : ', lịch rảnh' // eslint-disable-line
+          : ''; // eslint-disable-line
+      if (this.newGroupValue.newRegulations.length > 0) {
+        this.emptyElement +=
+          this.validateNewregulation() > 0 // eslint-disable-line
+            ? this.emptyElement === '' // eslint-disable-line
+              ? 'Tên nội quy' // eslint-disable-line
+              : ', tên nội quy' // eslint-disable-line
+            : ''; // eslint-disable-line
+        console.log(this.checkDuplicateNewRegulation());
+        this.emptyElement +=
+          this.checkDuplicateNewRegulation() >= 1 // eslint-disable-line
+            ? this.emptyElement === '' // eslint-disable-line
+              ? 'Nội quy bổ sung đã tồn tại' // eslint-disable-line
+              : ', nội quy bổ sung đã tồn tại' // eslint-disable-line
+            : ''; // eslint-disable-line
+      }
+    },
+    insertGroup() {
+      this.validate();
+      if (this.emptyElement === '') {
+        const regulation = this.newGroupValue.regulation.map((item) => ({ regulationId: item }));
+        const groupService = this.newGroupValue.services
+          .filter((item) => item.serviceId)
+          .map((item) => ({
+            serviceId: item.serviceId,
+            price:
+              item.price !== -1 && item.price !== -2
+                ? this.getPriceUnit(item.price).servicePrice // eslint-disable-line
+                : item.price, // eslint-disable-line
+            priceUnit:
+              item.price !== -1 && item.price !== -2
+                ? this.getPriceUnit(item.price).servicePriceUnit // eslint-disable-line
+                : null, // eslint-disable-line
+            timeUnit: item.timeUnit,
+            userUnit: item.price !== -1 && item.price !== -2 ? item.userUnit : null,
+            isRequired: item.isRequired,
+          }));
+        console.log(groupService);
+        const newGroupServices = this.newGroupValue.services
+          .filter((item) => !item.serviceId)
+          .map((item) => ({
+            price:
+              item.price !== -1 && item.price !== -2
+                ? this.getPriceUnit(item.price).servicePrice // eslint-disable-line
+                : item.price, // eslint-disable-line
+            priceUnit:
+              item.price !== -1 && item.price !== -2
+                ? this.getPriceUnit(item.price).servicePriceUnit // eslint-disable-line
+                : null, // eslint-disable-line
+            timeUnit: item.timeUnit,
+            userUnit: item.price !== -1 && item.price !== -2 ? item.userUnit : null,
+            serviceName: item.serviceName,
+            isRequired: item.isRequired,
+          }));
+        console.log(newGroupServices);
+        const reqObj = {
+          address: this.addressObjForApi,
+          appendixContract: 'string',
+          buildingNo: this.newGroupValue.buildingNo,
+          categoryId: this.newGroupValue.categoryId,
+          curfewTime:
+            this.newGroupValue.curfewTime.limit === true
+              ? `${this.newGroupValue.curfewTime.startTime}-${this.newGroupValue.curfewTime.endTime}` // eslint-disable-line
+              : null, // eslint-disable-line
+          downPayment: this.newGroupValue.downPayment,
+          groupName: this.newGroupValue.groupName,
+          imgUrl: this.newGroupValue.avatar,
+          latitude: this.newGroupValue.latitude,
+          longitude: this.newGroupValue.longitude,
+          managerName: this.newGroupValue.managerName,
+          managerPhone: this.newGroupValue.managerPhone,
+          ownerJoin: this.newGroupValue.ownerJoin,
+          regulations: regulation,
+          newRegulations: this.newGroupValue.newRegulations.map((item) => ({
+            regulationName: item.regulationName,
+          })),
+          schedules: this.newGroupValue.schedules,
+          services: groupService,
+          newServices: newGroupServices,
+          vendorId: this.user.userId,
+        };
+        console.log(this.addressObjForApi);
+        this.createHostelGroup(reqObj).then(() => {
+          if (this.isCreatedGroupStatus) {
+            this.closeDialog();
+          } else {
+            console.log('not success');
+          }
+        });
+        console.log(reqObj);
+      } else {
+        this.warningDialog = true;
+      }
     },
     getPriceUnit(price) {
       let servicePriceUnit = null;
