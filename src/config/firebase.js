@@ -5,14 +5,14 @@ import 'firebase/messaging';
 import 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBBMSCn0GUkuDCYZP-7-KkOTrZRE1gDIew',
-  authDomain: 'nhatro-sac.firebaseapp.com',
-  databaseURL: 'https://nhatro-sac.firebaseio.com',
-  projectId: 'nhatro-sac',
-  storageBucket: 'nhatro-sac.appspot.com',
-  messagingSenderId: '879858757535',
-  appId: '1:879858757535:web:f5f71b5d1ff47e1e6617aa',
-  measurementId: 'G-P5LQV1RXZD',
+  apiKey: 'AIzaSyCWNT4MhALulebmekYoHKbwyAx-htB76tA',
+  authDomain: 'td-vue-firestore-chat.firebaseapp.com',
+  databaseURL: 'https://td-vue-firestore-chat.firebaseio.com',
+  projectId: 'td-vue-firestore-chat',
+  storageBucket: 'td-vue-firestore-chat.appspot.com',
+  messagingSenderId: '223687361307',
+  appId: '1:223687361307:web:ed8fd5232accfb095f09be',
+  measurementId: 'G-0K8CSPWJ17',
 };
 firebase.initializeApp(firebaseConfig);
 // initialize cloud firestore through firebase
