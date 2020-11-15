@@ -4,7 +4,7 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container fluid v-if="!isLoading && isSearchError !== 500" class="px-0">
-      <v-row justify="center" style="background-color: #f3f4f9;">
+      <v-row justify="center" style="background-color: #f3f4f9">
         <v-col
           cols="12"
           sm="12"
@@ -84,7 +84,7 @@
                 <ArticleList :list="list" class="mt-4" :page="page" />
               </div>
               <v-card v-else>
-                <v-card-text class="font-nunito text-gray" style="font-size: 1rem;"
+                <v-card-text class="font-nunito text-gray" style="font-size: 1rem"
                   >Không tìm thấy kết quả phù hợp !</v-card-text
                 >
               </v-card>
