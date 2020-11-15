@@ -1,5 +1,8 @@
 <template>
   <div class="editor">
+    <v-overlay :value="isLoadingTemplate">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
     <v-divider class="mt-2" />
     <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
       <div class="menubar">
@@ -140,6 +143,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { Editor, EditorContent, EditorMenuBar } from 'tiptap';
 import {
   Blockquote,
@@ -162,11 +166,12 @@ import {
 } from 'tiptap-extensions';
 
 export default {
+  name: 'TextEditor',
   components: {
     EditorContent,
     EditorMenuBar,
   },
-  props: ['editorContent'],
+  props: ['editorContent', 'templateUrl'],
   computed: {
     htmlContent() {
       if (this.editor) {
@@ -216,10 +221,25 @@ export default {
   data() {
     return {
       editor: null,
+      isLoadingTemplate: false,
+      template: null,
     };
   },
   created() {
     this.editor = this.setEditorContent();
+    if (this.templateUrl) {
+      try {
+        axios.get(this.templateUrl).then((res) => {
+          console.log(res);
+          this.template = res.data;
+          this.editor.setContent(this.template);
+          this.isLoadingTemplate = false;
+        });
+      } catch (error) {
+        console.log(error);
+        this.isLoadingTemplate = false;
+      }
+    }
     if (this.editorContent) {
       this.editor.setContent(this.editorContent);
     }

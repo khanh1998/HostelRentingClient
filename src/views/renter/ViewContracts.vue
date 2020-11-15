@@ -42,7 +42,7 @@
         </v-toolbar>
         <div class="d-flex flex-column justify-center pa-2">
           <div style="height: calc(100vh - 128px); overflow: hidden">
-            <WebViewer :initialDoc="contractOverlay.contract.contractUrl" />
+            <PDFDocument :url="contractOverlay.contract.contractUrl" :scale="scale" />
           </div>
           <div v-if="contractOverlay.action === 'activate'" class="d-flex justify-center">
             <v-btn class="ma-1" outlined color="red" text @click="doActivateContract">
@@ -112,13 +112,14 @@
 <script>
 import { mapActions } from 'vuex';
 import contractItem from '@/components/view_contracts/contractItem.vue';
-import WebViewer from '../../components/vendor/contract/WebViewer.vue';
 import snackBarMixin from '../../components/mixins/snackBar';
+import PDFDocument from '../../components/vendor/pdfviewer/PDFDocument.vue';
+import mobileMixin from '../../components/mixins/mobile';
 
 export default {
   name: 'ViewContracts',
-  components: { contractItem, WebViewer },
-  mixins: [snackBarMixin],
+  components: { contractItem, PDFDocument },
+  mixins: [snackBarMixin, mobileMixin],
   data: () => ({
     contractOverlay: {
       show: false,
@@ -176,6 +177,12 @@ export default {
     });
   },
   computed: {
+    scale() {
+      if (this.isMobile) {
+        return 2.5;
+      }
+      return 1;
+    },
     isLoading() {
       const loadingUser = this.$store.state.user.user.isLoading;
       const loadingContracts = this.$store.state.user.contracts.isLoading;

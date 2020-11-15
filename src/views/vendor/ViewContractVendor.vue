@@ -48,7 +48,7 @@
                     :indeterminate="false"
                     :query="true"
                   ></v-progress-linear>
-                  <WebViewer :initialDoc="currentContract.contractUrl" />
+                  <pdfDocument :url="currentContract.contractUrl" :scale="scale" />
                 </div>
               </v-card>
             </v-dialog>
@@ -90,11 +90,13 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import WebViewer from '../../components/vendor/contract/WebViewer.vue';
+import pdfDocument from '../../components/vendor/pdfviewer/PDFDocument.vue';
+import mobileMixin from '../../components/mixins/mobile';
 
 export default {
   name: 'ViewContractVendor',
-  components: { WebViewer },
+  mixins: [mobileMixin],
+  components: { pdfDocument },
   data: () => ({
     // search
     search: '',
@@ -272,6 +274,12 @@ export default {
     });
   },
   computed: {
+    scale() {
+      if (this.isMobile) {
+        return 2.5;
+      }
+      return 1;
+    },
     isLoading() {
       const loadingUser = this.$store.state.user.user.isLoading;
       const loadingContracts = this.$store.state.user.contracts.isLoading;
@@ -279,8 +287,11 @@ export default {
       // const loadingProvinces = this.$store.state.renter.common.provinces.isLoading;
       return loadingUser || loadingContracts;
     },
+    contracts() {
+      return this.$store.state.user.contracts;
+    },
     allContracts() {
-      return this.$store.state.user.contracts.data.map((item) => ({
+      return this.contracts.data.map((item) => ({
         contractId: item.contractId,
         renterName: item.renter.username,
         groupName: item.group.groupName,
