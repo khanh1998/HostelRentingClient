@@ -549,6 +549,15 @@ export default {
       this.messCollectionRef.parent.update({
         lastedMessage: newContent,
       });
+      this.sendNotification({
+        title: `Trả giá mới từ: ${this.userState.data.username}`,
+        body: `${this.info.price}tr -> ${this.bargainOverlay.price}tr`,
+        action: 'NEW_MESSAGE',
+        id: '',
+        icon: this.userState.data.avatar,
+        vendorId: Number(this.id.vendorId),
+        renterId: null,
+      });
     },
     book(content) {
       this.bargainOverlay.show = false;
@@ -563,17 +572,18 @@ export default {
       const lastedDeal = this.findLastedDeal(renterId, vendorId, typeId);
       const dateTime = this.dateTimeOverlay.date.split('/');
       const timeTime = this.dateTimeOverlay.time.split(':');
+      const meetTime = new Date(
+        dateTime[2],
+        dateTime[1] - 1,
+        dateTime[0],
+        timeTime[0],
+        timeTime[1],
+      ).getTime();
       const bookingToApi = {
         renterId,
         vendorId,
         typeId,
-        meetTime: new Date(
-          dateTime[2],
-          dateTime[1] - 1,
-          dateTime[0],
-          timeTime[0],
-          timeTime[1],
-        ).getTime(),
+        meetTime,
         dealId: lastedDeal ? lastedDeal.dealId : null,
         status: 'INCOMING',
       };
@@ -585,6 +595,15 @@ export default {
         this.messCollectionRef.parent.update({
           lastedMessage: newContent,
         });
+        this.sendNotification({
+          title: `Lịch hẹn mới từ: ${this.userState.data.username}`,
+          body: `Thời gian: ${meetTime}`,
+          action: 'NEW_MESSAGE',
+          id: '',
+          icon: this.userState.data.avatar,
+          vendorId: Number(this.id.vendorId),
+          renterId: null,
+        });
       });
     },
     sendMessage(type = null) {
@@ -595,16 +614,6 @@ export default {
         createdAt: Date.now(),
         sender: 'renter',
       };
-      this.sendNotification({
-        title: `Tin nhắn mới từ: ${this.userState.data.username}`,
-        body: `${this.inputChat.text}`,
-        action: 'NEW_MESSAGE',
-        id: '',
-        icon: this.userState.data.avatar,
-        vendorId: Number(this.id.vendorId),
-        renterId: null,
-      });
-      console.log(content);
       this.createDoc().then(() => {
         if (type === null) {
           console.log('content', content);
@@ -612,14 +621,24 @@ export default {
           this.docRef.update({
             lastedMessage: content,
           });
+          this.sendNotification({
+            title: `Tin nhắn mới từ: ${this.userState.data.username}`,
+            body: `${this.inputChat.text}`,
+            action: 'NEW_MESSAGE',
+            id: '',
+            icon: this.userState.data.avatar,
+            vendorId: Number(this.id.vendorId),
+            renterId: null,
+          });
         } else if (type === 'book') {
           this.book(content);
         } else if (type === 'bargain') {
-          console.log('bargain');
-          console.log(content);
           this.bargain(content);
           this.bargainOverlay.step = 1;
         }
+        this.docRef.update({
+          updated: Date.now(),
+        });
       });
       this.$nextTick(() => {
         this.scrollToBottom();

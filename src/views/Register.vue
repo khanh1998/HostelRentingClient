@@ -431,6 +431,7 @@ export default {
     dialog: false,
     // user infomation
     name: '',
+    username: '',
     password: '',
     phone: '',
     role: '',
@@ -564,7 +565,7 @@ export default {
         renter.school = school;
       }
       await this.createRenter(renter);
-      await this.afterLogin();
+      await this.login();
     },
     async registerVendor() {
       const vendor = {
@@ -573,7 +574,7 @@ export default {
         phone: this.phone,
       };
       await this.createVendor(vendor);
-      await this.afterLogin();
+      await this.login();
     },
     goToLoginPage() {
       this.$router.push('/login');

@@ -179,7 +179,7 @@ export default {
   computed: {
     scale() {
       if (this.isMobile) {
-        return 2.5;
+        return 2;
       }
       return 1;
     },
