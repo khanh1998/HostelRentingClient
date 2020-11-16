@@ -36,7 +36,7 @@
       <v-col cols="3" class="d-flex align-center pt-2 pb-1">
         <span class="font-nunito text-gray size-sub-2"
           >{{ group.buildingNo }} {{ group.address.streetName }}, {{ group.address.wardName }},
-          {{ group.address.provinceName }}</span
+          {{ group.address.districtName }} {{ group.address.provinceName }}</span
         >
       </v-col>
       <v-col cols="2" class="d-flex align-center justify-center pt-2 pb-1">
@@ -95,7 +95,7 @@
       <v-col cols="3" class="d-flex align-center pt-2 pb-1">
         <span class="font-nunito text-gray size-sub-2"
           >{{ group.buildingNo }} {{ group.address.streetName }}, {{ group.address.wardName }},
-          {{ group.address.provinceName }}</span
+          {{ group.address.districtName }}, {{ group.address.provinceName }}</span
         >
       </v-col>
       <v-col cols="2" class="d-flex align-center justify-center pt-2 pb-1">

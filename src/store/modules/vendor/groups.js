@@ -267,7 +267,6 @@ const mutations = {
     state.types.error = null;
   },
   CREATE_HOSTEL_TYPE_SUCCESS: (state, createdNewType) => {
-    state.types.isCreating = false;
     console.log(createdNewType);
     const { groups } = state;
     const { groupId } = createdNewType[0];
@@ -277,6 +276,7 @@ const mutations = {
     console.log(state.groups.data[indexOfGroup].types);
     state.groups.data[indexOfGroup].types.unshift(createdNewType[0]);
     // state.types.data.unshift(createdNewType);
+    state.types.isCreating = false;
     state.types.success = true;
   },
   CREATE_HOSTEL_TYPE_FAILURE: (state, error) => {
@@ -297,11 +297,12 @@ const mutations = {
     const indexOfGroup = groups.data.findIndex((group) => group.groupId === groupId);
     const indexOfType = groups.data[indexOfGroup].types.findIndex((type) => type.typeId === typeId);
     console.log(rooms, typeId, groupId);
+    console.log(indexOfGroup, indexOfType);
     rooms.forEach((room) => {
       console.log(groups.data[indexOfGroup].types);
-      groups.data[indexOfGroup].types[indexOfType].rooms.push(room);
+      state.groups.data[indexOfGroup].types[indexOfType].rooms.push(room);
     });
-    console.log(groups);
+    console.log(state.groups.data);
     state.creatRooms.success = true;
   },
   CREATE_ROOMS_FAILURE: (state, error) => {

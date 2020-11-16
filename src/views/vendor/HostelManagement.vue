@@ -215,7 +215,6 @@ export default {
       return Math.ceil(this.searchResult.length / this.pageRange);
     },
     searchResult() {
-      console.log(this.groups);
       if (this.searchGroupQuery && this.searchGroupQuery.trim() !== '') {
         return this.groups.filter((item2) => {
           const res =
@@ -247,8 +246,6 @@ export default {
       getRooms: 'vendor/group/getRooms',
     }),
     checkCreated(e) {
-      console.log(e);
-      console.log('aaa');
       this.showSnackBar(`Khu trọ ${e} đã được tạo thành công`, {
         color: 'green',
       });
@@ -260,8 +257,6 @@ export default {
       let available = 0;
       let totalRooms = 0;
       let empty = 0;
-      console.log(group);
-      console.log(group.types);
       if (group.types.length > 0) {
         group.types.forEach((type) => {
           available += type.availableRoom;
