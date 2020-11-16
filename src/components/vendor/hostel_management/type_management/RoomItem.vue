@@ -1,7 +1,7 @@
 <template>
   <v-col cols="4">
     <v-card class="py-4 pl-2 pr-0">
-      <v-row class="d-flex align-start ma-0">
+      <v-row class="d-flex align-start ma-0 pr-0">
         <v-icon class="mr-2 mt-2">{{
           newValue.available ? 'mdi-door-closed' : 'mdi-door-closed-lock'
         }}</v-icon>
@@ -31,17 +31,14 @@
             ></v-radio>
           </v-radio-group>
         </div>
-        <v-badge
-          color="rgba(250, 92, 124, 0.8)"
-          icon="mdi-close"
-          overlap
-          class="d-flex justify-center align-center cursor"
-          offset-x="-20"
-          offset-y="-5"
-          @click.native="removeItem()"
+        <v-spacer></v-spacer>
+        <div
+          class="mt-n6 mr-n3 cursor d-flex justify-center align-center pa-1"
+          @click="removeItem()"
+          style="background-color: rgba(250, 92, 124, 0.5); border-radius: 50%"
         >
-          <div class="ml-auto"></div>
-        </v-badge>
+          <v-icon small color="rgb(255, 255, 255, 0.8)">mdi-close</v-icon>
+        </div>
       </v-row>
     </v-card>
   </v-col>

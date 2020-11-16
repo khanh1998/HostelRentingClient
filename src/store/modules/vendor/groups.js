@@ -293,16 +293,20 @@ const mutations = {
     state.creatRooms.isCreating = false;
     const { groups } = state;
     const { rooms, typeId, groupId } = createdRooms;
+    console.log(groups);
     const indexOfGroup = groups.data.findIndex((group) => group.groupId === groupId);
     const indexOfType = groups.data[indexOfGroup].types.findIndex((type) => type.typeId === typeId);
+    console.log(rooms, typeId, groupId);
     rooms.forEach((room) => {
       console.log(groups.data[indexOfGroup].types);
       groups.data[indexOfGroup].types[indexOfType].rooms.push(room);
     });
+    console.log(groups);
     state.creatRooms.success = true;
   },
   CREATE_ROOMS_FAILURE: (state, error) => {
     state.creatRooms.isCreating = false;
+    state.creatRooms.success = false;
     state.creatRooms.error = error;
   },
 };
@@ -404,8 +408,11 @@ const actions = {
     try {
       commit(mutationTypes.CREATE_HOSTEL_GROUP_REQUEST);
       const res = await window.axios.post('/api/v1/groups', [newGroup]);
-      if (res.status === 201) {
+      console.log(res.status);
+      if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.CREATE_HOSTEL_GROUP_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.CREATE_HOSTEL_GROUP_FAILURE, res.status);
       }
     } catch (error) {
       commit(mutationTypes.CREATE_HOSTEL_GROUP_FAILURE, error);

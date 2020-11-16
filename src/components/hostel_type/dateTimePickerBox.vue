@@ -124,7 +124,7 @@
       </v-snackbar>
     </div>
     <span class="font-nunito text-caption mt-4" style="text-align: end !important"
-      >TRẠNG THÁI: {{ availableRoom }}
+      >TRẠNG THÁI:
       <span class="text-subtitle-2" style="color: #1edb4c !important" v-if="availableRoom !== 0">
         {{ availableRoom }} phòng trống / {{ currentBooking }} lịch hẹn
       </span>
