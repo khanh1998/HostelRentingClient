@@ -189,7 +189,7 @@
             >
               <div class="category">
                 <span class="font-weight-bold text-body-1 yellow--text">
-                  {{ info.category.categoryName }}
+                  {{ group.category.categoryName }}
                 </span>
                 <br />
                 <span class="text-caption">{{ info.view }} lượt xem</span>

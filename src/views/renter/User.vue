@@ -13,9 +13,7 @@
       {{ snackBarMixin.message }}
 
       <template v-slot:action="{ attrs }">
-        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false">
-          Close
-        </v-btn>
+        <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Close </v-btn>
       </template>
     </v-snackbar>
     <v-dialog v-model="dialog.show" width="350">
@@ -29,7 +27,7 @@
             accept="image/*"
             class="ma-2"
           />
-          <div class="d-flex flex-wrap" style="height: 250px; overflow-y: auto;">
+          <div class="d-flex flex-wrap" style="height: 250px; overflow-y: auto">
             <v-img
               v-for="url in upload.imageUrls"
               :key="url"
@@ -46,6 +44,21 @@
             <v-icon>cloud_upload</v-icon> Tải lên
           </v-btn>
           <v-spacer />
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="showEmptyFields.show" max-width="400">
+      <v-card>
+        <v-card-title class="d-flex flex-column justify-center px-8">
+          Vui lòng điền đầy đủ các trường sau:
+        </v-card-title>
+        <v-card-text>
+          <span v-for="name in showEmptyFields.fields" :key="name"> {{ name }}, </span>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn icon @click="showEmptyFields.show = false">
+            <v-icon>clear</v-icon>
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -279,16 +292,24 @@ export default {
     prepareToEditProfile() {
       this.editProfile = true;
     },
+    showEmptyField() {
+      this.showEmptyFields.show = true;
+      this.showEmptyFields.fields = this.emptyFields;
+    },
     updateUserInfo() {
-      this.updateUser(this.newUser).then(() => {
-        this.updatable = false;
-        this.editProfile = false;
-        if (this.user.error) {
-          this.showSnackBar(this.user.error.message, { color: 'red' });
-        } else if (this.user.success) {
-          this.showSnackBar('Cập nhật thông tin thành công', { color: 'green' });
-        }
-      });
+      if (this.emptyFields.length === 0) {
+        this.updateUser(this.newUser).then(() => {
+          this.updatable = false;
+          this.editProfile = false;
+          if (this.user.error) {
+            this.showSnackBar('Cập nhật thông tin thất bại ', { color: 'red' });
+          } else if (this.user.success) {
+            this.showSnackBar('Cập nhật thông tin thành công', { color: 'green' });
+          }
+        });
+      } else {
+        this.showEmptyField();
+      }
     },
     openImageUploadDialog() {
       this.dialog.show = true;
@@ -351,8 +372,64 @@ export default {
     noAvatar() {
       return 'https://www.seekpng.com/png/full/428-4287240_no-avatar-user-circle-icon-png.png';
     },
+    emptyFields() {
+      const emptyFields = [];
+      const { username } = this.newUser;
+      if (!username) {
+        emptyFields.push('Tên');
+      }
+      const { yearOfBirth } = this.newUser;
+      if (!yearOfBirth) {
+        emptyFields.push('năm sinh');
+      }
+      const { provinceId } = this.newUser.hometown;
+      if (!provinceId) {
+        emptyFields.push('quê quán');
+      }
+      const { schoolId } = this.newUser.school;
+      if (!schoolId) {
+        emptyFields.push('trường đại học');
+      }
+      const { email } = this.newUser;
+      if (!email) {
+        emptyFields.push('email');
+      }
+      const { citizenIdNum } = this.newUser;
+      if (!citizenIdNum) {
+        emptyFields.push('số CMNN');
+      }
+      const { idIssuedLocation } = this.newUser;
+      if (!idIssuedLocation) {
+        emptyFields.push('nơi cấp CMNN');
+      }
+      const { idIssuedDate } = this.newUser;
+      if (!idIssuedDate) {
+        emptyFields.push('ngày cấp CMNN');
+      }
+      const { householdAddress } = this.newUser;
+      if (!householdAddress) {
+        emptyFields.push('địa chỉ thường trú');
+      }
+      const { currentAddress } = this.newUser;
+      if (!currentAddress) {
+        emptyFields.push('địa chỉ hiện tại');
+      }
+      const { citizenIdFrontImg } = this.newUser;
+      if (!citizenIdFrontImg) {
+        emptyFields.push('ảnh mặt trước CMNN');
+      }
+      const { citizenIdBackImg } = this.newUser;
+      if (!citizenIdBackImg) {
+        emptyFields.push('ảnh mắt sau CMNN');
+      }
+      return emptyFields;
+    },
   },
   data: () => ({
+    showEmptyFields: {
+      show: false,
+      fields: [],
+    },
     editProfile: false,
     newUser: null,
     updatable: false,
@@ -392,8 +469,8 @@ export default {
   created() {
     this.getUser().then(() => {
       this.newUser = { ...this.user.data };
-      this.newUser.school = {};
-      this.newUser.hometown = {};
+      // this.newUser.school = {};
+      // this.newUser.hometown = {};
     });
     this.getAllProvinces();
     this.getAllSchools();

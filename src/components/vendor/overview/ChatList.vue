@@ -280,7 +280,7 @@ export default {
     async fetchConversations() {
       await chatCollectionRef
         .where('vendorId', '==', Number(this.vendorId))
-        .orderBy('updated', 'desc')
+        .orderBy('lastedMessage.createdAt', 'desc')
         .onSnapshot((querySnapshot) => {
           this.docRefs = {};
           this.docs = [];
