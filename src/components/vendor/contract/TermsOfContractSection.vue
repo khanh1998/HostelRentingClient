@@ -133,7 +133,7 @@
                       v-if="mode !== 'view'"
                       @appendixContent="receiveAppendixContent"
                       :editorContent="contract.appendixContract"
-                      :templateUrl="contractTemplateUrl"
+                      :template="contractObj.appendixContract"
                     />
                     <span v-if="mode === 'view'" v-html="contract.appendixContract"></span>
                   </v-col>
@@ -233,7 +233,7 @@ export default {
       groupServiceIds: [],
       startTime: new Date().getTime(),
       images: [],
-      appendixContract: '',
+      appendixContract: null,
     },
     rooms: {
       data: [],

@@ -171,7 +171,7 @@ export default {
     EditorContent,
     EditorMenuBar,
   },
-  props: ['editorContent', 'templateUrl'],
+  props: ['editorContent', 'template'],
   computed: {
     htmlContent() {
       if (this.editor) {
@@ -214,29 +214,30 @@ export default {
     return {
       editor: null,
       isLoadingTemplate: false,
-      template: null,
       isUsingTemplate: false,
       initContent: null,
     };
   },
   created() {
     this.editor = this.setEditorContent();
-    if (this.templateUrl) {
-      try {
-        fetch(this.templateUrl).then(async (res) => {
-          console.log(res);
-          this.template = await res.text();
-          // this.editor.setContent(this.template);
-          this.isLoadingTemplate = false;
-        });
-      } catch (error) {
-        console.log(error);
-        this.isLoadingTemplate = false;
-      }
-    }
+    // if (this.templateUrl) {
+    //   try {
+    //     fetch(this.templateUrl).then(async (res) => {
+    //       console.log(res);
+    //       this.template = await res.text();
+    //       // this.editor.setContent(this.template);
+    //       this.isLoadingTemplate = false;
+    //     });
+    //   } catch (error) {
+    //     console.log(error);
+    //     this.isLoadingTemplate = false;
+    //   }
+    // }
     if (this.editorContent) {
       this.editor.setContent(this.editorContent);
       this.initContent = this.editorContent;
+    } else {
+      this.editor.setContent(this.template);
     }
   },
   beforeDestroy() {
@@ -253,7 +254,7 @@ export default {
         if (using) {
           this.editor.setContent(this.template);
         } else {
-          this.editor.setContent(this.initContent);
+          this.editor.setContent(this.editorContent);
         }
       },
     },
