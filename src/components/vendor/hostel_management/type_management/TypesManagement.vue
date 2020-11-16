@@ -496,7 +496,6 @@ export default {
       return this.$store.state.vendor.group.types.isCreating;
     },
     isRoomsCreating() {
-      console.log(this.$store.state.vendor.group.creatRooms.isCreating);
       return this.$store.state.vendor.group.creatRooms.isCreating;
     },
     isCreateSuccess() {

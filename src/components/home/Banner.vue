@@ -3,14 +3,12 @@
     <!-- main thumnail -->
     <v-col cols="11" sm="10" md="8" lg="8" xl="7" class="d-flex justify-center align-center">
       <!-- search by location -->
-      <div v-show="!advanceSearch" style="width: 100%;">
+      <div v-show="!advanceSearch" style="width: 100%">
         <v-row class="d-flex flex-column align-center justify-center">
-          <p class="text-md-h2 text-h3 font-weight-bold yellow--text">
-            NHÀ TRỌ.SAC
-          </p>
+          <p class="text-md-h2 text-h3 font-weight-bold yellow--text">NHÀ TRỌ SAC</p>
           <p
             class="white--text px-2 mt-4 font-weight-bold slogan hidden-xs-only"
-            style="letter-spacing: 0.001em !important; color: #fdde52;"
+            style="letter-spacing: 0.001em !important; color: #fdde52"
           >
             Hỗ trọ tìm kiếm, đề xuất và đặt lịch xem phòng trọ phù hợp nhất
           </p>
@@ -267,7 +265,7 @@
                 <v-switch class="ml-auto filter" hide-details v-model="disabled" />
                 <span
                   class="text-body-1 font-weight-medium px-0"
-                  style="line-height: normal; color: #ffff00;"
+                  style="line-height: normal; color: #ffff00"
                   >Giá thuê</span
                 >
               </v-row>
@@ -278,7 +276,7 @@
               <v-switch class="ml-auto filter" hide-details v-model="disabled" />
               <span
                 class="text-body-1 font-weight-medium px-0"
-                style="line-height: normal; color: #ffff00;"
+                style="line-height: normal; color: #ffff00"
                 >Giá thuê</span
               >
             </div>
@@ -339,7 +337,7 @@
                   multiple
                   active-class="deep-purple--text text--accent-4"
                 >
-                  <v-list style="background: none !important;">
+                  <v-list style="background: none !important">
                     <v-chip
                       class="font-nunito"
                       v-for="(item, i) in filter.facility.data"
@@ -375,7 +373,7 @@
                   multiple
                   active-class="deep-purple--text text--accent-4"
                 >
-                  <v-list style="background: none !important;">
+                  <v-list style="background: none !important">
                     <v-chip
                       class="font-nunito"
                       v-for="(item, i) in filter.around.items"

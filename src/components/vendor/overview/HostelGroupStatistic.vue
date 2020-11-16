@@ -59,18 +59,20 @@ export default {
         empty: 0,
         stat: 0,
       };
-      this.stat = types.reduce((c, type) => {
-        const newCount = c;
-        if (type.rooms) {
-          newCount.total += type.rooms.length;
-          newCount.empty += type.rooms.filter((room) => room.available).length;
-          newCount.stat =
-            newCount.total === 0
-              ? 100 // eslint-disable-line
-              : Number((100 - (newCount.empty / newCount.total) * 100).toFixed(2)); // eslint-disable-line
-        }
-        return newCount;
-      }, this.stat);
+      if (types) {
+        this.stat = types.reduce((c, type) => {
+          const newCount = c;
+          if (type.rooms) {
+            newCount.total += type.rooms.length;
+            newCount.empty += type.rooms.filter((room) => room.available).length;
+            newCount.stat =
+              newCount.total === 0
+                ? 100 // eslint-disable-line
+                : Number((100 - (newCount.empty / newCount.total) * 100).toFixed(2)); // eslint-disable-line
+          }
+          return newCount;
+        }, this.stat);
+      }
     },
   },
   computed: {

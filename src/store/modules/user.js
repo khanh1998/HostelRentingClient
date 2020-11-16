@@ -522,7 +522,7 @@ const mutations = {
     state.feedback.success = null;
   },
   UPDATE_FEEDBACK_SUCCESS(state, feedback) {
-    state.feedbackUpdate = feedback;
+    state.feedback.feedbackUpdate = feedback;
     state.feedback.success = true;
     state.feedback.isLoading = false;
   },
@@ -1129,7 +1129,8 @@ const actions = {
         const error = new Error('Loggin to update feedback');
         commit(mutationTypes.UPDATE_FEEDBACK_FAILURE, error);
       } else if (role !== 'renters') {
-        const error = new Error('Only owner have permission to activate contract');
+        const error = new Error('Only owner have permission to feedback');
+        console.log(feedback);
         commit(mutationTypes.UPDATE_FEEDBACK_FAILURE, error);
       } else {
         const res = await window.axios.put(`/api/v1/feedbacks/${feedback.feedbackId}`, {
