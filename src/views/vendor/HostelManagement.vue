@@ -28,7 +28,7 @@
                 v-model="searchGroupQuery"
                 solo
                 hide-details
-                class="text-muted py-1 size-sub-2 light-text-field"
+                class="text-muted py-1 size-sub-2 light-text-field font-nunito"
                 clearable
                 @input="changeSearchQuery"
                 style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
@@ -37,10 +37,9 @@
                 v-show="!showSearchGroup"
                 label="Tìm theo tên quản lý"
                 v-model="searchManagerQuery"
-                prepend-inner-icon="search"
                 solo
                 hide-details
-                class="text-muted py-1 px-3 size-sub-2 light-text-field text-field-medium"
+                class="text-muted py-1 size-sub-2 light-text-field text-field-medium font-nunito"
                 clearable
                 @input="changeSearchQuery"
                 style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
@@ -261,6 +260,8 @@ export default {
       let available = 0;
       let totalRooms = 0;
       let empty = 0;
+      console.log(group);
+      console.log(group.types);
       if (group.types.length > 0) {
         group.types.forEach((type) => {
           available += type.availableRoom;

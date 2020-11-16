@@ -23,7 +23,7 @@
         <v-divider></v-divider>
         <v-card-text class="py-0" style="height: 450px">
           <v-row class="ma-0 d-flex flex-column">
-            <v-row class="d-flex ma-0">
+            <v-row class="d-flex ma-0 align-center">
               <v-col cols="6" class="d-flex">
                 <v-select
                   v-model="newRoomValue.typeId"
@@ -36,15 +36,42 @@
                   solo
                   class="size-sub-2 font-nunito form"
                   @change="setNewRoom(newRoomValue)"
+                  v-if="group.types.length > 0"
                 ></v-select>
+                <span
+                  class="d-flex align-center font-nunito text-warning white px-5"
+                  style="
+                    border: 1px solid transparent;
+                    border-radius: 0.25rem;
+                    border: 1px solid #ffecb8 !important;
+                    border-top-right-radius: 0px !important;
+                    border-bottom-right-radius: 0px !important;
+                    box-shadow: 0 0 20px 0 rgba(154, 161, 171, 0.15) !important;
+                    height: 50px;
+                  "
+                  v-if="group.types.length === 0"
+                  >Bạn chưa tạo loại phòng nào để quản lý</span
+                >
+                <v-btn
+                  class="btn-warning btn-sm font-nunito size9rem"
+                  @click="openCreateTypeDialog()"
+                  style="
+                    border-top-left-radius: 0px !important;
+                    border-bottom-left-radius: 0px !important;
+                  "
+                  height="50"
+                  v-if="group.types.length === 0"
+                  >TẠO NGAY</v-btn
+                >
               </v-col>
               <v-col cols="6" class="d-flex">
                 <v-btn
-                  class="mx-5 btn-success btn-sm font-nunito white--text"
+                  class="mx-5 btn-warning btn-sm font-nunito"
+                  v-if="group.types.length > 0"
                   @click="openCreateTypeDialog()"
                   >Thêm loại phòng mới</v-btn
                 >
-                <v-btn class="mx-5 btn-danger btn-sm font-nunito white--text" @click="addRoom()"
+                <v-btn class="mx-5 btn-success btn-sm font-nunito white--text" @click="addRoom()"
                   >Thêm phòng mới</v-btn
                 >
               </v-col>
@@ -67,6 +94,12 @@
               <RoomItem v-for="room in createRooms" v-bind:key="room.index" :room="room" />
             </v-row>
           </v-row>
+          <alert
+            :type="alert.type"
+            :showAlert="alert.showAlert"
+            :action="alert.action"
+            style="z-index: 10"
+          />
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="d-flex justify-end pa-4">
@@ -83,7 +116,7 @@
       persistent
       hide-overlay
     >
-      <v-overlay :value="isLoading || isCreating" absolute>
+      <v-overlay :value="isLoading || isTypeCreating || isRoomsCreating" absolute>
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
       <v-card class="d-flex flex-column" v-if="!isLoading">
@@ -116,6 +149,9 @@
                     v-model="newTypeValue.title"
                     @input="setCreateTypeValue(newTypeValue)"
                   />
+                  <span class="font-nunito red--text size-caption" v-show="showMessage.typeName"
+                    >Vui lòng điền tên loại phòng!</span
+                  >
                 </v-col>
                 <v-col cols="5" class="d-flex flex-column pb-0">
                   <span class="field-name font-weight-medium"
@@ -154,6 +190,11 @@
                     :rules="[rules.min(newTypeValue.superficiality)]"
                     @input="setCreateTypeValue(newTypeValue)"
                   />
+                  <span
+                    class="font-nunito red--text size-caption"
+                    v-show="showMessage.superficiality"
+                    >Diện tích phải lớn hơn 0!</span
+                  >
                 </v-col>
                 <v-col cols="4" class="d-flex flex-column pb-0">
                   <span class="field-name font-weight-medium"
@@ -168,11 +209,14 @@
                     light
                     v-model="newTypeValue.capacity"
                     suffix="người"
-                    step="5"
+                    step="1"
                     min="0"
                     :rules="[rules.min(newTypeValue.capacity)]"
                     @input="setCreateTypeValue(newTypeValue)"
                   />
+                  <span class="font-nunito red--text size-caption" v-show="showMessage.capacity"
+                    >Sức chứa phải lớn hơn 0!</span
+                  >
                 </v-col>
                 <v-col cols="4" class="d-flex flex-column pb-0">
                   <span class="field-name font-weight-medium"
@@ -257,6 +301,9 @@
               <v-card outlined min-height="390" max-height="400">
                 <v-col cols="12" class="d-flex flex-column px-5">
                   <span class="field-name font-weight-medium">Hình ảnh</span>
+                  <span class="font-nunito red--text size-caption" v-show="showMessage.image"
+                    >Tải ít nhất một hình ảnh về phòng trọ của bạn!</span
+                  >
                   <v-row
                     class="cursor ma-0 pa-5"
                     style="border: 2px dashed #dee2e6; border-radius: 6px"
@@ -264,22 +311,18 @@
                   >
                     <v-icon color="#98a6ad" large class="ma-auto">mdi-file-image-outline</v-icon>
                   </v-row>
-                  <v-row class="ma-0 d-flex justify-center">
-                    <div v-for="image in images" :key="image.resourceUrl">
-                      <v-badge
-                        bordered
-                        color="rgba(250, 92, 124, 0.5)"
-                        icon="mdi-close"
-                        overlap
-                        class="d-flex justify-center align-center"
-                        offset-x="20"
-                        offset-y="20"
-                      >
+                  <v-row>
+                    <div class="d-flex flex-wrap align-center pa-2">
+                      <div v-for="image in images" :key="image.resourceUrl">
                         <v-img
                           :src="image.resourceUrl"
                           :lazy-src="image.resourceUrl"
                           aspect-ratio="1"
-                          class="ma-2 white type-image"
+                          class="ma-2 white type-image d-flex justify-center align-center"
+                          min-width="6rem"
+                          max-width="6rem"
+                          max-height="4rem"
+                          min-height="4rem"
                         >
                           <template v-slot:placeholder>
                             <v-row class="fill-height ma-0" align="center" justify="center">
@@ -289,8 +332,13 @@
                               ></v-progress-circular>
                             </v-row>
                           </template>
+                          <div class="d-flex justify-center align-center">
+                            <v-icon color="rbg(0,0,0,0.8)" class="cursor"
+                              >mdi-delete-forever</v-icon
+                            >
+                          </div>
                         </v-img>
-                      </v-badge>
+                      </div>
                     </div>
                   </v-row>
                   <v-dialog v-model="dialog.show" width="350">
@@ -350,6 +398,7 @@
 import { mapActions } from 'vuex';
 import RoomItem from './RoomItem.vue';
 import FacilityItem from './FacilityItem.vue';
+import alert from '../../../core_layout/alert.vue';
 import snackBarMixin from '../../../mixins/snackBar';
 import fileMixins from '../../../mixins/file';
 
@@ -377,9 +426,21 @@ export default {
       imageUrls: [],
     },
     images: [],
+    alert: {
+      type: '',
+      showAlert: false,
+      action: '',
+    },
+    showMessage: {
+      typeName: false,
+      superficiality: false,
+      capacity: false,
+      image: false,
+    },
+    isNotValidate: false,
   }),
   props: { show: Boolean, group: Object },
-  components: { RoomItem, FacilityItem },
+  components: { RoomItem, FacilityItem, alert },
   computed: {
     isLoading() {
       const allFacilities = this.$store.state.renter.common.facilities.isLoading;
@@ -428,11 +489,17 @@ export default {
     newTypeValue() {
       return this.$store.state.vendor.group.createType.data;
     },
-    isCreating() {
+    isTypeCreating() {
       return this.$store.state.vendor.group.types.isCreating;
+    },
+    isRoomsCreating() {
+      return this.$store.state.vendor.group.creatRooms.isCreating;
     },
     isCreateSuccess() {
       return this.$store.state.vendor.group.types.success;
+    },
+    isCreatedRoomsSuccess() {
+      return this.$store.state.vendor.group.creatRooms.success;
     },
   },
   methods: {
@@ -496,38 +563,94 @@ export default {
           typeId: this.newRoomValue.typeId,
           groupId: this.group.groupId,
         };
-        this.insertListRooms(reqObj);
+        this.insertListRooms(reqObj).then(() => {
+          console.log(this.isCreatedRoomsSuccess);
+          if (this.isCreatedRoomsSuccess) {
+            this.closeDialog();
+          } else {
+            this.alert.types = 'failed';
+            this.alert.action = 'Thêm mới danh sách phòng trọ thất bại!';
+            this.alert.showAlert = true;
+          }
+        });
       }
     },
-    insertNewType() {
-      const { typePrice, typePriceUnit } = this.getPriceUnit(this.newTypeValue.price);
-      const newType = {
-        groupId: this.group.groupId,
-        title: this.newTypeValue.title,
-        price: typePrice,
-        priceUnit: typePriceUnit,
-        superficiality: this.newTypeValue.superficiality,
-        capacity: this.newTypeValue.capacity,
-        deposit: this.newTypeValue.deposit,
-        rooms: [],
-        imageUrls: this.newTypeValue.image,
-        facilities: this.newTypeValue.facilityIds.map((facility) => ({
-          facilityId: facility,
-        })),
-      };
-      this.createHostelType(newType).then(() => {
-        if (this.isCreateSuccess) {
-          console.log(
-            this.$store.state.vendor.group.groups.data.find(
-              (item) => item.groupId === this.group.groupId,
-            ).types,
-          );
-          this.group.types = this.$store.state.vendor.group.groups.data.find(
-            (item) => item.groupId === this.group.groupId,
-          ).types;
-          this.closeCreateTypeDialog();
+    isEmptyNewFacilities() {
+      let flag = 0;
+      this.newTypeValue.newFacilities.forEach((item) => {
+        if (item.facilityName.trim() === '') {
+          flag += 1;
         }
       });
+      console.log(flag);
+      return flag > 0;
+    },
+    isDuplicateNewFacilities() {
+      let flag = 0;
+      this.newTypeValue.newFacilities.forEach((item) => {
+        if (
+          this.allFacilities.filter(
+            (facility) =>
+              facility.facilityName.toLowerCase().trim() === item.facilityName.toLowerCase().trim(), // eslint-disable-line
+          ).length > 0
+        ) {
+          flag += 1;
+        }
+        if (
+          this.newTypeValue.newFacilities.filter(
+            (facility) =>
+              facility.facilityName.toLowerCase().trim() === item.facilityName.toLowerCase().trim(), // eslint-disable-line
+          ).length > 0
+        ) {
+          flag += 1;
+        }
+      });
+      return flag > this.newTypeValue.newFacilities.length;
+    },
+    validate() {
+      this.showMessage.typeName = this.newTypeValue.title.trim() === '';
+      this.showMessage.superficiality = this.newTypeValue.superficiality <= 0;
+      this.showMessage.capacity = this.newTypeValue.capacity <= 0;
+      this.showMessage.image = this.newTypeValue.image.length === 0;
+    },
+    insertNewType() {
+      this.validate();
+      if (
+        !this.showMessage.typeName &&
+        !this.showMessage.superficiality &&
+        !this.showMessage.capacity &&
+        !this.showMessage.image &&
+        !this.isEmptyNewFacilities() &&
+        !this.isDuplicateNewFacilities()
+      ) {
+        const { typePrice, typePriceUnit } = this.getPriceUnit(this.newTypeValue.price);
+        const newType = {
+          groupId: this.group.groupId,
+          title: this.newTypeValue.title,
+          price: typePrice,
+          priceUnit: typePriceUnit,
+          superficiality: this.newTypeValue.superficiality,
+          capacity: this.newTypeValue.capacity,
+          deposit: this.newTypeValue.deposit,
+          rooms: [],
+          imageUrls: this.newTypeValue.image,
+          facilities: this.newTypeValue.facilityIds.map((facility) => ({
+            facilityId: facility,
+          })),
+          newFacilities: this.newTypeValue.newFacilities.map((newFacility) => ({
+            facilityName: newFacility.facilityName.trim(),
+          })),
+        };
+        console.log(this.newTypeValue, newType);
+        this.createHostelType(newType).then(() => {
+          if (this.isCreateSuccess) {
+            this.group.types = this.$store.state.vendor.group.groups.data.find(
+              (item) => item.groupId === this.group.groupId,
+            ).types;
+            this.closeCreateTypeDialog();
+          }
+        });
+      }
     },
     getPriceUnit(price) {
       let typePriceUnit = null;
@@ -558,7 +681,8 @@ export default {
         });
       } else {
         this.newTypeValue.newFacilities.push({
-          index: this.createRooms[this.createRooms.length - 1].index + 1,
+          index:
+            this.newTypeValue.newFacilities[this.newTypeValue.newFacilities.length - 1].index + 1,
           facilityName: '',
         });
       }
@@ -627,5 +751,6 @@ export default {
   height: 4rem !important;
   width: 6rem !important;
   border-radius: 0.25rem !important;
+  border: 1px thin #727cf5 !important;
 }
 </style>

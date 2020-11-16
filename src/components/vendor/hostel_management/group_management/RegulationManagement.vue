@@ -66,7 +66,6 @@ export default {
       this.setNewGroupValue(this.newGroup);
     },
     addNewRegulation() {
-      console.log(this.newGroup);
       if (this.newGroup.newRegulations.length === 0) {
         this.newGroup.newRegulations.push({
           index: 0,
