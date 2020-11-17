@@ -566,7 +566,7 @@ const actions = {
     if (userId && role) {
       try {
         commit(mutationTypes.CREATE_ROOM_REQUEST);
-        const res = await window.axios.get(`/api/v1/renters/${userId}/requests`, request);
+        const res = await window.axios.post(`/api/v1/renters/${userId}/requests`, request);
         if (res.status === 200) {
           commit(mutationTypes.CREATE_ROOM_SUCCESS, res.data.data);
         } else {

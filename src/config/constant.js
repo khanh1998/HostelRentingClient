@@ -1,6 +1,6 @@
 const constant = {
   PUBLIC_VAPID_KEY:
-    'BJaGi3L13TpEgrNwrlHUebY7f73mUDwtU6p2ZTvlySTB2VxXpYrzTb14cfCv-alykCnh920O3L-rQoaDG_qWqlo',
+    'BG209yRKCIGInfyYQrT-lhq3UOeLM6asnM6DAOc3ZtN5bB1DrP0XNOuRaFRKov9EA-NKGBWpNfYEx4NFztSPoWw',
 };
 
 export default constant;
