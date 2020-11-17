@@ -8,6 +8,9 @@
       persistent
       hide-overlay
     >
+      <v-overlay :value="isRoomsCreating" absolute>
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
       <v-card class="d-flex flex-column" color="#F7F9FC">
         <v-row class="d-flex px-4 py-3 align-center ma-0 justify-space-between bg-primary">
           <v-icon class="mr-1" color="rgb(255, 255, 255, 0.8)">mdi-door-closed</v-icon>

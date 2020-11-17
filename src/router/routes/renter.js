@@ -10,6 +10,7 @@ import QrReader from '../../views/renter/QrReader.vue';
 import FilterResult from '../../views/renter/FilterResult.vue';
 import DiscoveryOverivew from '../../views/renter/DiscoveryOverview.vue';
 import DiscoveryDistrict from '../../views/renter/DiscoveryDistrict.vue';
+import RoomAlert from '../../views/renter/RoomAlert.vue';
 
 const routes = [
   {
@@ -80,6 +81,12 @@ const routes = [
         path: 'discovery/:districtId',
         name: 'DiscoveryDistrict',
         component: DiscoveryDistrict,
+        props: true,
+      },
+      {
+        path: 'room-alert',
+        name: 'RoomAlert',
+        component: RoomAlert,
         props: true,
       },
     ],

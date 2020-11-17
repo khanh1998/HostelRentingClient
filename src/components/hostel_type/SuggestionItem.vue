@@ -9,7 +9,7 @@
     >
       <v-carousel-item v-for="(image, i) in images" :key="i" :src="images[i]">
         <div class="category">
-          <span class="text-body-2 white--text">{{ type.category.categoryName }}</span>
+          <span class="text-body-2 white--text">{{ group.category.categoryName }}</span>
           <br />
         </div>
         <div class="price">
