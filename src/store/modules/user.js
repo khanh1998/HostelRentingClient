@@ -103,9 +103,9 @@ const myGetters = {
   },
 };
 const mutationTypes = {
-  CREATE_ROOM_REQUEST: 'CREATE_ROOM_REQUEST',
-  CREATE_ROOM_SUCCESS: 'CREATE_ROOM_SUCCESS',
-  CREATE_ROOM_FAILURE: 'CREATE_ROOM_FAILURE',
+  CREATE_ROOM_REQUEST_REQUEST: 'CREATE_ROOM_REQUEST_REQUEST',
+  CREATE_ROOM_REQUEST_SUCCESS: 'CREATE_ROOM_REQUEST_SUCCESS',
+  CREATE_ROOM_REQUEST_FAILURE: 'CREATE_ROOM_REQUEST_FAILURE',
 
   GET_USER_REQUEST: 'GET_USER_REQUEST',
   GET_USER_SUCCESS: 'GET_USER_SUCCESS',
@@ -198,17 +198,21 @@ const mutationTypes = {
   UPDATE_FEEDBACK_REQUEST: 'UPDATE_FEEDBACK_REQUEST',
   UPDATE_FEEDBACK_SUCCESS: 'UPDATE_FEEDBACK_SUCCESS',
   UPDATE_FEEDBACK_FAILURE: 'UPDATE_FEEDBACK_FAILURE',
+
+  GET_ROOM_REQUESTS_REQUEST: 'GET_ROOM_REQUESTS_REQUEST',
+  GET_ROOM_REQUESTS_SUCCESS: 'GET_ROOM_REQUESTS_SUCCESS',
+  GET_ROOM_REQUESTS_FAILURE: 'GET_ROOM_REQUESTS_FAILURE',
 };
 const mutations = {
-  CREATE_ROOM_REQUEST(state) {
+  CREATE_ROOM_REQUEST_REQUEST(state) {
     state.requests.isCreating = true;
   },
-  CREATE_ROOM_SUCCESS(state, request) {
+  CREATE_ROOM_REQUEST_SUCCESS(state, request) {
     state.requests.isCreating = false;
     state.requests.data.unshift(request);
     state.requests.success = true;
   },
-  CREATE_ROOM_FAILURE(state, error) {
+  CREATE_ROOM_REQUEST_FAILURE(state, error) {
     state.requests.isCreating = false;
     state.requests.error = error;
     state.requests.success = true;
@@ -556,24 +560,64 @@ const mutations = {
     state.feedback.success = false;
     state.feedback.isLoading = false;
   },
+
+  GET_ROOM_REQUESTS_REQUEST(state) {
+    state.requests.isLoading = true;
+    state.requests.error = null;
+    state.requests.success = null;
+  },
+  GET_ROOM_REQUESTS_SUCCESS(state, requests) {
+    state.requests.isLoading = false;
+    state.requests.data = requests;
+    state.requests.success = true;
+  },
+  GET_ROOM_REQUESTS_FAILURE(state, error) {
+    state.requests.isLoading = false;
+    state.requests.error = error;
+    state.requests.success = false;
+  },
 };
 
 const actions = {
-  async createRoomRequest({ commit }, request) {
-    console.log(request);
+  async getRoomRequests({ commit }) {
     const userId = window.$cookies.get('userId');
     const role = window.$cookies.get('role');
     if (userId && role) {
       try {
-        commit(mutationTypes.CREATE_ROOM_REQUEST);
-        const res = await window.axios.post(`/api/v1/renters/${userId}/requests`, request);
+        commit(mutationTypes.GET_ROOM_REQUESTS_REQUEST);
+        const res = await window.axios.get(`/api/v1/renters/${userId}/requests`);
         if (res.status === 200) {
-          commit(mutationTypes.CREATE_ROOM_SUCCESS, res.data.data);
+          commit(mutationTypes.GET_ROOM_REQUESTS_SUCCESS, res.data.data);
         } else {
-          commit(mutationTypes.CREATE_ROOM_FAILURE, new Error('response with status code != 200'));
+          commit(
+            mutationTypes.GET_ROOM_REQUESTS_FAILURE,
+            new Error('response with status code != 200'),
+          );
         }
       } catch (error) {
-        commit(mutationTypes.CREATE_ROOM_FAILURE, error);
+        commit(mutationTypes.GET_ROOM_REQUESTS_FAILURE, error);
+      }
+    } else {
+      console.log('User are not logged in, cannot get user data');
+    }
+  },
+  async createRoomRequest({ commit }, request) {
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role) {
+      try {
+        commit(mutationTypes.CREATE_ROOM_REQUEST_REQUEST);
+        const res = await window.axios.post(`/api/v1/renters/${userId}/requests`, request);
+        if (res.status >= 200 && res.status <= 299) {
+          commit(mutationTypes.CREATE_ROOM_REQUEST_SUCCESS, res.data.data);
+        } else {
+          commit(
+            mutationTypes.CREATE_ROOM_REQUEST_FAILURE,
+            new Error('response with status code != 200'),
+          );
+        }
+      } catch (error) {
+        commit(mutationTypes.CREATE_ROOM_REQUEST_FAILURE, error);
       }
     } else {
       console.log('User are not logged in, cannot get user data');

@@ -3,7 +3,6 @@
     <v-dialog v-model="isLoading" hide-overlay persistent width="300">
       <v-card color="primary" dark>
         <v-card-text>
-          Đang tạo
           <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
         </v-card-text>
       </v-card>
@@ -25,9 +24,10 @@
     >
       {{ snackBarMixin.message }}
     </v-snackbar>
-    <v-row>
+    <v-row class="rounded-lg elevation-5">
       <v-col cols="12">Đặt thông báo cho phòng trọ mong muốn</v-col>
       <v-col cols="4">
+        <v-card-text>Địa điểm, khu vực... bạn muốn ở gần</v-card-text>
         <div class="searchBar d-flex align-center">
           <gmap-autocomplete
             placeholder="Địa điểm, khu vực... bạn muốn ở gần"
@@ -41,6 +41,7 @@
         </div>
       </v-col>
       <v-col cols="3">
+        <v-card-text>Chọn ngày nhận phòng</v-card-text>
         <v-menu
           v-model="menu1"
           :close-on-content-click="false"
@@ -52,9 +53,9 @@
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
               readonly
+              hide-details
               v-bind="attrs"
               v-on="on"
-              label="Chọn ngày nhận phòng"
               :value="startTimeString"
             ></v-text-field>
           </template>
@@ -68,8 +69,10 @@
         </v-menu>
       </v-col>
       <v-col cols="3">
+        <v-card-text>Giá tối đa mà bạn muốn trả</v-card-text>
         <v-text-field
-          v-model="request.price"
+          hide-details
+          v-model="request.maxPrice"
           type="number"
           suffix="Triệu"
           :rules="isPositiveNum"
@@ -81,8 +84,45 @@
           <v-icon>add_circle_outline</v-icon>
         </v-btn>
       </v-col>
+      <v-col cols="4">
+        <v-card-text>Bán kính tìm kiếm tính từ vị trí mà bạn đã chọn</v-card-text>
+        <v-chip-group v-model="chip" mandatory>
+          <v-chip filter>3 km</v-chip>
+          <v-chip filter>5 km</v-chip>
+          <v-chip filter>7 km</v-chip>
+          <v-chip filter>10 km</v-chip>
+        </v-chip-group>
+      </v-col>
+      <v-col cols="4">
+        <v-card-text>Diện tích tối thiểu</v-card-text>
+        <v-chip-group v-model="chip1" mandatory>
+          <v-chip filter>10 m2</v-chip>
+          <v-chip filter>15 m2</v-chip>
+          <v-chip filter>20 m2</v-chip>
+          <v-chip filter>25 m2</v-chip>
+          <v-chip filter>30 m2</v-chip>
+          <v-chip filter>40 m2</v-chip>
+        </v-chip-group>
+      </v-col>
     </v-row>
-    <v-row></v-row>
+    <v-row>
+      <v-slide-group v-model="requestIndex" show-arrows mandatory>
+        <v-slide-item
+          v-for="request in requests.data"
+          :key="request.requestId"
+          v-slot="{ active, toggle }"
+        >
+          <v-card :color="active ? undefined : 'grey lighten-1'" @click="toggle">
+            <v-card-text>
+              <p>Ngày nhận phòng: {{ new Date(request.dueDate).toLocaleDateString('vi') }}</p>
+              <p>Giá tối đa: {{ request.maxPrice }} Triệu</p>
+              <p>Diện tích tối thiểu: {{ request.minSuperficiality }} m2</p>
+              <p>Bán kính tìm kiếm: {{ request.maxDistance }} km</p>
+            </v-card-text>
+          </v-card>
+        </v-slide-item>
+      </v-slide-group>
+    </v-row>
   </v-container>
 </template>
 <script>
@@ -94,7 +134,10 @@ export default {
   name: 'RoomAlert',
   mixins: [validateMixin, snackbarMixin],
   data: () => ({
+    requestIndex: 0,
     menu1: null,
+    chip: 1,
+    chip1: 1,
     price: 0,
     startTime: new Date().toISOString().substr(0, 10),
     date: '',
@@ -109,18 +152,19 @@ export default {
       dueDate: new Date(new Date().toISOString().substr(0, 10)).getTime(),
       latitude: 10.7542893,
       longitude: 106.1346955,
-      maxRadius: 5,
-      price: 0,
-      superficiality: 0,
+      maxDistance: 5,
+      maxPrice: 2,
+      minSuperficiality: 15,
     },
   }),
   methods: {
     ...mapActions({
       createRoomRequest: 'user/createRoomRequest',
+      getRoomRequests: 'user/getRoomRequests',
       getUser: 'user/getUser',
     }),
     doCreateRoomRequest() {
-      this.request.price = Number(this.request.price);
+      this.request.maxPrice = Number(this.request.maxPrice);
       this.createRoomRequest(this.request).then(() => {
         if (this.requests.success) {
           this.showSnackBar('Tạo request thành công', { color: 'green' });
@@ -156,18 +200,60 @@ export default {
       return new Date(this.startTime).toLocaleDateString('vi');
     },
     isLoading() {
-      return this.request.isLoading || this.request.isCreating || this.user.isLoading;
+      return this.requests.isLoading || this.requests.isCreating || this.user.isLoading;
     },
   },
   created() {
     this.geolocate();
     if (!this.user.data) {
-      this.getUser();
+      this.getUser().then(() => this.getRoomRequests());
     }
   },
   watch: {
     startTime() {
       this.request.dueDate = new Date(this.startTime).getTime();
+    },
+    chip(index) {
+      switch (index) {
+        case 0:
+          this.request.maxDistance = 3;
+          break;
+        case 1:
+          this.request.maxDistance = 5;
+          break;
+        case 2:
+          this.request.maxDistance = 7;
+          break;
+        case 3:
+          this.request.maxDistance = 10;
+          break;
+        default:
+          break;
+      }
+    },
+    chip1(index) {
+      switch (index) {
+        case 0:
+          this.request.minSuperficiality = 10;
+          break;
+        case 1:
+          this.request.minSuperficiality = 15;
+          break;
+        case 2:
+          this.request.minSuperficiality = 20;
+          break;
+        case 3:
+          this.request.minSuperficiality = 25;
+          break;
+        case 4:
+          this.request.minSuperficiality = 30;
+          break;
+        case 5:
+          this.request.minSuperficiality = 40;
+          break;
+        default:
+          break;
+      }
     },
   },
 };
