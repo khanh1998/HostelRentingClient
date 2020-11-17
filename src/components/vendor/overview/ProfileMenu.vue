@@ -1,6 +1,6 @@
 <template>
   <div
-    class="d-flex align-center justify-center"
+    class="d-flex align-center justify-center mr-md-8"
     style="
       height: 100%;
       background-color: #fafbfd !important;
@@ -8,44 +8,51 @@
       border-width: 0 1px !important;
     "
   >
-    <v-menu offset-y v-if="!isLoadingUser">
+    <v-menu offset-y bottom open-on-hover _v-if="!isLoadingUser">
       <template v-slot:activator="{ on, attrs }">
-        <div v-bind="attrs" v-on="on" class="d-flex justify-center align-center px-4">
+        <div
+          v-bind="attrs"
+          v-on="on"
+          class="d-flex justify-center align-center px-4"
+          style="min-width: 150px !important"
+        >
           <v-btn icon>
             <v-avatar color="#727cf5" size="35" min-width="30" min-height="30" item>
-              <v-img v-if="user.avatar" :src="user.avatar" :alt="user.username"></v-img>
-              <span v-else class="text-overline white--text">{{
+              <!-- <v-img v-if="user.avatar" :src="user.avatar" :alt="user.username"></v-img> -->
+              <!-- <span _v-else class="text-overline white--text">{{
                 getAvatarTitle(user.username)
-              }}</span>
+              }}</span> -->
+              <span _v-else class="text-overline white--text">{{ getAvatarTitle('thuy') }}</span>
             </v-avatar>
           </v-btn>
           <div class="hidden-xs-only">
             <span class="text-muted d-flex flex-column font-nunito">
-              <span class="size9rem text-primary">{{ user.username }}</span>
+              <!-- <span class="size9rem text-primary">{{ user.username }}</span> -->
+              <span class="size9rem text-primary">Nguyễn Văn Thanh</span>
               <span class="size-caption">Chủ trọ</span>
             </span>
           </div>
         </div>
       </template>
       <v-list>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ user.username }}
-            </v-list-item-title>
-            <v-list-item-subtitle> Chủ trọ </v-list-item-subtitle>
-          </v-list-item-content>
+        <v-list-item
+          style="min-height: 20px !important"
+          class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+        >
+          <v-icon color="#6c757d" class="mr-2 item-hover" size="15">mdi-account-circle</v-icon>
+          <v-list-item-title class="item-hover font-nunito text-gray size9rem"
+            >Tài khoản của tôi</v-list-item-title
+          >
         </v-list-item>
-        <template v-for="(item, index) in infoMenu">
-          <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
-          <v-list-item v-else :key="item.title" :to="item.url">
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ item.title }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
+        <v-list-item
+          style="min-height: 20px !important"
+          class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+        >
+          <v-icon color="#6c757d" class="mr-2 item-hover" size="15">mdi-account-arrow-left</v-icon>
+          <v-list-item-title class="item-hover font-nunito text-gray size9rem"
+            >Đăng xuất</v-list-item-title
+          >
+        </v-list-item>
       </v-list>
     </v-menu>
   </div>

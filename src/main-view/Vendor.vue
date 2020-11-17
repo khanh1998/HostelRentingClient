@@ -1,6 +1,6 @@
 <template>
   <v-app id="sandbox">
-    <v-navigation-drawer
+    <!-- <v-navigation-drawer
       v-model="primaryDrawer.model"
       :temporary="primaryDrawer.type === 'temporary'"
       app
@@ -20,7 +20,7 @@
           </v-list-item-content>
         </v-list-item>
       </template>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
 
     <v-app-bar
       :clipped-left="primaryDrawer.clipped"
@@ -29,31 +29,39 @@
       height="70"
       class="white vendor pa-0"
     >
-      <!-- <router-link to="/">
+      <router-link to="/">
         <v-img
           alt="Hostel Renting"
-          class="shrink mr-2"
+          class="shrink mx-6"
           contain
           src="@/assets/logo-sac.png"
           transition="scale-transition"
-          max-width="50"
-          max-height="50"
+          max-width="60"
+          max-height="60"
         />
-      </router-link> -->
-      <v-app-bar-nav-icon
+      </router-link>
+      <!-- <v-app-bar-nav-icon
         @click.stop="primaryDrawer.model = !primaryDrawer.model"
         style="color: #727cf5 !important"
       >
-      </v-app-bar-nav-icon>
-      <v-toolbar-title
+      </v-app-bar-nav-icon> -->
+      <!-- <v-toolbar-title
         class="font-nunito text-primary font-weight-bold"
         style="font-size: 1.125rem"
         >{{ routeName }}</v-toolbar-title
-      >
+      > -->
       <v-spacer></v-spacer>
       <!-- <v-btn icon large @click.stop="chatDrawer.model = !chatDrawer.model">
         <v-icon color="#727cf5">mdi-chat-processing</v-icon>
       </v-btn> -->
+      <v-btn
+        @click="doGetMessagingToken"
+        v-if="!hasMessagingToken"
+        class="bg-warning-lighten elevation-0 text-warning font-nunito size9rem d-flex justify-start"
+        style="letter-spacing: 0.01rem !important"
+      >
+        <v-icon small class="mr-1">notifications_none</v-icon>Bật thông báo
+      </v-btn>
       <notify />
       <profile-menu />
     </v-app-bar>
@@ -74,22 +82,26 @@
 
 <script>
 import { mapActions } from 'vuex';
-import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
+// import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
 import notify from '../components/vendor/overview/Notify.vue';
 import profileMenu from '../components/vendor/overview/ProfileMenu.vue';
 import authenticationMixins from '../components/mixins/authentication';
+import pushNotificationMixins from '../components/mixins/pushNotification';
 
 export default {
   name: 'VendorView',
-  mixins: [authenticationMixins],
+  mixins: [authenticationMixins, pushNotificationMixins],
   components: {
-    sideMenuBar,
+    // sideMenuBar,
     notify,
     profileMenu,
   },
   computed: {
     routeName() {
       return this.$route.meta.vi || 'Yoho';
+    },
+    hasMessagingToken() {
+      return localStorage.getItem('messagingToken') != null;
     },
   },
   data: () => ({
@@ -109,7 +121,14 @@ export default {
     ...mapActions({
       clearUserData: 'user/clearUserData',
       updateUser: 'user/updateUser',
+      getUser: 'user/getUser',
     }),
+  },
+  created() {
+    this.getUser().then(() => {
+      console.log('get fcm token at Vendor.vue');
+      this.doGetMessagingToken();
+    });
   },
 };
 </script>

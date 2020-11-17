@@ -25,7 +25,7 @@ const routes = [
         path: 'management',
         name: 'HostelManagement',
         component: HostelManagement,
-        meta: { requiresAuth: true, is_vendor: true, vi: 'Quản lí nhà trọ' },
+        // meta: { requiresAuth: true, is_vendor: true, vi: 'Quản lí nhà trọ' },
       },
       {
         path: 'managementRooms/:groupId',
