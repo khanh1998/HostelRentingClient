@@ -45,6 +45,13 @@ const myState = () => ({
     error: null,
     feedbackUpdate: null,
   },
+  requests: {
+    data: [],
+    isLoading: false,
+    isCreating: false,
+    error: null,
+    success: null,
+  },
 });
 
 const myGetters = {
@@ -96,6 +103,10 @@ const myGetters = {
   },
 };
 const mutationTypes = {
+  CREATE_ROOM_REQUEST: 'CREATE_ROOM_REQUEST',
+  CREATE_ROOM_SUCCESS: 'CREATE_ROOM_SUCCESS',
+  CREATE_ROOM_FAILURE: 'CREATE_ROOM_FAILURE',
+
   GET_USER_REQUEST: 'GET_USER_REQUEST',
   GET_USER_SUCCESS: 'GET_USER_SUCCESS',
   GET_USER_FAILURE: 'GET_USER_FAILURE',
@@ -189,6 +200,19 @@ const mutationTypes = {
   UPDATE_FEEDBACK_FAILURE: 'UPDATE_FEEDBACK_FAILURE',
 };
 const mutations = {
+  CREATE_ROOM_REQUEST(state) {
+    state.requests.isCreating = true;
+  },
+  CREATE_ROOM_SUCCESS(state, request) {
+    state.requests.isCreating = false;
+    state.requests.data.unshift(request);
+    state.requests.success = true;
+  },
+  CREATE_ROOM_FAILURE(state, error) {
+    state.requests.isCreating = false;
+    state.requests.error = error;
+    state.requests.success = true;
+  },
   CLEAR_USER_DATA(state) {
     state.user.data = null;
     state.user.isLoading = false;
@@ -236,7 +260,8 @@ const mutations = {
       (c) => Number(c.contractId) === Number(contract.contractId),
     );
     if (oldContractIndex > -1) {
-      state.contracts.data[oldContractIndex] = contract;
+      state.contracts.data[oldContractIndex].status = contract.status;
+      state.contracts.data[oldContractIndex].contractUrl = contract.contractUrl;
     } else {
       state.contracts.data.unshift(contract);
     }
@@ -534,6 +559,26 @@ const mutations = {
 };
 
 const actions = {
+  async createRoomRequest({ commit }, request) {
+    console.log(request);
+    const userId = window.$cookies.get('userId');
+    const role = window.$cookies.get('role');
+    if (userId && role) {
+      try {
+        commit(mutationTypes.CREATE_ROOM_REQUEST);
+        const res = await window.axios.post(`/api/v1/renters/${userId}/requests`, request);
+        if (res.status === 200) {
+          commit(mutationTypes.CREATE_ROOM_SUCCESS, res.data.data);
+        } else {
+          commit(mutationTypes.CREATE_ROOM_FAILURE, new Error('response with status code != 200'));
+        }
+      } catch (error) {
+        commit(mutationTypes.CREATE_ROOM_FAILURE, error);
+      }
+    } else {
+      console.log('User are not logged in, cannot get user data');
+    }
+  },
   async login({ commit }, params) {
     // params {phone, password}
     commit(mutationTypes.GET_USER_REQUEST);

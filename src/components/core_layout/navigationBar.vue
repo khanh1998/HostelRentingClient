@@ -76,6 +76,7 @@
             class="mr-5 font-weight-regular font-nunito hidden-sm-and-down"
             style="letter-spacing: 0.01rem !important"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
+            :to="`room-alert`"
           >
             <v-icon left>mdi-home-search</v-icon>Đăng ký tìm phòng
           </v-btn>
