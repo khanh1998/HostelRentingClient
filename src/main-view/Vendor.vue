@@ -1,6 +1,6 @@
 <template>
   <v-app id="sandbox">
-    <!-- <v-navigation-drawer
+    <v-navigation-drawer
       v-model="primaryDrawer.model"
       :temporary="primaryDrawer.type === 'temporary'"
       app
@@ -20,7 +20,7 @@
           </v-list-item-content>
         </v-list-item>
       </template>
-    </v-navigation-drawer> -->
+    </v-navigation-drawer>
 
     <v-app-bar
       :clipped-left="primaryDrawer.clipped"
@@ -54,6 +54,40 @@
       <!-- <v-btn icon large @click.stop="chatDrawer.model = !chatDrawer.model">
         <v-icon color="#727cf5">mdi-chat-processing</v-icon>
       </v-btn> -->
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <span
+            v-bind="attrs"
+            v-on="on"
+            class="d-flex justify-center align-center font-nunito size9rem mr-10 text-muted"
+          >
+            Hướng dẫn sử dụng
+            <v-icon class="ml-1" color="#98a6ad" size="15">mdi-chevron-down</v-icon>
+          </span>
+        </template>
+        <v-list>
+          <v-list-item
+            style="min-height: 20px !important"
+            class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+          >
+            <v-icon color="#6c757d" class="mr-2 item-hover" size="15">mdi-account-circle</v-icon>
+            <v-list-item-title class="item-hover font-nunito text-gray size9rem"
+              >Tài khoản của tôi</v-list-item-title
+            >
+          </v-list-item>
+          <v-list-item
+            style="min-height: 20px !important"
+            class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+          >
+            <v-icon color="#6c757d" class="mr-2 item-hover" size="15"
+              >mdi-account-arrow-left</v-icon
+            >
+            <v-list-item-title class="item-hover font-nunito text-gray size9rem"
+              >Đăng xuất</v-list-item-title
+            >
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-btn
         @click="doGetMessagingToken"
         v-if="!hasMessagingToken"
@@ -82,7 +116,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-// import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
+import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
 import notify from '../components/vendor/overview/Notify.vue';
 import profileMenu from '../components/vendor/overview/ProfileMenu.vue';
 import authenticationMixins from '../components/mixins/authentication';
@@ -92,7 +126,7 @@ export default {
   name: 'VendorView',
   mixins: [authenticationMixins, pushNotificationMixins],
   components: {
-    // sideMenuBar,
+    sideMenuBar,
     notify,
     profileMenu,
   },

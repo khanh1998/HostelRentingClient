@@ -86,6 +86,7 @@ export default {
     },
   },
   created() {
+    console.log(this.user);
     this.getUser();
   },
 };
