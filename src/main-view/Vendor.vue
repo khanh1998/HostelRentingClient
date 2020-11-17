@@ -1,6 +1,6 @@
 <template>
   <v-app id="sandbox">
-    <!-- <v-navigation-drawer
+    <v-navigation-drawer
       v-model="primaryDrawer.model"
       :temporary="primaryDrawer.type === 'temporary'"
       app
@@ -20,7 +20,7 @@
           </v-list-item-content>
         </v-list-item>
       </template>
-    </v-navigation-drawer> -->
+    </v-navigation-drawer>
 
     <v-app-bar
       :clipped-left="primaryDrawer.clipped"
@@ -116,7 +116,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-// import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
+import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
 import notify from '../components/vendor/overview/Notify.vue';
 import profileMenu from '../components/vendor/overview/ProfileMenu.vue';
 import authenticationMixins from '../components/mixins/authentication';
@@ -126,7 +126,7 @@ export default {
   name: 'VendorView',
   mixins: [authenticationMixins, pushNotificationMixins],
   components: {
-    // sideMenuBar,
+    sideMenuBar,
     notify,
     profileMenu,
   },

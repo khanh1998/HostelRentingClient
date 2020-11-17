@@ -235,4 +235,7 @@ export default {
 .font-weight-500 {
   font-weight: 500 !important;
 }
+.font-weight-300 {
+  font-weight: 300 !important;
+}
 </style>
