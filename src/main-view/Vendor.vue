@@ -29,7 +29,7 @@
       height="70"
       class="white vendor pa-0"
     >
-      <router-link to="/">
+      <!-- <router-link to="/">
         <v-img
           alt="Hostel Renting"
           class="shrink mx-6"
@@ -39,17 +39,17 @@
           max-width="60"
           max-height="60"
         />
-      </router-link>
-      <!-- <v-app-bar-nav-icon
+      </router-link> -->
+      <v-app-bar-nav-icon
         @click.stop="primaryDrawer.model = !primaryDrawer.model"
         style="color: #727cf5 !important"
       >
-      </v-app-bar-nav-icon> -->
-      <!-- <v-toolbar-title
+      </v-app-bar-nav-icon>
+      <v-toolbar-title
         class="font-nunito text-primary font-weight-bold"
         style="font-size: 1.125rem"
         >{{ routeName }}</v-toolbar-title
-      > -->
+      >
       <v-spacer></v-spacer>
       <!-- <v-btn icon large @click.stop="chatDrawer.model = !chatDrawer.model">
         <v-icon color="#727cf5">mdi-chat-processing</v-icon>
