@@ -25,16 +25,21 @@
       {{ snackBarMixin.message }}
     </v-snackbar>
     <v-row class="rounded-lg elevation-5">
-      <v-col cols="12">Đặt thông báo cho phòng trọ mong muốn</v-col>
+      <v-col cols="12">
+        <div class="d-flex justify-center align-center">
+          <span>Đặt thông báo cho phòng trọ mong muốn</span>
+        </div>
+      </v-col>
       <v-col cols="4">
         <v-card-text>Địa điểm, khu vực... bạn muốn ở gần</v-card-text>
-        <div class="searchBar d-flex align-center">
-          <gmap-autocomplete
-            placeholder="Địa điểm, khu vực... bạn muốn ở gần"
-            class="col-11 gmap-input text-body-2 blue-grey--text"
-            @place_changed="setPlace"
-            :selectFirstOnEnter="true"
-          ></gmap-autocomplete>
+        <div class="d-flex align-center">
+          <v-text-field>
+            <gmap-autocomplete
+              placeholder="Địa điểm, khu vực... bạn muốn ở gần"
+              class="form-control"
+              :selectFirstOnEnter="true"
+            ></gmap-autocomplete>
+          </v-text-field>
           <v-btn icon @click="clearField()">
             <v-icon>clear</v-icon>
           </v-btn>
@@ -105,23 +110,38 @@
         </v-chip-group>
       </v-col>
     </v-row>
-    <v-row>
-      <v-slide-group v-model="requestIndex" show-arrows mandatory>
-        <v-slide-item
-          v-for="request in requests.data"
-          :key="request.requestId"
-          v-slot="{ active, toggle }"
-        >
-          <v-card :color="active ? undefined : 'grey lighten-1'" @click="toggle">
-            <v-card-text>
-              <p>Ngày nhận phòng: {{ new Date(request.dueDate).toLocaleDateString('vi') }}</p>
-              <p>Giá tối đa: {{ request.maxPrice }} Triệu</p>
-              <p>Diện tích tối thiểu: {{ request.minSuperficiality }} m2</p>
-              <p>Bán kính tìm kiếm: {{ request.maxDistance }} km</p>
-            </v-card-text>
-          </v-card>
-        </v-slide-item>
-      </v-slide-group>
+    <v-row class="rounded-lg elevation-5 mt-5">
+      <v-col>
+        <v-slide-group v-model="requestIndex" show-arrows mandatory>
+          <v-slide-item
+            v-for="request in requests.data"
+            :key="request.requestId"
+            v-slot="{ active, toggle }"
+          >
+            <v-card
+              :color="active ? 'blue lighten-1' : 'grey lighten-1'"
+              @click="toggle"
+              class="ma-2 elevation-5"
+              width="250"
+            >
+              <v-card-title>
+                {{ request.address }}
+                <v-spacer />
+                <v-btn icon @click="slide.short = !slide.short">
+                  <v-icon v-if="slide.short">arrow_drop_down</v-icon>
+                  <v-icon v-if="!slide.short">arrow_drop_up</v-icon>
+                </v-btn>
+              </v-card-title>
+              <v-card-text v-if="!slide.short">
+                <p>Ngày nhận phòng: {{ new Date(request.dueTime).toLocaleDateString('vi') }}</p>
+                <p>Giá tối đa: {{ request.maxPrice }} Triệu</p>
+                <p>Diện tích tối thiểu: {{ request.minSuperficiality }} m2</p>
+                <p>Bán kính tìm kiếm: {{ request.maxDistance }} km</p>
+              </v-card-text>
+            </v-card>
+          </v-slide-item>
+        </v-slide-group>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -134,6 +154,9 @@ export default {
   name: 'RoomAlert',
   mixins: [validateMixin, snackbarMixin],
   data: () => ({
+    slide: {
+      short: true,
+    },
     requestIndex: 0,
     menu1: null,
     chip: 1,
@@ -149,7 +172,8 @@ export default {
     visibleProperty: 'hidden',
     searchValue: '',
     request: {
-      dueDate: new Date(new Date().toISOString().substr(0, 10)).getTime(),
+      address: null,
+      dueTime: new Date(new Date().toISOString().substr(0, 10)).getTime(),
       latitude: 10.7542893,
       longitude: 106.1346955,
       maxDistance: 5,
@@ -175,7 +199,7 @@ export default {
     },
     setPlace(place) {
       this.currentPlace = place;
-      this.address = `${place.name}-${place.formatted_address}`;
+      this.request.address = `${place.name}-${place.formatted_address}`;
       this.searchValue = place.formatted_address;
       this.request.latitude = place.geometry.location.lat();
       this.request.longitude = place.geometry.location.lng();
@@ -211,7 +235,7 @@ export default {
   },
   watch: {
     startTime() {
-      this.request.dueDate = new Date(this.startTime).getTime();
+      this.request.dueTime = new Date(this.startTime).getTime();
     },
     chip(index) {
       switch (index) {

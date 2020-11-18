@@ -1,5 +1,19 @@
 <template>
   <v-card class="overflow-y-auto" max-height="100%" ref="contractView" id="contractView">
+    <v-dialog v-model="showUserEmptyFields" width="350" persistent>
+      <v-card>
+        <v-card-title> Vui lòng cập nhật thông tin để tạo hợp đồng </v-card-title>
+        <v-card-text v-if="!isValidRenter">
+          Người thuê phòng bổ sung thêm các thông tin sau: {{ renterEmptyFields.join(', ') }}
+        </v-card-text>
+        <v-card-text v-if="!isValidVendor">
+          <!-- Chủ trọ vui lòng bổ sung thêm các thông tin sau: {{ vendorEmptyFields.join(', ') }} -->
+        </v-card-text>
+        <v-card-actions>
+          <v-btn v-if="!isValidVendor" to="/user">Cập nhật thông tin ngay</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="showUpdateSuccess" width="350" persistent>
       <v-card>
         <v-card-title v-if="updateSuccess">
@@ -131,6 +145,7 @@ export default {
     createSuccess: null,
     showCreateSuccess: null,
     showEmptyFields: false,
+    ready: false,
   }),
   methods: {
     ...mapActions({
@@ -138,6 +153,8 @@ export default {
       updateContract: 'user/updateContract',
       getOneBooking: 'user/getOneBooking',
       getOneContract: 'user/getOneContract',
+      getUser: 'user/getUser',
+      sendNotification: 'user/sendNotification',
     }),
     ...mapGetters({
       findContractById: 'user/findContractById',
@@ -194,24 +211,72 @@ export default {
         }
       });
     },
+    emptyFields(newUser, isRenter) {
+      const emptyFields = [];
+      if (!newUser) {
+        return emptyFields;
+      }
+      const { username } = newUser;
+      if (!username) {
+        emptyFields.push('Tên');
+      }
+      const { yearOfBirth } = newUser;
+      if (!yearOfBirth) {
+        emptyFields.push('năm sinh');
+      }
+      if (isRenter) {
+        const { provinceId } = newUser.hometown;
+        if (!provinceId) {
+          emptyFields.push('quê quán');
+        }
+        const { schoolId } = newUser.school;
+        if (!schoolId) {
+          emptyFields.push('trường đại học');
+        }
+      }
+      const { email } = newUser;
+      if (!email) {
+        emptyFields.push('email');
+      }
+      const { citizenIdNum } = newUser;
+      if (!citizenIdNum) {
+        emptyFields.push('số CMNN');
+      }
+      const { idIssuedLocation } = newUser;
+      if (!idIssuedLocation) {
+        emptyFields.push('nơi cấp CMNN');
+      }
+      const { idIssuedDate } = newUser;
+      if (!idIssuedDate) {
+        emptyFields.push('ngày cấp CMNN');
+      }
+      const { householdAddress } = newUser;
+      if (!householdAddress) {
+        emptyFields.push('địa chỉ thường trú');
+      }
+      const { currentAddress } = newUser;
+      if (!currentAddress) {
+        emptyFields.push('địa chỉ hiện tại');
+      }
+      const { citizenIdFrontImg } = newUser;
+      if (!citizenIdFrontImg) {
+        emptyFields.push('ảnh mặt trước CMNN');
+      }
+      const { citizenIdBackImg } = newUser;
+      if (!citizenIdBackImg) {
+        emptyFields.push('ảnh mắt sau CMNN');
+      }
+      return emptyFields;
+    },
   },
   computed: {
     ...mapState({
       contracts: (state) => state.user.contracts,
       bookings: (state) => state.user.bookings,
+      user: (state) => state.user.user,
     }),
     showDoingPopup() {
       return this.contracts.isLoading || this.contracts.isUpdating || this.contracts.isCreating;
-    },
-    ready() {
-      switch (this.mode) {
-        case 'create':
-          return !this.bookings.isLoading;
-        case 'update':
-          return Object.entries(this.contractFull).length !== 0;
-        default:
-          return false;
-      }
     },
     bookingId() {
       return this.$route.query.bookingId;
@@ -221,7 +286,10 @@ export default {
     },
     renter() {
       if (this.mode === 'create') {
-        return this.booking.renter;
+        if (this.booking) {
+          return this.booking.renter;
+        }
+        return null;
       }
       if (this.mode === 'update') {
         return this.contractFull.renter;
@@ -229,7 +297,7 @@ export default {
       return null;
     },
     vendor() {
-      if (this.mode === 'create') {
+      if (this.mode === 'create' && this.booking) {
         return this.booking.vendor;
       }
       if (this.mode === 'update') {
@@ -238,7 +306,7 @@ export default {
       return null;
     },
     group() {
-      if (this.mode === 'create') {
+      if (this.mode === 'create' && this.booking) {
         return this.booking.group;
       }
       if (this.mode === 'update') {
@@ -247,7 +315,7 @@ export default {
       return null;
     },
     type() {
-      if (this.mode === 'create') {
+      if (this.mode === 'create' && this.booking) {
         return this.booking.type;
       }
       if (this.mode === 'update') {
@@ -262,27 +330,67 @@ export default {
       return this.findBookingById()(this.bookingId);
     },
     qrCodeValue() {
-      return `contract: ${this.contracts.newlyCreated.contractId}, ${this.contracts.newlyCreated.qrCode}`;
+      if (this.newlyCreatedContract) {
+        return `contract: ${this.contracts.newlyCreated.contractId}, ${this.contracts.newlyCreated.qrCode}`;
+      }
+      return 'nothing here';
     },
     newlyCreatedContract() {
       return this.contracts.newlyCreated;
     },
+    renterEmptyFields() {
+      const emptyFields = this.emptyFields(this.renter, true);
+      return emptyFields;
+    },
+    isValidRenter() {
+      return this.renterEmptyFields.length === 0;
+    },
+    vendorEmptyfields() {
+      const emptyFields = this.emptyFields(this.vendor, false);
+      return emptyFields;
+    },
+    isValidVendor() {
+      return this.vendorEmptyfields.length === 0;
+    },
+    showUserEmptyFields() {
+      return !this.isValidRenter || !this.isValidVendor;
+    },
   },
   created() {
-    console.log('contract.vue is created');
-    if (this.mode === 'create') {
-      this.getOneBooking(this.bookingId);
-    }
-    if (this.mode === 'update') {
-      this.getOneContract(this.contractId).then(() => {
-        this.contractFull = this.findContractById()(this.contractId);
-        if (this.contractFull.room) {
-          this.contractFull.roomId = this.contractFull.room.roomId;
-        }
-      });
-    }
+    this.ready = false;
+    this.getUser().then(() => {
+      console.log('mode: ', this.mode);
+
+      if (this.mode === 'create') {
+        this.getOneBooking(this.bookingId).then(() => {
+          if (!this.isValidRenter) {
+            this.sendNotification({
+              title: 'Vui lòng cập nhật thông tin để tạo hợp đồngv',
+              body: `${this.vendorEmptyfields.join(', ')}`,
+              action: 'REQUIRED_UPDATE_INFO',
+              id: '',
+              icon: this.renter.avatar,
+              vendorId: null,
+              renterId: this.renter.userId,
+            });
+          }
+        });
+        console.log('here');
+        this.ready = true;
+      }
+      if (this.mode === 'update') {
+        this.getOneContract(this.contractId).then(() => {
+          this.contractFull = this.findContractById()(this.contractId);
+          if (this.contractFull.room) {
+            this.contractFull.roomId = this.contractFull.room.roomId;
+          }
+          this.ready = true;
+        });
+      }
+    });
     this.registerMessaging(); // from mixins
   },
+  mounted() {},
   watch: {
     newlyCreatedContract: {
       handler() {

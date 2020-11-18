@@ -82,6 +82,8 @@ export default {
           return '/contract';
         case action.UPDATE_CONTRACT:
           return '/contract';
+        case action.REQUIRED_UPDATE_INFO:
+          return '/user';
         default:
           return '/';
       }
@@ -101,8 +103,10 @@ export default {
           return '/vendor/booking';
         case action.SCAN_BOOKING:
           return '/vendor/booking';
+        case action.REQUIRED_UPDATE_INFO:
+          return '/user';
         default:
-          return '/';
+          return '/vendor';
       }
     },
   },
