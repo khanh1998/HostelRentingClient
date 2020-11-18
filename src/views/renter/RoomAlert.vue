@@ -1,12 +1,8 @@
 <template>
   <v-container>
-    <v-dialog v-model="isLoading" hide-overlay persistent width="300">
-      <v-card color="primary" dark>
-        <v-card-text>
-          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <v-overlay :value="isLoading">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
     <v-dialog hide-overlay persistent width="300">
       <v-card color="primary" dark>
         <v-card-title>
@@ -33,13 +29,11 @@
       <v-col cols="4">
         <v-card-text>Địa điểm, khu vực... bạn muốn ở gần</v-card-text>
         <div class="d-flex align-center">
-          <v-text-field>
-            <gmap-autocomplete
-              placeholder="Địa điểm, khu vực... bạn muốn ở gần"
-              class="form-control"
-              :selectFirstOnEnter="true"
-            ></gmap-autocomplete>
-          </v-text-field>
+          <gmap-autocomplete
+            placeholder="Địa điểm, khu vực... bạn muốn ở gần"
+            class="form-control"
+            :selectFirstOnEnter="true"
+          ></gmap-autocomplete>
           <v-btn icon @click="clearField()">
             <v-icon>clear</v-icon>
           </v-btn>
@@ -112,7 +106,7 @@
     </v-row>
     <v-row class="rounded-lg elevation-5 mt-5">
       <v-col>
-        <v-slide-group v-model="requestIndex" show-arrows mandatory>
+        <v-slide-group v-model="slide.requestIndex" show-arrows>
           <v-slide-item
             v-for="request in requests.data"
             :key="request.requestId"
@@ -138,26 +132,38 @@
                 <p>Diện tích tối thiểu: {{ request.minSuperficiality }} m2</p>
                 <p>Bán kính tìm kiếm: {{ request.maxDistance }} km</p>
               </v-card-text>
+              <v-card-actions>
+                <v-btn @click="getResult(request.requestId)" text>Xem danh sách phòng</v-btn>
+              </v-card-actions>
             </v-card>
           </v-slide-item>
         </v-slide-group>
       </v-col>
     </v-row>
+    <v-row class="rounded-lg elevation-5 mt-5" v-if="result">
+      <v-col v-for="type in result.types" :key="type.typeId" cols="3">
+        <CarouselItem :type="type" :typeGroup="getGroupOfType(type.groupId)" />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script>
+import axios from 'axios';
 import { mapActions, mapState } from 'vuex';
 import validateMixin from '../../components/mixins/validate';
 import snackbarMixin from '../../components/mixins/snackBar';
+import CarouselItem from '../../components/home/TopCarouselItem.vue';
 
 export default {
   name: 'RoomAlert',
+  components: { CarouselItem },
   mixins: [validateMixin, snackbarMixin],
   data: () => ({
+    result: null,
     slide: {
       short: true,
+      requestIndex: 0,
     },
-    requestIndex: 0,
     menu1: null,
     chip: 1,
     chip1: 1,
@@ -180,6 +186,7 @@ export default {
       maxPrice: 2,
       minSuperficiality: 15,
     },
+    isLoadingResult: false,
   }),
   methods: {
     ...mapActions({
@@ -187,6 +194,9 @@ export default {
       getRoomRequests: 'user/getRoomRequests',
       getUser: 'user/getUser',
     }),
+    getGroupOfType(groupId) {
+      return this.result.groups.find((group) => group.groupId === groupId);
+    },
     doCreateRoomRequest() {
       this.request.maxPrice = Number(this.request.maxPrice);
       this.createRoomRequest(this.request).then(() => {
@@ -214,6 +224,18 @@ export default {
         });
       }
     },
+    getResult(requestId) {
+      this.isLoadingResult = true;
+      try {
+        axios.get(`/api/v1/types?requestId=${requestId}`).then((res) => {
+          this.result = res.data.data;
+          this.isLoadingResult = false;
+        });
+      } catch (error) {
+        console.log(error);
+        this.isLoadingResult = false;
+      }
+    },
   },
   computed: {
     ...mapState({
@@ -224,7 +246,12 @@ export default {
       return new Date(this.startTime).toLocaleDateString('vi');
     },
     isLoading() {
-      return this.requests.isLoading || this.requests.isCreating || this.user.isLoading;
+      return (
+        this.requests.isLoading ||
+        this.requests.isCreating ||
+        this.user.isLoading ||
+        this.isLoadingResult
+      );
     },
   },
   created() {
