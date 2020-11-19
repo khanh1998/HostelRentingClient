@@ -122,6 +122,7 @@ export default {
   name: 'TopCarouselItem',
   props: {
     type: Object,
+    typeGroup: Object,
   },
   computed: {
     isLoadingProvinces() {
@@ -129,6 +130,9 @@ export default {
     },
     group: {
       get() {
+        if (this.typeGroup) {
+          return this.typeGroup;
+        }
         const id = this.type.groupId;
         return this.$store.getters['renter/home/getTopViewHostelGroupById'](id);
       },
