@@ -34,8 +34,7 @@ const pushNotificationMixins = {
         });
     },
     notificationsPermisionRequest() {
-      messaging
-        .requestPermission()
+      Notification.requestPermission()
         .then(() => {
           this.getMessagingToken();
         })

@@ -26,20 +26,21 @@
           <span>Đặt thông báo cho phòng trọ mong muốn</span>
         </div>
       </v-col>
-      <v-col cols="4">
+      <v-col cols="5">
         <v-card-text>Địa điểm, khu vực... bạn muốn ở gần</v-card-text>
         <div class="d-flex align-center">
           <gmap-autocomplete
             placeholder="Địa điểm, khu vực... bạn muốn ở gần"
-            class="form-control"
+            class="address-input"
             :selectFirstOnEnter="true"
+            @place_changed="setPlace"
           ></gmap-autocomplete>
           <v-btn icon @click="clearField()">
             <v-icon>clear</v-icon>
           </v-btn>
         </div>
       </v-col>
-      <v-col cols="3">
+      <v-col cols="5">
         <v-card-text>Chọn ngày nhận phòng</v-card-text>
         <v-menu
           v-model="menu1"
@@ -67,7 +68,7 @@
           ></v-date-picker>
         </v-menu>
       </v-col>
-      <v-col cols="3">
+      <v-col cols="2">
         <v-card-text>Giá tối đa mà bạn muốn trả</v-card-text>
         <v-text-field
           hide-details
@@ -77,11 +78,6 @@
           :rules="isPositiveNum"
           :step="0.1"
         />
-      </v-col>
-      <v-col cols="2">
-        <v-btn icon @click="doCreateRoomRequest">
-          <v-icon>add_circle_outline</v-icon>
-        </v-btn>
       </v-col>
       <v-col cols="4">
         <v-card-text>Bán kính tìm kiếm tính từ vị trí mà bạn đã chọn</v-card-text>
@@ -102,6 +98,11 @@
           <v-chip filter>30 m2</v-chip>
           <v-chip filter>40 m2</v-chip>
         </v-chip-group>
+      </v-col>
+      <v-col cols="2">
+        <v-btn icon @click="doCreateRoomRequest">
+          <v-icon>add_circle_outline</v-icon>
+        </v-btn>
       </v-col>
     </v-row>
     <v-row class="rounded-lg elevation-5 mt-5">
@@ -309,3 +310,19 @@ export default {
   },
 };
 </script>
+<style scoped>
+.address-input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 3px solid #ccc;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
+
+.address-input:focus {
+  border: 1px solid #555;
+}
+</style>

@@ -7,10 +7,11 @@
           Người thuê phòng bổ sung thêm các thông tin sau: {{ renterEmptyFields.join(', ') }}
         </v-card-text>
         <v-card-text v-if="!isValidVendor">
-          <!-- Chủ trọ vui lòng bổ sung thêm các thông tin sau: {{ vendorEmptyFields.join(', ') }} -->
+          Chủ trọ vui lòng bổ sung thêm các thông tin sau: {{ vendorEmptyFieldsR }}
         </v-card-text>
         <v-card-actions>
           <v-btn v-if="!isValidVendor" to="/user">Cập nhật thông tin ngay</v-btn>
+          <v-btn to="/vendor">Trang chủ</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -345,12 +346,13 @@ export default {
     isValidRenter() {
       return this.renterEmptyFields.length === 0;
     },
-    vendorEmptyfields() {
-      const emptyFields = this.emptyFields(this.vendor, false);
+    vendorEmptyfieldsR() {
+      console.log('vendor empty fields');
+      const emptyFields = this.emptyFields(this.renter, true);
       return emptyFields;
     },
     isValidVendor() {
-      return this.vendorEmptyfields.length === 0;
+      return this.vendorEmptyfieldsR.length === 0;
     },
     showUserEmptyFields() {
       return !this.isValidRenter || !this.isValidVendor;
@@ -366,7 +368,7 @@ export default {
           if (!this.isValidRenter) {
             this.sendNotification({
               title: 'Vui lòng cập nhật thông tin để tạo hợp đồngv',
-              body: `${this.vendorEmptyfields.join(', ')}`,
+              body: `${this.renterEmptyFields.join(', ')}`,
               action: 'REQUIRED_UPDATE_INFO',
               id: '',
               icon: this.renter.avatar,

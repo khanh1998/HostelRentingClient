@@ -133,7 +133,7 @@
                       v-if="mode !== 'view'"
                       @appendixContent="receiveAppendixContent"
                       :editorContent="contract.appendixContract"
-                      :template="contractObj.appendixContract"
+                      :template="group.appendixContract"
                     />
                     <span v-if="mode === 'view'" v-html="contract.appendixContract"></span>
                   </v-col>
