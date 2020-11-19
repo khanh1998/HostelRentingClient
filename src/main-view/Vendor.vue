@@ -29,32 +29,30 @@
       height="70"
       class="white vendor pa-0"
     >
-      <!-- <router-link to="/">
+      <v-app-bar-nav-icon
+        @click.stop="primaryDrawer.model = !primaryDrawer.model"
+        _style="color: #727cf5 !important"
+        class="nav-icon"
+      >
+      </v-app-bar-nav-icon>
+      <router-link to="/">
         <v-img
           alt="Hostel Renting"
-          class="shrink mx-6"
+          class="shrink ml-1"
           contain
           src="@/assets/logo-sac.png"
           transition="scale-transition"
           max-width="60"
-          max-height="60"
+          max-height="40"
         />
-      </router-link> -->
-      <v-app-bar-nav-icon
-        @click.stop="primaryDrawer.model = !primaryDrawer.model"
-        style="color: #727cf5 !important"
-      >
-      </v-app-bar-nav-icon>
-      <v-toolbar-title
+      </router-link>
+      <!-- <v-toolbar-title
         class="font-nunito text-primary font-weight-bold"
         style="font-size: 1.125rem"
         >{{ routeName }}</v-toolbar-title
-      >
+      > -->
       <v-spacer></v-spacer>
-      <!-- <v-btn icon large @click.stop="chatDrawer.model = !chatDrawer.model">
-        <v-icon color="#727cf5">mdi-chat-processing</v-icon>
-      </v-btn> -->
-      <v-menu offset-y>
+      <!-- <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <span
             v-bind="attrs"
@@ -87,7 +85,7 @@
             >
           </v-list-item>
         </v-list>
-      </v-menu>
+      </v-menu> -->
       <v-btn
         @click="doGetMessagingToken"
         v-if="!hasMessagingToken"
@@ -97,7 +95,7 @@
         <v-icon small class="mr-1">notifications_none</v-icon>Bật thông báo
       </v-btn>
       <notify />
-      <profile-menu />
+      <profile-menu v-if="!isLoadingUser" />
     </v-app-bar>
 
     <v-main _style="max-height: calc(100vh); overflow-y: hidden;">
@@ -134,6 +132,12 @@ export default {
     routeName() {
       return this.$route.meta.vi || 'Yoho';
     },
+    user() {
+      return this.$store.state.user.user.data;
+    },
+    isLoadingUser() {
+      return this.$store.state.user.user.isLoading;
+    },
     hasMessagingToken() {
       return localStorage.getItem('messagingToken') != null;
     },
@@ -159,10 +163,14 @@ export default {
     }),
   },
   created() {
-    this.getUser().then(() => {
-      console.log('get fcm token at Vendor.vue');
+    if (!this.user) {
+      this.getUser().then(() => {
+        console.log('get fcm token at sideMenuBar.vue');
+        this.doGetMessagingToken();
+      });
+    } else {
       this.doGetMessagingToken();
-    });
+    }
   },
 };
 </script>
@@ -216,6 +224,36 @@ export default {
   font-weight: 700 !important;
   font-family: 'Nunito', sans-serif !important;
   color: #6c757d !important;
-  font-size: 1.15rem !important;
+  font-size: 1.075rem !important;
+}
+.nav-icon {
+  color: #313a46 !important;
+}
+.nav-icon:hover {
+  color: #727cf5 !important;
+}
+.badge-primary {
+  color: #fff;
+  background-color: #727cf5;
+}
+.badge-warning-lighten {
+  color: #ffbc00;
+  font-weight: 700;
+  background-color: rgba(255, 188, 0, 0.18);
+}
+.badge-info-lighten {
+  color: #727cf5;
+  font-weight: 700;
+  background-color: rgba(57, 175, 209, 0.18);
+}
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  font-size: 80%;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
 }
 </style>

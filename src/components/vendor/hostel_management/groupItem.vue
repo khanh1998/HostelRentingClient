@@ -127,7 +127,11 @@ export default {
   }),
   methods: {
     managementRooms() {
-      const route = this.$router.resolve(`managementRooms/${this.group.groupId}`);
+      // const route = this.$router.resolve(`managementRooms/${this.group.groupId}`);
+      const route = this.$router.resolve({
+        path: 'rooms',
+        query: { hostel: `${this.group.groupId}` },
+      });
       window.open(route.href, '_blank');
     },
   },

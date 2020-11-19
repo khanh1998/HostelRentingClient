@@ -128,8 +128,20 @@ export default {
 .text-primary-hover {
   color: #727cf5 !important;
 }
+.text-primary-danger-hover {
+  color: #727cf5 !important;
+}
+.text-primary-sucess-hover {
+  color: #727cf5 !important;
+}
 .text-primary-hover:hover {
   color: #4250f2 !important;
+}
+.text-primary-danger-hover:hover {
+  color: red !important;
+}
+.text-primary-sucess-hover:hover {
+  color: #08ab7c !important;
 }
 .text-primary-dark {
   color: #4250f2 !important;

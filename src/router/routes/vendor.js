@@ -22,16 +22,17 @@ const routes = [
         alias: '',
       },
       {
-        path: 'management',
+        path: 'groups',
         name: 'HostelManagement',
         component: HostelManagement,
-        // meta: { requiresAuth: true, is_vendor: true, vi: 'Quản lí nhà trọ' },
+        meta: { requiresAuth: true, is_vendor: true, vi: 'Quản lí nhà trọ' },
       },
       {
-        path: 'managementRooms/:groupId',
+        path: 'rooms',
         name: 'RoomManagement',
         component: RoomManagement,
         meta: { requiresAuth: true, is_vendor: true, vi: 'Quản lí phòng' },
+        props: true,
       },
       {
         path: 'qrgeneration',
