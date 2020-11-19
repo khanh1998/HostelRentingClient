@@ -30,7 +30,7 @@
               <v-col cols="6" class="d-flex">
                 <v-select
                   v-model="newRoomValue.typeId"
-                  :items="group.types"
+                  :items="allTypes"
                   item-text="title"
                   item-value="typeId"
                   label="Loại phòng"
@@ -39,7 +39,7 @@
                   solo
                   class="size-sub-2 font-nunito form"
                   @change="setNewRoom(newRoomValue)"
-                  v-if="group.types.length > 0"
+                  v-if="allTypes.length > 0"
                 ></v-select>
                 <span
                   class="d-flex align-center font-nunito text-warning white px-5"
@@ -52,7 +52,7 @@
                     box-shadow: 0 0 20px 0 rgba(154, 161, 171, 0.15) !important;
                     height: 50px;
                   "
-                  v-if="group.types.length === 0"
+                  v-if="allTypes.length === 0"
                   >Bạn chưa tạo loại phòng nào để quản lý</span
                 >
                 <v-btn
@@ -63,19 +63,19 @@
                     border-bottom-left-radius: 0px !important;
                   "
                   height="50"
-                  v-if="group.types.length === 0"
+                  v-if="allTypes.length === 0"
                   >TẠO NGAY</v-btn
                 >
               </v-col>
               <v-col cols="6" class="d-flex">
                 <v-btn
                   class="mx-5 btn-warning btn-sm font-nunito"
-                  v-if="group.types.length > 0"
+                  v-if="allTypes.length > 0"
                   @click="openCreateTypeDialog()"
-                  >Thêm loại phòng mới</v-btn
+                  ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm loại phòng mới</v-btn
                 >
-                <v-btn class="mx-5 btn-success btn-sm font-nunito white--text" @click="addRoom()"
-                  >Thêm phòng mới</v-btn
+                <v-btn class="mx-5 btn-danger btn-sm font-nunito white--text" @click="addRoom()"
+                  ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm phòng trọ</v-btn
                 >
               </v-col>
             </v-row>
@@ -316,7 +316,7 @@
                   </v-row>
                   <v-row>
                     <div class="d-flex flex-wrap align-center pa-2">
-                      <div v-for="image in images" :key="image.resourceUrl">
+                      <div v-for="image in newTypeValue.image" :key="image.resourceUrl">
                         <v-img
                           :src="image.resourceUrl"
                           :lazy-src="image.resourceUrl"
@@ -388,7 +388,8 @@
         <v-divider></v-divider>
         <v-card-actions class="d-flex justify-end pa-4">
           <v-btn class="btn btn-light elevation-0 font-nunito" @click="closeCreateTypeDialog()">
-            Quay lại
+            <span v-if="!showCreateTypeDialog">Quay lại</span>
+            <span v-if="showCreateTypeDialog">Hủy</span>
           </v-btn>
           <v-btn class="btn btn-primary font-nunito" @click="insertNewType()">Lưu</v-btn>
         </v-card-actions>
@@ -411,7 +412,6 @@ export default {
   data: () => ({
     typeIdNull: false,
     roomNameNull: false,
-    showCreateTypeDialog: false,
     searchFacilitiesQuery: '',
     rules: {
       minPrice(value) {
@@ -441,10 +441,20 @@ export default {
       image: false,
     },
     isNotValidate: false,
+    openCreateType: false,
   }),
-  props: { show: Boolean, group: Object },
+  props: { show: Boolean, group: Object, showCreateType: Boolean },
   components: { RoomItem, FacilityItem, alert },
   computed: {
+    // showCreateTypeDialog() {
+    //   return this.showCreateType;
+    // },
+    showCreateTypeDialog() {
+      if (this.show === null) {
+        return this.show === null && this.showCreateType;
+      }
+      return this.openCreateType;
+    },
     isLoading() {
       const allFacilities = this.$store.state.renter.common.facilities.isLoading;
       return allFacilities;
@@ -504,6 +514,18 @@ export default {
     isCreatedRoomsSuccess() {
       return this.$store.state.vendor.group.creatRooms.success;
     },
+    allTypes() {
+      if (this.group) {
+        const group = this.$store.state.vendor.group.groups.data.find(
+          (item) => item.groupId === this.group.groupId,
+        );
+        if (group) {
+          return group.types;
+        }
+        return [];
+      }
+      return [];
+    },
   },
   methods: {
     ...mapActions({
@@ -514,16 +536,17 @@ export default {
       insertListRooms: 'vendor/group/createRooms',
       createHostelType: 'vendor/group/createHostelType',
     }),
-    getTypes() {
-      return this.group.types;
-    },
     closeDialog() {
       const rooms = [];
       this.setCreatRooms(rooms);
       this.$emit('close');
     },
     closeCreateTypeDialog() {
-      this.showCreateTypeDialog = false;
+      if (this.show === null) {
+        this.$emit('close');
+      } else {
+        this.openCreateType = false;
+      }
       this.resetType();
     },
     resetType() {
@@ -539,6 +562,8 @@ export default {
         facilityIds: [],
         newFacilities: [],
       });
+      this.images = [];
+      this.listUploadedFiles = [];
     },
     addRoom() {
       this.createRooms.push({
@@ -647,9 +672,9 @@ export default {
         console.log(this.newTypeValue, newType);
         this.createHostelType(newType).then(() => {
           if (this.isCreateSuccess) {
-            this.group.types = this.$store.state.vendor.group.groups.data.find(
-              (item) => item.groupId === this.group.groupId,
-            ).types;
+            // this.group.types = this.$store.state.vendor.group.groups.data.find(
+            //   (item) => item.groupId === this.group.groupId,
+            // ).types;
             this.closeCreateTypeDialog();
           }
         });
@@ -671,10 +696,7 @@ export default {
       return { typePrice, typePriceUnit };
     },
     openCreateTypeDialog() {
-      if (this.allFacilities.length === 0) {
-        this.getAllFacilities();
-      }
-      this.showCreateTypeDialog = true;
+      this.openCreateType = true;
     },
     addNewFacility() {
       if (this.newTypeValue.newFacilities.length === 0) {
@@ -721,7 +743,11 @@ export default {
         });
     },
   },
-  created() {},
+  created() {
+    if (this.allFacilities.length === 0) {
+      this.getAllFacilities();
+    }
+  },
 };
 </script>
 

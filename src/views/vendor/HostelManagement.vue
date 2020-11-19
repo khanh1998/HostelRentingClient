@@ -1,9 +1,9 @@
 <template>
-  <v-row no-gutters class="d-flex justify-center">
+  <v-row no-gutters class="d-flex justify-center ma-0 pa-0">
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-container v-if="!isLoading">
+    <v-container v-if="!isLoading" class="pa-0">
       <GroupManagement
         :show="openGroupManagementDialog"
         @close="openGroupManagementDialog = false"
@@ -11,17 +11,20 @@
         :update="false"
         @check-created="checkCreated"
       />
-      <v-row justify="center">
+      <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" sm="12" md="12" lg="12" xl="11">
           <v-row class="d-flex align-center ma-0">
             <span class="page-title">Danh sách nhà trọ</span>
             <v-btn
               class="mx-5 btn-success btn-sm font-nunito white--text"
               @click="openGroupManagementDialog = true"
-              >Tạo mới</v-btn
+              ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm nhà trọ</v-btn
+            >
+            <v-btn class="mx-5 px-10 btn-warning btn-sm font-nunito" to="rooms"
+              >Quản lý phòng trọ</v-btn
             >
             <v-spacer></v-spacer>
-            <v-col cols="4" class="d-flex align-center">
+            <v-col cols="3" class="d-flex align-center">
               <v-text-field
                 v-show="showSearchGroup"
                 label="Tìm theo tên nhà trọ"
@@ -49,13 +52,13 @@
                   <v-btn
                     v-bind="attrs"
                     v-on="on"
+                    elevation="0"
                     height="38"
                     class="font-nunito size9rem btn-dropdown d-flex align-center justify-center px-0"
                     style="
-                      background-color: #6c757d !important;
+                      background-color: #727cf5 !important;
                       border-top-left-radius: 0;
                       border-bottom-left-radius: 0;
-                      box-shadow: 0 2px 6px 0 rgba(108, 117, 125, 0.5);
                       border-top-right-radius: 0.15rem !important;
                       border-bottom-right-radius: 0.15rem !important;
                     "
@@ -85,37 +88,47 @@
                 </v-list>
               </v-menu>
             </v-col>
-            <v-col cols="1" class="d-flex justify-end align-end">
-              <v-menu offset-y left>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn icon class="btn-hover pa-0" v-bind="attrs" v-on="on"
-                    ><v-icon size="20">mdi-sort-ascending</v-icon></v-btn
+            <!-- <v-col cols="1" class="d-flex justify-end align-end"> -->
+            <v-menu offset-y left>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="btn-hover px-0"
+                  v-bind="attrs"
+                  v-on="on"
+                  max-width="50"
+                  min-width="50"
+                  style="
+                    background-color: #727cf5 !important;
+                    border-radius: 0.15rem !important;
+                    box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
+                  "
+                  ><v-icon size="15" color="#fff">mdi-sort-ascending</v-icon></v-btn
+                >
+              </template>
+              <v-list>
+                <v-list-item
+                  style="min-height: 20px !important"
+                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                >
+                  <v-list-item-title
+                    class="item-hover font-nunito text-gray size9rem"
+                    @click="sortEmpty = true"
+                    >Phòng trống</v-list-item-title
                   >
-                </template>
-                <v-list>
-                  <v-list-item
-                    style="min-height: 20px !important"
-                    class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                </v-list-item>
+                <v-list-item
+                  style="min-height: 20px !important"
+                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                >
+                  <v-list-item-title
+                    class="item-hover font-nunito size9rem text-gray"
+                    @click="sortEmpty = false"
+                    >Phòng đang thuê</v-list-item-title
                   >
-                    <v-list-item-title
-                      class="item-hover font-nunito text-gray size9rem"
-                      @click="sortEmpty = true"
-                      >Phòng trống</v-list-item-title
-                    >
-                  </v-list-item>
-                  <v-list-item
-                    style="min-height: 20px !important"
-                    class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                  >
-                    <v-list-item-title
-                      class="item-hover font-nunito size9rem text-gray"
-                      @click="sortEmpty = false"
-                      >Phòng đang thuê</v-list-item-title
-                    >
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </v-col>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <!-- </v-col> -->
           </v-row>
           <v-card class="mt-5 px-5 py-4">
             <v-row>
@@ -245,6 +258,9 @@ export default {
       getTypes: 'vendor/group/getTypes',
       getRooms: 'vendor/group/getRooms',
     }),
+    manageRooms() {
+      this.$router.push('rooms');
+    },
     checkCreated(e) {
       this.showSnackBar(`Khu trọ ${e} đã được tạo thành công`, {
         color: 'green',
@@ -328,4 +344,7 @@ export default {
 }
 </style>
 <style scoped>
+.v-application a:hover {
+  color: #fff !important;
+}
 </style>

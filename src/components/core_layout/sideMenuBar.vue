@@ -22,7 +22,7 @@
           @click="doGetMessagingToken"
           v-if="!hasMessagingToken"
           class="bg-warning-lighten elevation-0 text-warning font-nunito size9rem d-flex justify-start"
-          style="letter-spacing: 0.01rem !important;"
+          style="letter-spacing: 0.01rem !important"
         >
           <v-icon small class="mr-1">notifications_none</v-icon>Bật thông báo
         </v-btn>
@@ -85,7 +85,7 @@ export default {
         {
           title: 'Quản lý nhà trọ',
           icon: 'menu_room',
-          link: '/vendor/management',
+          link: '/vendor/groups',
         },
         {
           title: 'Quản lý hợp đồng',

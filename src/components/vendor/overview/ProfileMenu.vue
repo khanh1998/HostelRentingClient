@@ -1,6 +1,6 @@
 <template>
   <div
-    class="d-flex align-center justify-center mr-md-8"
+    class="d-flex align-center justify-center mr-md-3"
     style="
       height: 100%;
       background-color: #fafbfd !important;
@@ -18,17 +18,15 @@
         >
           <v-btn icon>
             <v-avatar color="#727cf5" size="35" min-width="30" min-height="30" item>
-              <!-- <v-img v-if="user.avatar" :src="user.avatar" :alt="user.username"></v-img> -->
-              <!-- <span _v-else class="text-overline white--text">{{
+              <v-img v-if="user.avatar" :src="user.avatar" :alt="user.username"></v-img>
+              <span v-else class="text-overline white--text">{{
                 getAvatarTitle(user.username)
-              }}</span> -->
-              <span _v-else class="text-overline white--text">{{ getAvatarTitle('thuy') }}</span>
+              }}</span>
             </v-avatar>
           </v-btn>
           <div class="hidden-xs-only">
             <span class="text-muted d-flex flex-column font-nunito">
-              <!-- <span class="size9rem text-primary">{{ user.username }}</span> -->
-              <span class="size9rem text-primary">Nguyễn Văn Thanh</span>
+              <span class="size9rem text-primary">{{ user.username }}</span>
               <span class="size-caption">Chủ trọ</span>
             </span>
           </div>
@@ -84,10 +82,6 @@ export default {
     isLoadingUser() {
       return this.$store.state.user.user.isLoading;
     },
-  },
-  created() {
-    console.log(this.user);
-    this.getUser();
   },
 };
 </script>
