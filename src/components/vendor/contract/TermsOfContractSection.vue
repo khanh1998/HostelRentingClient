@@ -5,6 +5,24 @@
         <v-card>
           <v-row no-gutters>
             <v-row>
+              <v-col cols="12">
+                <div class="d-flex justify-center align-center">
+                  <v-card>
+                    <v-card-text>
+                      <span class="text-h6 mt-5">Chọn loại hợp đồng</span>
+                      <v-switch v-model="contract.reserved" :label="contractTypeString"></v-switch>
+                      <v-text-field
+                        v-if="contract.reserved"
+                        v-model="contract.downPayment"
+                        type="number"
+                        label="Tiền cọc giữ chỗ"
+                        suffix="triệu đồng"
+                      >
+                      </v-text-field>
+                    </v-card-text>
+                  </v-card>
+                </div>
+              </v-col>
               <v-col cols="12" md="5">
                 <v-card-text class="d-flex flex-column">
                   <span class="text-h6 mt-5">THÔNG TIN PHÒNG TRỌ</span>
@@ -138,6 +156,7 @@
                     <span v-if="mode === 'view'" v-html="contract.appendixContract"></span>
                   </v-col>
                   <v-col cols="12">
+                    <span>Ảnh của hợp đồng giấy (nếu có)</span>
                     <ImageEditor
                       :mode="mode"
                       @newValues="receiveNewImages"
@@ -234,6 +253,9 @@ export default {
       startTime: new Date().getTime(),
       images: [],
       appendixContract: null,
+      reserved: false,
+      paid: false,
+      downPayment: 0,
     },
     rooms: {
       data: [],
@@ -298,6 +320,12 @@ export default {
       }
       return '';
     },
+    contractTypeString() {
+      if (this.contract.reserved) {
+        return 'Hợp đồng có đặt cọc giữ chỗ';
+      }
+      return 'Hợp đồng không có đặt cọc giữ chỗ';
+    },
   },
   created() {
     this.getRoomsOfType();
@@ -310,6 +338,9 @@ export default {
         images,
         appendixContract,
         contractId,
+        paid,
+        downPayment,
+        reserved,
       } = this.contractObj;
       this.contract.roomId = roomId;
       this.contract.duration = duration;
@@ -319,6 +350,12 @@ export default {
       this.contract.appendixContract = appendixContract;
       this.contract.contractId = contractId;
       this.startTime = new Date(startTime).toISOString().substr(0, 10);
+      this.contract.paid = paid;
+      this.contract.downPayment = downPayment;
+      this.contract.reserved = reserved;
+    }
+    if (this.mode === 'create') {
+      this.contract.downPayment = this.group.downPayment;
     }
   },
   watch: {

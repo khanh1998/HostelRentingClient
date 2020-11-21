@@ -32,11 +32,11 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-row no-gutters>
+    <!-- <v-row no-gutters>
       <v-col>
         <span class="text-h6"><v-icon left>insert_photo</v-icon>Hình ảnh</span>
       </v-col>
-    </v-row>
+    </v-row> -->
     <v-row>
       <v-col cols="12">
         <v-btn class="ml-2" @click="openImageUploadDialog" depressed>

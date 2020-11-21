@@ -264,8 +264,7 @@ const mutations = {
       (c) => Number(c.contractId) === Number(contract.contractId),
     );
     if (oldContractIndex > -1) {
-      state.contracts.data[oldContractIndex].status = contract.status;
-      state.contracts.data[oldContractIndex].contractUrl = contract.contractUrl;
+      state.contracts.data[oldContractIndex] = contract;
     } else {
       state.contracts.data.unshift(contract);
     }
@@ -1042,11 +1041,8 @@ const actions = {
       commit(mutationTypes.UPDATE_CONTRACT_REQUEST);
       const userId = window.$cookies.get('userId');
       const role = window.$cookies.get('role');
-      if (!userId && !state.user.data) {
+      if (!role && !userId && !state.user.data) {
         const error = new Error('Loggin to update contract');
-        commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
-      } else if (role !== 'vendors') {
-        const error = new Error('Only vendor have permission to update contract');
         commit(mutationTypes.UPDATE_CONTRACT_FAILURE, error);
       } else {
         console.log(JSON.stringify(contract));

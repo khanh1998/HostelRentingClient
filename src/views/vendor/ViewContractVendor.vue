@@ -5,64 +5,63 @@
     </v-overlay>
     <div v-if="!isLoading">
       <v-row class="d-flex justify-space-between ma-0 pl-md-13 mt-5 font-nunito">
-        <v-col cols="12" md="1"/>
+        <v-col cols="12" md="1" />
         <v-col cols="12" md="3" class="py-0 mb-3">
           <v-card class="pa-3">
-          <div class="d-flex">
-            <span
-              style="letter-spacing: 0.02em; font-weight: 700;"
-              class="text-gray font-nunito size9rem mt-2"
-              >KHU TRỌ</span
-            >
-            <!-- <v-spacer/>
+            <div class="d-flex">
+              <span
+                style="letter-spacing: 0.02em; font-weight: 700"
+                class="text-gray font-nunito size9rem mt-2"
+                >KHU TRỌ</span
+              >
+              <!-- <v-spacer/>
             <div>
               <v-btn icon>
                 <v-icon color="#727cf5">search</v-icon>
               </v-btn>
             </div> -->
-          </div>
-          <v-text-field
-            label="Tìm kiếm khu trọ"
-            v-model="searchQuery"
-            append-icon="search"
-            solo
-            hide-details
-            class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
-            height="35"
-            rounded
-          ></v-text-field>
-          <v-virtual-scroll
-            :items="groupSearch"
-            :item-height="90"
-            height="500px"
-            class="pa-3 hidden-sm-and-down scrollbar"
-            style="background-color:white"
-            id="style-1"
-          >
-            <template v-slot="{ item, index }">
-              <v-list-item :key="item.groupId" class="px-0 d-flex justify-start align-start">
-
-                <span class="d-flex flex-column" v-if="groupSearch.length !== 0">
-                  <span
-                    class="font-weight-bold size9rem font-nunito cursor"
-                    @click="clickGroup(item)"
-                    v-bind:style="index % 2 === 0 ? 'color: #727cf5;' : 'color: #39afd1;'"
-                    >{{ item.groupName }}</span
-                  >
-                  <small class="text-gray font-nunito mt-2"
-                    >{{ item.buildingNo }} {{ item.address.streetName }},
-                    {{ item.address.districtName }}, {{ item.address.provinceName }}</small
-                  >
-                </span>
-                <!-- <span class="d-flex flex-column" v-if="groupSearch.length === 0">
+            </div>
+            <v-text-field
+              label="Tìm kiếm khu trọ"
+              v-model="searchQuery"
+              append-icon="search"
+              solo
+              hide-details
+              class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
+              height="35"
+              rounded
+            ></v-text-field>
+            <v-virtual-scroll
+              :items="groupSearch"
+              :item-height="90"
+              height="500px"
+              class="pa-3 hidden-sm-and-down scrollbar"
+              style="background-color: white"
+              id="style-1"
+            >
+              <template v-slot="{ item, index }">
+                <v-list-item :key="item.groupId" class="px-0 d-flex justify-start align-start">
+                  <span class="d-flex flex-column" v-if="groupSearch.length !== 0">
+                    <span
+                      class="font-weight-bold size9rem font-nunito cursor"
+                      @click="clickGroup(item)"
+                      v-bind:style="index % 2 === 0 ? 'color: #727cf5;' : 'color: #39afd1;'"
+                      >{{ item.groupName }}</span
+                    >
+                    <small class="text-gray font-nunito mt-2"
+                      >{{ item.buildingNo }} {{ item.address.streetName }},
+                      {{ item.address.districtName }}, {{ item.address.provinceName }}</small
+                    >
+                  </span>
+                  <!-- <span class="d-flex flex-column" v-if="groupSearch.length === 0">
                   <span
                     class="font-weight-bold size9rem font-nunito cursor"
                     v-bind:style="index % 2 === 0 ? 'color: #727cf5;' : 'color: #39afd1;'"
                     >Không có khu trọ</span
                   >
                 </span> -->
-              </v-list-item>
-              <!-- <v-list-item class="px-0 d-flex justify-start align-start" v-if="groupSearch.length === 0">
+                </v-list-item>
+                <!-- <v-list-item class="px-0 d-flex justify-start align-start" v-if="groupSearch.length === 0">
                 <span class="d-flex flex-column">
                   <span
                     class="font-weight-bold size9rem font-nunito cursor"
@@ -71,40 +70,40 @@
                   >
                 </span>
               </v-list-item> -->
-            </template>
-          </v-virtual-scroll>
-          <v-autocomplete
-            :items="groups.data"
-            :filter="customFilter"
-            item-text="groupName"
-            label="Nhà trọ"
-            persistent-hint
-            :style="{
-              borderTopLeftRadius: '0px',
-              borderTopRightRadius: '0px',
-            }"
-            solo
-            filled
-            dense
-            outlined
-            hide-no-data
-            class="text-body-2 hidden-md-and-up mt-3"
-          >
-            <template slot="selection" slot-scope="{ item }">
-              <span class="font-nunito font-weight-medium text-body-2">{{ item.groupName}}</span>
-            </template>
-            <template slot="item" slot-scope="{ item }">
-              <span class="d-flex flex-column" @click="clickGroup(item)">
-                <span class="font-weight-bold size9rem font-nunito cursor text-primary mt-3">{{
-                  item.groupName
-                }}</span>
-                <small class="text-gray font-nunito"
-                  >{{ item.buildingNo }} {{ item.address.streetName }},
-                  {{ item.address.districtName }}, {{ item.address.provinceName }}</small
-                >
-              </span>
-            </template>
-          </v-autocomplete>
+              </template>
+            </v-virtual-scroll>
+            <v-autocomplete
+              :items="groups.data"
+              :filter="customFilter"
+              item-text="groupName"
+              label="Nhà trọ"
+              persistent-hint
+              :style="{
+                borderTopLeftRadius: '0px',
+                borderTopRightRadius: '0px',
+              }"
+              solo
+              filled
+              dense
+              outlined
+              hide-no-data
+              class="text-body-2 hidden-md-and-up mt-3"
+            >
+              <template slot="selection" slot-scope="{ item }">
+                <span class="font-nunito font-weight-medium text-body-2">{{ item.groupName }}</span>
+              </template>
+              <template slot="item" slot-scope="{ item }">
+                <span class="d-flex flex-column" @click="clickGroup(item)">
+                  <span class="font-weight-bold size9rem font-nunito cursor text-primary mt-3">{{
+                    item.groupName
+                  }}</span>
+                  <small class="text-gray font-nunito"
+                    >{{ item.buildingNo }} {{ item.address.streetName }},
+                    {{ item.address.districtName }}, {{ item.address.provinceName }}</small
+                  >
+                </span>
+              </template>
+            </v-autocomplete>
           </v-card>
         </v-col>
         <v-col cols="12" md="7" class="py-0 mb-3">
@@ -140,51 +139,51 @@
                       >
                         <v-list-item-title
                           class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName=''"
+                          @click="statusName = ''"
                           >Tất cả</v-list-item-title
                         >
                       </v-list-item>
-                      <v-divider/>
+                      <v-divider />
                       <v-list-item
                         style="min-height: 20px !important"
                         class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
                       >
                         <v-list-item-title
                           class="item-hover font-nunito text-gray size9rem"
-                          @click="statusName='sắp hết hạn'"
+                          @click="statusName = 'sắp hết hạn'"
                           >Sắp hết hạn</v-list-item-title
                         >
                       </v-list-item>
-                      <v-divider/>
+                      <v-divider />
                       <v-list-item
                         style="min-height: 20px !important"
                         class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
                       >
                         <v-list-item-title
                           class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName='đang thuê'"
+                          @click="statusName = 'đang thuê'"
                           >Đang thuê</v-list-item-title
                         >
                       </v-list-item>
-                      <v-divider/>
+                      <v-divider />
                       <v-list-item
                         style="min-height: 20px !important"
                         class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
                       >
                         <v-list-item-title
                           class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName='chờ xác nhận'"
+                          @click="statusName = 'chờ xác nhận'"
                           >Chờ xác nhận</v-list-item-title
                         >
                       </v-list-item>
-                      <v-divider/>
+                      <v-divider />
                       <v-list-item
                         style="min-height: 20px !important"
                         class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
                       >
                         <v-list-item-title
                           class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName='hết hiệu lực'"
+                          @click="statusName = 'hết hiệu lực'"
                           >Hết hiệu lực</v-list-item-title
                         >
                       </v-list-item>
@@ -220,51 +219,51 @@
                       >
                         <v-list-item-title
                           class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName=''"
+                          @click="statusName = ''"
                           >Tất cả</v-list-item-title
                         >
                       </v-list-item>
-                      <v-divider/>
+                      <v-divider />
                       <v-list-item
                         style="min-height: 20px !important"
                         class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
                       >
                         <v-list-item-title
                           class="item-hover font-nunito text-gray size9rem"
-                          @click="statusName='sắp hết hạn'"
+                          @click="statusName = 'sắp hết hạn'"
                           >Sắp hết hạn</v-list-item-title
                         >
                       </v-list-item>
-                      <v-divider/>
+                      <v-divider />
                       <v-list-item
                         style="min-height: 20px !important"
                         class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
                       >
                         <v-list-item-title
                           class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName='đang thuê'"
+                          @click="statusName = 'đang thuê'"
                           >Đang thuê</v-list-item-title
                         >
                       </v-list-item>
-                      <v-divider/>
+                      <v-divider />
                       <v-list-item
                         style="min-height: 20px !important"
                         class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
                       >
                         <v-list-item-title
                           class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName='chờ xác nhận'"
+                          @click="statusName = 'chờ xác nhận'"
                           >Chờ xác nhận</v-list-item-title
                         >
                       </v-list-item>
-                      <v-divider/>
+                      <v-divider />
                       <v-list-item
                         style="min-height: 20px !important"
                         class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
                       >
                         <v-list-item-title
                           class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName='hết hiệu lực'"
+                          @click="statusName = 'hết hiệu lực'"
                           >Hết hiệu lực</v-list-item-title
                         >
                       </v-list-item>
@@ -318,7 +317,9 @@
                 <span class="size9rem">{{ item.status.toUpperCase() }}</span>
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-btn color="#727cf5" @click="findContract(item.contractId)" text> Chi tiết </v-btn>
+                <v-btn color="#727cf5" @click="findContract(item.contractId)" text>
+                  Chi tiết
+                </v-btn>
                 <v-btn
                   depressed
                   icon
@@ -329,7 +330,7 @@
                 </v-btn>
               </template>
               <template v-slot:no-data>
-                <p style="font-size:18px">Không có hợp đồng</p>
+                <p style="font-size: 18px">Không có hợp đồng</p>
                 <v-btn color="#727cf5" @click="allContracts" class="ma-2" dark> Tải lại </v-btn>
               </template>
             </v-data-table>
@@ -345,34 +346,36 @@
               style="background-color: white"
             >
               <v-dialog
-                    v-model="dialog"
-                    fullscreen
-                    hide-overlay
-                    transition="dialog-bottom-transition"
-                  >
-                    <v-card v-if="currentContract">
-                      <v-toolbar dark color="#727cf5">
-                        <v-btn icon dark @click="dialog = false">
-                          <v-icon>mdi-close</v-icon>
-                        </v-btn>
-                        <v-toolbar-title>Thông tin hợp đồng</v-toolbar-title>
-                      </v-toolbar>
-                      <div style="height: calc(100vh - 64px); overflow: hidden">
-                        <v-progress-linear
-                          v-model="progressBar.value"
-                          :active="true"
-                          :indeterminate="false"
-                          :query="true"
-                        ></v-progress-linear>
-                        <pdfDocument :url="currentContract.contractUrl" :scale="scale" />
-                      </div>
-                    </v-card>
-                  </v-dialog>
+                v-model="dialog"
+                fullscreen
+                hide-overlay
+                transition="dialog-bottom-transition"
+              >
+                <v-card v-if="currentContract">
+                  <v-toolbar dark color="#727cf5">
+                    <v-btn icon dark @click="dialog = false">
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title>Thông tin hợp đồng</v-toolbar-title>
+                  </v-toolbar>
+                  <div style="height: calc(100vh - 64px); overflow: hidden">
+                    <v-progress-linear
+                      v-model="progressBar.value"
+                      :active="true"
+                      :indeterminate="false"
+                      :query="true"
+                    ></v-progress-linear>
+                    <pdfDocument :url="currentContract.contractUrl" :scale="scale" />
+                  </div>
+                </v-card>
+              </v-dialog>
               <template v-slot:item.status="{ item }">
                 <v-chip :color="item.color">{{ item.status.toUpperCase() }}</v-chip>
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-btn color="#727cf5" @click="findContract(item.contractId)" text> Chi tiết </v-btn>
+                <v-btn color="#727cf5" @click="findContract(item.contractId)" text>
+                  Chi tiết
+                </v-btn>
                 <v-btn
                   depressed
                   icon
@@ -383,7 +386,7 @@
                 </v-btn>
               </template>
               <template v-slot:no-data>
-                <p style="font-size:18px">Không có hợp đồng</p>
+                <p style="font-size: 18px">Không có hợp đồng</p>
                 <v-btn color="#727cf5" @click="allContracts" class="ma-2" dark> Tải lại </v-btn>
               </template>
             </v-data-table>
@@ -395,8 +398,8 @@
             Chọn khu phòng trọ
           </v-card>
         </v-col>
-        <v-col cols="12" md="1"/>
-    </v-row>
+        <v-col cols="12" md="1" />
+      </v-row>
     </div>
   </div>
 </template>
@@ -692,7 +695,9 @@ export default {
       if (!this.searchQuery) {
         return this.groups.data;
       }
-      return this.groups.data.filter((item) => item.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1);
+      return this.groups.data.filter(
+        (item) => item.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+      );
     },
     allContracts() {
       if (!this.statusName) {
@@ -712,6 +717,9 @@ export default {
           districtName: item.group.address.districtName,
           provinceName: item.group.address.provinceName,
           contractUrl: item.contractUrl,
+          paid: item.paid,
+          downPayment: item.downPayment,
+          reserve: item.reserve,
         }));
       }
       return this.contracts.data.filter((itemFilter) => itemFilter.group.groupName === this.selectedGroup)
@@ -731,6 +739,9 @@ export default {
           districtName: item.group.address.districtName,
           provinceName: item.group.address.provinceName,
           contractUrl: item.contractUrl,
+          paid: item.paid,
+          downPayment: item.downPayment,
+          reserve: item.reserve,
         }));
     },
     items() {
@@ -769,26 +780,23 @@ export default {
   box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
   opacity: 1 !important;
 }
-.scrollbar{
-overflow-y: scroll;
+.scrollbar {
+  overflow-y: scroll;
 }
-.force-overflow{
-min-height: 450px;
+.force-overflow {
+  min-height: 450px;
 }
-#style-1::-webkit-scrollbar-track
-{
--webkit-box-shadow: inset 0 0 6px rgb(179, 184, 240);
-border-radius: 10px;
-}
-
-#style-1::-webkit-scrollbar
-{
-width: 10px;
+#style-1::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgb(179, 184, 240);
+  border-radius: 10px;
 }
 
-#style-1::-webkit-scrollbar-thumb
-{
-border-radius: 10px;
-background-color: #727cf5;
+#style-1::-webkit-scrollbar {
+  width: 10px;
+}
+
+#style-1::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #727cf5;
 }
 </style>

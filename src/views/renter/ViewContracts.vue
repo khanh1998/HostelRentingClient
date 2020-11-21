@@ -26,6 +26,32 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="payReserveFee.show" hide-overlay persistent width="300">
+      <v-card v-if="!payReserveFee.showResult">
+        <v-card-title class="primary"> Xác nhận thanh toán tiền cọc giữ chỗ </v-card-title>
+        <v-card-text>
+          Tải lên hình ảnh của biên lai đóng tiền giữ chỗ cho chủ trọ
+          <image-editor :oldImages="[]" @newValues="receiveNewImages" />
+        </v-card-text>
+        <v-card-actions>
+          <v-btn icon :disabled="payReserveFee.images.length === 0" @click="doPayReserveFee"><v-icon>send</v-icon></v-btn>
+          <v-btn icon @click="payReserveFee.show = false">
+            <v-icon>clear</v-icon>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-if="payReserveFee.showResult">
+        <v-card-title class="primary">
+          <span v-if="payReserveFee.success">Xác nhận thanh toán tiền giữ chỗ thành công</span>
+          <span v-if="!payReserveFee.success">Xác nhận thanh toán tiền giữ chỗ thất bại</span>
+        </v-card-title>
+        <v-card-actions>
+          <v-btn icon @click="payReserveFee.show = false">
+            <v-icon>clear</v-icon>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog
       v-model="contractOverlay.show"
       fullscreen
@@ -98,8 +124,9 @@
             >
               <contractItem
                 :contract="contract"
-                @viewDetail="viewContractDetail"
+                @view-detail="viewContractDetail"
                 @activate="openActivateContract"
+                @pay-reserve-fee="showPayReserveFee"
               />
             </div>
           </v-row>
@@ -115,10 +142,11 @@ import contractItem from '@/components/view_contracts/contractItem.vue';
 import snackBarMixin from '../../components/mixins/snackBar';
 import PDFDocument from '../../components/vendor/pdfviewer/PDFDocument.vue';
 import mobileMixin from '../../components/mixins/mobile';
+import ImageEditor from '../../components/vendor/hostel_management/ImageEditor.vue';
 
 export default {
   name: 'ViewContracts',
-  components: { contractItem, PDFDocument },
+  components: { contractItem, PDFDocument, ImageEditor },
   mixins: [snackBarMixin, mobileMixin],
   data: () => ({
     contractOverlay: {
@@ -130,13 +158,43 @@ export default {
       show: false,
       success: null,
     },
+    payReserveFee: {
+      show: false,
+      images: [],
+      contractId: null,
+      success: false,
+      showResult: false,
+    },
   }),
   methods: {
     ...mapActions({
       getContracts: 'user/getContracts',
       getUser: 'user/getUser',
       activateContract: 'user/activateContract',
+      updateContract: 'user/updateContract',
     }),
+    receiveNewImages(images) {
+      this.payReserveFee.images = images;
+    },
+    showPayReserveFee(contractId) {
+      this.payReserveFee.show = true;
+      this.payReserveFee.contractId = contractId;
+    },
+    doPayReserveFee() {
+      this.payReserveFee.showResult = false;
+      this.payReserveFee.success = false;
+      const contract = this.contracts.data.find(
+        (c) => c.contractId === this.payReserveFee.contractId,
+      );
+      contract.roomId = contract.room.roomId;
+      contract.paid = true;
+      contract.images.push(...this.payReserveFee.images);
+      this.updateContract(contract).then(() => {
+        const { success } = this.contracts;
+        this.payReserveFee.success = success;
+        this.payReserveFee.showResult = true;
+      });
+    },
     doActivateContract() {
       console.log('doactivatecontract');
       const payload = {
@@ -186,7 +244,8 @@ export default {
     isLoading() {
       const loadingUser = this.$store.state.user.user.isLoading;
       const loadingContracts = this.$store.state.user.contracts.isLoading;
-      return loadingUser || loadingContracts;
+      const updatingContracts = this.$store.state.user.contracts.isUpdating;
+      return loadingUser || loadingContracts || updatingContracts;
     },
     signing() {
       return this.$store.state.user.contracts.isUpdating;
