@@ -405,10 +405,6 @@ export default {
 .light-autocomplete .v-input__slot {
   border: 1px solid #fff !important;
 }
-.light-autocomplete.v-text-field input {
-  color: #4250f2 !important;
-  font-weight: 600 !important;
-}
 .checkbox-small .v-icon.v-icon {
   font-size: 1.25rem !important;
   border-radius: 0.25rem !important;
