@@ -30,7 +30,7 @@
               <v-col cols="6" class="d-flex">
                 <v-select
                   v-model="newRoomValue.typeId"
-                  :items="allTypes"
+                  v-bind:items="allTypes"
                   item-text="title"
                   item-value="typeId"
                   label="Loại phòng"

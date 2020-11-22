@@ -45,6 +45,7 @@
         <v-list-item
           style="min-height: 20px !important"
           class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+          @click="logout"
         >
           <v-icon color="#6c757d" class="mr-2 item-hover" size="15">mdi-account-arrow-left</v-icon>
           <v-list-item-title class="item-hover font-nunito text-gray size9rem"
@@ -57,8 +58,10 @@
 </template>
 <script>
 import { mapActions } from 'vuex';
+import authenticationMixins from '../../mixins/authentication';
 
 export default {
+  mixins: [authenticationMixins],
   data: () => ({
     infoMenu: [
       {
@@ -70,6 +73,7 @@ export default {
   methods: {
     ...mapActions({
       getUser: 'user/getUser',
+      clearUserData: 'user/clearUserData',
     }),
     getAvatarTitle(name) {
       return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);

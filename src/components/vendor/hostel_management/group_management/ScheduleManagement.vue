@@ -172,16 +172,11 @@ export default {
       this.menu = false;
     },
     getTimes(from, to, sort) {
-      // const time24h = new RegExp(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
-      // if (!time24h.test(from) || !time24h.test(to)) {
-      //   return 'invalid format!';
-      // }
       const [fromH, fromM] = from.split(':').map((m) => Number(m));
       const [toH, toM] = to.split(':').map((m) => Number(m));
       const hourArr = [...Array(toH - fromH + 1)];
       const preSort = hourArr.flatMap((_, index) => {
         const indexHour = fromH + index;
-        console.log(fromM);
         if (index === 0 && fromH === toH) {
           return fromM === 0 && toM < 30 // eslint-disable-line
             ? `${indexHour}:00` // eslint-disable-line
@@ -206,7 +201,6 @@ export default {
       if (sort === 'desc') {
         return preSort.reverse();
       }
-      console.log('ok');
       return preSort;
     },
   },

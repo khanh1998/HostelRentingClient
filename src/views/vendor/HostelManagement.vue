@@ -4,20 +4,14 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container v-if="!isLoading" class="pa-0">
-      <GroupManagement
-        :show="openGroupManagementDialog"
-        @close="openGroupManagementDialog = false"
-        :create="true"
-        :update="false"
-        @check-created="checkCreated"
-      />
+      <CreateGroupDialog :show="openCreateGroupDialog" @close="openCreateGroupDialog = false" />
       <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" sm="12" md="12" lg="12" xl="11">
           <v-row class="d-flex align-center ma-0">
             <span class="page-title">Danh sách nhà trọ</span>
             <v-btn
               class="mx-5 btn-success btn-sm font-nunito white--text"
-              @click="openGroupManagementDialog = true"
+              @click="openCreateGroupDialog = true"
               ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm nhà trọ</v-btn
             >
             <v-btn class="mx-5 px-10 btn-warning btn-sm font-nunito" to="rooms"
@@ -183,19 +177,13 @@
 import itemGroup from '@/components/vendor/hostel_management/groupItem.vue';
 import { mapActions } from 'vuex';
 import snackBarMixin from '@/components/mixins/snackBar';
-import GroupManagement from '@/components/vendor/hostel_management/group_management/GroupManagement.vue';
+import CreateGroupDialog from '@/components/vendor/hostel_management/group_management/CreateGroupDialog.vue';
 
 export default {
   name: 'HostelManagement',
   components: {
-    // HostelGroup,
-    // HostelType,
-    // HostelGroupActions,
-    // HostelGroupCreator,
-    // HostelNoData,
-    // thuy
     itemGroup,
-    GroupManagement,
+    CreateGroupDialog,
   },
   mixins: [snackBarMixin],
   data: () => ({
@@ -206,7 +194,7 @@ export default {
     sortEmpty: true,
     page: 1,
     pageRange: 5,
-    openGroupManagementDialog: false,
+    openCreateGroupDialog: false,
     showSearchGroup: true,
   }),
   computed: {
@@ -260,11 +248,6 @@ export default {
     }),
     manageRooms() {
       this.$router.push('rooms');
-    },
-    checkCreated(e) {
-      this.showSnackBar(`Khu trọ ${e} đã được tạo thành công`, {
-        color: 'green',
-      });
     },
     changeSearchQuery() {
       this.page = 1;
