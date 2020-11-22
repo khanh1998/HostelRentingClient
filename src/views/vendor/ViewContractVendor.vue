@@ -3,6 +3,9 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
+    <v-dialog width="500" :value="uncheckedReserveFee.length > 0">
+      <UnCheckedReservedFeeContracts :contracts="uncheckedReserveFee"/>
+    </v-dialog>
     <div v-if="!isLoading">
       <v-row class="d-flex justify-space-between ma-0 pl-md-13 mt-5 font-nunito">
         <v-col cols="12" md="1" />
@@ -407,11 +410,12 @@
 import { mapActions, mapGetters } from 'vuex';
 import pdfDocument from '../../components/vendor/pdfviewer/PDFDocument.vue';
 import mobileMixin from '../../components/mixins/mobile';
+import UnCheckedReservedFeeContracts from '../../components/view_contracts/UnCheckedReservedFeeContracts.vue';
 
 export default {
   name: 'ViewContractVendor',
   mixins: [mobileMixin],
-  components: { pdfDocument },
+  components: { pdfDocument, UnCheckedReservedFeeContracts },
   data: () => ({
     // search
     search: '',
@@ -674,12 +678,6 @@ export default {
     });
   },
   computed: {
-    scale() {
-      if (this.isMobile) {
-        return 2;
-      }
-      return 1;
-    },
     isLoading() {
       const loadingUser = this.$store.state.user.user.isLoading;
       const loadingContracts = this.$store.state.user.contracts.isLoading;
@@ -687,6 +685,11 @@ export default {
       // const loadingDeals = this.$store.state.user.deals.isLoading;
       // const loadingProvinces = this.$store.state.renter.common.provinces.isLoading;
       return loadingUser || loadingGroups || loadingContracts;
+    },
+    uncheckedReserveFee() {
+      return this.contracts.data.filter(
+        (c) => c.reserved && c.paid === true && c.status === 'INACTIVE',
+      );
     },
     contracts() {
       return this.$store.state.user.contracts;
@@ -701,26 +704,28 @@ export default {
     },
     allContracts() {
       if (!this.statusName) {
-        return this.contracts.data.filter((itemFilter) => itemFilter.group.groupName === this.selectedGroup).map((item) => ({
-          contractId: item.contractId,
-          renterName: item.renter.username,
-          groupName: item.group.groupName,
-          roomName: item.room.roomName,
-          startTime: this.getDateByTimestamp(item.startTime),
-          endTime: this.getDateByTimestamp(this.getEndDate(item.startTime, item.duration)),
-          status: this.getStatus(item.status, item.startTime, item.duration).contractStatus,
-          statusCode: item.status,
-          color: this.getStatus(item.status, item.startTime, item.duration).color,
-          buildingNo: item.group.buildingNo,
-          streetName: item.group.address.streetName,
-          wardName: item.group.address.wardName,
-          districtName: item.group.address.districtName,
-          provinceName: item.group.address.provinceName,
-          contractUrl: item.contractUrl,
-          paid: item.paid,
-          downPayment: item.downPayment,
-          reserve: item.reserve,
-        }));
+        return this.contracts.data
+          .filter((itemFilter) => itemFilter.group.groupName === this.selectedGroup)
+          .map((item) => ({
+            contractId: item.contractId,
+            renterName: item.renter.username,
+            groupName: item.group.groupName,
+            roomName: item.room.roomName,
+            startTime: this.getDateByTimestamp(item.startTime),
+            endTime: this.getDateByTimestamp(this.getEndDate(item.startTime, item.duration)),
+            status: this.getStatus(item.status, item.startTime, item.duration).contractStatus,
+            statusCode: item.status,
+            color: this.getStatus(item.status, item.startTime, item.duration).color,
+            buildingNo: item.group.buildingNo,
+            streetName: item.group.address.streetName,
+            wardName: item.group.address.wardName,
+            districtName: item.group.address.districtName,
+            provinceName: item.group.address.provinceName,
+            contractUrl: item.contractUrl,
+            paid: item.paid,
+            downPayment: item.downPayment,
+            reserve: item.reserve,
+          }));
       }
       return this.contracts.data.filter((itemFilter) => itemFilter.group.groupName === this.selectedGroup)
         .filter((itemFilter2) => this.statusName === this.getStatusForCompare(itemFilter2.status, itemFilter2.startTime, itemFilter2.duration).contractStatus).map((item) => ({

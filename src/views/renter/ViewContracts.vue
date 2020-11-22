@@ -188,7 +188,8 @@ export default {
       );
       contract.roomId = contract.room.roomId;
       contract.paid = true;
-      contract.images.push(...this.payReserveFee.images);
+      contract.images = this.payReserveFee.images;
+      console.log(contract);
       this.updateContract(contract).then(() => {
         const { success } = this.contracts;
         this.payReserveFee.success = success;

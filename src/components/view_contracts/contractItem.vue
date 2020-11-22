@@ -137,7 +137,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-stepper v-model="step" v-if="contract.reserved">
+          <v-stepper v-model="step" v-if="contract.reserved" class="elevation-0">
             <v-stepper-header>
               <v-stepper-step :complete="step > 0" step="1"> Hợp đồng được tạo </v-stepper-step>
               <v-divider></v-divider>
@@ -148,7 +148,7 @@
               <v-stepper-step :complete="step > 3" step="4"> Đã ký hợp đồng </v-stepper-step>
             </v-stepper-header>
           </v-stepper>
-          <v-stepper v-model="step" v-if="!contract.reserved">
+          <v-stepper v-model="step" v-if="!contract.reserved" class="elevation-0">
             <v-stepper-header>
               <v-stepper-step :complete="step > 0" step="1"> Hợp đồng được tạo </v-stepper-step>
               <v-divider></v-divider>
