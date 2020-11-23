@@ -88,7 +88,7 @@ const routes = [
         name: 'RoomAlert',
         component: RoomAlert,
         props: true,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, is_renter: true },
       },
     ],
   },

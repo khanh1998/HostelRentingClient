@@ -76,7 +76,7 @@
             class="mr-5 font-weight-regular font-nunito hidden-sm-and-down"
             style="letter-spacing: 0.01rem !important"
             v-if="!user || (user && user.role.roleName === 'Người thuê')"
-            :to="`room-alert`"
+            :to="`/room-alert`"
           >
             <v-icon left>mdi-home-search</v-icon>Đăng ký tìm phòng
           </v-btn>
@@ -137,7 +137,7 @@
                 </v-list-item-icon>
                 <v-list-item-title>Đăng ký</v-list-item-title>
               </v-list-item>
-              <v-list-item to="#" class="hidden-md-and-up">
+              <v-list-item to="/room-alert" class="hidden-md-and-up">
                 <v-list-item-icon>
                   <v-icon color="#727cf5">mdi-home-search</v-icon>
                 </v-list-item-icon>
@@ -173,7 +173,7 @@
                 <v-list-item-title>Thông báo</v-list-item-title>
               </v-list-item>
               <v-list-item
-                to="#"
+                to="/room-alert"
                 class="hidden-md-and-up"
                 v-if="user.role.roleName === 'Người thuê'"
               >

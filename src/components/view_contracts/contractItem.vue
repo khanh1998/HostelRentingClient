@@ -110,7 +110,7 @@
             color="green"
             v-if="contract.status !== 'INACTIVE'"
             text
-            @click="$emit('viewDetail', contract.contractId)"
+            @click="$emit('view-detail', contract.contractId)"
             >Chi tiết</v-btn
           >
           <v-btn
@@ -118,14 +118,45 @@
             rounded
             outlined
             color="red"
-            v-if="contract.status === 'INACTIVE'"
+            v-if="contractSignable"
             text
             @click="$emit('activate', contract.contractId)"
             >Ký hợp đồng</v-btn
           >
+          <v-btn
+            v-if="contract.reserved && contract.paid === false"
+            small
+            rounded
+            outlined
+            color="yellow"
+            text
+            @click="$emit('pay-reserve-fee', contract.contractId)"
+            >Xác nhận đóng tiền giữ chỗ</v-btn
+          >
         </v-col>
       </v-row>
-      <!-- </v-col> -->
+      <v-row>
+        <v-col>
+          <v-stepper v-model="step" v-if="contract.reserved" class="elevation-0">
+            <v-stepper-header>
+              <v-stepper-step :complete="step > 0" step="1"> Hợp đồng được tạo </v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step :complete="step > 1" step="2"> Đã đóng tiền giữ chỗ </v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step :complete="step > 2" step="3"> Chủ trọ đã nhận tiền cọc </v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step :complete="step > 3" step="4"> Đã ký hợp đồng </v-stepper-step>
+            </v-stepper-header>
+          </v-stepper>
+          <v-stepper v-model="step" v-if="!contract.reserved" class="elevation-0">
+            <v-stepper-header>
+              <v-stepper-step :complete="step > 0" step="1"> Hợp đồng được tạo </v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step :complete="step > 1" step="2"> Đã ký hợp đồng </v-stepper-step>
+            </v-stepper-header>
+          </v-stepper>
+        </v-col>
+      </v-row>
     </v-row>
   </v-card>
 </template>
@@ -142,6 +173,48 @@ export default {
     mapDialog: false,
   }),
   computed: {
+    contractSignable() {
+      if (this.contract.reserved) {
+        if (this.contract.status === 'RESERVED') {
+          return true;
+        }
+        return false;
+      }
+      if (!this.contract.reserved) {
+        if (this.contract.status === 'INACTIVE') {
+          return true;
+        }
+        return false;
+      }
+      return false;
+    },
+    step() {
+      if (this.contract.reserved) {
+        if (this.contract.status === 'INACTIVE') {
+          if (this.contract.paid === false) {
+            return 1;
+          }
+          if (this.contract.paid === true) {
+            return 2;
+          }
+        }
+        if (this.contract.status === 'RESERVED') {
+          return 3;
+        }
+        if (this.contract.status === 'ACTIVATED') {
+          return 4;
+        }
+      }
+      if (!this.contract.reserved) {
+        if (this.contract.status === 'INACTIVE') {
+          return 1;
+        }
+        if (this.contract.status === 'ACTIVATED') {
+          return 2;
+        }
+      }
+      return null;
+    },
     timestamp() {
       return new Date(this.booking.meetTime);
     },

@@ -103,113 +103,98 @@
           </v-card-text>
         </v-card>
       </v-col>
-    </v-col>
-
-    <v-container>
-      <v-overlay :value="isLoading">
-        <v-progress-circular indeterminate size="64"></v-progress-circular>
-      </v-overlay>
-      <v-dialog hide-overlay persistent width="300">
-        <v-card color="primary" dark>
-          <v-card-title>
-            <span v-if="requests.success"> </span>
-          </v-card-title>
-          <v-card-text> </v-card-text>
-        </v-card>
-      </v-dialog>
-      <v-snackbar
-        v-model="snackBarMixin.show"
-        :multi-line="snackBarMixin.multiLine"
-        :timeout="snackBarMixin.timeout"
-        :absolute="snackBarMixin.absolute"
-        :color="snackBarMixin.color"
-      >
-        {{ snackBarMixin.message }}
-      </v-snackbar>
-      <v-row class="rounded-lg elevation-5">
-        <v-col cols="12">
-          <div class="d-flex justify-center align-center">
-            <span>Đặt thông báo cho phòng trọ mong muốn</span>
-          </div>
-        </v-col>
-        <v-col cols="4">
-          <v-card-text>Địa điểm, khu vực... bạn muốn ở gần</v-card-text>
-          <div class="d-flex align-center"></div>
-        </v-col>
-        <v-col cols="3">
-          <v-card-text>Chọn ngày nhận phòng</v-card-text>
-          <!-- <v-menu
-            v-model="menu1"
-            :close-on-content-click="false"
-            transition="scale-transition"
-            offset-y
-            max-width="290px"
-            min-width="290px"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                readonly
-                hide-details
-                v-bind="attrs"
-                v-on="on"
-                :value="startTimeString"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              v-model="startTime"
-              no-title
-              @input="menu1 = false"
-              locale="vi"
-              :allowed-dates="allowedDates"
-            ></v-date-picker>
-          </v-menu> -->
-        </v-col>
-        <v-col cols="3">
-          <v-card-text>Giá tối đa mà bạn muốn trả</v-card-text>
-          <v-text-field
-            hide-details
-            v-model="request.maxPrice"
-            type="number"
-            suffix="Triệu"
-            :rules="isPositiveNum"
-            :step="0.1"
-          />
-        </v-col>
-        <v-col cols="2">
-          <v-btn icon @click="doCreateRoomRequest">
-            <v-icon>add_circle_outline</v-icon>
+      <v-col cols="5">
+        <v-card-text>Địa điểm, khu vực... bạn muốn ở gần</v-card-text>
+        <div class="d-flex align-center">
+          <gmap-autocomplete
+            placeholder="Địa điểm, khu vực... bạn muốn ở gần"
+            class="address-input"
+            :selectFirstOnEnter="true"
+            @place_changed="setPlace"
+          ></gmap-autocomplete>
+          <v-btn icon @click="clearField()">
+            <v-icon>clear</v-icon>
           </v-btn>
-        </v-col>
-        <v-col cols="4">
-          <v-card-text>Bán kính tìm kiếm tính từ vị trí mà bạn đã chọn</v-card-text>
-          <v-select :items="distances" v-model="chip"></v-select>
-          <!-- <v-chip-group v-model="chip" mandatory>
-            <v-chip filter>3 km</v-chip>
-            <v-chip filter>5 km</v-chip>
-            <v-chip filter>7 km</v-chip>
-            <v-chip filter>10 km</v-chip>
-          </v-chip-group> -->
-        </v-col>
-        <v-col cols="4">
-          <v-card-text>Diện tích tối thiểu</v-card-text>
-
-          <v-chip-group v-model="chip1" mandatory>
-            <v-chip filter>10 m2</v-chip>
-            <v-chip filter>15 m2</v-chip>
-            <v-chip filter>20 m2</v-chip>
-            <v-chip filter>25 m2</v-chip>
-            <v-chip filter>30 m2</v-chip>
-            <v-chip filter>40 m2</v-chip>
-          </v-chip-group>
-        </v-col>
-      </v-row>
-      <v-row class="rounded-lg elevation-5 mt-5">
-        <v-col>
-          <v-slide-group v-model="slide.requestIndex" show-arrows>
-            <v-slide-item
-              v-for="request in requests.data"
-              :key="request.requestId"
-              v-slot="{ active, toggle }"
+        </div>
+      </v-col>
+      <v-col cols="5">
+        <v-card-text>Chọn ngày nhận phòng</v-card-text>
+        <v-menu
+          v-model="menu1"
+          :close-on-content-click="false"
+          transition="scale-transition"
+          offset-y
+          max-width="290px"
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              readonly
+              hide-details
+              v-bind="attrs"
+              v-on="on"
+              :value="startTimeString"
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="startTime"
+            no-title
+            @input="menu1 = false"
+            locale="vi"
+            :allowed-dates="allowedDates"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col cols="2">
+        <v-card-text>Giá tối đa mà bạn muốn trả</v-card-text>
+        <v-text-field
+          hide-details
+          v-model="request.maxPrice"
+          type="number"
+          suffix="Triệu"
+          :rules="isPositiveNum"
+          :step="0.1"
+        />
+      </v-col>
+      <v-col cols="4">
+        <v-card-text>Bán kính tìm kiếm tính từ vị trí mà bạn đã chọn</v-card-text>
+        <v-chip-group v-model="chip" mandatory>
+          <v-chip filter>3 km</v-chip>
+          <v-chip filter>5 km</v-chip>
+          <v-chip filter>7 km</v-chip>
+          <v-chip filter>10 km</v-chip>
+        </v-chip-group>
+      </v-col>
+      <v-col cols="4">
+        <v-card-text>Diện tích tối thiểu</v-card-text>
+        <v-chip-group v-model="chip1" mandatory>
+          <v-chip filter>10 m2</v-chip>
+          <v-chip filter>15 m2</v-chip>
+          <v-chip filter>20 m2</v-chip>
+          <v-chip filter>25 m2</v-chip>
+          <v-chip filter>30 m2</v-chip>
+          <v-chip filter>40 m2</v-chip>
+        </v-chip-group>
+      </v-col>
+      <v-col cols="2">
+        <v-btn icon @click="doCreateRoomRequest">
+          <v-icon>add_circle_outline</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row class="rounded-lg elevation-5 mt-5">
+      <v-col>
+        <v-slide-group v-model="slide.requestIndex" show-arrows>
+          <v-slide-item
+            v-for="request in requests.data"
+            :key="request.requestId"
+            v-slot="{ active, toggle }"
+          >
+            <v-card
+              :color="active ? 'blue lighten-1' : 'grey lighten-1'"
+              @click="toggle"
+              class="ma-2 elevation-5"
+              width="250"
             >
               <v-card
                 :color="active ? 'blue lighten-1' : 'grey lighten-1'"
@@ -410,3 +395,19 @@ export default {
   },
 };
 </script>
+<style scoped>
+.address-input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 3px solid #ccc;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
+
+.address-input:focus {
+  border: 1px solid #555;
+}
+</style>
