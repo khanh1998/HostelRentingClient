@@ -312,7 +312,7 @@ export default {
     },
     availableRooms() {
       // return this.rooms.data.filter((r) => r.available || r.roomId === this.contract.roomId);
-      return this.type.rooms.filter((r) => r.available || r.roomId === this.contract.roomId);
+      return this.rooms.data.filter((r) => r.available || r.roomId === this.contract.roomId);
     },
     outOfRoomHint() {
       if (this.mode === 'create') {

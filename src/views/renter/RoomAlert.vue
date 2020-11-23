@@ -1,30 +1,107 @@
 <template>
-  <v-container>
-    <v-overlay :value="isLoading">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
-    <v-dialog hide-overlay persistent width="300">
-      <v-card color="primary" dark>
-        <v-card-title>
-          <span v-if="requests.success"> </span>
-        </v-card-title>
-        <v-card-text> </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-snackbar
-      v-model="snackBarMixin.show"
-      :multi-line="snackBarMixin.multiLine"
-      :timeout="snackBarMixin.timeout"
-      :absolute="snackBarMixin.absolute"
-      :color="snackBarMixin.color"
-    >
-      {{ snackBarMixin.message }}
-    </v-snackbar>
-    <v-row class="rounded-lg elevation-5">
-      <v-col cols="12">
-        <div class="d-flex justify-center align-center">
-          <span>Đặt thông báo cho phòng trọ mong muốn</span>
-        </div>
+  <v-row class="bg-main py-8" justify="center">
+    <v-col cols="11" md="11" lg="11" xl="10" class="pa-0">
+      <v-col cols="7">
+        <v-card>
+          <v-card-title
+            class="size-1rem font-nunito text-primary font-weight-bold text-uppercase d-flex justify-center"
+            >Thông tin phòng trọ theo yêu cầu</v-card-title
+          >
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-row class="ma-0">
+              <v-col cols="4" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Ngày nhận phòng: </span>
+                <v-menu
+                  v-model="menu1"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      readonly
+                      hide-details
+                      v-bind="attrs"
+                      v-on="on"
+                      :value="startTimeString"
+                      height="30"
+                      class="size-sub-2 font-nunito form"
+                      solo
+                      dense
+                      light
+                      append-icon="mdi-calendar-blank"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="startTime"
+                    no-title
+                    @input="menu1 = false"
+                    locale="vi"
+                    :allowed-dates="allowedDates"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col cols="8" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Khu vực tìm kiếm:</span>
+                <div class="d-flex">
+                  <v-col cols="11" class="d-flex flex-column pa-0">
+                    <gmap-autocomplete
+                      placeholder="Địa điểm, khu vực... bạn muốn ở gần"
+                      _class="form-control"
+                      :selectFirstOnEnter="true"
+                      hide-details
+                      style="
+                        border: 1px solid #dee2e6 !important;
+                        border-right: 0px;
+                        border-radius: 4px;
+                        border-top-right-radius: 0px;
+                        border-bottom-right-radius: 0px;
+                      "
+                      class="pa-2 address-autocomplete"
+                    ></gmap-autocomplete>
+                  </v-col>
+                  <v-col cols="1" class="pa-0">
+                    <v-btn
+                      icon
+                      @click="clearField()"
+                      height="100%"
+                      min-width="100%"
+                      style="
+                        border: 1px solid #dee2e6 !important;
+                        border-left: 0px;
+                        border-radius: 4px;
+                        border-top-left-radius: 0px;
+                        border-bottom-left-radius: 0px;
+                      "
+                    >
+                      <v-icon>clear</v-icon>
+                    </v-btn>
+                  </v-col>
+                </div>
+              </v-col>
+              <v-col cols="4" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Bán kính tìm kiếm:</span>
+                <v-select
+                  :items="distances"
+                  v-model="chip"
+                  dense
+                  hide-details
+                  solo
+                  class="size-sub-2 font-nunito form"
+                ></v-select>
+                <!-- <v-chip-group v-model="chip" color="#4250f2">
+                  <v-chip filter class="font-nunito">3 km</v-chip>
+                  <v-chip filter class="font-nunito">5 km</v-chip>
+                  <v-chip filter class="font-nunito">7 km</v-chip>
+                  <v-chip filter class="font-nunito">10 km</v-chip>
+                </v-chip-group> -->
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
       </v-col>
       <v-col cols="5">
         <v-card-text>Địa điểm, khu vực... bạn muốn ở gần</v-card-text>
@@ -104,7 +181,7 @@
           <v-icon>add_circle_outline</v-icon>
         </v-btn>
       </v-col>
-    </v-row>
+    </v-col>
     <v-row class="rounded-lg elevation-5 mt-5">
       <v-col>
         <v-slide-group v-model="slide.requestIndex" show-arrows>
@@ -146,7 +223,7 @@
         <CarouselItem :type="type" :typeGroup="getGroupOfType(type.groupId)" />
       </v-col>
     </v-row>
-  </v-container>
+  </v-row>
 </template>
 <script>
 import axios from 'axios';
@@ -166,7 +243,7 @@ export default {
       requestIndex: 0,
     },
     menu1: null,
-    chip: 1,
+    chip: '3km',
     chip1: 1,
     price: 0,
     startTime: new Date().toISOString().substr(0, 10),
@@ -188,6 +265,7 @@ export default {
       minSuperficiality: 15,
     },
     isLoadingResult: false,
+    distances: ['3 km', '5 km', '7km', '10 km'],
   }),
   methods: {
     ...mapActions({

@@ -185,6 +185,7 @@
               v-else
               min-height="250"
               max-height="400"
+              contain
               style="box-shadow: 0 0 35px 0 rgba(255, 22, 22, 0.15) !important"
             >
               <div class="category">
