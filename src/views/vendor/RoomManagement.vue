@@ -22,6 +22,7 @@
                 hide-details
                 background-color="#f1f3fa"
                 no-data-text="Không có kết quả phù hợp"
+                @change="resetSelectTypes()"
               >
                 <template slot="selection" slot-scope="{ item }">
                   <span class="font-nunito text-primary font-weight-600">{{ item.groupName }}</span>
@@ -353,12 +354,19 @@ export default {
       return this.types.find((type) => type.typeId === typeId);
     },
     selectAllTypes() {
-      console.log(this.checkbox.allTypes);
       const typeIds = [];
       if (this.checkbox.allTypes) {
         this.types.forEach((item) => typeIds.push(item.typeId));
       }
       this.checkbox.types = typeIds;
+    },
+    resetSelectTypes() {
+      this.checkbox.allTypes = false;
+      this.checkbox.types = [];
+      if (this.types.length > 0) {
+        this.checkbox.allTypes = true;
+        this.selectAllTypes();
+      }
     },
   },
   async created() {
@@ -396,10 +404,6 @@ export default {
 }
 .light-autocomplete .v-input__slot {
   border: 1px solid #fff !important;
-}
-.light-autocomplete.v-text-field input {
-  color: #4250f2 !important;
-  font-weight: 600 !important;
 }
 .checkbox-small .v-icon.v-icon {
   font-size: 1.25rem !important;

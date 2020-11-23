@@ -36,7 +36,7 @@ const myState = () => ({
     categoryId: null,
     ownerJoin: false,
     curfewTime: {
-      limit: true,
+      limit: false,
       startTime: '',
       endTime: '',
     },

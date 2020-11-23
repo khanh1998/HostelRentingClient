@@ -1,28 +1,30 @@
 <template>
-  <v-row class="mx-0 mt-3">
-    <v-row
-      class="cursor ma-0 mt-3 pa-5"
+  <v-row class="mx-0">
+    <v-col
+      cols="12"
+      class="cursor ma-0 mt-2 px-5 d-flex justify-center align-center"
       style="border: 2px dashed #dee2e6; border-radius: 6px"
       @click="openImageUploadDialog"
     >
-      <v-icon color="#98a6ad" large class="ma-auto">mdi-file-image-outline</v-icon>
-      <span style="text-align: center" class="text-gray font-nunito size1rem mt-3 font-weight-bold"
+      <v-icon color="#98a6ad" size="25">mdi-file-image-outline</v-icon>
+      <!-- <span style="text-align: center" class="text-gray font-nunito size1rem mt-3 font-weight-bold"
         >Tải ảnh đại diện của nhà trọ bạn lên để mọi người có thể dễ dàng nhận biết thương hiệu nhà
         trọ của bạn.</span
-      >
-    </v-row>
-    <v-row class="ma-0 d-flex justify-center">
+      > -->
+    </v-col>
+    <v-col cols="12" class="ma-0 pa-0 d-flex justify-center">
       <v-img
         :src="images[0].resourceUrl"
         :lazy-src="images[0].resourceUrl"
         aspect-ratio="1"
         v-if="images[0]"
         max-width="200"
+        min-width="200"
         contain
       ></v-img>
       <!-- {{ images[0].resourceUrl }} -->
       <!-- <span v-if="images">{{ images[0].resourceUrl }}</span> -->
-    </v-row>
+    </v-col>
     <v-dialog v-model="dialog.show" width="350">
       <v-card height="350" :loading="isFileUploading">
         <div class="d-flex flex-column align-center justify-center">

@@ -1,5 +1,5 @@
 <template>
-  <v-row class="mx-0 mt-3 pr-5 d-flex flex-column">
+  <v-row class="ma-0 d-flex flex-column">
     <div>
       <v-btn
         class="bg-danger-lighten elevation-0 text-danger font-nunito size9rem d-flex justify-start ml-auto"
@@ -20,10 +20,19 @@
       >
         <v-col
           cols="2"
-          class="d-flex py-0 px-0 align-center justify-center"
+          class="d-flex pa-0 align-center justify-center"
           style="border-right: 1px solid #eef2f7"
         >
-          <span class="font-nunito text-black size-sub-3 d-flex flex-column">Bắt buộc </span>
+          <span
+            class="font-nunito text-black size-sub-3 d-flex flex-column justify-center align-center"
+            style="width: 60%; height: 100%; border-right: 1px solid #eef2f7"
+            >Bắt buộc
+          </span>
+          <span
+            class="font-nunito text-black size-sub-3 d-flex flex-column justify-center align-center"
+            style="width: 40%"
+            >STT
+          </span>
         </v-col>
         <v-col
           cols="4"
@@ -33,18 +42,25 @@
           <span class="font-nunito text-black size-sub-3">Tên</span>
         </v-col>
         <v-col
-          cols="4"
+          cols="3"
           class="d-flex py-0 align-center justify-center"
           style="border-right: 1px solid #eef2f7"
         >
           <span class="font-nunito text-black size-sub-3">Giá</span>
         </v-col>
-        <v-col cols="2" class="d-flex py-0 align-center justify-center">
+        <v-col
+          cols="2"
+          class="d-flex py-0 align-center justify-center"
+          style="border-right: 1px solid #eef2f7"
+        >
           <span class="font-nunito text-black size-sub-3">Tần suất</span>
+        </v-col>
+        <v-col cols="1" class="d-flex py-0 align-center justify-center">
+          <span class="font-nunito text-black size-sub-3">Xóa</span>
         </v-col>
       </v-row>
       <v-card
-        max-height="300"
+        max-height="260"
         v-if="newGroup.services.length > 0"
         class="overflow-y-auto d-flex flex-column"
       >
@@ -53,155 +69,136 @@
           v-for="(item, index) in newGroup.services"
           class="px-0 d-flex justify-start align-start"
         >
-          <v-menu offset-y nudge-width="100px">
-            <template v-slot:activator="{ on, attrs }">
-              <v-row
-                class="mx-0 pa-0 service-item cursor"
-                style="border-bottom: 1px solid #eef2f7"
-                v-if="newGroup.services.length >= 4"
+          <v-row
+            class="mx-0 pa-0 service-item cursor"
+            style="border-bottom: 1px solid #eef2f7"
+            v-if="newGroup.services.length >= 6"
+          >
+            <v-col
+              cols="2"
+              class="d-flex justify-center align-center pa-0"
+              style="border-right: 1px solid #eef2f7; border-left: 1px solid #eef2f7"
+            >
+              <v-checkbox
+                v-model="newGroup.services[index].isRequired"
+                color="#727cf5"
+                hide-details
+                class="filter my-0 pl-7 d-flex align-center"
+                @change="setNewGroupValue(newGroup)"
+                style="width: 60%; height: 50px; border-right: 1px solid #eef2f7"
+              ></v-checkbox>
+              <span
+                class="font-nunito text-gray size-sub-3 d-flex flex-column justify-center align-center"
+                style="width: 40%"
+                >{{ index + 1 }}
+              </span>
+            </v-col>
+            <v-col cols="4" class="d-flex align-center" style="border-right: 1px solid #eef2f7">
+              <span class="font-nunito text-gray size-sub-3">{{ item.serviceName }}</span>
+            </v-col>
+            <v-col
+              cols="3"
+              class="d-flex py-0 align-center justify-center"
+              style="border-right: 1px solid #eef2f7"
+            >
+              <span
+                class="font-nunit text-gray size-sub-3"
+                v-if="item.price && item.price !== -2 && item.price !== -1"
+                >{{ item.price }}</span
               >
-                <v-col
-                  cols="2"
-                  class="d-flex flex-colum justify-center align-center"
-                  style="border-right: 1px solid #eef2f7; border-left: 1px solid #eef2f7"
-                >
-                  <v-checkbox
-                    v-model="newGroup.services[index].isRequired"
-                    color="#727cf5"
-                    hide-details
-                    class="filter my-0"
-                    @change="setNewGroupValue(newGroup)"
-                  ></v-checkbox>
-                </v-col>
-                <v-col
-                  v-bind="attrs"
-                  v-on="on"
-                  cols="4"
-                  class="d-flex py-0 align-center"
-                  style="border-right: 1px solid #eef2f7"
-                >
-                  <span class="font-nunito text-black size-sub-3">{{ item.serviceName }}</span>
-                </v-col>
-                <v-col
-                  v-bind="attrs"
-                  v-on="on"
-                  cols="4"
-                  class="d-flex py-0 align-center justify-center"
-                  style="border-right: 1px solid #eef2f7"
-                >
-                  <span
-                    class="font-nunito text-black size-sub-3"
-                    v-if="item.price && item.price !== -2 && item.price !== -1"
-                    >{{ item.price }}</span
-                  >
-                  <span
-                    class="font-nunito text-primary size-sub-3 ml-1"
-                    v-if="item.price && item.price !== -2 && item.price !== -1"
-                    >VNĐ/{{ item.userUnit }}</span
-                  >
-                  <span
-                    class="font-nunito text-black size-sub-3"
-                    v-if="
-                      item.priceSuggestion &&
-                      (!item.price || item.price === -2 || item.price === -1)
-                    "
-                    >{{ item.priceSuggestion }}</span
-                  >
-                </v-col>
-                <v-col
-                  cols="2"
-                  class="d-flex py-0 align-center justify-center"
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  <span class="font-nunito text-black size-sub-3">{{ item.timeUnit }}</span>
-                </v-col>
-              </v-row>
-              <v-row
-                v-else
-                class="mx-0 py-0 pl-0 pr-4 service-item cursor"
-                style="
-                  border-bottom: 1px solid #eef2f7;
-                  border-left: 2px solid #eef2f7;
-                  border-right: 2px solid #eef2f7;
+              <span
+                class="font-nunito text-primary size-sub-3 ml-1"
+                v-if="item.price && item.price !== -2 && item.price !== -1"
+                >VNĐ/{{ item.userUnit }}</span
+              >
+              <span
+                class="font-nunito text-gray size-sub-3"
+                v-if="
+                  item.priceSuggestion && (!item.price || item.price === -2 || item.price === -1)
                 "
+                >{{ item.priceSuggestion }}</span
               >
-                <v-col
-                  cols="2"
-                  class="d-flex flex-colum justify-center align-center"
-                  style="border-right: 1px solid #eef2f7"
-                >
-                  <v-checkbox
-                    v-model="newGroup.services[index].isRequired"
-                    color="#727cf5"
-                    hide-details
-                    class="filter my-0"
-                    @change="setNewGroupValue(newGroup)"
-                  ></v-checkbox>
-                </v-col>
-                <v-col
-                  v-bind="attrs"
-                  v-on="on"
-                  cols="4"
-                  class="d-flex py-0 align-center"
-                  style="border-right: 1px solid #eef2f7"
-                >
-                  <span class="font-nunito text-black size-sub-3">{{ item.serviceName }}</span>
-                </v-col>
-                <v-col
-                  cols="4"
-                  v-bind="attrs"
-                  v-on="on"
-                  class="d-flex py-0 align-center justify-center"
-                  style="border-right: 1px solid #eef2f7"
-                >
-                  <span
-                    class="font-nunito text-black size-sub-3"
-                    v-if="item.price && item.price !== -2 && item.price !== -1"
-                    >{{ item.price }}</span
-                  >
-                  <span
-                    class="font-nunito text-primary size-sub-3 ml-1"
-                    v-if="item.price && item.price !== -2 && item.price !== -1"
-                    >VNĐ/{{ item.userUnit }}</span
-                  >
-                  <span
-                    class="font-nunito text-black size-sub-3"
-                    v-if="
-                      item.priceSuggestion &&
-                      (!item.price || item.price === -2 || item.price === -1)
-                    "
-                    >{{ item.priceSuggestion }}</span
-                  >
-                </v-col>
-                <v-col
-                  cols="2"
-                  class="d-flex py-0 align-center justify-center"
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  <span class="font-nunito text-black size-sub-3">{{ item.timeUnit }}</span>
-                </v-col>
-              </v-row>
-            </template>
-            <v-list>
-              <v-list-item
-                style="min-height: 20px !important"
-                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+            </v-col>
+            <v-col
+              cols="2"
+              class="d-flex py-0 align-center justify-center"
+              style="border-right: 1px solid #eef2f7"
+            >
+              <span class="font-nunito text-gray size-sub-3">{{ item.timeUnit }}</span>
+            </v-col>
+            <v-col cols="1" class="d-flex py-0 align-center justify-center">
+              <v-btn icon @click="removeService(item.serviceName)"
+                ><v-icon small color="#98a6ad">mdi mdi-delete</v-icon></v-btn
               >
-                <v-icon color="#6c757d" class="mr-2 item-hover" size="15">mdi mdi-pencil</v-icon>
-                <v-list-item-title class="item-hover">Chỉnh sửa</v-list-item-title>
-              </v-list-item>
-              <v-list-item
-                style="min-height: 20px !important"
-                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                @click="removeService(item.serviceName)"
+            </v-col>
+          </v-row>
+          <v-row
+            v-else
+            class="mx-0 py-0 pl-0 pr-4 service-item cursor"
+            style="
+              border-bottom: 1px solid #eef2f7;
+              border-left: 2px solid #eef2f7;
+              border-right: 2px solid #eef2f7;
+            "
+          >
+            <v-col
+              cols="2"
+              class="d-flex justify-center align-center pa-0"
+              style="border-right: 1px solid #eef2f7; border-left: 1px solid #eef2f7"
+            >
+              <v-checkbox
+                v-model="newGroup.services[index].isRequired"
+                color="#727cf5"
+                hide-details
+                class="filter my-0 pl-7 d-flex align-center"
+                @change="setNewGroupValue(newGroup)"
+                style="width: 60%; height: 50px; border-right: 1px solid #eef2f7"
+              ></v-checkbox>
+              <span
+                class="font-nunito text-gray size-sub-3 d-flex flex-column justify-center align-center"
+                style="width: 40%"
+                >{{ index + 1 }}
+              </span>
+            </v-col>
+            <v-col cols="4" class="d-flex align-center" style="border-right: 1px solid #eef2f7">
+              <span class="font-nunito text-gray size-sub-3">{{ item.serviceName }}</span>
+            </v-col>
+            <v-col
+              cols="3"
+              class="d-flex py-0 align-center justify-center"
+              style="border-right: 1px solid #eef2f7"
+            >
+              <span
+                class="font-nunito text-gray size-sub-3"
+                v-if="item.price && item.price !== -2 && item.price !== -1"
+                >{{ item.price }}</span
               >
-                <v-icon color="#6c757d" class="mr-2 item-hover" size="15">mdi mdi-delete</v-icon>
-                <v-list-item-title class="item-hover">Xóa</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
+              <span
+                class="font-nunito text-primary size-sub-3 ml-1"
+                v-if="item.price && item.price !== -2 && item.price !== -1"
+                >VNĐ/{{ item.userUnit }}</span
+              >
+              <span
+                class="font-nunito text-gray size-sub-3"
+                v-if="
+                  item.priceSuggestion && (!item.price || item.price === -2 || item.price === -1)
+                "
+                >{{ item.priceSuggestion }}</span
+              >
+            </v-col>
+            <v-col
+              cols="2"
+              class="d-flex py-0 align-center justify-center"
+              style="border-right: 1px solid #eef2f7"
+            >
+              <span class="font-nunito text-gray size-sub-3">{{ item.timeUnit }}</span>
+            </v-col>
+            <v-col cols="1" class="d-flex py-0 align-center justify-center">
+              <v-btn icon @click="removeService(item.serviceName)"
+                ><v-icon small color="#98a6ad">mdi mdi-delete</v-icon></v-btn
+              >
+            </v-col>
+          </v-row>
         </div>
       </v-card>
       <span

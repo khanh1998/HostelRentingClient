@@ -111,6 +111,16 @@ export default {
 .btn-danger:hover {
   background-color: #f9375e !important;
 }
+.btn-outline-danger {
+  color: #fa5c7c !important;
+  border-color: #fa5c7c !important;
+  background-color: white !important;
+}
+.btn-outline-primary {
+  color: #727cf5 !important;
+  border-color: #727cf5 !important;
+  background-color: white !important;
+}
 .btn-outline-primary {
   color: #727cf5 !important;
   border: 1px solid #727cf5 !important;

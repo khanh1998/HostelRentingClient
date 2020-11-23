@@ -28,7 +28,7 @@
         class="d-flex flex-column justify-center pt-2 pb-1 table-item cursor"
         @click="managementRooms()"
       >
-        <HostelGroupStatistic :group="group" />
+        <HostelGroupStatistic :group="localGroup" />
         <span class="font-nunito text-info size-sub-2 ml-auto">
           {{ group.types.length }} <span>loại</span></span
         >
@@ -137,13 +137,28 @@ export default {
   },
   computed: {
     isEmptyGroup() {
-      if (!this.group.types || this.group.types.length === 0) {
+      if (this.localGroup.types.length === 0) {
         return true;
       }
-      if (!this.group.types[0].rooms || this.group.types[0].rooms.length === 0) {
+      if (this.rooms.length === 0) {
         return true;
       }
       return false;
+    },
+    rooms() {
+      let rooms = [];
+      const { types } = this.$store.state.vendor.group.groups.data.find(
+        (item) => item.groupId === this.group.groupId,
+      );
+      types.forEach((item) => {
+        rooms = [...rooms, ...item.rooms];
+      });
+      return rooms;
+    },
+    localGroup() {
+      return this.$store.state.vendor.group.groups.data.find(
+        (item) => item.groupId === this.group.groupId,
+      );
     },
   },
   created() {},

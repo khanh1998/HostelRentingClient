@@ -5,8 +5,8 @@
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
       <v-card class="d-flex flex-column" v-if="!isLoading" style="border-radius: 0px !important">
-        <v-row class="d-flex px-4 py-3 align-center ma-0 justify-space-between bg-primary">
-          <!-- <v-img
+        <v-row class="d-flex px-4 py-3 align-center ma-0 justify-space-between">
+          <v-img
             alt="Hostel Renting"
             class="shrink mr-2"
             contain
@@ -14,16 +14,16 @@
             transition="scale-transition"
             max-width="40"
             max-height="40"
-          /> -->
-          <v-icon class="ml-4" color="rgb(255, 255, 255, 0.8)">mdi-home-group</v-icon>
+          />
+          <!-- <v-icon class="ml-4" color="rgb(255, 255, 255, 0.8)">mdi-home-group</v-icon> -->
 
           <span
-            class="font-nunito white--text font-weight-bold"
+            class="font-nunito text-primary font-weight-bold"
             style="font-size: 1.125rem !important"
             >Thêm nhà trọ mới
           </span>
           <v-btn icon @click="closeDialog()" class="mr-4"
-            ><v-icon color="rgb(255, 255, 255, 0.75)">close</v-icon></v-btn
+            ><v-icon color="#727cf5">close</v-icon></v-btn
           >
         </v-row>
         <v-divider></v-divider>
@@ -452,38 +452,8 @@ export default {
       setNewGroupValue: 'vendor/group/setNewGroupValue',
       getProvinces: 'renter/common/getProvinces',
     }),
-    receiveNewServiceData(serviceList) {
-      if (this.create) {
-        this.newGroup.services = serviceList;
-      }
-    },
-    receiveNewRulesData(obj) {
-      if (this.create) {
-        this.newGroup.regulations = obj.rule;
-        if (!obj.time.openAllDay && obj.time.startTime && obj.time.endTime) {
-          this.newGroup.curfewTime = `${obj.time.startTime} - ${obj.time.endTime}`;
-        } else {
-          this.newGroup.curfewTime = null;
-        }
-      }
-    },
-    receiveNewAddress(addressObj) {
-      const { coords, address } = addressObj;
-      this.newGroup.longitude = coords.longitude;
-      this.newGroup.latitude = coords.latitude;
-      this.newGroup.address = address;
-      this.newGroup.buildingNo = address.buildingNo;
-    },
-    receiveNewSchedule(scheduleObj) {
-      this.newGroup.schedules = scheduleObj;
-      // console.log('new group');
-      // console.log(this.newGroup.schedules);
-    },
     checkCreatingGroup() {
       if (this.groups.success) {
-        // this.showSnackBar(`Khu trọ ${this.newGroup.groupName} đã được tạo thành công`, {
-        //   color: 'green',
-        // });
         this.changeShow();
       } else {
         this.showSnackBar('Tạo khu trọ thất bại', { color: 'red' });
@@ -491,9 +461,6 @@ export default {
     },
     changeShow() {
       this.show = false;
-    },
-    doCreateHostelGroup() {
-      this.createHostelGroup(this.newGroup).then(() => this.checkCreatingGroup());
     },
     closeDialog() {
       this.$emit('close');
@@ -816,29 +783,6 @@ export default {
       }
       wardName = wardName.trim();
       districtName = districtName.trim(); // let streetName = this.addressComponents.find(
-      //   (item) => item.types.some((type) => type === 'route') === true,
-      // );
-      // if (streetName) {
-      //   streetName = streetName.long_name;
-      //   if (streetName.startsWith('Đường')) {
-      //     streetName = `${streetName.split('Đường')[1]}`;
-      //   }
-      // }
-      // console.log(streetName);
-      // let wardName = this.addressComponents.find(
-      //   (item) => item.types.some((type) => type === 'administrative_area_level_2') === true,
-      // );
-      // if (wardName) {
-      //   wardName = wardName.long_name;
-      // }
-      // console.log(wardName);
-      // let provinceName = this.addressComponents.find(
-      //   (item) => item.types.some((type) => type === 'administrative_area_level_1') === true,
-      // );
-      // if (provinceName) {
-      //   provinceName = provinceName.long_name;
-      // }
-      // console.log(provinceName);
       return { streetName, wardName, districtName };
     },
   },
