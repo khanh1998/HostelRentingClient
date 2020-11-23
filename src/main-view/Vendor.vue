@@ -11,11 +11,11 @@
       <template v-slot:append>
         <v-list-item link>
           <v-list-item-icon>
-            <v-icon>mdi-logout-variant</v-icon>
+            <v-icon>mdi-account-arrow-left</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title @click="logout" class="item-text-display text-h6">
-              Đăng xuất
+            <v-list-item-title @click="logout" style="color: #3645f1">
+              <span class="font-nunito size-h4">Đăng xuất</span>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -27,7 +27,7 @@
       app
       dense
       height="70"
-      class="white vendor pa-0"
+      class="white vendor pa-0 hidden-xs-only"
     >
       <v-app-bar-nav-icon
         @click.stop="primaryDrawer.model = !primaryDrawer.model"
@@ -46,11 +46,6 @@
           max-height="40"
         />
       </router-link>
-      <!-- <v-toolbar-title
-        class="font-nunito text-primary font-weight-bold"
-        style="font-size: 1.125rem"
-        >{{ routeName }}</v-toolbar-title
-      > -->
       <v-spacer></v-spacer>
       <!-- <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
@@ -97,6 +92,73 @@
       <notify />
       <profile-menu v-if="!isLoadingUser" />
     </v-app-bar>
+    <!-- Mobile app bar -->
+    <v-app-bar
+      :clipped-left="primaryDrawer.clipped"
+      app
+      dense
+      height="70"
+      class="vendor pa-0 hidden-sm-and-up"
+      style="background: linear-gradient(135deg, #8f75da 0, #727cf5 60%)"
+    >
+      <v-app-bar-nav-icon
+        @click.stop="primaryDrawer.model = !primaryDrawer.model"
+        style="color: #fff !important"
+      >
+      </v-app-bar-nav-icon>
+      <router-link to="/">
+        <div
+          style="height: 55px; width: 55px; border-radius: 50%"
+          class="white d-flex flex-column justify-center align-center ml-5"
+        >
+          <v-img
+            alt="Hostel Renting"
+            class="shrink ml-1"
+            contain
+            src="@/assets/logo-sac.png"
+            transition="scale-transition"
+            max-width="50"
+            max-height="35"
+          />
+        </div>
+      </router-link>
+      <v-spacer></v-spacer>
+      <!-- <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <span
+            v-bind="attrs"
+            v-on="on"
+            class="d-flex justify-center align-center font-nunito size9rem mr-10 text-muted"
+          >
+            Hướng dẫn sử dụng
+            <v-icon class="ml-1" color="#98a6ad" size="15">mdi-chevron-down</v-icon>
+          </span>
+        </template>
+        <v-list>
+          <v-list-item
+            style="min-height: 20px !important"
+            class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+          >
+            <v-icon color="#6c757d" class="mr-2 item-hover" size="15">mdi-account-circle</v-icon>
+            <v-list-item-title class="item-hover font-nunito text-gray size9rem"
+              >Tài khoản của tôi</v-list-item-title
+            >
+          </v-list-item>
+          <v-list-item
+            style="min-height: 20px !important"
+            class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+          >
+            <v-icon color="#6c757d" class="mr-2 item-hover" size="15"
+              >mdi-account-arrow-left</v-icon
+            >
+            <v-list-item-title class="item-hover font-nunito text-gray size9rem"
+              >Đăng xuất</v-list-item-title
+            >
+          </v-list-item>
+        </v-list>
+      </v-menu> -->
+      <notify />
+    </v-app-bar>
 
     <v-main _style="max-height: calc(100vh); overflow-y: hidden;">
       <v-container
@@ -109,12 +171,14 @@
         <router-view />
       </v-container>
     </v-main>
+    <bottomNavigation class="hidden-sm-and-up" />
   </v-app>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
 import sideMenuBar from '../components/core_layout/sideMenuBar.vue';
+import bottomNavigation from '../components/core_layout/bottomNavigation.vue';
 import notify from '../components/vendor/overview/Notify.vue';
 import profileMenu from '../components/vendor/overview/ProfileMenu.vue';
 import authenticationMixins from '../components/mixins/authentication';
@@ -127,6 +191,7 @@ export default {
     sideMenuBar,
     notify,
     profileMenu,
+    bottomNavigation,
   },
   computed: {
     routeName() {
