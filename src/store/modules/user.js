@@ -264,8 +264,7 @@ const mutations = {
       (c) => Number(c.contractId) === Number(contract.contractId),
     );
     if (oldContractIndex > -1) {
-      state.contracts.data[oldContractIndex].status = contract.status;
-      state.contracts.data[oldContractIndex].contractUrl = contract.contractUrl;
+      state.contracts.data[oldContractIndex] = contract;
     } else {
       state.contracts.data.unshift(contract);
     }
