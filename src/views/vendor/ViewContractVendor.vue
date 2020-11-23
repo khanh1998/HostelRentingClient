@@ -3,7 +3,7 @@
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-dialog width="500" :value="uncheckedReserveFee.length > 0">
+    <v-dialog width="500" persistent :value="uncheckedReserveFee.length > 0">
       <UnCheckedReservedFeeContracts :contracts="uncheckedReserveFee"/>
     </v-dialog>
     <div v-if="!isLoading">

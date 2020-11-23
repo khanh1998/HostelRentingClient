@@ -100,9 +100,13 @@
           </v-row>
         </v-col>
         <v-col cols="12" md="1" class="d-flex flex-column justify-center align-center">
-          <v-chip small class="font-nunito mb-2" :color="getStatus(contract.status).color">{{
-            getStatus(contract.status).contractStatus
-          }}</v-chip>
+          <!-- <v-chip
+            v-if="false"
+            small
+            class="font-nunito mb-2"
+            :color="getStatus(contract.status, contract.paid).color"
+            >{{ getStatus(contract.status, contract.paid).contractStatus }}</v-chip
+          >
           <v-btn
             small
             rounded
@@ -132,21 +136,46 @@
             text
             @click="$emit('pay-reserve-fee', contract.contractId)"
             >Xác nhận đóng tiền giữ chỗ</v-btn
-          >
+          > -->
         </v-col>
       </v-row>
       <v-row>
         <v-col>
           <v-stepper v-model="step" v-if="contract.reserved" class="elevation-0">
-            <v-stepper-header>
+            <v-stepper-header class="elevation-0">
               <v-stepper-step :complete="step > 0" step="1"> Hợp đồng được tạo </v-stepper-step>
               <v-divider></v-divider>
               <v-stepper-step :complete="step > 1" step="2"> Đã đóng tiền giữ chỗ </v-stepper-step>
               <v-divider></v-divider>
-              <v-stepper-step :complete="step > 2" step="3"> Chủ trọ đã nhận tiền cọc </v-stepper-step>
+              <v-stepper-step :complete="step > 2" step="3">
+                Chủ trọ đã nhận tiền cọc
+              </v-stepper-step>
               <v-divider></v-divider>
               <v-stepper-step :complete="step > 3" step="4"> Đã ký hợp đồng </v-stepper-step>
             </v-stepper-header>
+            <v-stepper-items class="elevation-0">
+              <v-stepper-content step="1" class="elevation-0">
+                Hợp đồng đặt cọc giữ chỗ đã được tạo, chuyển tiền giữ chỗ cho chủ nhà. Sau khi
+                chuyển tiền,
+                <v-chip @click="$emit('pay-reserve-fee', contract.contractId)">nhấn vào đây</v-chip>
+                để yêu cầu chủ nhà xác nhận đã nhận tiền.
+              </v-stepper-content>
+              <v-stepper-content step="2">
+                Yêu cầu xác nhận tiền của bạn đã được gửi tới chủ nhà. Hãy đợi cho tới khi chủ nhà
+                xác nhận.
+              </v-stepper-content>
+              <v-stepper-content step="3">
+                Chủ nhà xác nhận là đã nhận tiền cọc giữ chỗ, bây giờ bạn có thể
+                <v-chip @click="$emit('activate', contract.contractId)">ký hợp đồng</v-chip> thuê
+                nhà chính thức.
+              </v-stepper-content>
+              <v-stepper-content step="4">
+                Hợp đồng đã được hoàn tất. Bây giờ bạn có thể
+                <v-chip @click="$emit('view-detail', contract.contractId)">
+                  xem chi tiết hợp đồng</v-chip
+                >
+              </v-stepper-content>
+            </v-stepper-items>
           </v-stepper>
           <v-stepper v-model="step" v-if="!contract.reserved" class="elevation-0">
             <v-stepper-header>
@@ -154,6 +183,21 @@
               <v-divider></v-divider>
               <v-stepper-step :complete="step > 1" step="2"> Đã ký hợp đồng </v-stepper-step>
             </v-stepper-header>
+            <v-stepper-items>
+              <v-stepper-items class="elevation-0">
+                <v-stepper-content step="1" class="elevation-0">
+                  Hợp đồng đặt cọc giữ chỗ đã được tạo, bây giờ bạn có thể
+                  <v-chip @click="$emit('activate', contract.contractId)">ký hợp đồng</v-chip> thuê
+                  nhà chính thức.
+                </v-stepper-content>
+                <v-stepper-content step="2">
+                  Hợp đồng đã được hoàn tất. Bây giờ bạn có thể
+                  <v-chip @click="$emit('view-detail', contract.contractId)">
+                    xem chi tiết hợp đồng</v-chip
+                  >
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper-items>
           </v-stepper>
         </v-col>
       </v-row>
@@ -251,12 +295,12 @@ export default {
       endDate.setMonth(endDate.getMonth() + duration);
       return endDate.getTime();
     },
-    getStatus(status) {
+    getStatus(status, paid) {
       let contractStatus = '';
       let color = 'red';
       switch (status) {
         case 'REVERSED':
-          contractStatus = 'cọc';
+          contractStatus = 'Đặt cọc giữ chỗ thành công';
           color = 'rgba(255,188,0,.25)';
           break;
         case 'ACTIVATED':
@@ -264,12 +308,17 @@ export default {
           color = 'rgba(57,175,209,.25)';
           break;
         case 'INACTIVE':
-          contractStatus = 'chờ xác nhận';
+          contractStatus = 'Chưa đóng tiền cọc giữ chỗ';
           color = 'rgba(10,207,151,.25)';
+          if (paid) {
+            contractStatus = 'Đang chờ chủ trọ xác nhận';
+          }
           break;
-        default:
+        case 'EXPIRED':
           contractStatus = 'hết hiệu lực';
           color = 'rgba(250,92,124,.25)';
+          break;
+        default:
           break;
       }
       return { contractStatus, color };

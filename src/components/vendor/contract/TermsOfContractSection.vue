@@ -161,7 +161,7 @@
                       :mode="mode"
                       @newValues="receiveNewImages"
                       class="pa-0"
-                      :oldImages="contract.images"
+                      :oldImages="physicalContractImages"
                     />
                   </v-col>
                 </v-row>
@@ -270,7 +270,7 @@ export default {
       this.contract.groupServiceIds = selectServiceIds;
     },
     receiveNewImages(imageUrls) {
-      this.contract.images = imageUrls;
+      this.contract.images = imageUrls.map((img) => ({ ...img, reserved: false }));
     },
     receiveAppendixContent(appendix) {
       this.contract.appendixContract = appendix;
@@ -300,6 +300,9 @@ export default {
     },
   },
   computed: {
+    physicalContractImages() {
+      return this.contract.images.filter((img) => !img.reserved);
+    },
     addressString() {
       const { address } = this.group;
       return `${this.group.buildingNo} ${address.streetName}, ${address.wardName}, ${address.districtName}, ${address.provinceName}`;
