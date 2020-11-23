@@ -31,7 +31,7 @@
                 <v-col cols="8" v-if="allTypes.length > 0" class="pa-0">
                   <v-select
                     v-model="newRoomValue.typeId"
-                    v-bind:items="allTypes"
+                    v-bind:items="listType"
                     item-text="title"
                     item-value="typeId"
                     label="Loại phòng"
@@ -904,6 +904,7 @@ export default {
     newFacility: '',
     newFacilities: [],
     newFacilitiesSelectes: [],
+    listType: [],
   }),
   props: { show: Boolean, group: Object, showCreateType: Boolean },
   components: { RoomItem, alert },
@@ -1069,6 +1070,12 @@ export default {
         facilityIds: [],
         newFacilities: [],
       });
+      this.showMessage = {
+        typeName: false,
+        superficiality: false,
+        capacity: false,
+        image: false,
+      };
       this.images = [];
       this.listUploadedFiles = [];
     },
@@ -1178,9 +1185,10 @@ export default {
             facilityName: newFacility.trim(),
           })),
         };
-        console.log(this.newTypeValue, newType);
         this.createHostelType(newType).then(() => {
           if (this.isCreateSuccess) {
+            this.listType = [];
+            this.listType = this.allTypes;
             this.closeCreateTypeDialog();
           }
         });
@@ -1205,19 +1213,6 @@ export default {
       this.openCreateType = true;
     },
     addNewFacility() {
-      // if (this.newTypeValue.newFacilities.length === 0) {
-      //   this.newTypeValue.newFacilities.push({
-      //     index: 0,
-      //     facilityName: '',
-      //   });
-      // } else {
-      //   this.newTypeValue.newFacilities.push({
-      //     index:
-      //       this.newTypeValue.newFacilities[this.newTypeValue.newFacilities.length - 1].index + 1,
-      //     facilityName: '',
-      //   });
-      // }
-      // this.setCreateTypeValue(this.newTypeValue);
       if (this.newFacilities && !this.isDuplicate) {
         this.newFacilities.unshift(this.newFacility);
         this.newFacilitiesSelectes.push(this.newFacility);
@@ -1283,6 +1278,7 @@ export default {
     if (this.allFacilities.length === 0) {
       this.getAllFacilities();
     }
+    this.listType = this.allTypes;
   },
 };
 </script>
