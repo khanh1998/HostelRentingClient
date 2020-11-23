@@ -34,7 +34,9 @@
           <image-editor :oldImages="[]" @newValues="receiveNewImages" />
         </v-card-text>
         <v-card-actions>
-          <v-btn icon :disabled="payReserveFee.images.length === 0" @click="doPayReserveFee"><v-icon>send</v-icon></v-btn>
+          <v-btn icon :disabled="payReserveFee.images.length === 0" @click="doPayReserveFee"
+            ><v-icon>send</v-icon></v-btn
+          >
           <v-btn icon @click="payReserveFee.show = false">
             <v-icon>clear</v-icon>
           </v-btn>
@@ -174,7 +176,7 @@ export default {
       updateContract: 'user/updateContract',
     }),
     receiveNewImages(images) {
-      this.payReserveFee.images = images;
+      this.payReserveFee.images = images.map((img) => ({ ...img, reserved: true }));
     },
     showPayReserveFee(contractId) {
       this.payReserveFee.show = true;

@@ -14,7 +14,7 @@
         <v-card
           width="350"
           v-if="evidences.show && !evidences.showResult"
-          :loading="contractsStore.isLoading"
+          :loading="contractsStore.isUpdating"
         >
           <v-card-title> Hình ảnh của biên lai chuyển tiền </v-card-title>
           <v-card-text>
@@ -24,7 +24,7 @@
             Phòng số: {{ evidences.contract.room.roomName }}<br />
             Mức tiền cọc giữ chỗ: {{ evidences.contract.downPayment }}<br />
             triệu đồng
-            <div class="d-flex flex-row">
+            <div class="d-flex flex-row flex-wrap">
               <v-img
                 contain
                 v-for="url in evidences.imageUrls"
@@ -117,6 +117,7 @@ export default {
   methods: {
     ...mapActions({
       updateContract: 'user/updateContract',
+      activateContract: 'user/activateContract',
     }),
     confirmInvalidReserved() {
       const contract = this.evidences;
@@ -130,7 +131,9 @@ export default {
       const { contract } = this.evidences;
       contract.roomId = contract.room.roomId;
       contract.status = 'RESERVED';
-      this.updateContract(contract).then(() => {
+      const { contractId, qrCode } = contract;
+      const payload = { contractId, qrCode };
+      this.activateContract(payload).then(() => {
         this.evidences.success = this.contractsStore.success;
         this.evidences.show = false;
       });
@@ -141,13 +144,11 @@ export default {
     },
     showEvidences(contractId) {
       const contract = this.contracts.find((c) => c.contractId === contractId);
-      this.evidences.imageUrls = contract.images.map((img) => img.resourceUrl);
+      this.evidences.imageUrls = contract.images
+        .filter((img) => img.reserved)
+        .map((img) => img.resourceUrl);
       this.evidences.show = true;
       this.evidences.contract = contract;
-      this.evidences.imageUrls.push(
-        'https://i.pinimg.com/564x/cc/01/31/cc01317d0242d2a1cb54386b719e42d0.jpg',
-        'https://i.pinimg.com/originals/95/f8/f0/95f8f07eaf103282dbd9518ab8175931.png',
-      );
     },
   },
 };
