@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <v-overlay :value="isLoading" absolute>
+    <v-overlay :value="isLoading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-dialog v-model="signing" hide-overlay persistent width="300">
@@ -51,6 +51,36 @@
           <v-btn icon @click="payReserveFee.show = false">
             <v-icon>clear</v-icon>
           </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="signAndPay.show" persistent max-width="300">
+      <v-card>
+        <v-stepper v-model="signAndPay.step" vertical class="elevation-0 pt-3">
+          <v-stepper-step :complete="signAndPay.step > 1" step="1"> Ký hợp đồng </v-stepper-step>
+          <v-stepper-content step="1">
+            <v-card>
+              <v-card-text>
+                <v-chip @click="doActivateContract">Nhấn vào đây</v-chip> để đọc và ký hợp đồng.
+              </v-card-text>
+            </v-card>
+          </v-stepper-content>
+          <v-stepper-step :complete="signAndPay.step > 2" step="2">
+            Thanh toán tiền cọc giữ chỗ
+          </v-stepper-step>
+          <v-stepper-content step="2">
+            <v-card>
+              <v-card-text>
+                Chuyển khoản tiền cọc giữ chỗ cho chủ trọ. Sau đó
+                <v-chip @click="doPayReserveFee">Nhấn vào đây</v-chip> để gửi ảnh biên lai chuyển
+                tiền cho chủ trọ.
+              </v-card-text>
+            </v-card>
+          </v-stepper-content>
+        </v-stepper>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="signAndPay.show = false"> Đóng </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -167,6 +197,10 @@ export default {
       success: false,
       showResult: false,
     },
+    signAndPay: {
+      show: false,
+      step: 1,
+    },
   }),
   methods: {
     ...mapActions({
@@ -174,12 +208,14 @@ export default {
       getUser: 'user/getUser',
       activateContract: 'user/activateContract',
       updateContract: 'user/updateContract',
+      sendNotification: 'user/sendNotification',
     }),
     receiveNewImages(images) {
       this.payReserveFee.images = images.map((img) => ({ ...img, reserved: true }));
     },
     showPayReserveFee(contractId) {
-      this.payReserveFee.show = true;
+      // this.payReserveFee.show = true;
+      this.signAndPay.show = true;
       this.payReserveFee.contractId = contractId;
     },
     doPayReserveFee() {
@@ -196,6 +232,26 @@ export default {
         const { success } = this.contracts;
         this.payReserveFee.success = success;
         this.payReserveFee.showResult = true;
+        const title = `${contract.renter.username} đóng tiền cọc giữ chân`;
+        const body = `${contract.downPayment} triệu đồng`;
+        const action = 'PAY_RESERVE_FEE';
+        const id = contract.contractId;
+        const vendorId = contract.vendor.userId;
+        const renterId = null;
+        const icon = contract.renter.avatar;
+        const payload = {
+          title,
+          body,
+          action,
+          id,
+          vendorId,
+          renterId,
+          icon,
+        };
+        if (success) {
+          this.signAndPay.step += 1;
+          this.sendNotification(payload);
+        }
       });
     },
     doActivateContract() {
@@ -212,6 +268,7 @@ export default {
           this.signingResult.success = true;
           console.log(success);
           this.showSnackBar('Kích hoạt hợp đồng thành công', { color: 'green' });
+          this.signAndPay.step += 1;
         } else {
           this.signingResult.success = false;
           console.log(error);
