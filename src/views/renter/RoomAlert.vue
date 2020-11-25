@@ -182,47 +182,49 @@
         </v-btn>
       </v-col>
     </v-col>
-    <v-row class="rounded-lg elevation-5 mt-5">
-      <v-col>
-        <v-slide-group v-model="slide.requestIndex" show-arrows>
-          <v-slide-item
-            v-for="request in requests.data"
-            :key="request.requestId"
-            v-slot="{ active, toggle }"
-          >
-            <v-card
-              :color="active ? 'blue lighten-1' : 'grey lighten-1'"
-              @click="toggle"
-              class="ma-2 elevation-5"
-              width="250"
+    <v-col cols="11" md="11" lg="11" xl="10" class="pa-0">
+      <v-row class="rounded-lg elevation-5 mt-5">
+        <v-col>
+          <v-slide-group v-model="slide.requestIndex" show-arrows>
+            <v-slide-item
+              v-for="request in requests.data"
+              :key="request.requestId"
+              v-slot="{ active, toggle }"
             >
-              <v-card-title>
-                {{ request.address }}
-                <v-spacer />
-                <v-btn icon @click="slide.short = !slide.short">
-                  <v-icon v-if="slide.short">arrow_drop_down</v-icon>
-                  <v-icon v-if="!slide.short">arrow_drop_up</v-icon>
-                </v-btn>
-              </v-card-title>
-              <v-card-text v-if="!slide.short">
-                <p>Ngày nhận phòng: {{ new Date(request.dueTime).toLocaleDateString('vi') }}</p>
-                <p>Giá tối đa: {{ request.maxPrice }} Triệu</p>
-                <p>Diện tích tối thiểu: {{ request.minSuperficiality }} m2</p>
-                <p>Bán kính tìm kiếm: {{ request.maxDistance }} km</p>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn @click="getResult(request.requestId)" text>Xem danh sách phòng</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-slide-item>
-        </v-slide-group>
-      </v-col>
-    </v-row>
-    <v-row class="rounded-lg elevation-5 mt-5" v-if="result">
-      <v-col v-for="type in result.types" :key="type.typeId" cols="3">
-        <CarouselItem :type="type" :typeGroup="getGroupOfType(type.groupId)" />
-      </v-col>
-    </v-row>
+              <v-card
+                :color="active ? 'blue lighten-1' : 'grey lighten-1'"
+                @click="toggle"
+                class="ma-2 elevation-5"
+                width="250"
+              >
+                <v-card-title>
+                  {{ request.address }}
+                  <v-spacer />
+                  <v-btn icon @click="slide.short = !slide.short">
+                    <v-icon v-if="slide.short">arrow_drop_down</v-icon>
+                    <v-icon v-if="!slide.short">arrow_drop_up</v-icon>
+                  </v-btn>
+                </v-card-title>
+                <v-card-text v-if="!slide.short">
+                  <p>Ngày nhận phòng: {{ new Date(request.dueTime).toLocaleDateString('vi') }}</p>
+                  <p>Giá tối đa: {{ request.maxPrice }} Triệu</p>
+                  <p>Diện tích tối thiểu: {{ request.minSuperficiality }} m2</p>
+                  <p>Bán kính tìm kiếm: {{ request.maxDistance }} km</p>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn @click="getResult(request.requestId)" text>Xem danh sách phòng</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-slide-item>
+          </v-slide-group>
+        </v-col>
+      </v-row>
+      <v-row class="rounded-lg elevation-5 mt-5" v-if="result">
+        <v-col v-for="type in result.types" :key="type.typeId" cols="3">
+          <CarouselItem :type="type" :typeGroup="getGroupOfType(type.groupId)" />
+        </v-col>
+      </v-row>
+    </v-col>
   </v-row>
 </template>
 <script>

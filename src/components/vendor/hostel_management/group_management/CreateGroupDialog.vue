@@ -37,7 +37,7 @@
           <span
             class="font-nunito white--text font-weight-bold"
             style="font-size: 1.125rem !important"
-            >Thêm nhà trọ mới
+            >Thêm khu trọ mới
           </span>
           <v-btn icon @click="closeDialog()" class="mr-4"
             ><v-icon color="rgb(255, 255, 255, 0.75)">close</v-icon></v-btn
@@ -80,7 +80,7 @@
                   <v-row class="ma-0">
                     <v-col cols="7" class="d-flex flex-column">
                       <span class="field-name font-weight-medium"
-                        >Tên nhà trọ<span class="red--text ml-1">(*)</span></span
+                        >Tên khu trọ<span class="red--text ml-1">(*)</span></span
                       >
                       <v-text-field
                         class="size-sub-2 font-nunito form"
@@ -92,7 +92,7 @@
                         @input="setNewGroupValue(newGroupValue)"
                       />
                       <span class="font-nunito red--text size-caption" v-show="check && error.name"
-                        >Vui lòng điền tên nhà trọ</span
+                        >Vui lòng điền tên khu trọ</span
                       >
                     </v-col>
                     <v-col cols="5" class="d-flex flex-column">
@@ -232,13 +232,15 @@
                     </v-col>
                     <v-col cols="4" class="d-flex flex-column">
                       <span class="field-name font-weight-medium d-flex align-center font-nunito"
-                        >Người liên lạc<v-tooltip top>
+                        >Người liên lạc
+                        <v-tooltip right>
                           <template v-slot:activator="{ on, attrs }">
-                            <!-- <v-btn icon v-bind="attrs" v-on="on"> -->
-                            <v-icon small color="red" v-bind="attrs" v-on="on" class="ml-2"
-                              >mdi-account-question</v-icon
+                            <span
+                              v-bind="attrs"
+                              v-on="on"
+                              class="red--text font-nunito font-weight-bold ml-2"
+                              >?</span
                             >
-                            <!-- </v-btn> -->
                           </template>
                           <span class="font-nunito"
                             >Là người có thể liên lạc khi tới xem phòng, nếu là chủ trọ, bạn có thể
@@ -272,9 +274,20 @@
                       />
                     </v-col>
                     <v-col cols="4" class="d-flex flex-column">
-                      <span class="field-name font-weight-medium font-nunito"
-                        >Cọc giữ chân<span class="red--text ml-1">(*)</span></span
-                      >
+                      <span class="field-name font-weight-medium d-flex align-center font-nunito"
+                        >Cọc giữ chỗ<span class="red--text ml-1">(*)</span>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <span
+                              v-bind="attrs"
+                              v-on="on"
+                              class="red--text font-nunito font-weight-bold ml-2"
+                              >?</span
+                            >
+                          </template>
+                          <span class="font-nunito">Tiền cọc giữ chỗ thuê cần phải đóng</span>
+                        </v-tooltip>
+                      </span>
                       <v-text-field
                         class="size-sub form"
                         type="number"
@@ -315,7 +328,7 @@
                 <v-col cols="4" class="d-flex flex-column pl-10">
                   <v-card outlined min-height="330" max-height="330">
                     <v-col cols="12" class="d-flex flex-column px-5">
-                      <span class="field-name font-weight-medium">Ảnh đại diện</span>
+                      <span class="field-name font-weight-medium">Ảnh đại diện khu trọ</span>
                       <AvatarManagement />
                     </v-col>
                   </v-card>
