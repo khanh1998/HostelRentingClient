@@ -163,26 +163,53 @@
                       style="font-size: 18px"
                       ><p class="hidden-sm-and-up">Hợp đồng được tạo</p></v-col
                     >
-                    <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
+                    <v-col
+                      cols="12"
+                      class="d-flex justify-center font-nunito"
+                      style="font-size: 18px"
+                      ><p class="hidden-sm-and-down">
+                        Bạn cần thanh toán tiền cọc giữ chân và gửi thông tin thanh toán để chủ nhà
+                        xác nhận
+                      </p></v-col
+                    >
+                    <v-col cols="12" class="pb-0 pt-0">
                       <v-timeline align-top dense>
                         <v-timeline-item color="#727CF5" small>
                           <div>
-                            Hỗ trợ thanh toán tiền cọc giữ chỗ :
-                            <v-btn :href="getParamForUrl" rounded text>
-                              <v-img
-                                height="30px"
-                                width="30px"
-                                src="../../assets/logo-momo.png"
-                              ></v-img>
-                            </v-btn>
+                            Thanh toán tiền cọc giữ chỗ cho chủ trọ.
+                            <v-card-subtitle class="pt-0 pb-0  hidden-sm-and-down">
+                              Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán trực tuyến.<br/>
+                              Hỗ trợ thanh toán bằng
+                              <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text>
+                                <v-img
+                                  height="30px"
+                                  width="30px"
+                                  src="../../assets/logo-momo.png"
+                                ></v-img>
+                                 <v-card-subtitle class="pl-1 pr-0">Bạn phải có tài khoản MoMo</v-card-subtitle>
+                              </v-btn>
+                            </v-card-subtitle>
+                            <v-card-text class="pt-0 pb-0  hidden-sm-and-up">
+                              * Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán trực tuyến.<br/>
+                              * Hỗ trợ thanh toán bằng
+                              <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text>
+                                <v-img
+                                  height="30px"
+                                  width="30px"
+                                  src="../../assets/logo-momo.png"
+                                ></v-img>
+                                 <!-- <v-card-subtitle class="pl-1 pr-0">Bạn phải có tài khoản MoMo</v-card-subtitle> -->
+                              </v-btn>
+                            </v-card-text>
                           </div>
                         </v-timeline-item>
                         <v-timeline-item color="#727CF5" small>
                           <div>
-                            Yêu cầu chủ nhà xác nhận :
+                            Yêu cầu chủ nhà xác nhận tiền cọc giữ chỗ :
                             <v-chip
                               @click="$emit('pay-reserve-fee', contract.contractId)"
                               color="#727CF5"
+                              class="ml-2"
                               dark
                               >Yêu cầu xác nhận</v-chip
                             >
@@ -232,8 +259,8 @@
                   >
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
                     <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
-                  xem chi tiết hợp đồng</v-chip
-                >
+                      xem chi tiết hợp đồng</v-chip
+                    >
                   </v-col>
                 </v-row>
               </v-stepper-content>
@@ -253,19 +280,19 @@
             <v-stepper-items class="elevation-0">
               <v-stepper-content step="1">
                 <div class="d-flex justify-center">
-                   <v-row>
-                  <v-col
-                    cols="12"
-                    class="d-flex justify-center font-weight-bold font-nunito"
-                    style="font-size: 18px"
-                    ><p class="hidden-sm-and-up">Hợp đồng được tạo</p></v-col
-                  >
-                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0"
-                    ><v-chip @click="$emit('activate', contract.contractId)" color="#727CF5" dark
-                    >Ký hợp đồng</v-chip
-                  ></v-col
-                  >
-                </v-row>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      class="d-flex justify-center font-weight-bold font-nunito"
+                      style="font-size: 18px"
+                      ><p class="hidden-sm-and-up">Hợp đồng được tạo</p></v-col
+                    >
+                    <v-col cols="12" class="d-flex justify-center pb-0 pt-0"
+                      ><v-chip @click="$emit('activate', contract.contractId)" color="#727CF5" dark
+                        >Ký hợp đồng</v-chip
+                      ></v-col
+                    >
+                  </v-row>
                 </div>
               </v-stepper-content>
               <v-stepper-content step="2">
