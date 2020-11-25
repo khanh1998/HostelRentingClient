@@ -8,20 +8,20 @@
       <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" sm="12" md="12" lg="12" xl="11">
           <v-row class="d-flex align-center ma-0">
-            <span class="page-title">Danh sách nhà trọ</span>
+            <span class="page-title">Bạn đang quản lý {{ groups.length }} khu trọ</span>
             <v-btn
               class="mx-5 btn-success btn-sm font-nunito white--text"
               @click="openCreateGroupDialog = true"
-              ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm nhà trọ</v-btn
+              ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm khu trọ mới</v-btn
             >
             <v-btn class="mx-5 px-10 btn-warning btn-sm font-nunito" to="rooms"
-              >Quản lý phòng trọ</v-btn
-            >
+              >Quản lý chi tiết các khu trọ
+            </v-btn>
             <v-spacer></v-spacer>
             <v-col cols="3" class="d-flex align-center">
               <v-text-field
                 v-show="showSearchGroup"
-                label="Tìm theo tên nhà trọ"
+                label="Tìm theo tên khu trọ"
                 v-model="searchGroupQuery"
                 solo
                 hide-details
@@ -67,7 +67,7 @@
                     @click="showSearchGroup = true"
                   >
                     <v-list-item-title class="item-hover font-nunito text-gray size9rem"
-                      >Nhà trọ</v-list-item-title
+                      >Khu trọ</v-list-item-title
                     >
                   </v-list-item>
                   <v-list-item
@@ -128,9 +128,7 @@
             <v-row>
               <div class="d-flex mx-4 py-2" style="width: 100%; border-bottom: 2px solid #eef2f7">
                 <v-col cols="2" class="d-flex align-center">
-                  <span class="font-nunito text-primary size9rem font-weight-bold"
-                    >Tên nhà trọ</span
-                  >
+                  <span class="font-nunito text-primary size9rem font-weight-bold">Khu trọ</span>
                 </v-col>
                 <v-col cols="4" class="d-flex align-center">
                   <span class="font-nunito text-primary font-weight-bold size9rem"
@@ -174,17 +172,17 @@
     <v-container v-if="!isLoading" class="pa-0 hidden-sm-and-up">
       <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" class="d-flex align-center">
-          <span class="page-title">Bạn đang quản lý {{ groups.length }} nhà trọ</span>
+          <span class="page-title">Bạn đang quản lý {{ groups.length }} khu trọ</span>
           <v-btn
             class="ml-auto btn-success btn-sm font-nunito white--text"
             @click="openCreateGroupMobileDialog = true"
-            ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm nhà trọ</v-btn
+            ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm khu trọ mới</v-btn
           >
         </v-col>
         <v-col cols="12" class="d-flex align-center">
           <v-text-field
             v-show="showSearchGroup"
-            label="Tìm theo tên nhà trọ"
+            label="Tìm theo tên khu trọ"
             v-model="searchGroupQuery"
             solo
             hide-details
@@ -230,7 +228,7 @@
                 @click="showSearchGroup = true"
               >
                 <v-list-item-title class="item-hover font-nunito text-gray size9rem"
-                  >Nhà trọ</v-list-item-title
+                  >Khu trọ</v-list-item-title
                 >
               </v-list-item>
               <v-list-item

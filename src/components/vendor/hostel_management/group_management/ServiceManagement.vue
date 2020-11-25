@@ -498,7 +498,7 @@ export default {
         const { serviceName } = this.allServices.find(
           (service) => service.serviceId === Number(this.addNew.serviceId),
         );
-        switch (serviceName) {
+        switch (serviceName.toLowerCase()) {
           case 'điện cố định theo đồng hồ':
             this.userUnitSuggested = 'VNĐ/Kwh';
             this.addNew.userUnit = 'kwh';
