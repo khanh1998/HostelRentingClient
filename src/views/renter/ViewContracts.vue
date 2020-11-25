@@ -307,10 +307,16 @@ export default {
     },
     doActivateContract() {
       console.log('doactivatecontract');
+      let status;
+      if (this.contractOverlay.contract.reserved) {
+        status = 'RESERVED';
+      } else {
+        status = 'ACTIVATED';
+      }
       const payload = {
         contractId: this.contractOverlay.contract.contractId,
         qrCode: this.contractOverlay.contract.qrCode,
-        status: 'ACTIVATED',
+        status,
       };
       this.activateContract(payload).then(() => {
         this.contractOverlay.show = false;
