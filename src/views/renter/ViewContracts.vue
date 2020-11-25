@@ -5,7 +5,7 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-dialog v-model="signing" hide-overlay persistent width="300">
-      <v-card color="primary" dark>
+      <v-card color="#727CF5" dark>
         <v-card-text>
           Đang ký hợp đồng
           <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
@@ -13,45 +13,53 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="signingResult.show" hide-overlay persistent width="300">
-      <v-card color="primary" dark>
-        <v-card-title>
+      <v-card color="#727CF5" dark>
+        <v-toolbar color="#727cf5" dark class="font-nunito">
+          <v-toolbar-title>Xác nhận</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn class="d-flex justify-end" @click="signingResult.show = false" icon>
+            <v-icon class="mr-3"> clear </v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text class="d-flex justify-center pt-3" style="font-size:18px">
           <span v-if="signingResult.success"> Ký hợp đồng thành công </span>
           <span v-if="!signingResult.success"> Ký hợp đồng thất bại </span>
-        </v-card-title>
-        <v-card-text> </v-card-text>
-        <v-card-actions>
-          <v-btn icon @click="signingResult.show = false">
-            <v-icon>clear</v-icon>
-          </v-btn>
-        </v-card-actions>
+        </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="payReserveFee.show" hide-overlay persistent width="300">
+    <v-dialog v-model="payReserveFee.show" hide-overlay persistent width="450">
       <v-card v-if="!payReserveFee.showResult">
-        <v-card-title class="primary"> Xác nhận thanh toán tiền cọc giữ chỗ </v-card-title>
-        <v-card-text>
+        <v-toolbar color="#727cf5" dark class="font-nunito">
+          <v-toolbar-title>Xác nhận đã thanh toán</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn class="d-flex justify-end" @click="payReserveFee.show = false" icon>
+            <v-icon class="mr-3"> clear </v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text class="pt-3">
           Tải lên hình ảnh của biên lai đóng tiền giữ chỗ cho chủ trọ
           <image-editor :oldImages="[]" @newValues="receiveNewImages" />
         </v-card-text>
         <v-card-actions>
-          <v-btn icon :disabled="payReserveFee.images.length === 0" @click="doPayReserveFee"
-            ><v-icon>send</v-icon></v-btn
+          <v-spacer/>
+          <v-btn :disabled="payReserveFee.images.length === 0" @click="doPayReserveFee"
+          :color="payReserveFee.images.length === 0 ? '' : '#727CF5'" :dark="payReserveFee.images.length === 0 ? false : true"
+            >Gửi xác nhận</v-btn
           >
-          <v-btn icon @click="payReserveFee.show = false">
-            <v-icon>clear</v-icon>
-          </v-btn>
         </v-card-actions>
       </v-card>
       <v-card v-if="payReserveFee.showResult">
-        <v-card-title class="primary">
-          <span v-if="payReserveFee.success">Xác nhận thanh toán tiền giữ chỗ thành công</span>
-          <span v-if="!payReserveFee.success">Xác nhận thanh toán tiền giữ chỗ thất bại</span>
-        </v-card-title>
-        <v-card-actions>
-          <v-btn icon @click="payReserveFee.show = false">
-            <v-icon>clear</v-icon>
+        <v-toolbar color="#727cf5" dark class="font-nunito">
+          <v-toolbar-title>Xác nhận</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn class="d-flex justify-end" @click="payReserveFee.show = false" icon>
+            <v-icon class="mr-3"> clear </v-icon>
           </v-btn>
-        </v-card-actions>
+        </v-toolbar>
+        <v-card-text class="pt-3 d-flex justify-center" style="font-size: 18px">
+          <span v-if="payReserveFee.success">Thanh toán tiền giữ chỗ thành công</span>
+          <span v-if="!payReserveFee.success">Thanh toán tiền giữ chỗ thất bại</span>
+        </v-card-text>
       </v-card>
     </v-dialog>
     <v-dialog
@@ -94,7 +102,21 @@
       </template>
     </v-snackbar>
     <v-container v-if="!isLoading">
-      <v-row justify="center" class="py-10">
+      <v-row class="d-flex justify-end pr-10 pb-0">
+        <v-col cols="6" >
+          <v-text-field
+              label="Tìm kiếm chủ trọ, nhà trọ"
+              v-model="searchQuery"
+              append-icon="search"
+              solo
+              hide-details
+              class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
+              height="35"
+              rounded
+            ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
         <v-col cols="11" sm="11" md="11" lg="11" xl="10">
           <v-row class="hidden-xs-only">
             <div class="d-flex px-4" style="width: 100%">
@@ -114,8 +136,11 @@
                 <span class="font-nunito text-gray size-sub-2">Ngày hết hạn</span>
               </v-col>
               <v-col cols="1" class="d-flex justify-center align-center">
-                <span class="font-nunito text-gray size-sub-2">Trạng thái</span>
+                <span class="font-nunito text-gray size-sub-2"></span>
               </v-col>
+              <!-- </v-col><v-col cols="1" class="d-flex justify-center align-center">
+                <span class="font-nunito text-gray size-sub-2">Trạng thái</span>
+              </v-col> -->
             </div>
           </v-row>
           <v-row class="mt-2">
@@ -167,6 +192,7 @@ export default {
       success: false,
       showResult: false,
     },
+    searchQuery: '',
   }),
   methods: {
     ...mapActions({
@@ -255,6 +281,14 @@ export default {
     },
     contracts() {
       return this.$store.state.user.contracts;
+    },
+    searchContract() {
+      if (!this.searchQuery) {
+        return this.contracts.data;
+      }
+      return this.$store.state.user.contracts.data.filter(
+        (item) => item.vendor.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1 || item.group.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+      );
     },
   },
 };
