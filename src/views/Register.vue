@@ -27,20 +27,29 @@
                   class="pb-4"
                 >
                   <div
-                    class="py-4"
+                    class="py-4 d-flex align-center"
                     style="
                       background-color: #727cf5 !important;
                       border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
                     "
                   >
-                    <v-img
-                      alt="Hostel Renting"
-                      class="shrink"
-                      contain
-                      src="@/assets/logo2.png"
-                      max-height="50"
-                      _max-width="10%"
-                    />
+                    <div
+                      style="height: 55px; width: 55px; border-radius: 50%"
+                      class="white d-flex flex-column justify-center align-center ml-5"
+                    >
+                      <v-img
+                        alt="Hostel Renting"
+                        class="shrink ml-1"
+                        contain
+                        src="@/assets/logo-sac.png"
+                        transition="scale-transition"
+                        max-width="50"
+                        max-height="35"
+                      />
+                    </div>
+                    <span class="font-nunito font-weight-bold ml-14" style="font-size: 1.5rem"
+                      >nhà trọ SAC</span
+                    >
                   </div>
                   <v-card-text class="d-flex flex-column">
                     <span
@@ -126,20 +135,29 @@
                   class="pb-4"
                 >
                   <div
-                    class="py-4"
+                    class="py-4 d-flex align-center"
                     style="
                       background-color: #727cf5 !important;
                       border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
                     "
                   >
-                    <v-img
-                      alt="Hostel Renting"
-                      class="shrink"
-                      contain
-                      src="@/assets/logo2.png"
-                      max-height="50"
-                      _max-width="10%"
-                    />
+                    <div
+                      style="height: 55px; width: 55px; border-radius: 50%"
+                      class="white d-flex flex-column justify-center align-center ml-5"
+                    >
+                      <v-img
+                        alt="Hostel Renting"
+                        class="shrink ml-1"
+                        contain
+                        src="@/assets/logo-sac.png"
+                        transition="scale-transition"
+                        max-width="50"
+                        max-height="35"
+                      />
+                    </div>
+                    <span class="font-nunito font-weight-bold ml-14" style="font-size: 1.5rem"
+                      >nhà trọ SAC</span
+                    >
                   </div>
                   <v-card-text class="d-flex flex-column px-10 py-4">
                     <span
@@ -316,20 +334,29 @@
                 class="pb-4"
               >
                 <div
-                  class="py-4"
+                  class="py-4 d-flex align-center"
                   style="
                     background-color: #727cf5 !important;
                     border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
                   "
                 >
-                  <v-img
-                    alt="Hostel Renting"
-                    class="shrink"
-                    contain
-                    src="@/assets/logo2.png"
-                    max-height="50"
-                    _max-width="10%"
-                  />
+                  <div
+                    style="height: 55px; width: 55px; border-radius: 50%"
+                    class="white d-flex flex-column justify-center align-center ml-5"
+                  >
+                    <v-img
+                      alt="Hostel Renting"
+                      class="shrink ml-1"
+                      contain
+                      src="@/assets/logo-sac.png"
+                      transition="scale-transition"
+                      max-width="50"
+                      max-height="35"
+                    />
+                  </div>
+                  <span class="font-nunito font-weight-bold ml-14" style="font-size: 1.5rem"
+                    >nhà trọ SAC</span
+                  >
                 </div>
                 <v-card-text class="d-flex flex-column pa-10">
                   <v-form class="d-flex flex-column">

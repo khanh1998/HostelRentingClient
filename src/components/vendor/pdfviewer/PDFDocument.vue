@@ -2,6 +2,7 @@
 <template>
   <div class="pdf-document">
     <PDFPage v-for="page in pages" v-bind="{ scale }" :key="page.pageNumber" :page="page" />
+    <slot name="footer"></slot>
   </div>
 </template>
 

@@ -22,19 +22,13 @@
               <span class="font-nunito text-primary size-sub-2">Chủ trọ: </span>
             </v-col>
             <v-col cols="9" md="12" class="d-flex">
-              <v-avatar
-                color="#727cf5"
-                height="40"
-                width="40"
-                min-width="40"
-                class="hidden-xs-only mr-2"
-              >
-                <!-- <v-img
-            max-height="30"
-            max-width="30"
-            v-if="contract.vendor.avatar"
-            :src="contract.vendor.avatar"
-          /> -->
+              <v-avatar color="#727cf5" height="50px" min-width="50px" class="hidden-xs-only mr-2">
+                <v-img
+                  height="50px"
+                  min-width="60px"
+                  v-if="contract.vendor.avatar"
+                  :src="contract.vendor.avatar"
+                />
                 <span class="text-overline white--text">{{
                   getAvatarTitle(contract.vendor.username)
                 }}</span>
@@ -143,22 +137,45 @@
         <v-col>
           <v-stepper v-model="step" v-if="contract.reserved" class="elevation-0">
             <v-stepper-header class="elevation-0">
-              <v-stepper-step :complete="step > 0" step="1"> Hợp đồng được tạo </v-stepper-step>
+              <v-stepper-step :complete="step > 0" step="1" color="#727CF5">
+                Hợp đồng được tạo
+              </v-stepper-step>
               <v-divider></v-divider>
-              <v-stepper-step :complete="step > 1" step="2"> Đã đóng tiền giữ chỗ </v-stepper-step>
+              <v-stepper-step :complete="step > 1" step="2" color="#727CF5">
+                Đã đóng tiền giữ chỗ
+              </v-stepper-step>
               <v-divider></v-divider>
-              <v-stepper-step :complete="step > 2" step="3">
+              <v-stepper-step :complete="step > 2" step="3" color="#727CF5">
                 Chủ trọ đã nhận tiền cọc
               </v-stepper-step>
               <v-divider></v-divider>
-              <v-stepper-step :complete="step > 3" step="4"> Đã ký hợp đồng </v-stepper-step>
+              <v-stepper-step :complete="step > 3" step="4" color="#727CF5">
+                Đã ký hợp đồng
+              </v-stepper-step>
             </v-stepper-header>
             <v-stepper-items class="elevation-0">
               <v-stepper-content step="1" class="elevation-0">
-                Hợp đồng đặt cọc giữ chỗ đã được tạo, chuyển tiền giữ chỗ cho chủ nhà. Sau khi
-                chuyển tiền,
-                <v-chip @click="$emit('pay-reserve-fee', contract.contractId)">nhấn vào đây</v-chip>
-                để yêu cầu chủ nhà xác nhận đã nhận tiền.
+                <v-timeline align-top dense>
+                  <v-timeline-item color="#727CF5" small>
+                    <div>
+                      Hỗ trợ thanh toán tiền cọc giữ chỗ :
+                      <v-btn :href="getParamForUrl" rounded text>
+                        <v-img height="30px" width="30px" src="../../assets/logo-momo.png"></v-img>
+                      </v-btn>
+                    </div>
+                  </v-timeline-item>
+                  <v-timeline-item color="#727CF5" small>
+                    <div>
+                      Yêu cầu chủ nhà xác nhận :
+                      <v-chip
+                        @click="$emit('pay-reserve-fee', contract.contractId)"
+                        color="#727CF5"
+                        dark
+                        >Yêu cầu xác nhận</v-chip
+                      >
+                    </div>
+                  </v-timeline-item>
+                </v-timeline>
               </v-stepper-content>
               <v-stepper-content step="2">
                 Yêu cầu xác nhận tiền của bạn đã được gửi tới chủ nhà. Hãy đợi cho tới khi chủ nhà
@@ -166,12 +183,12 @@
               </v-stepper-content>
               <v-stepper-content step="3">
                 Chủ nhà xác nhận là đã nhận tiền cọc giữ chỗ, bây giờ bạn có thể
-                <v-chip @click="$emit('activate', contract.contractId)">ký hợp đồng</v-chip> thuê
+                <v-chip @click="$emit('activate', contract.contractId)" color="#727CF5" dark>Ký hợp đồng</v-chip> thuê
                 nhà chính thức.
               </v-stepper-content>
               <v-stepper-content step="4">
                 Hợp đồng đã được hoàn tất. Bây giờ bạn có thể
-                <v-chip @click="$emit('view-detail', contract.contractId)">
+                <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
                   xem chi tiết hợp đồng</v-chip
                 >
               </v-stepper-content>
@@ -179,25 +196,29 @@
           </v-stepper>
           <v-stepper v-model="step" v-if="!contract.reserved" class="elevation-0">
             <v-stepper-header>
-              <v-stepper-step :complete="step > 0" step="1"> Hợp đồng được tạo </v-stepper-step>
+              <v-stepper-step :complete="step > 0" step="1" color="#727CF5">
+                Hợp đồng được tạo
+              </v-stepper-step>
               <v-divider></v-divider>
-              <v-stepper-step :complete="step > 1" step="2"> Đã ký hợp đồng </v-stepper-step>
+              <v-stepper-step :complete="step > 1" step="2" color="#727CF5">
+                Đã ký hợp đồng
+              </v-stepper-step>
             </v-stepper-header>
-            <v-stepper-items>
-              <v-stepper-items class="elevation-0">
-                <v-stepper-content step="1" class="elevation-0">
-                  Hợp đồng đặt cọc giữ chỗ đã được tạo, bây giờ bạn có thể
-                  <v-chip @click="$emit('activate', contract.contractId)">ký hợp đồng</v-chip> thuê
-                  nhà chính thức.
-                </v-stepper-content>
-                <v-stepper-content step="2">
-                  Hợp đồng đã được hoàn tất. Bây giờ bạn có thể
-                  <v-chip @click="$emit('view-detail', contract.contractId)">
-                    xem chi tiết hợp đồng</v-chip
-                  >
-                </v-stepper-content>
-              </v-stepper-items>
+            <!-- <v-stepper-items> -->
+            <v-stepper-items class="elevation-0">
+              <v-stepper-content step="1">
+                Hợp đồng đặt cọc giữ chỗ đã được tạo, bây giờ bạn có thể
+                <v-chip @click="$emit('activate', contract.contractId)" color="#727CF5" dark>Ký hợp đồng</v-chip> thuê
+                nhà chính thức.
+              </v-stepper-content>
+              <v-stepper-content step="2">
+                Hợp đồng đã được hoàn tất. Bây giờ bạn có thể
+                <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
+                  xem chi tiết hợp đồng</v-chip
+                >
+              </v-stepper-content>
             </v-stepper-items>
+            <!-- </v-stepper-items> -->
           </v-stepper>
         </v-col>
       </v-row>
@@ -217,6 +238,9 @@ export default {
     mapDialog: false,
   }),
   computed: {
+    // ...mapGetters({
+    //   getUserById: 'vendor/overview/getUserById',
+    // }),
     contractSignable() {
       if (this.contract.reserved) {
         if (this.contract.status === 'RESERVED') {
@@ -278,10 +302,38 @@ export default {
       const { districtId } = this.district;
       return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
     },
+    getParamForUrl() {
+      const { downPayment } = this.contract;
+      let result = null;
+      let url = null;
+      console.log(this.contract.group.vendorId);
+      const phone = null;
+      console.log('Aa');
+      console.log(phone);
+      if (downPayment.toString().includes('.')) {
+        if (downPayment.toString().split('.')[0] === 0) {
+          result = `${downPayment.toString().split('.')[1]}00000`;
+          url = `https://nhantien.momo.vn/${phone}/${result}`;
+          // console.log(`a${url}`);
+          return url;
+        }
+        result = `${
+          downPayment.toString().split('.')[0] + downPayment.toString().split('.')[1]
+        }00000`;
+        url = `https://nhantien.momo.vn/${phone}/${result}`;
+        // console.log(`b${url}`);
+        return url;
+      }
+      result = `${downPayment.toString()}000000`;
+      url = `https://nhantien.momo.vn/${phone}/${result}`;
+      // console.log(`c${url}`);
+      return url;
+    },
   },
   methods: {
     ...mapActions({
       getProvinces: 'renter/common/getProvinces',
+      getUserByIds: 'vendor/overview/getUserByIds',
     }),
     getAvatarTitle(name) {
       return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);

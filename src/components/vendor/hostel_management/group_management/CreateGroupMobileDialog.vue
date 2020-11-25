@@ -1,12 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog
-      v-model="show"
-      max-width="1000"
-      scrollable
-      transition="dialog-bottom-transition"
-      persistent
-    >
+    <v-dialog v-model="show" scrollable fullscreen transition="dialog-bottom-transition" persistent>
       <v-overlay :value="isLoading" absolute>
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
@@ -23,15 +17,6 @@
             border-radius: 0px !important;
           "
         >
-          <!-- <v-img
-            alt="Hostel Renting"
-            class="shrink mr-2"
-            contain
-            src="@/assets/logo-sac.png"
-            transition="scale-transition"
-            max-width="40"
-            max-height="40"
-          /> -->
           <v-icon class="ml-4" color="rgb(255, 255, 255, 0.8)">mdi-home-group</v-icon>
 
           <span
@@ -43,42 +28,34 @@
             ><v-icon color="rgb(255, 255, 255, 0.75)">close</v-icon></v-btn
           >
         </v-card>
-        <v-stepper v-model="e1">
-          <v-stepper-header class="ma-auto px-16" _style="width: 70% !important">
+        <v-stepper v-model="e1" _alt-labels>
+          <v-stepper-header>
             <template v-for="n in 5">
-              <v-stepper-step :key="`${n}-step`" :complete="e1 > n" :step="n" color="#727cf5">
-                <span class="font-nunito size9rem text-gray">{{ stepHeader[n - 1] }}</span>
+              <v-stepper-step
+                :key="`${n}-step`"
+                :complete="e1 > n"
+                class="px-0 mx-0"
+                :step="n"
+                color="#727cf5"
+              >
+                <span class="font-nunito size-caption text-gray mx-0">{{ stepHeader[n - 1] }}</span>
               </v-stepper-step>
-              <v-divider v-if="n !== 5" :key="n"></v-divider>
+              <span class="font-nunito size-caption text-gray my-auto" :key="n">{{
+                stepHeader[n - 1]
+              }}</span>
             </template>
           </v-stepper-header>
-          <!-- <v-stepper-content step="1" class="pa-0">
-            <v-card
-              class="overflow-y-auto d-flex flex-column py-1 mx-10 my-3"
-              max-height="350"
-              min-height="350"
-            >
-              1
-            </v-card>
-            <v-divider></v-divider>
-            <div class="d-flex justify-end pa-4">
-              <v-btn class="btn btn-primary font-nunito mx-2" @click="e1 = 2"> Tiếp tục </v-btn>
-              <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="closeDialog()"
-                >Hủy</v-btn
-              >
-            </div>
-          </v-stepper-content> -->
           <v-stepper-content step="1" class="pa-0 mt-2">
             <v-card
-              class="overflow-y-auto d-flex flex-column pb-3 px-10 my-0"
-              max-height="370"
-              min-height="370"
+              class="overflow-y-auto d-flex flex-column pb-3 my-0"
+              max-height="400"
+              min-height="400"
               style="box-shadow: none !important"
             >
               <v-row class="ma-0">
-                <v-col cols="8" class="py-0">
+                <v-col cols="12" class="py-0">
                   <v-row class="ma-0">
-                    <v-col cols="7" class="d-flex flex-column">
+                    <v-col cols="12" class="d-flex flex-column">
                       <span class="field-name font-weight-medium"
                         >Tên nhà trọ<span class="red--text ml-1">(*)</span></span
                       >
@@ -95,7 +72,7 @@
                         >Vui lòng điền tên nhà trọ</span
                       >
                     </v-col>
-                    <v-col cols="5" class="d-flex flex-column">
+                    <v-col cols="6" class="d-flex flex-column">
                       <span class="field-name font-weight-medium"
                         >Loại<span class="red--text ml-1">(*)</span></span
                       >
@@ -111,6 +88,17 @@
                         solo
                         class="size-sub-2 font-nunito form"
                       ></v-select>
+                    </v-col>
+                    <v-col cols="6" class="d-flex align-end">
+                      <v-checkbox
+                        v-model="newGroupValue.ownerJoin"
+                        @click="setNewGroupValue(newGroupValue)"
+                        label="Chung chủ"
+                        color="#727cf5"
+                        class="filter font-nunito size-sub-2 checkbox ma-0"
+                        hide-details
+                      ></v-checkbox>
+                      <span class="red--text pl-1 pt-auto">(*)</span>
                     </v-col>
                     <v-col cols="3" class="d-flex flex-column">
                       <span class="field-name font-weight-medium"
@@ -132,7 +120,6 @@
                         placeholder="Địa chỉ đầy đủ"
                         @place_changed="setPlace"
                         :options="gmap"
-                        :value="addressString1"
                         :selectFirstOnEnter="true"
                         style="
                           border: 1px solid #dee2e6 !important;
@@ -152,19 +139,8 @@
                         errorMsg.fullAddres
                       }}</span>
                     </v-col>
-                    <v-col cols="3" class="d-flex align-start pr-0">
-                      <v-checkbox
-                        v-model="newGroupValue.ownerJoin"
-                        @click="setNewGroupValue(newGroupValue)"
-                        label="Chung chủ"
-                        color="#727cf5"
-                        class="filter font-nunito size-sub-2 checkbox ma-0"
-                        hide-details
-                      ></v-checkbox>
-                      <span class="red--text pl-1 pt-auto">(*)</span>
-                    </v-col>
-                    <v-col cols="9" class="d-flex flex-column justify-end">
-                      <div class="d-flex mb-2 justify-center">
+                    <v-col cols="12" class="d-flex flex-column justify-end">
+                      <div class="d-flex mb-2">
                         <v-radio-group
                           v-model="groupInfo.curfewTime.radiogroup"
                           hide-details
@@ -230,7 +206,27 @@
                         </v-col>
                       </v-row>
                     </v-col>
-                    <v-col cols="4" class="d-flex flex-column">
+                    <v-col cols="12" class="d-flex flex-column">
+                      <span class="field-name font-weight-medium font-nunito"
+                        >Cọc giữ chân<span class="red--text ml-1">(*)</span></span
+                      >
+                      <v-text-field
+                        class="size-sub form"
+                        type="number"
+                        color="#727cf5"
+                        solo
+                        dense
+                        light
+                        hide-details
+                        v-model="newGroupValue.downPayment"
+                        suffix="VNĐ"
+                        step="100000"
+                        min="0"
+                        :rules="[rules.min(groupInfo.downPayment)]"
+                        @input="setNewGroupValue(newGroupValue)"
+                      />
+                    </v-col>
+                    <v-col cols="6" class="d-flex flex-column">
                       <span class="field-name font-weight-medium d-flex align-center font-nunito"
                         >Người liên lạc<v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
@@ -258,7 +254,7 @@
                         @input="setNewGroupValue(newGroupValue)"
                       />
                     </v-col>
-                    <v-col cols="4" class="d-flex align-end">
+                    <v-col cols="6" class="d-flex align-end">
                       <v-text-field
                         class="size-sub-2 form"
                         color="#727cf5"
@@ -271,34 +267,14 @@
                         @input="setNewGroupValue(newGroupValue)"
                       />
                     </v-col>
-                    <v-col cols="4" class="d-flex flex-column">
-                      <span class="field-name font-weight-medium font-nunito"
-                        >Cọc giữ chân<span class="red--text ml-1">(*)</span></span
-                      >
-                      <v-text-field
-                        class="size-sub form"
-                        type="number"
-                        color="#727cf5"
-                        solo
-                        dense
-                        light
-                        hide-details
-                        v-model="newGroupValue.downPayment"
-                        suffix="VNĐ"
-                        step="100000"
-                        min="0"
-                        :rules="[rules.min(groupInfo.downPayment)]"
-                        @input="setNewGroupValue(newGroupValue)"
-                      />
-                    </v-col>
-                    <v-col cols="4" class="d-flex flex-column py-0">
+                    <v-col cols="6" class="d-flex flex-column py-0">
                       <span
                         class="font-nunito red--text size-caption"
                         v-show="check && error.manageName"
                         >Vui lòng điền tên người liên lạc</span
                       >
                     </v-col>
-                    <v-col cols="4" class="d-flex flex-column py-0">
+                    <v-col cols="6" class="d-flex flex-column py-0">
                       <span
                         class="font-nunito red--text size-caption"
                         v-show="check && error.managePhone"
@@ -312,7 +288,7 @@
                     </v-col>
                   </v-row>
                 </v-col>
-                <v-col cols="4" class="d-flex flex-column pl-10">
+                <v-col cols="12" class="d-flex flex-column px-6">
                   <v-card outlined min-height="330" max-height="330">
                     <v-col cols="12" class="d-flex flex-column px-5">
                       <span class="field-name font-weight-medium">Ảnh đại diện</span>
@@ -337,9 +313,9 @@
           </v-stepper-content>
           <v-stepper-content step="2" class="pa-0 mt-2">
             <v-card
-              class="overflow-y-auto d-flex flex-column pt-1 pb-3 px-16 my-0"
-              max-height="370"
-              min-height="370"
+              class="overflow-y-auto d-flex flex-column pb-3 px-5 my-0"
+              max-height="400"
+              min-height="400"
               style="box-shadow: none !important"
             >
               <ServiceManagement />
@@ -482,7 +458,6 @@ export default {
     AvatarManagement,
   },
   data: () => ({
-    addressString1: '321',
     newGroup: {
       vendorId: 0,
       buildingNo: '',
@@ -574,7 +549,7 @@ export default {
     nextServiceStep() {
       this.check = true;
       if (
-        this.getAddress() !== false &&
+        // this.getAddress() !== false &&
         !this.error.name &&
         !this.error.startTime &&
         !this.error.endTime &&
@@ -631,8 +606,6 @@ export default {
       this.place = place;
       this.addMarker();
       this.addressString = `${this.place.formatted_address}`;
-      console.log(this.place);
-      this.addressString1 = `~${this.addressString.substring(5)}`;
     },
     addMarker() {
       const marker = {
@@ -982,7 +955,6 @@ export default {
     buildingNo: {
       handler() {
         this.emitNewAddress();
-        this.addressString1 = `${this.buildingNo} `;
       },
     },
   },

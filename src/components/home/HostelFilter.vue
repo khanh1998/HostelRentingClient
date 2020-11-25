@@ -1,9 +1,9 @@
 <template>
   <!-- eslint-disable max-len -->
-  <v-card style="width: 100%;" outlined>
+  <v-card style="width: 100%" outlined>
     <v-card-title
       class="d-flex align-center justify-center white--text font-nunito py-5"
-      style="background-color: #7d86f6;"
+      style="background-color: #7d86f6"
       >Bộ tìm kiếm nâng cao</v-card-title
     >
     <v-expansion-panels focusable _multiple accordion v-model="panel">
@@ -283,7 +283,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-card-actions class="pa-4" style="border-top: 1px solid rgba(0, 0, 0, 0.12);">
+    <v-card-actions class="pa-4" style="border-top: 1px solid rgba(0, 0, 0, 0.12)">
       <v-btn
         class="bg-primary bt-primary-hover white--text font-nunito"
         width="100%"
@@ -304,6 +304,13 @@
 .noWrap {
   white-space: normal;
 }
+.border-col {
+  border: 0.8px solid rgba(0, 0, 0, 0.12) !important;
+  border-left: 0px !important;
+  border-right: 0px !important;
+  border-bottom: 0px !important;
+  border-radius: 0px;
+}
 </style>
 <style scoped>
 .v-text-field--outlined >>> fieldset {
@@ -313,14 +320,7 @@
 .v-expansion-panel::before {
   box-shadow: none !important;
 }
-.border-col {
-  border: 0.8px solid rgba(0, 0, 0, 0.12) !important;
-  border-left: 0px !important;
-  border-right: 0px !important;
-  border-bottom: 0px !important;
-  border-radius: 0px;
-  /* background-color: red; */
-}
+
 .header-label {
   color: #313a46 !important;
 }

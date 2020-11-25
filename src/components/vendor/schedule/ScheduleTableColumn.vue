@@ -31,7 +31,7 @@ import ColumnCellInput from './ScheduleTableColumnCellInput.vue';
 
 export default {
   name: 'VendorScheduleTableColumn',
-  props: ['columnName'],
+  props: ['columnName', 'dataT'],
   components: { ColumnCell, ColumnCellInput },
   data: () => ({
     items: [],
@@ -81,6 +81,19 @@ export default {
   computed: {
     lastItem() {
       return this.items[this.items.length - 1] || {};
+    },
+    getValue() {
+      return this.dataT.filter((item) => this.columnName.toLowerCase() === item.dayOfWeek).forEach((element) => {
+        const { scheduleId } = element;
+        element.timeRange.forEach((element2) => {
+          const { startTime } = element2;
+          const { endTime } = element2;
+          const now = Date.now();
+          this.items.push({
+            scheduleId, startTime, endTime, now,
+          });
+        });
+      });
     },
   },
 };

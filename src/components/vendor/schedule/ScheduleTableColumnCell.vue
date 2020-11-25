@@ -16,10 +16,22 @@
 export default {
   name: 'VendorScheduleTableColumnCell',
   props: ['value'],
+  data: () => ({
+  }),
   methods: {
     remove(removeItem) {
       this.$emit('remove', removeItem);
     },
   },
+  // computed: {
+  //   getValue() {
+  //     const startTime = this.value.timeRange.split('-')[0].trim();
+  //     const endTime = this.value.timeRange.split('-')[1].trim();
+  //     this.valueReceive.scheduleId = this.value.scheduleId;
+  //     this.valueReceive.startTime = startTime;
+  //     this.valueReceive.endTime = endTime;
+  //     return this.valueReceive;
+  //   },
+  // },
 };
 </script>

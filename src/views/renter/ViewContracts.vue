@@ -5,7 +5,7 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-dialog v-model="signing" hide-overlay persistent width="300">
-      <v-card color="primary" dark>
+      <v-card color="#727CF5" dark>
         <v-card-text>
           Đang ký hợp đồng
           <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
@@ -13,67 +13,79 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="signingResult.show" hide-overlay persistent width="300">
-      <v-card color="primary" dark>
-        <v-card-title>
+      <v-card color="#727CF5" dark>
+        <v-toolbar color="#727cf5" dark class="font-nunito">
+          <v-toolbar-title>Xác nhận</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn class="d-flex justify-end" @click="signingResult.show = false" icon>
+            <v-icon class="mr-3"> clear </v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text class="d-flex justify-center pt-3" style="font-size: 18px">
           <span v-if="signingResult.success"> Ký hợp đồng thành công </span>
           <span v-if="!signingResult.success"> Ký hợp đồng thất bại </span>
-        </v-card-title>
-        <v-card-text> </v-card-text>
-        <v-card-actions>
-          <v-btn icon @click="signingResult.show = false">
-            <v-icon>clear</v-icon>
-          </v-btn>
-        </v-card-actions>
+        </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="payReserveFee.show" hide-overlay persistent width="300">
+    <v-dialog v-model="payReserveFee.show" hide-overlay persistent width="450">
       <v-card v-if="!payReserveFee.showResult">
-        <v-card-title class="primary"> Xác nhận thanh toán tiền cọc giữ chỗ </v-card-title>
-        <v-card-text>
+        <v-toolbar color="#727cf5" dark class="font-nunito">
+          <v-toolbar-title>Xác nhận đã thanh toán</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn class="d-flex justify-end" @click="payReserveFee.show = false" icon>
+            <v-icon class="mr-3"> clear </v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text class="pt-3">
           Tải lên hình ảnh của biên lai đóng tiền giữ chỗ cho chủ trọ
           <image-editor :oldImages="[]" @newValues="receiveNewImages" />
         </v-card-text>
         <v-card-actions>
-          <v-btn icon :disabled="payReserveFee.images.length === 0" @click="doPayReserveFee"
-            ><v-icon>send</v-icon></v-btn
+          <v-spacer />
+          <v-btn
+            :disabled="payReserveFee.images.length === 0"
+            @click="doPayReserveFee"
+            :color="payReserveFee.images.length === 0 ? '' : '#727CF5'"
+            :dark="payReserveFee.images.length === 0 ? false : true"
+            >Gửi xác nhận</v-btn
           >
-          <v-btn icon @click="payReserveFee.show = false">
-            <v-icon>clear</v-icon>
-          </v-btn>
         </v-card-actions>
       </v-card>
       <v-card v-if="payReserveFee.showResult">
-        <v-card-title class="primary">
-          <span v-if="payReserveFee.success">Xác nhận thanh toán tiền giữ chỗ thành công</span>
-          <span v-if="!payReserveFee.success">Xác nhận thanh toán tiền giữ chỗ thất bại</span>
-        </v-card-title>
-        <v-card-actions>
-          <v-btn icon @click="payReserveFee.show = false">
-            <v-icon>clear</v-icon>
+        <v-toolbar color="#727cf5" dark class="font-nunito">
+          <v-toolbar-title>Xác nhận</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn class="d-flex justify-end" @click="payReserveFee.show = false" icon>
+            <v-icon class="mr-3"> clear </v-icon>
           </v-btn>
-        </v-card-actions>
+        </v-toolbar>
+        <v-card-text class="pt-3 d-flex justify-center" style="font-size: 18px">
+          <span v-if="payReserveFee.success">Thanh toán tiền giữ chỗ thành công</span>
+          <span v-if="!payReserveFee.success">Thanh toán tiền giữ chỗ thất bại</span>
+        </v-card-text>
       </v-card>
     </v-dialog>
     <v-dialog v-model="signAndPay.show" persistent max-width="300">
       <v-card>
-        <v-stepper v-model="signAndPay.step" vertical class="elevation-0 pt-3">
-          <v-stepper-step :complete="signAndPay.step > 1" step="1"> Ký hợp đồng </v-stepper-step>
+        <v-stepper v-model="step" vertical class="elevation-0 pt-3">
+          <v-stepper-step :complete="step > 1" step="1"> Ký hợp đồng </v-stepper-step>
           <v-stepper-content step="1">
             <v-card>
               <v-card-text>
-                <v-chip @click="doActivateContract">Nhấn vào đây</v-chip> để đọc và ký hợp đồng.
+                <v-chip @click="contractOverlay.show = true">Nhấn vào đây</v-chip> để đọc và ký hợp
+                đồng.
               </v-card-text>
             </v-card>
           </v-stepper-content>
-          <v-stepper-step :complete="signAndPay.step > 2" step="2">
+          <v-stepper-step :complete="step > 2" step="2">
             Thanh toán tiền cọc giữ chỗ
           </v-stepper-step>
           <v-stepper-content step="2">
             <v-card>
               <v-card-text>
                 Chuyển khoản tiền cọc giữ chỗ cho chủ trọ. Sau đó
-                <v-chip @click="doPayReserveFee">Nhấn vào đây</v-chip> để gửi ảnh biên lai chuyển
-                tiền cho chủ trọ.
+                <v-chip @click="payReserveFee.show = true">Nhấn vào đây</v-chip> để gửi ảnh biên lai
+                chuyển tiền cho chủ trọ.
               </v-card-text>
             </v-card>
           </v-stepper-content>
@@ -98,15 +110,33 @@
           <v-toolbar-title>Hợp đồng</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
-        <div class="d-flex flex-column justify-center pa-2">
-          <div style="height: calc(100vh - 128px); overflow: hidden">
-            <PDFDocument :url="contractOverlay.contract.contractUrl" :scale="scale" />
-          </div>
-          <div v-if="contractOverlay.action === 'activate'" class="d-flex justify-center">
-            <v-btn class="ma-1" outlined color="red" text @click="doActivateContract">
-              <v-icon>edit</v-icon> Ký hợp đồng
-            </v-btn>
-          </div>
+        <div class="d-flex flex-column justify-center" style="height: calc(100vh - 64px)">
+          <PDFDocument :url="contractOverlay.contract.contractUrl" :scale="scale">
+            <template v-slot:footer>
+              <div class="d-flex flex-column justify-center align-center">
+                <v-card
+                  v-if="contractOverlay.action === 'activate'"
+                  class="d-flex flex-column justify-center"
+                  width="200"
+                >
+                  <v-checkbox
+                    v-model="contractOverlay.agree"
+                    label="Tôi đồng ý với các điều khoản trong hợp đồng"
+                  ></v-checkbox>
+                  <v-btn
+                    :disabled="!contractOverlay.agree"
+                    class="ma-1"
+                    outlined
+                    color="red"
+                    text
+                    @click="doActivateContract"
+                  >
+                    <v-icon>edit</v-icon> Ký hợp đồng
+                  </v-btn>
+                </v-card>
+              </div>
+            </template>
+          </PDFDocument>
         </div>
       </v-card>
     </v-dialog>
@@ -124,7 +154,21 @@
       </template>
     </v-snackbar>
     <v-container v-if="!isLoading">
-      <v-row justify="center" class="py-10">
+      <v-row class="d-flex justify-end pr-10 pb-0">
+        <v-col cols="6">
+          <v-text-field
+            label="Tìm kiếm chủ trọ, nhà trọ"
+            v-model="searchQuery"
+            append-icon="search"
+            solo
+            hide-details
+            class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
+            height="35"
+            rounded
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
         <v-col cols="11" sm="11" md="11" lg="11" xl="10">
           <v-row class="hidden-xs-only">
             <div class="d-flex px-4" style="width: 100%">
@@ -144,8 +188,11 @@
                 <span class="font-nunito text-gray size-sub-2">Ngày hết hạn</span>
               </v-col>
               <v-col cols="1" class="d-flex justify-center align-center">
-                <span class="font-nunito text-gray size-sub-2">Trạng thái</span>
+                <span class="font-nunito text-gray size-sub-2"></span>
               </v-col>
+              <!-- </v-col><v-col cols="1" class="d-flex justify-center align-center">
+                <span class="font-nunito text-gray size-sub-2">Trạng thái</span>
+              </v-col> -->
             </div>
           </v-row>
           <v-row class="mt-2">
@@ -185,6 +232,7 @@ export default {
       show: false,
       action: null, // view or activate
       contract: null,
+      agree: false,
     },
     signingResult: {
       show: false,
@@ -201,6 +249,7 @@ export default {
       show: false,
       step: 1,
     },
+    searchQuery: '',
   }),
   methods: {
     ...mapActions({
@@ -217,6 +266,8 @@ export default {
       // this.payReserveFee.show = true;
       this.signAndPay.show = true;
       this.payReserveFee.contractId = contractId;
+      this.contractOverlay.action = 'activate';
+      this.contractOverlay.contract = this.contracts.data.find((c) => c.contractId === contractId);
     },
     doPayReserveFee() {
       this.payReserveFee.showResult = false;
@@ -259,6 +310,7 @@ export default {
       const payload = {
         contractId: this.contractOverlay.contract.contractId,
         qrCode: this.contractOverlay.contract.qrCode,
+        status: 'ACTIVATED',
       };
       this.activateContract(payload).then(() => {
         this.contractOverlay.show = false;
@@ -295,6 +347,17 @@ export default {
     });
   },
   computed: {
+    step() {
+      if (this.contractOverlay.contract) {
+        if (this.contractOverlay.contract.status === 'ACTIVATED') {
+          if (this.contractOverlay.contract.paid === true) {
+            return 3;
+          }
+          return 2;
+        }
+      }
+      return 1;
+    },
     scale() {
       if (this.isMobile) {
         return 2;
@@ -312,6 +375,18 @@ export default {
     },
     contracts() {
       return this.$store.state.user.contracts;
+    },
+    searchContract() {
+      if (!this.searchQuery) {
+        return this.contracts.data;
+      }
+      return this.$store.state.user.contracts.data.filter((item) => {
+        const username =
+          item.vendor.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1;
+        const groupname =
+          item.group.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1;
+        return username || groupname;
+      });
     },
   },
 };

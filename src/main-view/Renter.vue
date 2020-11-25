@@ -135,6 +135,9 @@ export default {
 .text-primary {
   color: #727cf5 !important;
 }
+.text-primary-dark {
+  color: #727cf5 !important;
+}
 .text-primary-hover {
   color: #727cf5 !important;
 }

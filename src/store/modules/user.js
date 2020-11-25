@@ -1070,8 +1070,8 @@ const actions = {
         const error = new Error('Loggin to activate contract');
         commit(mutationTypes.ACTIVATE_CONTRACT_FAILURE, error);
       } else {
-        const { contractId, qrCode } = payload;
-        const res = await window.axios.put(`/api/v1/contracts/confirm/${contractId}`, { qrCode });
+        const { contractId, qrCode, status } = payload;
+        const res = await window.axios.put(`/api/v1/contracts/confirm/${contractId}`, { qrCode, status });
         if (!res) {
           const error = new Error('Cannot receive response from server');
           commit(mutationTypes.ACTIVATE_CONTRACT_FAILURE, error);
