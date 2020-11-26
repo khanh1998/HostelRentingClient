@@ -126,7 +126,7 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import InfomationSection from '../../components/vendor/contract/InfomationSection.vue';
 import TermsOfContractSection from '../../components/vendor/contract/TermsOfContractSection.vue';
 import processFCMForegroundMixins from '../../components/mixins/processFCMForeground';
-import pushNotificationAction from '../../config/pushNotificationActions';
+import actions from '../../config/pushNotificationActions';
 import snackBarMixin from '../../components/mixins/snackBar';
 
 export default {
@@ -369,7 +369,7 @@ export default {
             this.sendNotification({
               title: 'Vui lòng cập nhật thông tin để tạo hợp đồngv',
               body: `${this.renterEmptyFields.join(', ')}`,
-              action: 'REQUIRED_UPDATE_INFO',
+              action: actions.REQUIRED_UPDATE_INFO,
               id: '',
               icon: this.renter.avatar,
               vendorId: null,
@@ -403,7 +403,7 @@ export default {
     newMessage: {
       // from mixins
       handler() {
-        if (this.newMessage.data.action === pushNotificationAction.SCAN_CONTRACT) {
+        if (this.newMessage.data.action === actions.SCAN_CONTRACT) {
           this.scanQRSuccess = true;
         }
       },

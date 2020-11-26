@@ -67,7 +67,7 @@
     </v-dialog>
     <v-dialog v-model="signAndPay.show" persistent max-width="300">
       <v-card>
-        <v-stepper v-model="step" vertical class="elevation-0 pt-3">
+        <v-stepper v-model="signAndPayStep" vertical class="elevation-0 pt-3">
           <v-stepper-step :complete="step > 1" step="1"> Ký hợp đồng </v-stepper-step>
           <v-stepper-content step="1">
             <v-card>
@@ -222,6 +222,7 @@ import snackBarMixin from '../../components/mixins/snackBar';
 import PDFDocument from '../../components/vendor/pdfviewer/PDFDocument.vue';
 import mobileMixin from '../../components/mixins/mobile';
 import ImageEditor from '../../components/vendor/hostel_management/ImageEditor.vue';
+import actions from '../../config/pushNotificationActions';
 
 export default {
   name: 'ViewContracts',
@@ -283,33 +284,25 @@ export default {
         const { success } = this.contracts;
         this.payReserveFee.success = success;
         this.payReserveFee.showResult = true;
-        const title = `${contract.renter.username} đóng tiền cọc giữ chân`;
-        const body = `${contract.downPayment} triệu đồng`;
-        const action = 'PAY_RESERVE_FEE';
-        const id = contract.contractId;
-        const vendorId = contract.vendor.userId;
-        const renterId = null;
-        const icon = contract.renter.avatar;
-        const payload = {
-          title,
-          body,
-          action,
-          id,
-          vendorId,
-          renterId,
-          icon,
-        };
         if (success) {
           this.signAndPay.step += 1;
+          const payload = {
+            title: `${contract.renter.username} đóng tiền cọc giữ chân`,
+            body: `${contract.downPayment} triệu đồng`,
+            action: actions.RESERVE_FEE_PAID,
+            id: contract.contractId,
+            vendorId: contract.vendor.userId,
+            renterId: null,
+            icon: contract.renter.avatar,
+          };
           this.sendNotification(payload);
         }
       });
     },
     doActivateContract() {
-      console.log('doactivatecontract');
       let status;
       if (this.contractOverlay.contract.reserved) {
-        status = 'RESERVED';
+        status = 'ACCEPTED';
       } else {
         status = 'ACTIVATED';
       }
@@ -321,12 +314,23 @@ export default {
       this.activateContract(payload).then(() => {
         this.contractOverlay.show = false;
         this.signingResult.show = true;
+        const { contract } = this.contractOverlay;
         const { success, error } = this.contracts;
         if (success) {
           this.signingResult.success = true;
           console.log(success);
           this.showSnackBar('Kích hoạt hợp đồng thành công', { color: 'green' });
           this.signAndPay.step += 1;
+          const p = {
+            title: `${contract.renter.username} đã ký vào hợp đồng`,
+            body: `phòng ${contract.room.roomName}, ${contract.type.title}`,
+            action: actions.CONTRACT_ACCEPTED,
+            id: contract.contractId,
+            vendorId: contract.vendor.userId,
+            renterId: null,
+            icon: contract.renter.avatar,
+          };
+          this.sendNotification(p);
         } else {
           this.signingResult.success = false;
           console.log(error);
@@ -354,9 +358,22 @@ export default {
   },
   computed: {
     step() {
-      if (this.contractOverlay.contract) {
-        if (this.contractOverlay.contract.status === 'ACTIVATED') {
-          if (this.contractOverlay.contract.paid === true) {
+      const { contract } = this.contractOverlay;
+      if (contract) {
+        if (contract.status === 'ACTIVATED') {
+          if (contract.paid === true) {
+            return 3;
+          }
+          return 2;
+        }
+      }
+      return 1;
+    },
+    signAndPayStep() {
+      const { contract } = this.contractOverlay;
+      if (contract) {
+        if (contract.status === 'ACCEPTED') {
+          if (contract.paid) {
             return 3;
           }
           return 2;

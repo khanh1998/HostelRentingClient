@@ -94,6 +94,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';
+import actions from '../../config/pushNotificationActions';
 
 export default {
   name: 'UncheckedReservedFeeContracts',
@@ -142,6 +143,7 @@ export default {
     ...mapActions({
       updateContract: 'user/updateContract',
       activateContract: 'user/activateContract',
+      sendNotification: 'user/sendNotification',
     }),
     confirmInvalidReserved() {
       const contract = this.evidences;
@@ -159,6 +161,18 @@ export default {
       const payload = { contractId, qrCode, status: 'RESERVED' };
       this.activateContract(payload).then(() => {
         this.evidences.success = this.contractsStore.success;
+        if (this.evidences.success) {
+          const p = {
+            title: `${contract.vendor.username} xác nhận đã nhận tiền cọc giữ chân`,
+            body: `${contract.downPayment} triệu đồng, phòng ${contract.room.roomName}`,
+            action: actions.RESERVE_FEE_RECEIVED,
+            id: contract.contractId,
+            vendorId: null,
+            renterId: contract.renter.userId,
+            icon: contract.renter.avatar,
+          };
+          this.sendNotification(p);
+        }
         this.evidences.show = false;
       });
     },
