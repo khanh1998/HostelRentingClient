@@ -164,7 +164,7 @@
               <span>3. Đã cài đặt ứng dụng MoMo trên điện thoại.</span>
             </v-col>
             <v-col cols="12" class="d-flex justify-center">
-              <v-btn color="#727CF5" dark :href="momoPayment.url" @click="momoPayment.show = false"> Xác nhận </v-btn>
+              <v-btn color="#727CF5" dark :href="momoPayment.url" target="_blank" @click="momoPayment.show = false;"> Xác nhận </v-btn>
             </v-col>
           </v-row>
         </v-card-text>
@@ -185,17 +185,27 @@
     </v-snackbar>
     <v-container v-if="!isLoading">
       <v-row class="d-flex justify-end pr-10 pb-0">
-        <v-col cols="6">
+        <v-col :cols="isMobile ? '7' : '5'" >
           <v-text-field
-            label="Tìm kiếm chủ trọ, nhà trọ"
-            v-model="searchQuery"
-            append-icon="search"
-            solo
-            hide-details
-            class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
-            height="35"
-            rounded
-          ></v-text-field>
+              label="Tìm kiếm chủ trọ, nhà trọ"
+              v-model="searchQuery"
+              append-icon="search"
+              solo
+              hide-details
+              class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
+              height="35"
+              rounded
+            ></v-text-field>
+            <v-text-field
+              label="Tìm kiếm"
+              v-model="searchQuery"
+              append-icon="search"
+              solo
+              hide-details
+              class="mt-3 text-muted pa-0 size-sub-2 chat hidden-sm-and-up"
+              height="35"
+              rounded
+            ></v-text-field>
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -449,6 +459,16 @@ export default {
           item.group.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1;
         return username || groupname;
       });
+    },
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+          return true;
+        case 'sm':
+          return true;
+        default:
+          return false;
+      }
     },
   },
 };
