@@ -13,7 +13,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="signingResult.show" hide-overlay persistent width="300">
-      <v-card color="#727CF5" dark>
+      <v-card>
         <v-toolbar color="#727cf5" dark class="font-nunito">
           <v-toolbar-title>Xác nhận</v-toolbar-title>
           <v-spacer></v-spacer>
@@ -140,6 +140,36 @@
         </div>
       </v-card>
     </v-dialog>
+     <v-dialog v-model="momoPayment.show" hide-overlay persistent width="350">
+      <v-card>
+        <v-toolbar color="#727cf5" dark class="font-nunito">
+          <v-toolbar-title>Yêu cầu</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn class="d-flex justify-end" @click="momoPayment.show = false" icon>
+            <v-icon class="mr-3"> clear </v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text class="d-flex justify-center pt-3" style="font-size:18px">
+          <v-row>
+            <v-col cols="12">
+              <span>Bạn cần có: </span>
+            </v-col>
+            <v-col cols="12">
+              <span>1. Mật khẩu đăng nhập ví MoMo.</span>
+            </v-col>
+            <v-col cols="12">
+              <span>2. Số điện thoại đăng kí với MoMo vẫn đang hoạt động.</span>
+            </v-col>
+            <v-col cols="12">
+              <span>3. Đã cài đặt ứng dụng MoMo trên điện thoại.</span>
+            </v-col>
+            <v-col cols="12" class="d-flex justify-center">
+              <v-btn color="#727CF5" dark :href="momoPayment.url" @click="momoPayment.show = false"> Xác nhận </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-snackbar
       v-model="snackBarMixin.show"
       :multi-line="snackBarMixin.multiLine"
@@ -206,6 +236,7 @@
                 @view-detail="viewContractDetail"
                 @activate="openActivateContract"
                 @pay-reserve-fee="showPayReserveFee"
+                @momo-payment="showMoMoPayment"
               />
             </div>
           </v-row>
@@ -251,6 +282,10 @@ export default {
       step: 1,
     },
     searchQuery: '',
+    momoPayment: {
+      show: false,
+      url: null,
+    },
   }),
   methods: {
     ...mapActions({
@@ -269,6 +304,10 @@ export default {
       this.payReserveFee.contractId = contractId;
       this.contractOverlay.action = 'activate';
       this.contractOverlay.contract = this.contracts.data.find((c) => c.contractId === contractId);
+    },
+    showMoMoPayment(url) {
+      this.momoPayment.url = url;
+      this.momoPayment.show = true;
     },
     doPayReserveFee() {
       this.payReserveFee.showResult = false;

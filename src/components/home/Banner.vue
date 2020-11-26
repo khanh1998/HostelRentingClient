@@ -10,7 +10,7 @@
             class="white--text px-2 mt-4 font-weight-bold slogan hidden-xs-only"
             style="letter-spacing: 0.001em !important; color: #fdde52"
           >
-            Hỗ trọ tìm kiếm, đề xuất và đặt lịch xem phòng trọ phù hợp nhất
+            Hỗ trợ tìm kiếm, đề xuất và đặt lịch xem phòng trọ phù hợp nhất
           </p>
           <v-row class="d-flex px-0 justify-center align-center" :style="{ width: '100%' }">
             <v-col cols="12" md="7" class="py-0">
