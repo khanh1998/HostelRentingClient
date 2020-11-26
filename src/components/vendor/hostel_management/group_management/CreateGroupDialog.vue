@@ -132,6 +132,7 @@
                         placeholder="Địa chỉ đầy đủ"
                         @place_changed="setPlace"
                         :options="gmap"
+                        :value="addressString1"
                         :selectFirstOnEnter="true"
                         style="
                           border: 1px solid #dee2e6 !important;
@@ -494,6 +495,7 @@ export default {
     AvatarManagement,
   },
   data: () => ({
+    addressString1: '321',
     newGroup: {
       vendorId: 0,
       buildingNo: '',
@@ -642,6 +644,8 @@ export default {
       this.place = place;
       this.addMarker();
       this.addressString = `${this.place.formatted_address}`;
+      console.log(this.place);
+      this.addressString1 = `~${this.addressString.substring(5)}`;
     },
     addMarker() {
       const marker = {
@@ -991,6 +995,7 @@ export default {
     buildingNo: {
       handler() {
         this.emitNewAddress();
+        this.addressString1 = `${this.buildingNo} `;
       },
     },
   },

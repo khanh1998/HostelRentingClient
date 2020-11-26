@@ -156,7 +156,7 @@ export default {
       contract.roomId = contract.room.roomId;
       contract.status = 'RESERVED';
       const { contractId, qrCode } = contract;
-      const payload = { contractId, qrCode };
+      const payload = { contractId, qrCode, status: 'RESERVED' };
       this.activateContract(payload).then(() => {
         this.evidences.success = this.contractsStore.success;
         this.evidences.show = false;

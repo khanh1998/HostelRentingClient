@@ -349,6 +349,7 @@ export default {
       const payload = {
         contractId: this.previewDialog.contractId.trim(),
         qrCode: this.previewDialog.contractSecret.trim(),
+        status: 'ACTIVATED',
       };
       this.activateContract(payload).then(() => {
         this.previewDialog.show = false;
