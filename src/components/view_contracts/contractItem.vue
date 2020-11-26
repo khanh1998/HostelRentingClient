@@ -155,42 +155,87 @@
             </v-stepper-header>
             <v-stepper-items class="elevation-0">
               <v-stepper-content step="1" class="elevation-0">
-                <v-timeline align-top dense>
-                  <v-timeline-item color="#727CF5" small>
-                    <div>
-                      Hỗ trợ thanh toán tiền cọc giữ chỗ :
-                      <v-btn :href="getParamForUrl" rounded text>
-                        <v-img height="30px" width="30px" src="../../assets/logo-momo.png"></v-img>
-                      </v-btn>
-                    </div>
-                  </v-timeline-item>
-                  <v-timeline-item color="#727CF5" small>
-                    <div>
-                      Yêu cầu chủ nhà xác nhận :
-                      <v-chip
-                        @click="$emit('pay-reserve-fee', contract.contractId)"
-                        color="#727CF5"
-                        dark
-                        >Yêu cầu xác nhận</v-chip
-                      >
-                    </div>
-                  </v-timeline-item>
-                </v-timeline>
+                <div>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      class="d-flex justify-center font-weight-bold font-nunito"
+                      style="font-size: 18px"
+                      ><p class="hidden-sm-and-up">Hợp đồng được tạo</p></v-col
+                    >
+                    <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
+                      <v-timeline align-top dense>
+                        <v-timeline-item color="#727CF5" small>
+                          <div>
+                            Hỗ trợ thanh toán tiền cọc giữ chỗ :
+                            <v-btn :href="getParamForUrl" rounded text>
+                              <v-img
+                                height="30px"
+                                width="30px"
+                                src="../../assets/logo-momo.png"
+                              ></v-img>
+                            </v-btn>
+                          </div>
+                        </v-timeline-item>
+                        <v-timeline-item color="#727CF5" small>
+                          <div>
+                            Yêu cầu chủ nhà xác nhận :
+                            <v-chip
+                              @click="$emit('pay-reserve-fee', contract.contractId)"
+                              color="#727CF5"
+                              dark
+                              >Yêu cầu xác nhận</v-chip
+                            >
+                          </div>
+                        </v-timeline-item>
+                      </v-timeline>
+                    </v-col>
+                  </v-row>
+                </div>
               </v-stepper-content>
               <v-stepper-content step="2">
-                Yêu cầu xác nhận tiền của bạn đã được gửi tới chủ nhà. Hãy đợi cho tới khi chủ nhà
-                xác nhận.
+                <v-row>
+                  <v-col
+                    cols="12"
+                    class="d-flex justify-center font-weight-bold font-nunito"
+                    style="font-size: 18px"
+                    ><p class="hidden-sm-and-up">Đã đóng tiền giữ chỗ</p></v-col
+                  >
+                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
+                    Yêu cầu xác nhận tiền của bạn đã được gửi tới chủ nhà. Hãy đợi cho tới khi chủ
+                    nhà xác nhận.
+                  </v-col>
+                </v-row>
               </v-stepper-content>
               <v-stepper-content step="3">
-                Chủ nhà xác nhận là đã nhận tiền cọc giữ chỗ, bây giờ bạn có thể
-                <v-chip @click="$emit('activate', contract.contractId)" color="#727CF5" dark>Ký hợp đồng</v-chip> thuê
-                nhà chính thức.
+                <v-row>
+                  <v-col
+                    cols="12"
+                    class="d-flex justify-center font-weight-bold font-nunito"
+                    style="font-size: 18px"
+                    ><p class="hidden-sm-and-up">Chủ trọ đã nhận tiền cọc</p></v-col
+                  >
+                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0"
+                    ><v-chip @click="$emit('activate', contract.contractId)" color="#727CF5" dark
+                      >Ký hợp đồng</v-chip
+                    ></v-col
+                  >
+                </v-row>
               </v-stepper-content>
               <v-stepper-content step="4">
-                Hợp đồng đã được hoàn tất. Bây giờ bạn có thể
-                <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
+                <v-row>
+                  <v-col
+                    cols="12"
+                    class="d-flex justify-center font-weight-bold font-nunito"
+                    style="font-size: 18px"
+                    ><p class="hidden-sm-and-up">Đã ký hợp đồng</p></v-col
+                  >
+                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
+                    <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
                   xem chi tiết hợp đồng</v-chip
                 >
+                  </v-col>
+                </v-row>
               </v-stepper-content>
             </v-stepper-items>
           </v-stepper>
@@ -207,15 +252,36 @@
             <!-- <v-stepper-items> -->
             <v-stepper-items class="elevation-0">
               <v-stepper-content step="1">
-                Hợp đồng đặt cọc giữ chỗ đã được tạo, bây giờ bạn có thể
-                <v-chip @click="$emit('activate', contract.contractId)" color="#727CF5" dark>Ký hợp đồng</v-chip> thuê
-                nhà chính thức.
+                <div class="d-flex justify-center">
+                   <v-row>
+                  <v-col
+                    cols="12"
+                    class="d-flex justify-center font-weight-bold font-nunito"
+                    style="font-size: 18px"
+                    ><p class="hidden-sm-and-up">Hợp đồng được tạo</p></v-col
+                  >
+                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0"
+                    ><v-chip @click="$emit('activate', contract.contractId)" color="#727CF5" dark
+                    >Ký hợp đồng</v-chip
+                  ></v-col
+                  >
+                </v-row>
+                </div>
               </v-stepper-content>
               <v-stepper-content step="2">
-                Hợp đồng đã được hoàn tất. Bây giờ bạn có thể
-                <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
-                  xem chi tiết hợp đồng</v-chip
-                >
+                <v-row>
+                  <v-col
+                    cols="12"
+                    class="d-flex justify-center font-weight-bold font-nunito"
+                    style="font-size: 18px"
+                    ><p class="hidden-sm-and-up">Đã ký hợp đồng</p></v-col
+                  >
+                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
+                    <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
+                      xem chi tiết hợp đồng</v-chip
+                    >
+                  </v-col>
+                </v-row>
               </v-stepper-content>
             </v-stepper-items>
             <!-- </v-stepper-items> -->
@@ -307,9 +373,7 @@ export default {
       let result = null;
       let url = null;
       console.log(this.contract.group.vendorId);
-      const phone = null;
-      console.log('Aa');
-      console.log(phone);
+      const { phone } = this.contract.vendor;
       if (downPayment.toString().includes('.')) {
         if (downPayment.toString().split('.')[0] === 0) {
           result = `${downPayment.toString().split('.')[1]}00000`;

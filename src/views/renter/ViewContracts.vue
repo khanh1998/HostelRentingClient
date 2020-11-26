@@ -197,7 +197,7 @@
           </v-row>
           <v-row class="mt-2">
             <div
-              v-for="contract in contracts.data"
+              v-for="contract in searchContract"
               v-bind:key="contract.contractId"
               style="width: 100%"
             >
