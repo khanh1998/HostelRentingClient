@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-5" height="100%" elevation="0" :loading="isServiceLoading">
+  <div :class="isMobile ? 'pa-1' : 'pa-8'" height="100%" elevation="0" :loading="isServiceLoading">
     <v-dialog v-model="dialog" persistent max-width="600px">
       <!-- <template v-slot:activator="{ on, attrs }">
         <v-row>
@@ -93,6 +93,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <span class="text-muted pl-2 pt-10 font-weight-medium font-italic" v-if="check !== 1">Chọn dịch vụ mà bạn sẽ tính tiền</span>
     <v-data-table
       :headers="servicesBox.headers"
       v-model="selects"
@@ -100,17 +101,17 @@
       item-key="serviceId"
       show-select
       hide-default-footer
-      dense
       locale="vi-VN"
       class="mt-2"
+      :loading="isServiceLoading"
     >
       <template v-slot:header.data-table-select> </template>
       <template v-slot:item.data-table-select="{ item }">
-        <v-simple-checkbox v-model="item.select" v-if="!item.required"></v-simple-checkbox>
-        <v-simple-checkbox v-model="item.select" v-if="item.required" disabled></v-simple-checkbox>
+        <v-simple-checkbox v-model="item.select" v-if="!item.required" color="#727CF5"></v-simple-checkbox>
+        <v-simple-checkbox v-model="item.select" v-if="item.required" disabled color="#727CF5"></v-simple-checkbox>
       </template>
       <template v-slot:item.price="{ item }">
-        <v-text-field v-model="item.price" hide-details dense></v-text-field>
+        <v-text-field v-model="item.price" hide-details dense solo suffix="nghìn đồng"></v-text-field>
       </template>
       <template v-slot:item.unit="{ item }">
         <v-select
@@ -147,8 +148,8 @@
     <v-card v-if="select">
       <v-card-subtitle v-if="selects.length === 0"> Chưa có dịch vụ nào được chọn </v-card-subtitle>
       <v-card-subtitle v-if="selects.length != 0">
-        <span class="font-weight-bold">Những dịch vụ được chọn:</span>
-        {{ selects.map((s) => s.serviceName).join(', ') }}
+        <span class="font-weight-bold" style="color: #727CF5; font-size:18px">Những dịch vụ được chọn : </span>
+        <span style="font-size:16px">{{ selects.map((s) => s.serviceName).join(', ') }}</span>
       </v-card-subtitle>
     </v-card>
     <v-divider />
@@ -216,7 +217,7 @@
         <v-btn color="red" text v-bind="attrs" @click="snackBarMixin.show = false"> Đóng </v-btn>
       </template>
     </v-snackbar>
-  </v-card>
+  </div>
 </template>
 <script>
 import { mapActions } from 'vuex';
@@ -224,7 +225,7 @@ import snackBarMixin from '../../mixins/snackBar';
 
 export default {
   name: 'HostelGroupServiceEditor',
-  props: ['groupService', 'create', 'update', 'select', 'mode'],
+  props: ['groupService', 'create', 'update', 'select', 'mode', 'check'],
   mixins: [snackBarMixin],
   data: () => ({
     selects: [],
@@ -234,7 +235,7 @@ export default {
         {
           text: 'Tên',
           align: 'start',
-          sortable: true,
+          sortable: false,
           value: 'serviceName',
         },
         { text: 'Giá (Nghìn đồng)', value: 'price', sortable: true },
@@ -285,6 +286,16 @@ export default {
         return false;
       }
       return true;
+    },
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+          return true;
+        case 'sm':
+          return true;
+        default:
+          return false;
+      }
     },
   },
   methods: {

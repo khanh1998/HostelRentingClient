@@ -1,159 +1,176 @@
 <template>
-  <!-- <div>
-    <v-overlay :value="isLoading" absolute>
+  <div>
+    <v-overlay :value="requests.isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay> -->
-  <v-row class="bg-main py-8 pt-15" justify="center">
-    <!-- <v-col cols="6" class="pa-0"> -->
-    <v-col cols="6" class="pr-0 pl-10">
-      <v-card min-height="500">
-        <v-card-title
-          class="size-1rem font-nunito text-primary font-weight-bold text-uppercase d-flex justify-center"
-          >Thông tin phòng trọ theo yêu cầu</v-card-title
-        >
-        <v-divider></v-divider>
-        <v-card-text>
-          <v-row class="ma-0">
-            <v-col cols="8" class="d-flex flex-column px-6">
-              <span class="field-name font-weight-medium">Khu vực tìm kiếm:</span>
-              <div class="d-flex">
-                <v-col cols="11" class="d-flex flex-column pa-0">
-                  <gmap-autocomplete
-                    placeholder="Địa điểm, khu vực... bạn muốn ở gần"
-                    _class="form-control"
-                    :selectFirstOnEnter="true"
-                    hide-details
-                    style="
-                      border: 1px solid #dee2e6 !important;
-                      border-right: 0px;
-                      border-radius: 4px;
-                      border-top-right-radius: 0px;
-                      border-bottom-right-radius: 0px;
-                    "
-                    class="pa-2 address-autocomplete"
-                  ></gmap-autocomplete>
-                </v-col>
-                <v-col cols="1" class="pa-0">
-                  <v-btn
-                    icon
-                    @click="clearField()"
-                    height="100%"
-                    min-width="100%"
-                    style="
-                      border: 1px solid #dee2e6 !important;
-                      border-left: 0px;
-                      border-radius: 4px;
-                      border-top-left-radius: 0px;
-                      border-bottom-left-radius: 0px;
-                    "
-                  >
-                    <v-icon>clear</v-icon>
-                  </v-btn>
-                </v-col>
-              </div>
-            </v-col>
-            <v-col cols="4" class="d-flex flex-column px-6">
-              <span class="field-name font-weight-medium">Ngày nhận phòng: </span>
-              <v-menu
-                v-model="menu1"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    readonly
-                    hide-details
-                    v-bind="attrs"
-                    v-on="on"
-                    :value="startTimeString"
-                    height="30"
-                    class="size-sub-2 font-nunito form"
-                    solo
-                    dense
-                    light
-                    append-icon="mdi-calendar-blank"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="startTime"
-                  no-title
-                  @input="menu1 = false"
-                  locale="vi"
-                  :allowed-dates="allowedDates"
-                ></v-date-picker>
-              </v-menu>
-            </v-col>
-            <v-col cols="4" class="d-flex flex-column px-6">
-              <span class="field-name font-weight-medium">Bán kính tìm kiếm:</span>
-              <v-select
-                :items="distances"
-                v-model="chipDistance"
-                dense
-                hide-details
-                solo
-                class="size-sub-2 font-nunito form"
-              ></v-select>
-              <!-- <v-chip-group v-model="chip" color="#4250f2">
+    </v-overlay>
+    <v-row class="bg-main py-8 pt-15" justify="center">
+      <!-- <v-col cols="6" class="pa-0"> -->
+      <v-col cols="6" class="pr-0 pl-10" v-if="!isMobile">
+        <v-card min-height="500">
+          <v-card-title
+            class="size-1rem font-nunito text-primary font-weight-bold text-uppercase d-flex justify-center"
+            >Thông tin phòng trọ theo yêu cầu</v-card-title
+          >
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-row class="ma-0">
+              <v-col cols="8" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Khu vực tìm kiếm:</span>
+                <div class="d-flex">
+                  <v-col cols="11" class="d-flex flex-column pa-0">
+                    <gmap-autocomplete
+                      placeholder="Địa điểm, khu vực... bạn muốn ở gần"
+                      _class="form-control"
+                      @place_changed="setPlace"
+                      :selectFirstOnEnter="true"
+                      hide-details
+                      style="
+                        border: 1px solid #dee2e6 !important;
+                        border-right: 0px;
+                        border-radius: 4px;
+                        border-top-right-radius: 0px;
+                        border-bottom-right-radius: 0px;
+                      "
+                      class="pa-2 address-autocomplete"
+                    ></gmap-autocomplete>
+                  </v-col>
+                  <v-col cols="1" class="pa-0">
+                    <v-btn
+                      icon
+                      @click="clearField()"
+                      height="100%"
+                      min-width="100%"
+                      style="
+                        border: 1px solid #dee2e6 !important;
+                        border-left: 0px;
+                        border-radius: 4px;
+                        border-top-left-radius: 0px;
+                        border-bottom-left-radius: 0px;
+                      "
+                    >
+                      <v-icon>clear</v-icon>
+                    </v-btn>
+                  </v-col>
+                </div>
+              </v-col>
+              <v-col cols="4" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Ngày nhận phòng: </span>
+                <v-menu
+                  v-model="menu1"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      readonly
+                      hide-details
+                      v-bind="attrs"
+                      v-on="on"
+                      :value="startTimeString"
+                      height="30"
+                      class="size-sub-2 font-nunito form"
+                      solo
+                      dense
+                      light
+                      append-icon="mdi-calendar-blank"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="startTime"
+                    no-title
+                    @input="menu1 = false"
+                    locale="vi"
+                    :allowed-dates="allowedDates"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col cols="4" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Bán kính tìm kiếm:</span>
+                <v-select
+                  :items="distances"
+                  v-model="chipDistance"
+                  dense
+                  hide-details
+                  solo
+                  class="size-sub-2 font-nunito form"
+                ></v-select>
+                <!-- <v-chip-group v-model="chip" color="#4250f2">
                   <v-chip filter class="font-nunito">3 km</v-chip>
                   <v-chip filter class="font-nunito">5 km</v-chip>
                   <v-chip filter class="font-nunito">7 km</v-chip>
                   <v-chip filter class="font-nunito">10 km</v-chip>
                 </v-chip-group> -->
-            </v-col>
-            <v-col cols="4" class="d-flex flex-column px-6">
-              <span class="field-name font-weight-medium">Giá tối đa mà bạn muốn trả:</span>
+              </v-col>
+              <v-col cols="4" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Giá tối đa mà bạn muốn trả:</span>
+                <v-text-field
+                  hide-details
+                  v-model="request.maxPrice"
+                  type="number"
+                  suffix="Triệu"
+                  :rules="isPositiveNum"
+                  :step="0.1"
+                  dense
+                  solo
+                />
+              </v-col>
+              <v-col cols="4" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Diện tích tối thiểu:</span>
+                <v-select
+                  :items="superficialities"
+                  v-model="chipSuperficiality"
+                  dense
+                  hide-details
+                  solo
+                  class="size-sub-2 font-nunito form"
+                ></v-select>
+              </v-col>
+              <v-col cols="11" class="d-flex justify-end">
+                <v-btn @click="doCreateRoomRequest" color="#727CF5" dark>Gửi yêu cầu</v-btn>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="6" class="pr-10" v-if="!isMobile">
+        <v-card min-height="425" max-height="425">
+          <v-row no-gutters class="pt-3">
+            <v-spacer />
+            <v-col cols="6">
               <v-text-field
-                hide-details
-                v-model="request.maxPrice"
-                type="number"
-                suffix="Triệu"
-                :rules="isPositiveNum"
-                :step="0.1"
-                dense
+                label="Tìm kiếm"
+                v-model="searchQuery"
+                append-icon="search"
                 solo
-              />
-            </v-col>
-            <v-col cols="4" class="d-flex flex-column px-6">
-              <span class="field-name font-weight-medium">Diện tích tối thiểu:</span>
-              <v-select
-                :items="superficialities"
-                v-model="chipSuperficiality"
-                dense
                 hide-details
-                solo
-                class="size-sub-2 font-nunito form"
-              ></v-select>
-            </v-col>
-            <v-col cols="11" class="d-flex justify-end">
-              <v-btn @click="doCreateRoomRequest" color="#727CF5" dark>Gửi yêu cầu</v-btn>
+                class="pr-2 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
+                height="35"
+                rounded
+              ></v-text-field>
             </v-col>
           </v-row>
-        </v-card-text>
-      </v-card>
-    </v-col>
-    <v-col cols="6" class="pr-10">
-      <v-card
-        min-height="500"
-        max-height="500"
-        style="overflow-y: auto"
-        class="scrollbar"
-        id="style-1"
-      >
-        <v-list>
-          <v-list-item-group v-model="slide.requestIndex" mandatory color="#727CF5">
-            <v-list-item
-              v-for="(request, index) in requests.data"
-              :key="index"
-              class="ml-2 mr-2 mb-2"
-            >
-              <v-row no-gutters>
-                <v-col cols="1" class="d-flex justify-center align-center">
-                  <span class="font-nunito">{{ (index += 1) }}</span>
-                </v-col>
-                <!-- <v-col
+          <div
+            style="overflow-y: auto; max-height:425px; min-height=425px"
+            id="style-1"
+            class="scrollbar"
+          >
+            <v-list v-if="searchRequest.length !== 0">
+              <v-list-item-group v-model="slide.requestIndex" mandatory color="#727CF5">
+                <v-list-item
+                  v-for="(request, index) in searchRequest"
+                  :value="request.createdAt"
+                  :key="request.createdAt"
+                  class="ml-2 mr-2 mb-2"
+                  style="height: 200px"
+                >
+                  <v-row no-gutters>
+                    <v-col cols="1" class="d-flex justify-center align-center">
+                      <span class="font-nunito">{{ (index += 1) }}</span>
+                    </v-col>
+                    <!-- <v-col
                   cols="5"
                   sm="2"
                   md="2"
@@ -169,45 +186,311 @@
                       <span class="text-muted font-nunito">{{ request.maxDistance }} km</span>
                     </v-col>
                 </v-col> -->
-                <v-col cols="11" sm="11" md="11" class="d-flex py-4 px-4">
-                  <v-col cols="12" sm="10" md="10" class="d-flex flex-column align-start">
-                    <span class="text-primary-dark font-nunito type-name">
-                      <v-icon color="#727cf5">mdi-google-maps</v-icon>{{ request.address }}
-                    </span>
-                    <span class="my-2">
-                      <v-row>
-                        <v-col cols="5">
-                          <span class="font-nunito pr-2" style="color: #727cf5">Bán kính :</span>
-                          <span class="text-muted font-nunito">{{ request.maxDistance }} km</span>
-                        </v-col>
-                        <v-col cols="7">
-                          <span class="font-nunito pr-2" style="color: #727cf5">Diện tích tối thiểu :</span>
-                          <span class="text-muted font-nunito">{{ request.minSuperficiality }} m2</span>
-                        </v-col>
-                        <v-col cols="5">
-                          <span class="font-nunito pr-2" style="color: #727cf5">Giá tối đa :</span>
-                          <span class="text-muted font-nunito">{{ request.maxPrice }} Triệu</span>
-                        </v-col>
-                        <v-col cols="7">
-                          <span class="font-nunito pr-2" style="color: #727cf5">Ngày nhận phòng :</span>
-                          <span class="text-muted font-nunito">{{ new Date(request.dueTime).toLocaleDateString('vi') }}</span>
-                        </v-col>
-                      </v-row>
-                    </span>
+                    <v-col cols="11" sm="11" md="11" class="d-flex py-4 px-4">
+                      <v-col cols="12" sm="10" md="10" class="d-flex flex-column align-start">
+                        <span
+                          class="text-primary-dark font-nunito type-name pt-2"
+                          v-if="request.address"
+                        >
+                          <v-row no-gutters>
+                            <v-col cols="1" class="pa-0 py-0">
+                              <v-icon color="#727cf5" left>mdi-google-maps</v-icon>
+                            </v-col>
+                            <v-col cols="11" class="pa-0 py-0">
+                              {{ request.address }}
+                            </v-col>
+                          </v-row>
+                        </span>
+                        <span class="my-2">
+                          <v-row>
+                            <v-col cols="5">
+                              <span class="font-nunito pr-2" style="color: #727cf5"
+                                >Bán kính :</span
+                              >
+                              <span class="text-muted font-nunito"
+                                >{{ request.maxDistance }} km</span
+                              >
+                            </v-col>
+                            <v-col cols="7">
+                              <span class="font-nunito pr-2" style="color: #727cf5"
+                                >Diện tích tối thiểu :</span
+                              >
+                              <span class="text-muted font-nunito"
+                                >{{ request.minSuperficiality }} m2</span
+                              >
+                            </v-col>
+                            <v-col cols="5">
+                              <span class="font-nunito pr-2" style="color: #727cf5"
+                                >Giá tối đa :</span
+                              >
+                              <span class="text-muted font-nunito"
+                                >{{ request.maxPrice }} Triệu</span
+                              >
+                            </v-col>
+                            <v-col cols="7">
+                              <span class="font-nunito pr-2" style="color: #727cf5"
+                                >Ngày nhận phòng :</span
+                              >
+                              <span class="text-muted font-nunito">{{
+                                new Date(request.dueTime).toLocaleDateString('vi')
+                              }}</span>
+                            </v-col>
+                          </v-row>
+                        </span>
+                      </v-col>
+                    </v-col>
+                    <v-col cols="12"><v-divider></v-divider></v-col>
+                  </v-row>
+                  <v-list-item-action class="pr-10">
+                    <v-btn @click="getResult(request.requestId)" dark color="#727CF5">
+                      Xem phòng
+                    </v-btn>
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+            <div v-if="searchRequest.length === 0" class="d-flex justify-center">
+              <span class="font-nunito text-muted pt-10"
+                >Không có yêu cầu tìm kiếm phòng trọ tương lai</span
+              >
+            </div>
+          </div>
+        </v-card>
+      </v-col>
+      <v-col cols="12" class="d-flex justify-center pa-0 py-0" v-if="isMobile">
+        <v-card>
+          <v-card-title
+            class="size-1rem font-nunito text-primary font-weight-bold text-uppercase d-flex justify-center"
+            >Thông tin phòng trọ theo yêu cầu</v-card-title
+          >
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-row class="ma-0">
+              <v-col cols="12" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Khu vực tìm kiếm:</span>
+                <div class="d-flex">
+                  <v-col cols="11" class="d-flex flex-column pa-0">
+                    <gmap-autocomplete
+                      placeholder="Địa điểm, khu vực... bạn muốn ở gần"
+                      _class="form-control"
+                      @place_changed="setPlace"
+                      :selectFirstOnEnter="true"
+                      hide-details
+                      style="
+                        border: 1px solid #dee2e6 !important;
+                        border-right: 0px;
+                        border-radius: 4px;
+                        border-top-right-radius: 0px;
+                        border-bottom-right-radius: 0px;
+                      "
+                      class="pa-2 address-autocomplete"
+                    ></gmap-autocomplete>
                   </v-col>
-                </v-col>
-              </v-row>
-              <v-list-item-action class="pr-10">
-                <v-btn @click="getResult(request.requestId)" dark color="#727CF5">
-                  Xem phòng
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </v-card>
-    </v-col>
-    <!-- <v-col cols="5">
+                  <v-col cols="1" class="pa-0">
+                    <v-btn
+                      icon
+                      @click="clearField()"
+                      height="100%"
+                      min-width="100%"
+                      style="
+                        border: 1px solid #dee2e6 !important;
+                        border-left: 0px;
+                        border-radius: 4px;
+                        border-top-left-radius: 0px;
+                        border-bottom-left-radius: 0px;
+                      "
+                    >
+                      <v-icon>clear</v-icon>
+                    </v-btn>
+                  </v-col>
+                </div>
+              </v-col>
+              <v-col cols="6" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Ngày nhận phòng: </span>
+                <v-menu
+                  v-model="menu1"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      readonly
+                      hide-details
+                      v-bind="attrs"
+                      v-on="on"
+                      :value="startTimeString"
+                      height="30"
+                      class="size-sub-2 font-nunito form"
+                      solo
+                      dense
+                      light
+                      append-icon="mdi-calendar-blank"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="startTime"
+                    no-title
+                    @input="menu1 = false"
+                    locale="vi"
+                    :allowed-dates="allowedDates"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col cols="6" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Bán kính tìm kiếm:</span>
+                <v-select
+                  :items="distances"
+                  v-model="chipDistance"
+                  dense
+                  hide-details
+                  solo
+                  class="size-sub-2 font-nunito form"
+                ></v-select>
+                <!-- <v-chip-group v-model="chip" color="#4250f2">
+                  <v-chip filter class="font-nunito">3 km</v-chip>
+                  <v-chip filter class="font-nunito">5 km</v-chip>
+                  <v-chip filter class="font-nunito">7 km</v-chip>
+                  <v-chip filter class="font-nunito">10 km</v-chip>
+                </v-chip-group> -->
+              </v-col>
+              <v-col cols="6" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Giá tối đa:</span>
+                <v-text-field
+                  hide-details
+                  v-model="request.maxPrice"
+                  type="number"
+                  suffix="Triệu"
+                  :rules="isPositiveNum"
+                  :step="0.1"
+                  dense
+                  solo
+                />
+              </v-col>
+              <v-col cols="6" class="d-flex flex-column px-6">
+                <span class="field-name font-weight-medium">Diện tích tối thiểu:</span>
+                <v-select
+                  :items="superficialities"
+                  v-model="chipSuperficiality"
+                  dense
+                  hide-details
+                  solo
+                  class="size-sub-2 font-nunito form"
+                ></v-select>
+              </v-col>
+              <v-col cols="11" class="d-flex justify-end">
+                <v-btn @click="doCreateRoomRequest" color="#727CF5" dark>Gửi yêu cầu</v-btn>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" class="d-flex justify-center pa-0 py-0 pt-3" v-if="isMobile">
+        <v-card>
+          <v-row no-gutters class="pt-6">
+            <v-col cols="12">
+              <v-text-field
+                label="Tìm kiếm"
+                v-model="searchQuery"
+                append-icon="search"
+                solo
+                hide-details
+                class="pl-5 pr-5 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-up"
+                height="35"
+                rounded
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="d-flex justify-center">
+              <span class="text-muted font-nunito">{{ searchRequest.length }} kết quả</span>
+            </v-col>
+          </v-row>
+          <div>
+            <v-list v-if="searchRequest.length !== 0">
+              <v-list-item-group v-model="slide.requestIndex" mandatory color="#727CF5">
+                <v-list-item
+                  v-for="request in searchRequest"
+                  :value="request.createdAt"
+                  :key="request.createdAt"
+                  class="mb-2"
+                  style="background-color: #FFFFA"
+                >
+                  <v-row no-gutters>
+                    <v-col cols="1" class="d-flex justify-center align-center">
+                      <!-- <span class="font-nunito">{{ (index += 1) }}</span> -->
+                    </v-col>
+                    <v-col cols="11">
+                      <v-col cols="11" sm="10" md="10" class="d-flex flex-column align-start">
+                        <span class="my-2">
+                          <v-row>
+                            <v-col cols="5">
+                              <span class="font-nunito pr-2" style="color: #727cf5">Bán kính</span
+                              ><br />
+                              <span class="text-muted font-nunito"
+                                >{{ request.maxDistance }} km</span
+                              >
+                            </v-col>
+                            <v-col cols="7">
+                              <span class="font-nunito pr-2" style="color: #727cf5"
+                                >Diện tích tối thiểu</span
+                              ><br />
+                              <span class="text-muted font-nunito"
+                                >{{ request.minSuperficiality }} m2</span
+                              >
+                            </v-col>
+                            <v-col cols="5">
+                              <span class="font-nunito pr-2" style="color: #727cf5">Giá tối đa</span
+                              ><br />
+                              <span class="text-muted font-nunito"
+                                >{{ request.maxPrice }} Triệu</span
+                              >
+                            </v-col>
+                            <v-col cols="7">
+                              <span class="font-nunito pr-2" style="color: #727cf5"
+                                >Ngày nhận phòng</span
+                              ><br />
+                              <span class="text-muted font-nunito">{{
+                                new Date(request.dueTime).toLocaleDateString('vi')
+                              }}</span>
+                            </v-col>
+                            <v-col cols="12">
+                              <span class="text-muted font-nunito" v-if="request.address">
+                                <v-row no-gutters>
+                                  <v-col cols="12" class="pa-0 py-0">
+                                    <span class="font-nunito pr-2" style="color: #727cf5"
+                                      >Địa chỉ</span
+                                    ><br />
+                                    {{ request.address }}
+                                  </v-col>
+                                </v-row>
+                              </span>
+                            </v-col>
+                          </v-row>
+                        </span>
+                      </v-col>
+                    </v-col>
+                    <v-col cols="12" class="pa-0 px-0 d-flex justify-end">
+                      <v-list-item-action>
+                        <v-btn @click="getResult(request.requestId)" dark color="#727CF5">
+                          Xem phòng
+                        </v-btn>
+                      </v-list-item-action>
+                    </v-col>
+                    <v-col cols="12"><v-divider></v-divider></v-col>
+                  </v-row>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+            <div v-if="searchRequest.length === 0" class="d-flex justify-center">
+              <span class="font-nunito text-muted pt-10"
+                >Không có yêu cầu tìm kiếm phòng trọ tương lai</span
+              >
+            </div>
+          </div>
+        </v-card>
+      </v-col>
+      <!-- <v-col cols="5">
         <v-card-text>Địa điểm, khu vực... bạn muốn ở gần</v-card-text>
         <div class="d-flex align-center">
           <gmap-autocomplete
@@ -285,8 +568,8 @@
           <v-icon>add_circle_outline</v-icon>
         </v-btn>
       </v-col> -->
-    <!-- </v-col> -->
-    <!-- <v-col cols="11" md="11" lg="11" xl="10" class="pa-0">
+      <!-- </v-col> -->
+      <!-- <v-col cols="11" md="11" lg="11" xl="10" class="pa-0">
       <v-row class="rounded-lg elevation-5 mt-5">
         <v-col>
           <v-slide-group v-model="slide.requestIndex" show-arrows>
@@ -329,8 +612,8 @@
         </v-col>
       </v-row>
     </v-col> -->
-  </v-row>
-  <!-- </div> -->
+    </v-row>
+  </div>
 </template>
 <script>
 import axios from 'axios';
@@ -350,7 +633,7 @@ export default {
       requestIndex: 0,
     },
     menu1: null,
-    chipDistance: '3 km',
+    chipDistance: '5 km',
     chipSuperficiality: '15 m2',
     chip1: 1,
     price: 0,
@@ -376,6 +659,7 @@ export default {
     distances: ['3 km', '5 km', '7km', '10 km'],
     // superficialities: ['10 ㎡', '15 ㎡', '20 ㎡', '25 ㎡', '30 ㎡', '40 ㎡'],
     superficialities: ['10 m2', '15 m2', '20 m2', '25 m2', '30 m2', '40 m2'],
+    searchQuery: '',
   }),
   methods: {
     ...mapActions({
@@ -387,7 +671,11 @@ export default {
       return this.result.groups.find((group) => group.groupId === groupId);
     },
     doCreateRoomRequest() {
+      this.request.maxDistance = Number(this.chipDistance.split('km')[0].trim());
+      this.request.minSuperficiality = Number(this.chipSuperficiality.split('m2')[0].trim());
       this.request.maxPrice = Number(this.request.maxPrice);
+      // console.log(this.request.maxDistance);
+      // console.log(this.request.minSuperficiality);
       this.createRoomRequest(this.request).then(() => {
         if (this.requests.success) {
           this.showSnackBar('Tạo request thành công', { color: 'green' });
@@ -425,6 +713,21 @@ export default {
         this.isLoadingResult = false;
       }
     },
+    getDistance(distance) {
+      return `${distance} km`;
+    },
+    getSuperficiality(superficiality) {
+      return `${superficiality} m2`;
+    },
+    getPrice(price) {
+      return `${price} Triệu`;
+    },
+    checkNull(address) {
+      if (address === null) {
+        return true;
+      }
+      return false;
+    },
   },
   computed: {
     ...mapState({
@@ -441,6 +744,43 @@ export default {
         this.user.isLoading ||
         this.isLoadingResult
       );
+    },
+    // sortRequest() {
+    //   return Object.entries(this.requests.data).sort((a, b) => b.createdAt - a.createdAt).forEach((item));
+    // },
+    sortData() {
+      return this.requests.data.slice().sort((a, b) => b.createdAt - a.createdAt);
+    },
+    searchRequest() {
+      if (!this.searchQuery) {
+        return this.requests.data.slice().sort((a, b) => b.createdAt - a.createdAt);
+      }
+      return this.requests.data
+        .filter(
+          (item) => (this.checkNull(item.address) ?
+            false :
+            item.address.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1) ||
+            this.getDistance(item.maxDistance)
+              .toLowerCase()
+              .indexOf(this.searchQuery.toLowerCase()) !== -1 ||
+            this.getPrice(item.maxPrice).toLowerCase().indexOf(this.searchQuery.toLowerCase()) !==
+              -1 ||
+            this.getSuperficiality(item.minSuperficiality)
+              .toLowerCase()
+              .indexOf(this.searchQuery.toLowerCase()) !== -1,
+        )
+        .slice()
+        .sort((a, b) => b.createdAt - a.createdAt);
+    },
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+          return true;
+        case 'sm':
+          return true;
+        default:
+          return false;
+      }
     },
   },
   created() {

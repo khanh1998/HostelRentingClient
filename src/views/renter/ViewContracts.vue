@@ -21,7 +21,7 @@
             <v-icon class="mr-3"> clear </v-icon>
           </v-btn>
         </v-toolbar>
-        <v-card-text class="d-flex justify-center pt-3" style="font-size:18px">
+        <v-card-text class="d-flex justify-center pt-3" style="font-size: 18px">
           <span v-if="signingResult.success"> Ký hợp đồng thành công </span>
           <span v-if="!signingResult.success"> Ký hợp đồng thất bại </span>
         </v-card-text>
@@ -41,9 +41,12 @@
           <image-editor :oldImages="[]" @newValues="receiveNewImages" />
         </v-card-text>
         <v-card-actions>
-          <v-spacer/>
-          <v-btn :disabled="payReserveFee.images.length === 0" @click="doPayReserveFee"
-          :color="payReserveFee.images.length === 0 ? '' : '#727CF5'" :dark="payReserveFee.images.length === 0 ? false : true"
+          <v-spacer />
+          <v-btn
+            :disabled="payReserveFee.images.length === 0"
+            @click="doPayReserveFee"
+            :color="payReserveFee.images.length === 0 ? '' : '#727CF5'"
+            :dark="payReserveFee.images.length === 0 ? false : true"
             >Gửi xác nhận</v-btn
           >
         </v-card-actions>
@@ -88,7 +91,7 @@
         </div>
       </v-card>
     </v-dialog>
-     <v-dialog v-model="momoPayment.show" hide-overlay persistent width="350">
+    <v-dialog v-model="momoPayment.show" hide-overlay persistent width="350">
       <v-card>
         <v-toolbar color="#727cf5" dark class="font-nunito">
           <v-toolbar-title>Yêu cầu</v-toolbar-title>
@@ -97,7 +100,7 @@
             <v-icon class="mr-3"> clear </v-icon>
           </v-btn>
         </v-toolbar>
-        <v-card-text class="d-flex justify-center pt-3" style="font-size:18px">
+        <v-card-text class="d-flex justify-center pt-3" style="font-size: 18px">
           <v-row>
             <v-col cols="12">
               <span>Bạn cần có: </span>
@@ -112,7 +115,15 @@
               <span>3. Đã cài đặt ứng dụng MoMo trên điện thoại.</span>
             </v-col>
             <v-col cols="12" class="d-flex justify-center">
-              <v-btn color="#727CF5" dark :href="momoPayment.url" target="_blank" @click="momoPayment.show = false;"> Xác nhận </v-btn>
+              <v-btn
+                color="#727CF5"
+                dark
+                :href="momoPayment.url"
+                target="_blank"
+                @click="momoPayment.show = false"
+              >
+                Xác nhận
+              </v-btn>
             </v-col>
           </v-row>
         </v-card-text>
@@ -132,28 +143,34 @@
       </template>
     </v-snackbar>
     <v-container v-if="!isLoading">
-      <v-row class="d-flex justify-end pr-10 pb-0">
-        <v-col :cols="isMobile ? '7' : '5'" >
-          <v-text-field
-              label="Tìm kiếm chủ trọ, nhà trọ"
-              v-model="searchQuery"
-              append-icon="search"
-              solo
-              hide-details
-              class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
-              height="35"
-              rounded
-            ></v-text-field>
-            <v-text-field
-              label="Tìm kiếm"
-              v-model="searchQuery"
-              append-icon="search"
-              solo
-              hide-details
-              class="mt-3 text-muted pa-0 size-sub-2 chat hidden-sm-and-up"
-              height="35"
-              rounded
-            ></v-text-field>
+      <v-row
+        :class="isMobile ? 'd-flex justify-end pr-10 pb-0' : 'd-flex justify-center pr-10 pb-0'"
+      >
+        <v-col cols="11" sm="11" md="11" lg="11" xl="10">
+          <v-row no-gutters class="d-flex justify-end pr-10 pb-0">
+            <v-col :cols="isMobile ? '7' : '3'">
+              <v-text-field
+                label="Tìm kiếm chủ trọ, nhà trọ"
+                v-model="searchQuery"
+                append-icon="search"
+                solo
+                hide-details
+                class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
+                height="35"
+                rounded
+              ></v-text-field>
+              <v-text-field
+                label="Tìm kiếm"
+                v-model="searchQuery"
+                append-icon="search"
+                solo
+                hide-details
+                class="mt-3 text-muted pa-0 size-sub-2 chat hidden-sm-and-up"
+                height="35"
+                rounded
+              ></v-text-field>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -336,7 +353,8 @@ export default {
         return this.contracts.data;
       }
       return this.$store.state.user.contracts.data.filter(
-        (item) => item.vendor.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1 || item.group.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+        (item) => item.vendor.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1 ||
+          item.group.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
       );
     },
     isMobile() {

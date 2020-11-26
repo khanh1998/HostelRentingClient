@@ -25,8 +25,8 @@
         </div>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" v-if="this.upload.imageUrls.length > 0" @click="uploadImages">
-            <v-icon>cloud_upload</v-icon> Tải lên
+          <v-btn color="#727CF5" v-if="this.upload.imageUrls.length > 0" @click="uploadImages" dark>
+            <v-icon left>cloud_upload</v-icon> Tải lên
           </v-btn>
           <v-spacer />
         </v-card-actions>
@@ -38,9 +38,9 @@
       </v-col>
     </v-row> -->
     <v-row>
-      <v-col cols="12">
+      <v-col cols="12" :class="check === 1 ? 'd-flex justify-center' : ''">
         <v-btn class="ml-2" @click="openImageUploadDialog" depressed>
-          <v-icon>add_photo_alternate</v-icon>Tải lên ảnh mới</v-btn
+          <v-icon left>add_photo_alternate</v-icon>Tải lên ảnh mới</v-btn
         >
       </v-col>
       <v-col cols="12">
@@ -96,7 +96,7 @@ import snackBarMixins from '../../mixins/snackBar';
 
 export default {
   name: 'ImageEditor',
-  props: ['oldImages', 'mode'],
+  props: ['oldImages', 'mode', 'check'],
   mixins: [fileMixins, snackBarMixins],
   data: () => ({
     dialog: {

@@ -5,7 +5,7 @@
     </template>
     <template v-slot:top>
       <v-toolbar flat>
-        <v-toolbar-title>Quy định</v-toolbar-title>
+        <v-toolbar-title><div v-if="check === 1">Nội quy</div></v-toolbar-title>
       </v-toolbar>
     </template>
   </v-data-table>
@@ -13,7 +13,7 @@
 <script>
 export default {
   name: 'RegulationTable',
-  props: ['rules'],
+  props: ['rules', 'check'],
   data: () => ({
     // data rules
     dialogR: false,
@@ -22,11 +22,11 @@ export default {
       {
         text: 'Số thứ tự',
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'regulationId',
       },
-      { text: 'Nội dung', value: 'regulationName' },
-      { text: 'Được làm', value: 'allowed' },
+      { text: 'Nội dung', value: 'regulationName', sortable: false },
+      { text: 'Được làm', value: 'allowed', sortable: false },
       { value: 'actions', sortable: false },
     ],
     editedIndexR: -1,
