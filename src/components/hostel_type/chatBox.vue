@@ -597,7 +597,7 @@ export default {
         });
         this.sendNotification({
           title: `Lịch hẹn mới từ: ${this.userState.data.username}`,
-          body: `Thời gian: ${meetTime}`,
+          body: `Thời gian: ${new Date(meetTime).toLocaleString()}`,
           action: 'NEW_MESSAGE',
           id: '',
           icon: this.userState.data.avatar,
@@ -623,7 +623,7 @@ export default {
           });
           this.sendNotification({
             title: `Tin nhắn mới từ: ${this.userState.data.username}`,
-            body: `${this.inputChat.text}`,
+            body: `${content.message}`,
             action: 'NEW_MESSAGE',
             id: '',
             icon: this.userState.data.avatar,

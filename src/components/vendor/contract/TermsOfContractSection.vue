@@ -270,7 +270,7 @@ export default {
       this.contract.groupServiceIds = selectServiceIds;
     },
     receiveNewImages(imageUrls) {
-      this.contract.images = imageUrls.map((img) => ({ ...img, reserved: false }));
+      this.contract.images = imageUrls.map((img) => ({ ...img, type: 'PAPER' }));
     },
     receiveAppendixContent(appendix) {
       this.contract.appendixContract = appendix;
@@ -301,7 +301,7 @@ export default {
   },
   computed: {
     physicalContractImages() {
-      return this.contract.images.filter((img) => !img.reserved);
+      return this.contract.images.filter((img) => img.type === 'PAPER');
     },
     addressString() {
       const { address } = this.group;

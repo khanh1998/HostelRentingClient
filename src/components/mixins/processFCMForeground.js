@@ -43,6 +43,21 @@ const processFCMForegroundMixins = {
         case actions.UPDATE_CONTRACT:
           this.getOneContract(Number(this.newMessage.data.id));
           break;
+        case actions.CONTRACT_ACCEPTED:
+          this.getOneContract(Number(this.newMessage.data.id));
+          break;
+        case actions.RESERVE_FEE_PAID:
+          this.getOneContract(Number(this.newMessage.data.id));
+          break;
+        case actions.RESERVE_FEE_RECEIVED:
+          this.getOneContract(Number(this.newMessage.data.id));
+          break;
+        case actions.REST_FEE_PAID:
+          this.getOneContract(Number(this.newMessage.data.id));
+          break;
+        case actions.REST_FEE_RECEIVED:
+          this.getOneContract(Number(this.newMessage.data.id));
+          break;
         default:
           console.log('default case on receive new notification');
           break;

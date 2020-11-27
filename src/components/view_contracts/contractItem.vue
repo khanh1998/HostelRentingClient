@@ -136,21 +136,25 @@
       <v-row>
         <v-col>
           <v-stepper v-model="step" v-if="contract.reserved" class="elevation-0">
-            <v-stepper-header class="elevation-0">
+            <v-stepper-header class="elevation-0" v-if="step <= 4">
               <v-stepper-step :complete="step > 0" step="1" color="#727CF5">
-                Hợp đồng được tạo
+                <span v-if="step <= 0">Hợp đồng được tạo</span>
               </v-stepper-step>
               <v-divider></v-divider>
               <v-stepper-step :complete="step > 1" step="2" color="#727CF5">
-                Đã đóng tiền giữ chỗ
+                <span v-if="step <= 1">Đóng tiền cọc giữ chỗ</span>
               </v-stepper-step>
               <v-divider></v-divider>
               <v-stepper-step :complete="step > 2" step="3" color="#727CF5">
-                Chủ trọ đã nhận tiền cọc
+                <span v-if="step <= 2">Chủ trọ đã nhận tiền</span>
               </v-stepper-step>
               <v-divider></v-divider>
               <v-stepper-step :complete="step > 3" step="4" color="#727CF5">
-                Đã ký hợp đồng
+                <span v-if="step <= 3">Thanh toán phần còn lại</span>
+              </v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step :complete="step > 4" step="5" color="#727CF5">
+                <span v-if="step <= 4">Hợp đồng hoàn tất</span>
               </v-stepper-step>
             </v-stepper-header>
             <v-stepper-items class="elevation-0">
@@ -177,8 +181,9 @@
                         <v-timeline-item color="#727CF5" small>
                           <div>
                             Thanh toán tiền cọc giữ chỗ cho chủ trọ.
-                            <v-card-subtitle class="pt-0 pb-0  hidden-sm-and-down">
-                              Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán trực tuyến.<br/>
+                            <v-card-subtitle class="pt-0 pb-0 hidden-sm-and-down">
+                              Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
+                              trực tuyến.<br />
                               Hỗ trợ thanh toán bằng
                               <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text>
                                 <v-img
@@ -186,11 +191,14 @@
                                   width="30px"
                                   src="../../assets/logo-momo.png"
                                 ></v-img>
-                                 <v-card-subtitle class="pl-1 pr-0">Bạn phải có tài khoản MoMo</v-card-subtitle>
+                                <v-card-subtitle class="pl-1 pr-0"
+                                  >Bạn phải có tài khoản MoMo</v-card-subtitle
+                                >
                               </v-btn>
                             </v-card-subtitle>
-                            <v-card-text class="pt-0 pb-0  hidden-sm-and-up">
-                              * Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán trực tuyến.<br/>
+                            <v-card-text class="pt-0 pb-0 hidden-sm-and-up">
+                              * Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
+                              trực tuyến.<br />
                               * Hỗ trợ thanh toán bằng
                               <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text>
                                 <v-img
@@ -198,7 +206,7 @@
                                   width="30px"
                                   src="../../assets/logo-momo.png"
                                 ></v-img>
-                                 <!-- <v-card-subtitle class="pl-1 pr-0">Bạn phải có tài khoản MoMo</v-card-subtitle> -->
+                                <!-- <v-card-subtitle class="pl-1 pr-0">Bạn phải có tài khoản MoMo</v-card-subtitle> -->
                               </v-btn>
                             </v-card-text>
                           </div>
@@ -242,14 +250,28 @@
                     style="font-size: 18px"
                     ><p class="hidden-sm-and-up">Chủ trọ đã nhận tiền cọc</p></v-col
                   >
-                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0"
-                    ><v-chip @click="$emit('activate', contract.contractId)" color="#727CF5" dark
-                      >Ký hợp đồng</v-chip
-                    ></v-col
-                  >
+                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
+                    Bạn hoàn tất việc đóng tiền cọc giữ chỗ,
+                    <v-chip @click="$emit('paid-rest', contract.contractId)">nhấn vào đây</v-chip>
+                    để thanh toán phần tiền còn lại để hợp đồng chính thức có hiệu lực.
+                  </v-col>
                 </v-row>
               </v-stepper-content>
               <v-stepper-content step="4">
+                <v-row>
+                  <v-col
+                    cols="12"
+                    class="d-flex justify-center font-weight-bold font-nunito"
+                    style="font-size: 18px"
+                    ><p class="hidden-sm-and-up">Đóng phần tiền còn lại</p></v-col
+                  >
+                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
+                    Bạn đã thanh toán đầy đủ tiền, hãy chờ chủ trọ xác nhận đã nhận tiền để hợp đồng
+                    có hiệu lực.
+                  </v-col>
+                </v-row>
+              </v-stepper-content>
+              <v-stepper-content step="5">
                 <v-row>
                   <v-col
                     cols="12"
@@ -352,6 +374,9 @@ export default {
     step() {
       if (this.contract.reserved) {
         if (this.contract.status === 'INACTIVE') {
+          return 1;
+        }
+        if (this.contract.status === 'ACCEPTED') {
           if (this.contract.paid === false) {
             return 1;
           }
@@ -360,10 +385,13 @@ export default {
           }
         }
         if (this.contract.status === 'RESERVED') {
-          return 3;
+          if (this.contract.paid === false) {
+            return 3;
+          }
+          return 4;
         }
         if (this.contract.status === 'ACTIVATED') {
-          return 4;
+          return 5;
         }
       }
       if (!this.contract.reserved) {

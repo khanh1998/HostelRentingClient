@@ -74,6 +74,7 @@ if (firebase.messaging.isSupported()) {
       body: payload.data.body,
       icon: payload.data.icon,
       vibrate: [200, 100, 200, 100, 200, 100, 200],
+      click_action: 'https://nhatro-sac.web.app/',
     };
     const channel = new BroadcastChannel('yoho-sw-messages');
     channel.postMessage(payload);

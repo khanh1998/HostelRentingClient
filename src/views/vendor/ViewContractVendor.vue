@@ -6,6 +6,9 @@
     <v-dialog width="500" persistent :value="uncheckedReserveFee.length > 0">
       <UnCheckedReservedFeeContracts :contracts="uncheckedReserveFee"/>
     </v-dialog>
+    <v-dialog width="500" persistent :value="uncheckedRestFee.length > 0">
+      <UnCheckedRestFeeContracts :contracts="uncheckedRestFee"/>
+    </v-dialog>
     <div v-if="!isLoading">
       <v-row class="d-flex justify-space-between ma-0 pl-md-13 mt-5 font-nunito">
         <v-col cols="12" md="1" />
@@ -411,11 +414,12 @@ import { mapActions, mapGetters } from 'vuex';
 import pdfDocument from '../../components/vendor/pdfviewer/PDFDocument.vue';
 import mobileMixin from '../../components/mixins/mobile';
 import UnCheckedReservedFeeContracts from '../../components/view_contracts/UnCheckedReservedFeeContracts.vue';
+import UnCheckedRestFeeContracts from '../../components/view_contracts/UnCheckedRestFeeContracts.vue';
 
 export default {
   name: 'ViewContractVendor',
   mixins: [mobileMixin],
-  components: { pdfDocument, UnCheckedReservedFeeContracts },
+  components: { pdfDocument, UnCheckedReservedFeeContracts, UnCheckedRestFeeContracts },
   data: () => ({
     // search
     search: '',
@@ -678,6 +682,12 @@ export default {
     });
   },
   computed: {
+    scale() {
+      if (this.isMobile) {
+        return 2;
+      }
+      return 1;
+    },
     isLoading() {
       const loadingUser = this.$store.state.user.user.isLoading;
       const loadingContracts = this.$store.state.user.contracts.isLoading;
@@ -688,7 +698,12 @@ export default {
     },
     uncheckedReserveFee() {
       return this.contracts.data.filter(
-        (c) => c.reserved && c.paid === true && c.status === 'INACTIVE',
+        (c) => c.reserved && c.paid === true && c.status === 'ACCEPTED',
+      );
+    },
+    uncheckedRestFee() {
+      return this.contracts.data.filter(
+        (c) => c.reserved && c.paid === true && c.status === 'RESERVED',
       );
     },
     contracts() {

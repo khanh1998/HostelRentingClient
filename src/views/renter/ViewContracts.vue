@@ -65,10 +65,48 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="payReserveFee.showPaidRest" hide-overlay persistent width="450">
+      <v-card v-if="!payReserveFee.showResult">
+        <v-toolbar color="#727cf5" dark class="font-nunito">
+          <v-toolbar-title>Xác nhận thanh toán phần tiền còn lại</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn class="d-flex justify-end" @click="payReserveFee.showPaidRest = false" icon>
+            <v-icon class="mr-3"> clear </v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text class="pt-3">
+          Tải lên hình ảnh của biên lai chuyển khoản cho chủ trọ
+          <image-editor :oldImages="[]" @newValues="receiveNewImagesRest" />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="payReserveFee.images.length === 0"
+            @click="doPaidRestFee"
+            :color="payReserveFee.images.length === 0 ? '' : '#727CF5'"
+            :dark="payReserveFee.images.length === 0 ? false : true"
+            >yêu cầu</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+      <v-card v-if="payReserveFee.showResult">
+        <v-toolbar color="#727cf5" dark class="font-nunito">
+          <v-toolbar-title>Xác nhận</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn class="d-flex justify-end" @click="payReserveFee.showPaidRest = false" icon>
+            <v-icon class="mr-3"> clear </v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text class="pt-3 d-flex justify-center" style="font-size: 18px">
+          <span v-if="payReserveFee.success">Thanh toán tiền giữ chỗ thành công</span>
+          <span v-if="!payReserveFee.success">Thanh toán tiền giữ chỗ thất bại</span>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="signAndPay.show" persistent max-width="300">
       <v-card>
         <v-stepper v-model="signAndPayStep" vertical class="elevation-0 pt-3">
-          <v-stepper-step :complete="step > 1" step="1"> Ký hợp đồng </v-stepper-step>
+          <v-stepper-step :complete="signAndPayStep > 1" step="1"> Ký hợp đồng </v-stepper-step>
           <v-stepper-content step="1">
             <v-card>
               <v-card-text>
@@ -77,7 +115,7 @@
               </v-card-text>
             </v-card>
           </v-stepper-content>
-          <v-stepper-step :complete="step > 2" step="2">
+          <v-stepper-step :complete="signAndPayStep > 2" step="2">
             Thanh toán tiền cọc giữ chỗ
           </v-stepper-step>
           <v-stepper-content step="2">
@@ -140,7 +178,7 @@
         </div>
       </v-card>
     </v-dialog>
-     <v-dialog v-model="momoPayment.show" hide-overlay persistent width="350">
+    <v-dialog v-model="momoPayment.show" hide-overlay persistent width="350">
       <v-card>
         <v-toolbar color="#727cf5" dark class="font-nunito">
           <v-toolbar-title>Yêu cầu</v-toolbar-title>
@@ -149,7 +187,7 @@
             <v-icon class="mr-3"> clear </v-icon>
           </v-btn>
         </v-toolbar>
-        <v-card-text class="d-flex justify-center pt-3" style="font-size:18px">
+        <v-card-text class="d-flex justify-center pt-3" style="font-size: 18px">
           <v-row>
             <v-col cols="12">
               <span>Bạn cần có: </span>
@@ -164,7 +202,15 @@
               <span>3. Đã cài đặt ứng dụng MoMo trên điện thoại.</span>
             </v-col>
             <v-col cols="12" class="d-flex justify-center">
-              <v-btn color="#727CF5" dark :href="momoPayment.url" target="_blank" @click="momoPayment.show = false;"> Xác nhận </v-btn>
+              <v-btn
+                color="#727CF5"
+                dark
+                :href="momoPayment.url"
+                target="_blank"
+                @click="momoPayment.show = false"
+              >
+                Xác nhận
+              </v-btn>
             </v-col>
           </v-row>
         </v-card-text>
@@ -185,27 +231,27 @@
     </v-snackbar>
     <v-container v-if="!isLoading">
       <v-row class="d-flex justify-end pr-10 pb-0">
-        <v-col :cols="isMobile ? '7' : '5'" >
+        <v-col :cols="isMobile ? '7' : '5'">
           <v-text-field
-              label="Tìm kiếm chủ trọ, nhà trọ"
-              v-model="searchQuery"
-              append-icon="search"
-              solo
-              hide-details
-              class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
-              height="35"
-              rounded
-            ></v-text-field>
-            <v-text-field
-              label="Tìm kiếm"
-              v-model="searchQuery"
-              append-icon="search"
-              solo
-              hide-details
-              class="mt-3 text-muted pa-0 size-sub-2 chat hidden-sm-and-up"
-              height="35"
-              rounded
-            ></v-text-field>
+            label="Tìm kiếm chủ trọ, nhà trọ"
+            v-model="searchQuery"
+            append-icon="search"
+            solo
+            hide-details
+            class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
+            height="35"
+            rounded
+          ></v-text-field>
+          <v-text-field
+            label="Tìm kiếm"
+            v-model="searchQuery"
+            append-icon="search"
+            solo
+            hide-details
+            class="mt-3 text-muted pa-0 size-sub-2 chat hidden-sm-and-up"
+            height="35"
+            rounded
+          ></v-text-field>
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -247,6 +293,7 @@
                 @activate="openActivateContract"
                 @pay-reserve-fee="showPayReserveFee"
                 @momo-payment="showMoMoPayment"
+                @paid-rest="paidTheRestOfContract"
               />
             </div>
           </v-row>
@@ -286,6 +333,7 @@ export default {
       contractId: null,
       success: false,
       showResult: false,
+      showPaidRest: false,
     },
     signAndPay: {
       show: false,
@@ -296,6 +344,13 @@ export default {
       show: false,
       url: null,
     },
+    payRest: {
+      show: false,
+      images: [],
+      contractId: null,
+      success: false,
+      showResult: false,
+    },
   }),
   methods: {
     ...mapActions({
@@ -305,8 +360,47 @@ export default {
       updateContract: 'user/updateContract',
       sendNotification: 'user/sendNotification',
     }),
+    doPaidRestFee() {
+      this.payReserveFee.showResult = false;
+      this.payReserveFee.success = false;
+      const contract = this.contracts.data.find(
+        (c) => c.contractId === this.payReserveFee.contractId,
+      );
+      contract.roomId = contract.room.roomId;
+      contract.paid = true;
+      contract.images = [...this.payReserveFee.images, ...contract.images];
+      const { contractId } = contract;
+      this.updateContract(contract).then(() => {
+        const { success } = this.contracts;
+        this.payReserveFee.success = success;
+        this.payReserveFee.showResult = true;
+        if (success) {
+          this.signAndPay.step += 1;
+          const payload = {
+            title: `${contract.renter.username} đóng phần tiền còn lại để hoàn tất hợp đồng`,
+            body: `${contract.type.price - contract.downPayment} triệu đồng`,
+            action: actions.RESERVE_FEE_PAID,
+            id: contract.contractId,
+            vendorId: contract.vendor.userId,
+            renterId: null,
+            icon: contract.renter.avatar,
+          };
+          this.sendNotification(payload);
+          this.contractOverlay.contract = this.contracts.data.find(
+            (c) => c.contractId === contractId,
+          );
+        }
+      });
+    },
+    paidTheRestOfContract(contractId) {
+      this.payReserveFee.showPaidRest = true;
+      this.payReserveFee.contractId = contractId;
+    },
     receiveNewImages(images) {
-      this.payReserveFee.images = images.map((img) => ({ ...img, reserved: true }));
+      this.payReserveFee.images = images.map((img) => ({ ...img, type: 'RESERVED_BILL' }));
+    },
+    receiveNewImagesRest(images) {
+      this.payReserveFee.images = images.map((img) => ({ ...img, type: 'REST_BILL' }));
     },
     showPayReserveFee(contractId) {
       // this.payReserveFee.show = true;
@@ -327,8 +421,8 @@ export default {
       );
       contract.roomId = contract.room.roomId;
       contract.paid = true;
-      contract.images = this.payReserveFee.images;
-      console.log(contract);
+      contract.images = [...this.payReserveFee.images, ...contract.images];
+      const { contractId } = contract;
       this.updateContract(contract).then(() => {
         const { success } = this.contracts;
         this.payReserveFee.success = success;
@@ -345,6 +439,9 @@ export default {
             icon: contract.renter.avatar,
           };
           this.sendNotification(payload);
+          this.contractOverlay.contract = this.contracts.data.find(
+            (c) => c.contractId === contractId,
+          );
         }
       });
     },
@@ -355,9 +452,11 @@ export default {
       } else {
         status = 'ACTIVATED';
       }
+      const { contractId } = this.contractOverlay.contract;
+      const { qrCode } = this.contractOverlay.contract;
       const payload = {
-        contractId: this.contractOverlay.contract.contractId,
-        qrCode: this.contractOverlay.contract.qrCode,
+        contractId,
+        qrCode,
         status,
       };
       this.activateContract(payload).then(() => {
@@ -380,6 +479,9 @@ export default {
             icon: contract.renter.avatar,
           };
           this.sendNotification(p);
+          this.contractOverlay.contract = this.contracts.data.find(
+            (c) => c.contractId === contractId,
+          );
         } else {
           this.signingResult.success = false;
           console.log(error);
@@ -409,7 +511,7 @@ export default {
     step() {
       const { contract } = this.contractOverlay;
       if (contract) {
-        if (contract.status === 'ACTIVATED') {
+        if (contract.status === 'ACCEPTED') {
           if (contract.paid === true) {
             return 3;
           }

@@ -83,6 +83,8 @@ export default {
         case action.NEW_CONTRACT:
           return '/contract';
         case action.UPDATE_CONTRACT:
+        case action.RESERVE_FEE_RECEIVED:
+        case action.REST_FEE_RECEIVED:
           return '/contract';
         case action.REQUIRED_UPDATE_INFO:
           return '/user';
@@ -92,6 +94,9 @@ export default {
     },
     getDestinationForVendor(message) {
       switch (message.data.action) {
+        case action.CONTRACT_ACCEPTED:
+        case action.RESERVE_FEE_PAID:
+        case action.REST_FEE_PAID:
         case action.NEW_CONTRACT:
           return '/vendor/view-contract';
         case action.SCAN_CONTRACT:

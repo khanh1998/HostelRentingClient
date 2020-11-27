@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-toolbar color="#727cf5" dark class="font-nunito">
-      <v-toolbar-title>Danh sách người thuê đóng tiền cọc giữ chỗ</v-toolbar-title>
+      <v-toolbar-title>Danh sách người thuê đóng tiền hoàn tất hợp đồng</v-toolbar-title>
     </v-toolbar>
     <v-dialog v-model="evidences.lighbox" max-width="600">
       <div
@@ -23,30 +23,76 @@
           </v-toolbar>
           <v-card-text class="pt-3 font-nunito">
             <v-row>
-              <v-col cols="5"><span style="font-size:18px" class="font-weight-bold">Người thuê:</span></v-col>
-              <v-col cols="7"><span style="font-size:18px">{{ evidences.contract.renter.username }}</span></v-col>
+              <v-col cols="5"
+                ><span style="font-size: 18px" class="font-weight-bold">Người thuê:</span></v-col
+              >
+              <v-col cols="7"
+                ><span style="font-size: 18px">{{
+                  evidences.contract.renter.username
+                }}</span></v-col
+              >
             </v-row>
             <v-row>
-              <v-col cols="5"><span style="font-size:18px" class="font-weight-bold">Khu trọ:</span></v-col>
-              <v-col cols="7"><span style="font-size:18px">{{ evidences.contract.group.groupName }}</span></v-col>
+              <v-col cols="5"
+                ><span style="font-size: 18px" class="font-weight-bold">Khu trọ:</span></v-col
+              >
+              <v-col cols="7"
+                ><span style="font-size: 18px">{{
+                  evidences.contract.group.groupName
+                }}</span></v-col
+              >
             </v-row>
             <v-row>
-              <v-col cols="5"><span style="font-size:18px" class="font-weight-bold">Loại phòng:</span></v-col>
-              <v-col cols="7"><span style="font-size:18px">{{ evidences.contract.type.title }}</span></v-col>
+              <v-col cols="5"
+                ><span style="font-size: 18px" class="font-weight-bold">Loại phòng:</span></v-col
+              >
+              <v-col cols="7"
+                ><span style="font-size: 18px">{{ evidences.contract.type.title }}</span></v-col
+              >
             </v-row>
             <v-row>
-              <v-col cols="5"><span style="font-size:18px" class="font-weight-bold">Phòng số:</span></v-col>
-              <v-col cols="7"><span style="font-size:18px">{{ evidences.contract.room.roomName }}</span></v-col>
+              <v-col cols="5"
+                ><span style="font-size: 18px" class="font-weight-bold">Phòng số:</span></v-col
+              >
+              <v-col cols="7"
+                ><span style="font-size: 18px">{{ evidences.contract.room.roomName }}</span></v-col
+              >
             </v-row>
             <v-row>
-              <v-col cols="5"><span style="font-size:18px" class="font-weight-bold">Tiền cọc giữ chỗ:</span></v-col>
-              <v-col cols="7"><span style="font-size:18px">{{ evidences.contract.downPayment }} triệu đồng</span></v-col>
+              <v-col cols="5"
+                ><span style="font-size: 18px" class="font-weight-bold">Tiền cọc giữ chỗ:</span></v-col
+              >
+              <v-col cols="7"
+                ><span style="font-size: 18px"
+                  >{{ evidences.contract.downPayment }} triệu đồng</span
+                ></v-col
+              >
             </v-row>
-            <!-- Khu trọ: {{ evidences.contract.group.groupName }}<br />
-            Loại phòng: {{ evidences.contract.type.title }}<br />
-            Phòng số: {{ evidences.contract.room.roomName }}<br />
-            Mức tiền cọc giữ chỗ: {{ evidences.contract.downPayment }} triệu đồng -->
-            <v-row><v-col cols="12"><span style="font-size:18px" class="font-weight-bold">Hình ảnh</span></v-col></v-row>
+            <v-row>
+              <v-col cols="5"
+                ><span style="font-size: 18px" class="font-weight-bold">Giá thuê:</span></v-col
+              >
+              <v-col cols="7"
+                ><span style="font-size: 18px"
+                  >{{ evidences.contract.type.price }} triệu đồng/tháng</span
+                ></v-col
+              >
+            </v-row>
+            <v-row>
+              <v-col cols="5"
+                ><span style="font-size: 18px" class="font-weight-bold">Số tiền còn lại cần phải trả:</span></v-col
+              >
+              <v-col cols="7"
+                ><span style="font-size: 18px"
+                  >{{ evidences.contract.type.price - evidences.contract.downPayment}} triệu đồng</span
+                ></v-col
+              >
+            </v-row>
+            <v-row
+              ><v-col cols="12"
+                ><span style="font-size: 18px" class="font-weight-bold">Hình ảnh</span></v-col
+              ></v-row
+            >
             <div class="d-flex flex-row flex-wrap pt-3">
               <v-img
                 contain
@@ -86,8 +132,10 @@
     <v-card-subtitle class="pt-3">
       <v-row>
         <v-col cols="1"><v-icon color="amber" left>warning</v-icon></v-col>
-        <v-col cols="11">Kiểm tra hết tất cả các yêu cầu xác nhận đóng tiền cọc giữ chỗ để có thể tiếp tục sử dụng
-        ứng dụng.</v-col>
+        <v-col cols="11"
+          >Kiểm tra hết tất cả các yêu cầu xác nhận đóng tiền hoàn tất hợp đồng để có thể tiếp tục
+          sử dụng ứng dụng.</v-col
+        >
       </v-row>
     </v-card-subtitle>
   </v-card>
@@ -97,17 +145,8 @@ import { mapActions, mapState } from 'vuex';
 import actions from '../../config/pushNotificationActions';
 
 export default {
-  name: 'UncheckedReservedFeeContracts',
-  props: {
-    contracts: {
-      type: Object,
-      required: true,
-    },
-    paidRest: {
-      type: Boolean,
-      default: false,
-    },
-  },
+  name: 'UnCheckedRestFeeContracts',
+  props: ['contracts'],
   data: () => ({
     headers: [
       {
@@ -165,16 +204,16 @@ export default {
       this.evidences.success = false;
       const { contract } = this.evidences;
       contract.roomId = contract.room.roomId;
-      contract.status = 'RESERVED';
+      contract.status = 'ACTIVATED';
       contract.paid = false;
       const { contractId, qrCode } = contract;
-      const payload = { contractId, qrCode, status: 'RESERVED' };
+      const payload = { contractId, qrCode, status: 'ACTIVATED' };
       this.activateContract(payload).then(() => {
         this.evidences.success = this.contractsStore.success;
         if (this.evidences.success) {
           const p = {
-            title: `${contract.vendor.username} xác nhận đã nhận tiền cọc giữ chân`,
-            body: `${contract.downPayment} triệu đồng, phòng ${contract.room.roomName}`,
+            title: `${contract.vendor.username} xác nhận đã nhận đủ số tiền theo hợp đồng`,
+            body: `${contract.type.price - contract.downPayment} triệu đồng, phòng ${contract.room.roomName}`,
             action: actions.RESERVE_FEE_RECEIVED,
             id: contract.contractId,
             vendorId: null,
@@ -193,7 +232,7 @@ export default {
     showEvidences(contractId) {
       const contract = this.contracts.find((c) => c.contractId === contractId);
       this.evidences.imageUrls = contract.images
-        .filter((img) => img.type === 'RESERVED_BILL')
+        .filter((img) => img.type === 'REST_BILL')
         .map((img) => img.resourceUrl);
       this.evidences.show = true;
       this.evidences.contract = contract;

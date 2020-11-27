@@ -480,11 +480,12 @@ const mutations = {
     state.contracts.error = null;
     state.contracts.success = null;
   },
-  ACTIVATE_CONTRACT_SUCCESS(state, contractId) {
+  ACTIVATE_CONTRACT_SUCCESS(state, contract) {
+    const { contractId } = contract;
     state.contracts.isUpdating = false;
     console.log(contractId);
     const index = state.contracts.data.findIndex((c) => c.contractId === Number(contractId));
-    state.contracts.data[index].status = 'ACTIVATED';
+    state.contracts.data[index] = contract;
     state.contracts.success = true;
   },
   ACTIVATE_CONTRACT_FAILURE(state, error) {
@@ -1076,7 +1077,7 @@ const actions = {
           const error = new Error('Cannot receive response from server');
           commit(mutationTypes.ACTIVATE_CONTRACT_FAILURE, error);
         } else if (res.status >= 200 && res.status <= 299) {
-          commit(mutationTypes.ACTIVATE_CONTRACT_SUCCESS, contractId);
+          commit(mutationTypes.ACTIVATE_CONTRACT_SUCCESS, res.data.data);
         }
       }
     } catch (error) {
