@@ -27,28 +27,27 @@
         <v-card-text class="py-0" style="height: 450px">
           <v-row class="ma-0 d-flex flex-column">
             <v-row class="d-flex ma-0 align-center">
-              <v-col cols="7" class="d-flex" v-if="allTypes.length > 0">
-                <v-col cols="8" v-if="allTypes.length > 0" class="pa-0">
-                  <v-select
-                    v-model="newRoomValue.typeId"
-                    v-bind:items="listType"
-                    item-text="title"
-                    item-value="typeId"
-                    label="Loại phòng"
-                    dense
-                    hide-details
-                    solo
-                    class="size-sub-2 font-nunito form"
-                    @change="setNewRoom(newRoomValue)"
-                  ></v-select>
-                </v-col>
-                <v-btn
-                  class="btn-success btn-sm font-nunito white--text ml-auto"
+              <v-col cols="5" class="d-flex" v-if="allTypes.length > 0">
+                <!-- <v-col cols="12" v-if="allTypes.length > 0" class="pa-0"> -->
+                <v-select
+                  v-model="newRoomValue.typeId"
+                  v-bind:items="listType"
+                  item-text="title"
+                  item-value="typeId"
+                  label="Nhóm phòng"
+                  dense
+                  hide-details
+                  solo
+                  class="size-sub-2 font-nunito form"
+                  @change="setNewRoom(newRoomValue)"
+                ></v-select>
+                <!-- </v-col> -->
+                <!-- <v-btn
+                  class="btn-warning btn-sm font-nunito white--text ml-auto"
                   @click="showChooseExistTypeDialog = true"
                   height="38"
-                  ><v-icon small class="mr-1">mdi-home-search-outline</v-icon>Thêm từ khu
-                  khác</v-btn
-                >
+                  ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Phân loại nhóm phòng mới</v-btn
+                > -->
               </v-col>
               <v-col cols="8" class="d-flex" v-else>
                 <span
@@ -63,7 +62,7 @@
                     height: 50px;
                   "
                   v-if="allTypes.length === 0"
-                  >Bạn chưa tạo loại phòng nào để quản lý</span
+                  >Bạn tạo loại nhóm phòng chung nào để quản lý</span
                 >
                 <v-btn
                   class="btn-warning btn-sm font-nunito size9rem"
@@ -76,35 +75,41 @@
                   v-if="allTypes.length === 0"
                   >TẠO NGAY</v-btn
                 >
-                <v-btn
-                  class="btn-success btn-sm font-nunito white--text ml-auto"
+                <!-- <v-btn
+                  class="btn-warning btn-sm font-nunito white--text ml-auto"
                   height="50"
                   @click="showChooseExistTypeDialog = true"
-                  ><v-icon small class="mr-1">mdi-home-search-outline</v-icon>Thêm từ khu
-                  khác</v-btn
-                >
+                  ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Phân loại nhóm phòng mới</v-btn
+                > -->
               </v-col>
               <v-btn
+                class="btn-warning btn-sm font-nunito"
+                v-if="allTypes.length > 0"
+                @click="showChooseExistTypeDialog = true"
+                height="38"
+                ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Phân loại nhóm phòng khác</v-btn
+              >
+              <!-- <v-btn
                 class="btn-warning btn-sm font-nunito"
                 v-if="allTypes.length > 0"
                 @click="openCreateTypeDialog()"
                 height="38"
                 ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm loại phòng mới</v-btn
-              >
+              > -->
 
               <v-btn
-                class="btn-danger btn-sm font-nunito white--text ml-auto"
+                class="btn-danger btn-sm font-nunito white--text mx-3"
                 @click="addRoom()"
                 v-if="allTypes.length > 0"
                 height="38"
-                ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm phòng trọ</v-btn
+                ><v-icon small class="mr-1">mdi-door-closed</v-icon>Thêm phòng trọ</v-btn
               >
               <v-btn
                 class="btn-danger btn-sm font-nunito white--text ml-auto"
                 @click="addRoom()"
                 v-else
                 height="50"
-                ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm phòng trọ</v-btn
+                ><v-icon small class="mr-1">mdi-door-closed</v-icon>Thêm phòng trọ</v-btn
               >
             </v-row>
             <v-row class="ma-0">
@@ -156,7 +161,7 @@
           <span
             class="font-nunito white--text font-weight-bold"
             style="font-size: 1.125rem !important"
-            >Thêm loại phòng mới
+            >Phân loại nhóm mới
           </span>
           <v-btn icon @click="closeCreateTypeDialog()" class="mr-4"
             ><v-icon size="20" color="rgb(255, 255, 255, 0.75)">close</v-icon></v-btn
@@ -169,7 +174,7 @@
               <v-row class="ma-0">
                 <v-col cols="7" class="d-flex flex-column pb-0">
                   <span class="field-name font-weight-medium"
-                    >Tên loại phòng<span class="red--text ml-1">(*)</span></span
+                    >Tên nhóm phòng<span class="red--text ml-1">(*)</span></span
                   >
                   <v-text-field
                     class="size-sub-2 font-nunito form"
@@ -487,7 +492,7 @@
           <span
             class="font-nunito white--text font-weight-bold"
             style="font-size: 1.125rem !important"
-            >Thêm loại phòng mới
+            >Phân loại nhóm mới
           </span>
           <v-btn icon @click="closeCreateTypeDialog()" class="mr-4"
             ><v-icon size="20" color="rgb(255, 255, 255, 0.75)">close</v-icon></v-btn
@@ -496,63 +501,70 @@
         <v-divider></v-divider>
         <v-card-text class="py-0 d-flex" style="height: 500px">
           <v-row>
+            <v-col cols="12" class="py-0">
+              <span class="font-nunito text-muted font-italic">
+                Bạn có thể lấy gợi ý các thông tin từ các nhóm phòng của các khu trọ mà bạn đã tạo
+                từ trước
+              </span>
+            </v-col>
+            <v-col cols="5" class="d-flex flex-column justify-center">
+              <v-autocomplete
+                v-model="groupSelected"
+                :items="groups"
+                label="Chọn khu trọ"
+                item-text="groupName"
+                item-value="groupId"
+                class="size9rem font-nunito light-autocomplete"
+                dense
+                outlined
+                clearable
+                color="#727cf5"
+                hide-details
+                background-color="#f1f3fa"
+                no-data-text="Không có kết quả phù hợp"
+                hide-selected
+              >
+                <template slot="selection" slot-scope="{ item }">
+                  <span class="font-nunito text-primary">{{ item.groupName }}</span>
+                </template>
+                <template slot="item" slot-scope="{ item }">
+                  <span class="d-flex flex-column mb-3">
+                    <span class="font-nunito size9rem text-primary-dark">{{ item.groupName }}</span>
+                    <span class="font-nunito size-sub-3 text-gray"
+                      >{{ item.buildingNo }}, {{ item.address.streetName }},
+                      {{ item.address.districtName }} , {{ item.address.provinceName }}</span
+                    >
+                  </span>
+                </template></v-autocomplete
+              >
+            </v-col>
+            <v-col cols="7" class="d-flex flex-column justify-center">
+              <v-autocomplete
+                v-model="typeSelected"
+                :items="types"
+                label="Chọn nhóm phòng"
+                item-text="title"
+                item-value="typeId"
+                class="text-gray size9rem font-weight-regular font-nunito light-autocomplete"
+                outlined
+                dense
+                clearable
+                color="#727cf5"
+                hide-details
+                background-color="#f1f3fa"
+                no-data-text="Không có kết quả phù hợp"
+                @change="suggestType()"
+              >
+                <template slot="selection" slot-scope="{ item }">
+                  <span class="font-nunito text-gray">{{ item.title }}</span>
+                </template>
+              </v-autocomplete>
+            </v-col>
             <v-col cols="8">
               <v-row class="ma-0">
-                <v-col cols="6" class="d-flex flex-column justify-center">
-                  <v-autocomplete
-                    v-model="groupSelected"
-                    :items="groups"
-                    label="Nhà trọ"
-                    item-text="groupName"
-                    item-value="groupId"
-                    class="size9rem font-nunito light-autocomplete"
-                    solo
-                    dense
-                    color="#727cf5"
-                    hide-details
-                    background-color="#f1f3fa"
-                    no-data-text="Không có kết quả phù hợp"
-                  >
-                    <template slot="selection" slot-scope="{ item }">
-                      <span class="font-nunito text-primary">{{ item.groupName }}</span>
-                    </template>
-                    <template slot="item" slot-scope="{ item }">
-                      <span class="d-flex flex-column mb-3">
-                        <span class="font-nunito size9rem text-primary-dark">{{
-                          item.groupName
-                        }}</span>
-                        <span class="font-nunito size-sub-3 text-gray"
-                          >{{ item.buildingNo }}, {{ item.address.streetName }},
-                          {{ item.address.districtName }} , {{ item.address.provinceName }}</span
-                        >
-                      </span>
-                    </template></v-autocomplete
-                  >
-                </v-col>
-                <v-col cols="6" class="d-flex flex-column justify-center">
-                  <v-autocomplete
-                    v-model="typeSelected"
-                    :items="types"
-                    label="Loại phòng"
-                    item-text="title"
-                    item-value="typeId"
-                    class="text-gray size9rem font-weight-regular font-nunito light-autocomplete"
-                    solo
-                    dense
-                    color="#727cf5"
-                    hide-details
-                    background-color="#f1f3fa"
-                    no-data-text="Không có kết quả phù hợp"
-                    @change="suggestType()"
-                  >
-                    <template slot="selection" slot-scope="{ item }">
-                      <span class="font-nunito text-gray">{{ item.title }}</span>
-                    </template>
-                  </v-autocomplete>
-                </v-col>
                 <v-col cols="7" class="d-flex flex-column pb-0">
                   <span class="field-name font-weight-medium"
-                    >Tên loại phòng<span class="red--text ml-1">(*)</span></span
+                    >Tên nhóm phòng<span class="red--text ml-1">(*)</span></span
                   >
                   <v-text-field
                     class="size-sub-2 font-nunito form"
@@ -564,7 +576,7 @@
                     @input="setCreateTypeValue(newTypeValue)"
                   />
                   <span class="font-nunito red--text size-caption" v-show="showMessage.typeName"
-                    >Vui lòng điền tên loại phòng!</span
+                    >Vui lòng điền tên nhóm phòng!</span
                   >
                 </v-col>
                 <v-col cols="5" class="d-flex flex-column pb-0">
@@ -848,7 +860,7 @@
           <v-btn class="btn btn-light elevation-0 font-nunito" @click="closeCreateTypeDialog()">
             <span>Quay lại</span>
           </v-btn>
-          <v-btn class="btn btn-primary font-nunito" @click="insertNewType()">Lưu</v-btn>
+          <v-btn class="btn btn-primary font-nunito" @click="insertNewType()">Tiếp theo</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -1189,6 +1201,7 @@ export default {
           if (this.isCreateSuccess) {
             this.listType = [];
             this.listType = this.allTypes;
+            this.newRoomValue.typeId = this.listType[0].typeId;
             this.closeCreateTypeDialog();
           }
         });

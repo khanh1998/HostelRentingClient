@@ -216,16 +216,8 @@
     </div>
     <v-dialog v-model="dialog.addGroupService" hide-overlay persistent max-width="600px">
       <v-card>
-        <v-card-title
-          style="
-            background-color: #727cf5 !important;
-            box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
-          "
-        >
-          <span class="white--text font-nunito">Thêm dịch vụ mới</span>
-        </v-card-title>
         <v-card-text>
-          <v-container>
+          <v-container class="pt-3 pb-0">
             <v-row>
               <v-col cols="6" class="pb-0 pl-0" v-if="!otherService.checkbox">
                 <v-autocomplete
@@ -425,7 +417,7 @@
           <v-spacer></v-spacer>
           <v-btn
             class="btn btn-light red--text elevation-0 font-nunito"
-            @click="dialog.addGroupService = false"
+            @click="(dialog.addGroupService = false), (message = ''), (duplicateMsg = '')"
           >
             Hủy
           </v-btn>

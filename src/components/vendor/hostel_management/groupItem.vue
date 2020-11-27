@@ -78,7 +78,7 @@
               class="bg-danger-lighten elevation-0 text-danger font-nunito size9rem d-flex justify-start"
               value="done"
               style="letter-spacing: 0.01rem !important"
-              ><v-icon small class="mr-1">mdi-door-closed</v-icon>Tạo danh sách phòng</v-btn
+              ><v-icon small class="mr-1">mdi-door-closed</v-icon>Tạo nhanh danh sách phòng</v-btn
             >
           </v-col>
           <v-col cols="3" class="pa-0 d-flex flex-column align-end text-gray font-nunito size9rem">
