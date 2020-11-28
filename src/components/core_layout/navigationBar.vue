@@ -32,6 +32,7 @@
               <v-row class="pa-0 d-flex align-center px-0">
                 <v-col cols="9" md="10" class="searchBar d-flex align-center">
                   <gmap-autocomplete
+                    :options="gmap"
                     placeholder="Địa điểm, khu vực... bạn muốn ở gần"
                     class="col-11 gmap-input text-body-2 blue-grey--text"
                     @place_changed="setPlace"
@@ -302,6 +303,15 @@ export default {
     places: [],
     currentPlace: null,
     visibleProperty: 'hidden',
+    gmap: {
+      bounds: {
+        north: 11.1602136,
+        south: 10.3493704,
+        east: 107.0265769,
+        west: 106.3638784,
+      },
+      strictBounds: true,
+    },
   }),
   methods: {
     getAvatarTitle(name) {
