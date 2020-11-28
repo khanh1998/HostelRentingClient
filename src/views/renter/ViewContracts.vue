@@ -103,6 +103,44 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="payAllFee.show" hide-overlay persistent width="450">
+      <v-card v-if="!payAllFee.showResult">
+        <v-toolbar color="#727cf5" dark class="font-nunito">
+          <v-toolbar-title>Xác nhận đã thanh toán</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn class="d-flex justify-end" @click="payAllFee.show = false" icon>
+            <v-icon class="mr-3"> clear </v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text class="pt-3">
+          Tải lên hình ảnh của biên lai đóng tiền giữ chỗ cho chủ trọ
+          <image-editor :oldImages="[]" @newValues="receiveNewImagesAll" />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="payAllFee.images.length === 0"
+            @click="doPayAllFee"
+            :color="payAllFee.images.length === 0 ? '' : '#727CF5'"
+            :dark="payAllFee.images.length === 0 ? false : true"
+            >Gửi xác nhận</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+      <v-card v-if="payAllFee.showResult">
+        <v-toolbar color="#727cf5" dark class="font-nunito">
+          <v-toolbar-title>Xác nhận</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn class="d-flex justify-end" @click="payAllFee.show = false" icon>
+            <v-icon class="mr-3"> clear </v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text class="pt-3 d-flex justify-center" style="font-size: 18px">
+          <span v-if="payAllFee.success">Thanh toán tiền giữ chỗ thành công</span>
+          <span v-if="!payAllFee.success">Thanh toán tiền giữ chỗ thất bại</span>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="signAndPay.show" persistent max-width="300">
       <v-card>
         <v-stepper v-model="signAndPayStep" vertical class="elevation-0 pt-3">
@@ -116,14 +154,19 @@
             </v-card>
           </v-stepper-content>
           <v-stepper-step :complete="signAndPayStep > 2" step="2">
-            Thanh toán tiền cọc giữ chỗ
+            Gửi thông tin thanh toán
           </v-stepper-step>
           <v-stepper-content step="2">
             <v-card>
               <v-card-text>
                 Chuyển khoản tiền cọc giữ chỗ cho chủ trọ. Sau đó
-                <v-chip @click="payReserveFee.show = true">Nhấn vào đây</v-chip> để gửi ảnh biên lai
-                chuyển tiền cho chủ trọ.
+                <v-chip v-if="!signAndPay.payAll" @click="payReserveFee.show = true"
+                  >Nhấn vào đây</v-chip
+                >
+                <v-chip v-if="signAndPay.payAll" @click="payAllFee.show = true"
+                  >Nhấn vào đây</v-chip
+                >
+                để gửi ảnh biên lai chuyển tiền cho chủ trọ.
               </v-card-text>
             </v-card>
           </v-stepper-content>
@@ -294,6 +337,7 @@
                 @pay-reserve-fee="showPayReserveFee"
                 @momo-payment="showMoMoPayment"
                 @paid-rest="paidTheRestOfContract"
+                @pay-all-fee="showPayAllFee"
               />
             </div>
           </v-row>
@@ -338,13 +382,14 @@ export default {
     signAndPay: {
       show: false,
       step: 1,
+      payAll: false,
     },
     searchQuery: '',
     momoPayment: {
       show: false,
       url: null,
     },
-    payRest: {
+    payAllFee: {
       show: false,
       images: [],
       contractId: null,
@@ -360,6 +405,45 @@ export default {
       updateContract: 'user/updateContract',
       sendNotification: 'user/sendNotification',
     }),
+    doPayAllFee() {
+      this.payAllFee.showResult = false;
+      this.payAllFee.success = false;
+      const contract = this.contracts.data.find(
+        (c) => c.contractId === this.payAllFee.contractId,
+      );
+      contract.roomId = contract.room.roomId;
+      contract.paid = true;
+      contract.images = [...this.payAllFee.images, ...contract.images];
+      const { contractId } = contract;
+      this.updateContract(contract).then(() => {
+        const { success } = this.contracts;
+        this.payAllFee.success = success;
+        this.payAllFee.showResult = true;
+        if (success) {
+          this.signAndPay.step += 1;
+          const payload = {
+            title: `${contract.renter.username} đóng tiền`,
+            body: `${contract.type.price} triệu đồng`,
+            action: actions.ALL_FEE_PAID,
+            id: contract.contractId,
+            vendorId: contract.vendor.userId,
+            renterId: null,
+            icon: contract.renter.avatar,
+          };
+          this.sendNotification(payload);
+          this.contractOverlay.contract = this.contracts.data.find(
+            (c) => c.contractId === contractId,
+          );
+        }
+      });
+    },
+    showPayAllFee(contractId) {
+      this.signAndPay.show = true;
+      this.signAndPay.payAll = true;
+      this.payAllFee.contractId = contractId;
+      this.contractOverlay.action = 'activate';
+      this.contractOverlay.contract = this.contracts.data.find((c) => c.contractId === contractId);
+    },
     doPaidRestFee() {
       this.payReserveFee.showResult = false;
       this.payReserveFee.success = false;
@@ -402,8 +486,10 @@ export default {
     receiveNewImagesRest(images) {
       this.payReserveFee.images = images.map((img) => ({ ...img, type: 'REST_BILL' }));
     },
+    receiveNewImagesAll(images) {
+      this.payAllFee.images = images.map((img) => ({ ...img, type: 'REST_BILL' }));
+    },
     showPayReserveFee(contractId) {
-      // this.payReserveFee.show = true;
       this.signAndPay.show = true;
       this.payReserveFee.contractId = contractId;
       this.contractOverlay.action = 'activate';
@@ -446,12 +532,7 @@ export default {
       });
     },
     doActivateContract() {
-      let status;
-      if (this.contractOverlay.contract.reserved) {
-        status = 'ACCEPTED';
-      } else {
-        status = 'ACTIVATED';
-      }
+      const status = 'ACCEPTED';
       const { contractId } = this.contractOverlay.contract;
       const { qrCode } = this.contractOverlay.contract;
       const payload = {

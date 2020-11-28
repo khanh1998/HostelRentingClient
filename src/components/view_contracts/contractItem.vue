@@ -1,20 +1,6 @@
 <template>
   <v-card class="mb-2 pa-4">
     <v-row>
-      <!-- <v-col cols="3" md="0" class="hidden-sm-and-up pa-0">
-        <v-row no-gutters class="d-flex">
-          <v-col cols="12">
-            <span class="font-nunito text-primary size-sub-2 hidden-sm-and-up">Chủ trọ:</span>
-          </v-col>
-          <v-col cols="12" class="mt-4">
-            <span class="font-nunito text-primary size-sub-2 hidden-sm-and-up">Nhà trọ:</span>
-          </v-col>
-          <v-col cols="12" class="mt-7">
-            <span class="font-nunito text-primary size-sub-2 hidden-sm-and-up">Phòng:</span>
-          </v-col>
-        </v-row>
-      </v-col> -->
-      <!-- <v-col cols="9" md="12"> -->
       <v-row no-gutters class="d-flex">
         <v-col cols="12" md="3" class="d-flex align-center">
           <v-row class="ma-0">
@@ -93,45 +79,7 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="12" md="1" class="d-flex flex-column justify-center align-center">
-          <!-- <v-chip
-            v-if="false"
-            small
-            class="font-nunito mb-2"
-            :color="getStatus(contract.status, contract.paid).color"
-            >{{ getStatus(contract.status, contract.paid).contractStatus }}</v-chip
-          >
-          <v-btn
-            small
-            rounded
-            outlined
-            color="green"
-            v-if="contract.status !== 'INACTIVE'"
-            text
-            @click="$emit('view-detail', contract.contractId)"
-            >Chi tiết</v-btn
-          >
-          <v-btn
-            small
-            rounded
-            outlined
-            color="red"
-            v-if="contractSignable"
-            text
-            @click="$emit('activate', contract.contractId)"
-            >Ký hợp đồng</v-btn
-          >
-          <v-btn
-            v-if="contract.reserved && contract.paid === false"
-            small
-            rounded
-            outlined
-            color="yellow"
-            text
-            @click="$emit('pay-reserve-fee', contract.contractId)"
-            >Xác nhận đóng tiền giữ chỗ</v-btn
-          > -->
-        </v-col>
+        <v-col cols="12" md="1" class="d-flex flex-column justify-center align-center"> </v-col>
       </v-row>
       <v-row>
         <v-col>
@@ -277,7 +225,7 @@
                     cols="12"
                     class="d-flex justify-center font-weight-bold font-nunito"
                     style="font-size: 18px"
-                    ><p class="hidden-sm-and-up">Đã ký hợp đồng</p></v-col
+                    ><p class="hidden-sm-and-up">Hợp đồng có hiệu lực</p></v-col
                   >
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
                     <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
@@ -295,10 +243,13 @@
               </v-stepper-step>
               <v-divider></v-divider>
               <v-stepper-step :complete="step > 1" step="2" color="#727CF5">
-                Đã ký hợp đồng
+                Thanh toán tiền
+              </v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step :complete="step > 2" step="3" color="#727CF5">
+                Hợp đồng có hiệu lực
               </v-stepper-step>
             </v-stepper-header>
-            <!-- <v-stepper-items> -->
             <v-stepper-items class="elevation-0">
               <v-stepper-content step="1">
                 <div class="d-flex justify-center">
@@ -309,15 +260,80 @@
                       style="font-size: 18px"
                       ><p class="hidden-sm-and-up">Hợp đồng được tạo</p></v-col
                     >
-                    <v-col cols="12" class="d-flex justify-center pb-0 pt-0"
-                      ><v-chip @click="$emit('activate', contract.contractId)" color="#727CF5" dark
-                        >Ký hợp đồng</v-chip
-                      ></v-col
+                    <v-col
+                      cols="12"
+                      class="d-flex justify-center font-nunito"
+                      style="font-size: 18px"
+                      ><p class="hidden-sm-and-down">
+                        Bạn cần thanh toán tiền và gửi thông tin thanh toán để chủ nhà xác nhận
+                      </p></v-col
                     >
+                    <v-col cols="12" class="pb-0 pt-0">
+                      <v-timeline align-top dense>
+                        <v-timeline-item color="#727CF5" small>
+                          <div>
+                            Thanh toán tiền cho chủ trọ.
+                            <v-card-subtitle class="pt-0 pb-0 hidden-sm-and-down">
+                              Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
+                              trực tuyến.<br />
+                              Hỗ trợ thanh toán bằng
+                              <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text>
+                                <v-img
+                                  height="30px"
+                                  width="30px"
+                                  src="../../assets/logo-momo.png"
+                                ></v-img>
+                                <v-card-subtitle class="pl-1 pr-0"
+                                  >Bạn phải có tài khoản MoMo</v-card-subtitle
+                                >
+                              </v-btn>
+                            </v-card-subtitle>
+                            <v-card-text class="pt-0 pb-0 hidden-sm-and-up">
+                              * Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
+                              trực tuyến.<br />
+                              * Hỗ trợ thanh toán bằng
+                              <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text>
+                                <v-img
+                                  height="30px"
+                                  width="30px"
+                                  src="../../assets/logo-momo.png"
+                                ></v-img>
+                                <!-- <v-card-subtitle class="pl-1 pr-0">Bạn phải có tài khoản MoMo</v-card-subtitle> -->
+                              </v-btn>
+                            </v-card-text>
+                          </div>
+                        </v-timeline-item>
+                        <v-timeline-item color="#727CF5" small>
+                          <div>
+                            Yêu cầu chủ nhà xác nhận đã nhận tiền:
+                            <v-chip
+                              @click="$emit('pay-all-fee', contract.contractId)"
+                              color="#727CF5"
+                              class="ml-2"
+                              dark
+                              >Yêu cầu xác nhận</v-chip
+                            >
+                          </div>
+                        </v-timeline-item>
+                      </v-timeline>
+                    </v-col>
                   </v-row>
                 </div>
               </v-stepper-content>
               <v-stepper-content step="2">
+                <v-row>
+                  <v-col
+                    cols="12"
+                    class="d-flex justify-center font-weight-bold font-nunito"
+                    style="font-size: 18px"
+                    ><p class="hidden-sm-and-up">Thanh toán tiền</p></v-col
+                  >
+                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
+                    Thông tin thanh toán đã được gửi tới chủ trọ, hãy đợi đến khi chủ trọ xác nhận đã nhận được tiền.
+                  </v-col>
+                </v-row>
+              </v-stepper-content>
+              <v-stepper-content step="3">
                 <v-row>
                   <v-col
                     cols="12"
@@ -333,7 +349,6 @@
                 </v-row>
               </v-stepper-content>
             </v-stepper-items>
-            <!-- </v-stepper-items> -->
           </v-stepper>
         </v-col>
       </v-row>
@@ -398,8 +413,11 @@ export default {
         if (this.contract.status === 'INACTIVE') {
           return 1;
         }
-        if (this.contract.status === 'ACTIVATED') {
+        if (this.contract.status === 'ACCEPTED') {
           return 2;
+        }
+        if (this.contract.status === 'ACTIVATED') {
+          return 3;
         }
       }
       return null;

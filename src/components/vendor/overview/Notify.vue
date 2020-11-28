@@ -85,6 +85,7 @@ export default {
         case action.UPDATE_CONTRACT:
         case action.RESERVE_FEE_RECEIVED:
         case action.REST_FEE_RECEIVED:
+        case action.ALL_FEE_RECEIVED:
           return '/contract';
         case action.REQUIRED_UPDATE_INFO:
           return '/user';
@@ -98,6 +99,7 @@ export default {
         case action.RESERVE_FEE_PAID:
         case action.REST_FEE_PAID:
         case action.NEW_CONTRACT:
+        case action.ALL_FEE_PAID:
           return '/vendor/view-contract';
         case action.SCAN_CONTRACT:
           return '/vendor/view-contract';

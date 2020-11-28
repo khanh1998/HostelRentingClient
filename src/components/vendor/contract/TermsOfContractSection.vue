@@ -107,6 +107,26 @@
                         :readonly="mode === 'view'"
                       />
                     </v-col>
+                    <v-col cols="12" sm="6" class="d-flex flex-column">
+                      <span class="font-weight-bold text-gray-black"
+                        >Ngày thanh toán tiền hằng tháng<span class="text-danger">(*)</span></span
+                      >
+                      <v-text-field
+                        class="size-sub-2 mt-2"
+                        type="number"
+                        color="#727cf5"
+                        solo
+                        dense
+                        light
+                        hide-details
+                        v-model="contract.paymentDayInMonth"
+                        prefix="Ngày"
+                        step="1"
+                        min="1"
+                        max="31"
+                        :readonly="mode === 'view'"
+                      />
+                    </v-col>
                     <v-col cols="6" sm="6" class="d-flex flex-column">
                       <span class="font-weight-bold text-gray-black">Tiền thuê </span>
                       <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
@@ -247,6 +267,7 @@ export default {
     menu1: null,
     startTime: new Date().toISOString().substr(0, 10),
     contract: {
+      paymentDayInMonth: 1,
       roomId: null,
       duration: null,
       groupServiceIds: [],

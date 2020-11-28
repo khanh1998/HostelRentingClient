@@ -4,10 +4,13 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-dialog width="500" persistent :value="uncheckedReserveFee.length > 0">
-      <UnCheckedReservedFeeContracts :contracts="uncheckedReserveFee"/>
+      <UnCheckedReservedFeeContracts :contracts="uncheckedReserveFee" />
     </v-dialog>
     <v-dialog width="500" persistent :value="uncheckedRestFee.length > 0">
-      <UnCheckedRestFeeContracts :contracts="uncheckedRestFee"/>
+      <UnCheckedRestFeeContracts :contracts="uncheckedRestFee" />
+    </v-dialog>
+    <v-dialog width="500" persistent :value="uncheckedAllFee.length > 0">
+      <UnCheckedAllFeeContracts :contracts="uncheckedAllFee" />
     </v-dialog>
     <div v-if="!isLoading">
       <v-row class="d-flex justify-space-between ma-0 pl-md-13 mt-5 font-nunito">
@@ -415,11 +418,17 @@ import pdfDocument from '../../components/vendor/pdfviewer/PDFDocument.vue';
 import mobileMixin from '../../components/mixins/mobile';
 import UnCheckedReservedFeeContracts from '../../components/view_contracts/UnCheckedReservedFeeContracts.vue';
 import UnCheckedRestFeeContracts from '../../components/view_contracts/UnCheckedRestFeeContracts.vue';
+import UnCheckedAllFeeContracts from '../../components/view_contracts/UnCheckedAllFeeContracts.vue';
 
 export default {
   name: 'ViewContractVendor',
   mixins: [mobileMixin],
-  components: { pdfDocument, UnCheckedReservedFeeContracts, UnCheckedRestFeeContracts },
+  components: {
+    pdfDocument,
+    UnCheckedReservedFeeContracts,
+    UnCheckedRestFeeContracts,
+    UnCheckedAllFeeContracts,
+  },
   data: () => ({
     // search
     search: '',
@@ -706,6 +715,11 @@ export default {
         (c) => c.reserved && c.paid === true && c.status === 'RESERVED',
       );
     },
+    uncheckedAllFee() {
+      return this.contracts.data.filter(
+        (c) => !c.reserved && c.paid === true && c.status === 'ACCEPTED',
+      );
+    },
     contracts() {
       return this.$store.state.user.contracts;
     },
@@ -742,8 +756,20 @@ export default {
             reserve: item.reserve,
           }));
       }
-      return this.contracts.data.filter((itemFilter) => itemFilter.group.groupName === this.selectedGroup)
-        .filter((itemFilter2) => this.statusName === this.getStatusForCompare(itemFilter2.status, itemFilter2.startTime, itemFilter2.duration).contractStatus).map((item) => ({
+      return this.contracts.data
+        .filter((itemFilter) => itemFilter.group.groupName === this.selectedGroup)
+        .filter((itemFilter2) => {
+          const res = (
+            this.statusName ===
+            this.getStatusForCompare(
+              itemFilter2.status,
+              itemFilter2.startTime,
+              itemFilter2.duration,
+            ).contractStatus
+          );
+          return res;
+        })
+        .map((item) => ({
           contractId: item.contractId,
           renterName: item.renter.username,
           groupName: item.group.groupName,
