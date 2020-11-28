@@ -406,11 +406,7 @@ export default {
       sendNotification: 'user/sendNotification',
     }),
     doPayAllFee() {
-      this.payAllFee.showResult = false;
-      this.payAllFee.success = false;
-      const contract = this.contracts.data.find(
-        (c) => c.contractId === this.payAllFee.contractId,
-      );
+      const contract = this.contracts.data.find((c) => c.contractId === this.payAllFee.contractId);
       contract.roomId = contract.room.roomId;
       contract.paid = true;
       contract.images = [...this.payAllFee.images, ...contract.images];
@@ -440,6 +436,8 @@ export default {
     showPayAllFee(contractId) {
       this.signAndPay.show = true;
       this.signAndPay.payAll = true;
+      this.payAllFee.showResult = false;
+      this.payAllFee.success = false;
       this.payAllFee.contractId = contractId;
       this.contractOverlay.action = 'activate';
       this.contractOverlay.contract = this.contracts.data.find((c) => c.contractId === contractId);
@@ -478,6 +476,8 @@ export default {
     },
     paidTheRestOfContract(contractId) {
       this.payReserveFee.showPaidRest = true;
+      this.payReserveFee.showResult = false;
+      this.payReserveFee.success = false;
       this.payReserveFee.contractId = contractId;
     },
     receiveNewImages(images) {
@@ -492,6 +492,8 @@ export default {
     showPayReserveFee(contractId) {
       this.signAndPay.show = true;
       this.payReserveFee.contractId = contractId;
+      this.payReserveFee.showResult = false;
+      this.payReserveFee.success = false;
       this.contractOverlay.action = 'activate';
       this.contractOverlay.contract = this.contracts.data.find((c) => c.contractId === contractId);
     },
@@ -500,8 +502,6 @@ export default {
       this.momoPayment.show = true;
     },
     doPayReserveFee() {
-      this.payReserveFee.showResult = false;
-      this.payReserveFee.success = false;
       const contract = this.contracts.data.find(
         (c) => c.contractId === this.payReserveFee.contractId,
       );

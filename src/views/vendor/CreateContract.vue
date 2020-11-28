@@ -185,6 +185,18 @@ export default {
       this.createContract(this.contract).then(() => {
         this.showCreateSuccess = true;
         this.createSuccess = this.contracts.success;
+        if (this.createSuccess) {
+          const payload = {
+            title: 'Hợp đồng thuê nhà nháp',
+            body: `${this.group.groupName}, ${this.type.title}`,
+            action: actions.NEW_CONTRACT,
+            id: this.contracts.newlyCreatedContract.contractId,
+            icon: this.vendor.avatar,
+            vendorId: null,
+            renterId: this.renter.userId,
+          };
+          this.sendNotification(payload);
+        }
       });
     },
     goToNextTab() {

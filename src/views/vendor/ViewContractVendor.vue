@@ -706,19 +706,25 @@ export default {
       return loadingUser || loadingGroups || loadingContracts;
     },
     uncheckedReserveFee() {
-      return this.contracts.data.filter(
+      const l = this.contracts.data.filter(
         (c) => c.reserved && c.paid === true && c.status === 'ACCEPTED',
       );
+      console.log(l);
+      return l;
     },
     uncheckedRestFee() {
-      return this.contracts.data.filter(
+      const l = this.contracts.data.filter(
         (c) => c.reserved && c.paid === true && c.status === 'RESERVED',
       );
+      console.log(l);
+      return l;
     },
     uncheckedAllFee() {
-      return this.contracts.data.filter(
+      const l = this.contracts.data.filter(
         (c) => !c.reserved && c.paid === true && c.status === 'ACCEPTED',
       );
+      console.log(l);
+      return l;
     },
     contracts() {
       return this.$store.state.user.contracts;
