@@ -7,14 +7,14 @@
             <div>
               <span
                 class="font-nunito text-primary dialog-title d-flex"
-                style="font-size: 1.125rem !important;"
+                style="font-size: 1.125rem !important"
                 >{{ mapDateCode(timestamp.getDay()) }}, {{ timestamp.getDate() }}-{{
                   timestamp.getMonth() + 1
                 }}-{{ timestamp.getFullYear() }}
               </span>
-              <span style="font-size: 0.9rem !important;" class="d-flex align-center">
+              <span style="font-size: 0.9rem !important" class="d-flex align-center">
                 <v-icon size="10" color="#8891f7" class="mr-2">fiber_manual_record</v-icon
-                ><span style="color: #8891f7;"
+                ><span style="color: #8891f7"
                   >{{ timestamp.getHours() }}:{{ padZero(timestamp.getMinutes())
                   }}{{ timestamp.getMinutes() }}</span
                 >
@@ -25,7 +25,7 @@
           </div>
 
           <v-divider></v-divider>
-          <v-card-text style="height: 300px;">
+          <v-card-text style="height: 300px">
             <v-row class="d-flex align-center px-4 ma-0">
               <v-col md="3" class="px-0 pb-0"
                 ><span class="text-muted font-nunito font-weight-bold title-content"
@@ -57,7 +57,7 @@
                 ></v-col
               >
               <v-col md="9" class="px-0 pb-0"
-                ><span @click="openStreetMap()" class="font-nunito title-content address"
+                ><span @click="mapDialog = true" class="font-nunito title-content address"
                   >{{ booking.group.buildingNo }} {{ booking.group.address.streetName }},
                   {{ booking.group.address.wardName }}, {{ booking.group.address.districtName }},
                   {{ booking.group.address.provinceName }}</span
@@ -129,9 +129,7 @@
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions class="d-flex justify-start pa-4">
-            <v-btn class="btn btn-danger font-nunito">
-              Báo cáo
-            </v-btn>
+            <v-btn class="btn btn-danger font-nunito"> Báo cáo </v-btn>
             <v-spacer></v-spacer>
             <v-btn class="btn btn-light elevation-0 font-nunito" @click="detailDialog = false">
               Đóng
@@ -158,7 +156,7 @@
               accept="image/*"
               class="ma-2"
             />
-            <div class="d-flex flex-wrap" style="height: 250px; overflow-y: auto;">
+            <div class="d-flex flex-wrap" style="height: 250px; overflow-y: auto">
               <v-img
                 v-for="url in upload.imageUrls"
                 :key="url"
@@ -186,7 +184,7 @@
       >
         <v-card>
           <v-row class="d-flex px-4 py-3 align-center justify-space-between ma-0">
-            <span class="font-nunito text-gray dialog-title" style="font-size: 1.125rem !important;"
+            <span class="font-nunito text-gray dialog-title" style="font-size: 1.125rem !important"
               >Đánh giá phòng trọ
             </span>
             <v-btn icon @click="feedbackDialog = false"
@@ -195,7 +193,7 @@
           </v-row>
 
           <v-divider></v-divider>
-          <v-card-text style="height: 400px;" class="py-0">
+          <v-card-text style="height: 400px" class="py-0">
             <v-row class="ma-0 d-flex justify-space-between">
               <v-col cols="12" md="5" class="pb-0">
                 <v-row>
@@ -319,17 +317,17 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="mapDialog" scrollable max-width="70%">
+      <v-dialog v-model="mapDialog" scrollable max-width="900" min-width="500">
         <v-card>
           <div class="d-flex py-3 align-center px-4">
             <div>
               <span
                 class="font-nunito text-primary dialog-title d-flex"
-                style="font-size: 1.125rem !important;"
+                style="font-size: 1.125rem !important"
                 ><v-icon size="20" color="#727cf5" class="mr-2">mdi-home-map-marker</v-icon
                 >{{ booking.group.groupName }}
               </span>
-              <span class="font-nunito text-gray d-flex" style="font-size: 0.9rem !important;"
+              <span class="font-nunito text-gray d-flex" style="font-size: 0.9rem !important"
                 ><v-icon size="20" color="green" class="mr-2">mdi-google-maps</v-icon
                 >{{ booking.group.buildingNo }} {{ booking.group.address.streetName }},
                 {{ booking.group.address.wardName }}, {{ booking.group.address.districtName }},
@@ -340,26 +338,17 @@
             <v-btn icon @click="mapDialog = false"><v-icon>close</v-icon></v-btn>
           </div>
           <v-divider></v-divider>
-          <v-row style="height: 400px;" class="ma-0 white">
-            <v-col
-              cols="9"
-              class="d-flex flex-column justify-center"
-              style="border: 1px solid red;"
-            >
+          <v-row style="height: 400px" class="ma-0 white">
+            <v-col cols="9" class="d-flex flex-column justify-center" style="border: 1px solid red">
               <GoogleMapsDirection
                 :dest="{ lat: booking.group.latitude, lng: booking.group.longitude }"
               />
             </v-col>
             <v-col cols="3" class="d-flex flex-column">
               <span
-                class="font-nunito text-muted d-flex align-center cursor"
-                style="font-size: 0.875rem;"
-                @click="geolocate()"
-                ><v-icon color="#727cf5" small class="mr-1">mdi-near-me</v-icon>Chỉ đường</span
-              >
-              <span
                 class="font-nunito text-muted d-flex align-center cursor mt-3"
-                style="font-size: 0.875rem;"
+                style="font-size: 0.875rem"
+                @click="openStreetMap()"
                 ><v-icon color="#33cc33" small class="mr-1">mdi-map</v-icon>Xem trên Google
                 Map</span
               >
@@ -368,16 +357,14 @@
         </v-card>
       </v-dialog>
     </v-row>
-    <v-row no-gutters class="d-flex justify-center">
+    <v-row no-gutters class="d-flex justify-center cursor" @click="detailDialog = true">
       <v-col
         cols="7"
         sm="3"
         md="3"
         class="d-flex flex-column justify-center align-center py-4 px-2"
       >
-        <span class="font-nunito group-name px-4 py-2" @click="getGroup()">{{
-          booking.group.groupName
-        }}</span>
+        <span class="font-nunito group-name px-4 py-2">{{ booking.group.groupName }}</span>
         <span class="text-primary font-nunito mt-2"
           ><v-icon color="#727cf5" class="mr-2" small>mdi-phone-forward</v-icon
           >{{ booking.vendor.phone }}</span
@@ -389,7 +376,7 @@
         md="2"
         class="d-flex align-start align-sm-center align-md-center align-lg-center py-4 px-2"
       >
-        <v-col cols="11" sm="11" md="11" class="d-flex flex-column align-start justify-center px-0">
+        <v-col cols="12" class="d-flex flex-column align-start justify-center px-0">
           <span class="text-danger font-nunito"
             >{{ timestamp.getDate() }}-{{ timestamp.getMonth() + 1 }}-{{
               timestamp.getFullYear()
@@ -400,51 +387,10 @@
             }}{{ timestamp.getMinutes() }}</span
           >
         </v-col>
-        <v-col cols="1" sm="1" md="1" class="hidden-sm-and-up pa-0">
-          <v-menu bottom left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn dark icon v-bind="attrs" v-on="on">
-                <v-icon color="#727cf5">mdi-dots-vertical</v-icon>
-              </v-btn>
-            </template>
-            <v-card>
-              <v-list>
-                <v-list-item
-                  style="min-height: 20px !important;"
-                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                  @click="detailDialog = true"
-                >
-                  <v-icon color="#6c757d" class="mr-2 item-hover" size="20"
-                    >mdi-home-map-marker</v-icon
-                  >
-                  <v-list-item-title class="item-hover">Chi tiết</v-list-item-title>
-                </v-list-item>
-                <v-list-item
-                  style="min-height: 20px !important;"
-                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                >
-                  <v-icon color="#6c757d" class="mr-2 item-hover" size="20">report</v-icon>
-                  <v-list-item-title class="item-hover">Báo cáo</v-list-item-title>
-                </v-list-item>
-                <v-list-item
-                  style="min-height: 20px !important;"
-                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                  v-if="booking.status === 'DONE'"
-                  @click="feedbackDialog = true"
-                >
-                  <v-icon color="#6c757d" class="mr-2 item-hover" size="20">mdi-comment-eye</v-icon>
-                  <v-list-item-title class="item-hover">Đánh giá</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-card>
-          </v-menu>
-        </v-col>
       </v-col>
       <v-col cols="12" sm="7" md="7" class="d-flex py-4 px-4">
-        <v-col cols="12" sm="11" md="11" class="d-flex flex-column align-start">
-          <span class="text-primary-dark font-nunito type-name" @click="getType()">{{
-            booking.type.title
-          }}</span>
+        <v-col cols="12" class="d-flex flex-column align-start">
+          <span class="text-primary-dark font-nunito type-name">{{ booking.type.title }}</span>
           <span class="my-2">
             <v-icon color="#727cf5">mdi-home-currency-usd</v-icon>
             <span class="amber--text text-decoration-line-through font-nunito" v-if="booking.deal">
@@ -458,49 +404,12 @@
             </span>
             <small class="font-italic" v-if="booking.deal"> (đã trả giá)</small>
           </span>
-          <small class="font-nunito address" @click="mapDialog = true"
+          <small class="font-nunito"
             ><v-icon color="#727cf5">mdi-google-maps</v-icon>{{ booking.group.buildingNo }}
             {{ booking.group.address.streetName }}, {{ booking.group.address.wardName }},
             {{ booking.group.address.districtName }},
             {{ booking.group.address.provinceName }}</small
           >
-        </v-col>
-        <v-col cols="0" sm="1" md="1" class="hidden-xs-only pa-0">
-          <v-menu bottom left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn dark icon v-bind="attrs" v-on="on">
-                <v-icon color="#727cf5">mdi-dots-vertical</v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item
-                style="min-height: 20px !important;"
-                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                @click="detailDialog = true"
-              >
-                <v-icon color="#6c757d" class="mr-2 item-hover" size="20"
-                  >mdi-home-map-marker</v-icon
-                >
-                <v-list-item-title class="item-hover">Chi tiết</v-list-item-title>
-              </v-list-item>
-              <v-list-item
-                style="min-height: 20px !important;"
-                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-              >
-                <v-icon color="#6c757d" class="mr-2 item-hover" size="20">report</v-icon>
-                <v-list-item-title class="item-hover">Báo cáo</v-list-item-title>
-              </v-list-item>
-              <v-list-item
-                style="min-height: 20px !important;"
-                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                v-if="booking.status === 'DONE'"
-                @click="feedbackDialog = true"
-              >
-                <v-icon color="#6c757d" class="mr-2 item-hover" size="20">mdi-comment-eye</v-icon>
-                <v-list-item-title class="item-hover">Đánh giá</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
         </v-col>
       </v-col>
     </v-row>

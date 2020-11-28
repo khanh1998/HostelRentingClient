@@ -81,17 +81,6 @@
           >
             <v-icon left>mdi-home-search</v-icon>Đăng ký tìm phòng
           </v-btn>
-          <v-btn
-            to="/cart"
-            depressed
-            icon
-            class="hidden-sm-and-down navigation"
-            v-if="!user || (user && user.role.roleName === 'Người thuê')"
-          >
-            <v-icon style="font-size: 30px" color="#98a6ad" _color="#727cf5" class="navigation"
-              >mdi-account-clock-outline</v-icon
-            >
-          </v-btn>
           <notify />
           <v-btn
             to="/vendor"
@@ -144,12 +133,6 @@
                 </v-list-item-icon>
                 <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
               </v-list-item>
-              <v-list-item to="/cart" class="hidden-md-and-up">
-                <v-list-item-icon>
-                  <v-icon color="#727cf5">mdi-account-clock-outline</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
-              </v-list-item>
               <v-list-item to="/discovery">
                 <v-list-item-icon>
                   <v-icon color="#727cf5">explore</v-icon>
@@ -163,6 +146,12 @@
                   <v-icon color="#727cf5">mdi mdi-account-circle</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Tài khoản</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="/vendor/booking" v-if="user && user.role.roleName === 'Chủ trọ'">
+                <v-list-item-icon>
+                  <v-icon color="#727cf5">mdi-account-clock-outline</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Lịch hẹn của bạn</v-list-item-title>
               </v-list-item>
               <v-list-item to="#" v-if="user" class="hidden-md-and-up">
                 <v-list-item-icon>
@@ -183,11 +172,7 @@
                 </v-list-item-icon>
                 <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
               </v-list-item>
-              <v-list-item
-                to="/cart"
-                class="hidden-md-and-up"
-                v-if="user.role.roleName === 'Người thuê'"
-              >
+              <v-list-item to="/cart" v-if="user.role.roleName === 'Người thuê'">
                 <v-list-item-icon>
                   <v-icon color="#727cf5">mdi-account-clock-outline</v-icon>
                 </v-list-item-icon>
