@@ -1,14 +1,14 @@
 <template>
   <!-- eslint-disable max-len -->
-  <v-card style="width: 100%;" outlined>
+  <v-card style="width: 100%" outlined>
     <v-card-title
-      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);"
+      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
       class="d-flex align-center justify-center text-uppercase"
       >Bộ lọc</v-card-title
     >
     <v-expansion-panels focusable multiple accordion>
       <v-expansion-panel>
-        <v-expansion-panel-header>Loại</v-expansion-panel-header>
+        <!-- <v-expansion-panel-header>Loại</v-expansion-panel-header>
         <v-expansion-panel-content class="noPadding">
           <v-chip-group v-model="filterSelected.categoriesIds" column multiple>
             <v-chip
@@ -21,7 +21,7 @@
               {{ item.categoryName }}
             </v-chip>
           </v-chip-group>
-        </v-expansion-panel-content>
+        </v-expansion-panel-content> -->
       </v-expansion-panel>
       <v-expansion-panel>
         <v-expansion-panel-header>Tiện nghi</v-expansion-panel-header>
@@ -44,7 +44,7 @@
           <v-row>
             <v-col class="px-5 pt-0">
               <v-switch
-                class="ml-auto mb-4"
+                class="ml-auto mb-4 filter"
                 height="10"
                 v-model="filterSelected.disabledPrice"
                 label="Lọc"
@@ -54,7 +54,7 @@
                 :max="max"
                 :min="min"
                 hide-details
-                _class="align-center"
+                class="filter"
                 :thumb-size="23"
                 thumb-label="always"
                 step="0.1"
@@ -94,7 +94,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-card-actions class="pa-4" style="border-top: 1px solid rgba(0, 0, 0, 0.12);">
+    <v-card-actions class="pa-4" style="border-top: 1px solid rgba(0, 0, 0, 0.12)">
       <v-btn color="#727cf5" class="white--text" width="100%" @click="filterSubmit()"
         >Áp dụng</v-btn
       >
@@ -150,6 +150,7 @@ export default {
       if (this.max < 50) this.max += 5;
     },
     filterSubmit() {
+      console.log(this.filterSelected);
       this.setFilterValue(this.filterSelected);
       this.filterTypes({
         types: this.types,

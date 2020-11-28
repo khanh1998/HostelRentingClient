@@ -12,27 +12,15 @@
       >
         <div class="item-classic-media" style="padding-right: 0px !important">
           <v-carousel
-            height="180"
+            height="210"
             hide-delimiters
             show-arrows-on-hover
             v-if="type.imageUrls.length !== 0"
           >
-            <v-carousel-item
-              v-for="(image, i) in type.imageUrls"
-              :key="i"
-              :src="type.imageUrls[i].resourceUrl"
-            >
-              <div class="top">
-                <span class="text-body-2 amber--text" _style="color: #3476b2">{{
-                  group.category.categoryName
-                }}</span>
-                <br />
-                <span class="text-caption">{{ type.view }} lượt xem</span>
-              </div>
-              <!-- </v-img> -->
+            <v-carousel-item v-for="(image, i) in type.imageUrls" :key="i" :src="image.resourceUrl">
             </v-carousel-item>
           </v-carousel>
-          <v-img src="@/assets/image-error.png" v-else style="height: 180px" class="image-box">
+          <v-img src="@/assets/image-error.png" v-else style="height: 210px" class="image-box">
             <div class="top">
               <span class="text-body-2 amber--text" _style="color: #3476b2">{{
                 type.category.categoryName
@@ -43,6 +31,11 @@
           </v-img>
           <div class="item-classic-price text-body-1 white--text">
             <span>{{ type.price }} {{ type.priceUnit }}</span>
+          </div>
+          <div class="arrow-price">
+            <span class="text-caption"
+              >{{ type.currentBooking }} lịch hẹn / {{ type.availableRoom }} phòng</span
+            >
           </div>
         </div>
       </v-col>
@@ -122,8 +115,16 @@
               >Không chung chủ</span
             >
             <span class="item-text font-nunito font-weight-medium ml-auto" v-else>Chung chủ</span>
-            <!-- </div> -->
           </div>
+          <v-sheet class="pa-0 pt-3" max-width="100%" v-if="type.facilities.length !== 0">
+            <v-slide-group show-arrows class="px-0" mobile-breakpoint>
+              <v-slide-item v-for="(item, i) in type.facilities" :key="`item-${i}`">
+                <v-chip class="ma-1 font-nunito" small>
+                  {{ item.facilityName }}
+                </v-chip>
+              </v-slide-item>
+            </v-slide-group>
+          </v-sheet>
         </v-col>
       </v-col>
       <v-col
