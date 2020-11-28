@@ -112,11 +112,30 @@
                         class="size-sub-2 font-nunito form"
                       ></v-select>
                     </v-col>
-                    <v-col cols="3" class="d-flex flex-column">
+                    <v-col cols="12" class="d-flex flex-column">
                       <span class="field-name font-weight-medium"
-                        >Địa chỉ<span class="red--text ml-1">(*)</span></span
+                        >Địa chỉ đầy đủ<span class="red--text ml-1">(*)</span>
+                        <span class="font-nunito size-caption text-gray ml-2 mt-auto"
+                          >Để lấy vị trí chính xác, vui lòng nhập địa chỉ rõ 5 cấp.</span
+                        ></span
                       >
-                      <v-text-field
+                      <!-- <span class="font-nunito size-caption"
+                        >Ví dụ: 1426 đường Nguyễn Duy Trinh, phường Long Trường, quận 9, thành phố
+                        Hồ Chí Minh</span
+                      > -->
+                      <gmap-autocomplete
+                        placeholder="Bao gồm số nhà, tên đường, phường, quận, thành phố"
+                        @place_changed="setPlace"
+                        :options="gmap"
+                        :selectFirstOnEnter="true"
+                        style="
+                          border: 1px solid #dee2e6 !important;
+                          border-radius: 4px;
+                          height: 38px !important;
+                        "
+                        class="address-autocomplete px-3"
+                      ></gmap-autocomplete>
+                      <!-- <v-text-field
                         class="size-sub-2 font-nunito form"
                         solo
                         dense
@@ -125,9 +144,9 @@
                         hide-details
                         v-model="newGroupValue.buildingNo"
                         @input="setNewGroupValue(newGroupValue)"
-                      />
+                      /> -->
                     </v-col>
-                    <v-col cols="9" class="d-flex flex-column justify-end">
+                    <!-- <v-col cols="9" class="d-flex flex-column justify-end">
                       <gmap-autocomplete
                         placeholder="Địa chỉ đầy đủ"
                         @place_changed="setPlace"
@@ -141,15 +160,10 @@
                         "
                         class="address-autocomplete px-3"
                       ></gmap-autocomplete>
-                    </v-col>
-                    <v-col cols="3" class="d-flex flex-column py-0">
+                    </v-col> -->
+                    <v-col cols="12" class="d-flex flex-column py-0">
                       <span class="size-caption red--text font-nunito">{{
                         errorMsg.buildingNo
-                      }}</span>
-                    </v-col>
-                    <v-col cols="9" class="d-flex flex-column justify-end py-0">
-                      <span class="size-caption red--text font-nunito">{{
-                        errorMsg.fullAddres
                       }}</span>
                     </v-col>
                     <v-col cols="3" class="d-flex align-start pr-0">
@@ -587,7 +601,7 @@ export default {
     nextServiceStep() {
       this.check = true;
       if (
-        this.getAddress() !== false &&
+        // this.getAddress() !== false &&
         !this.error.name &&
         !this.error.startTime &&
         !this.error.endTime &&
@@ -596,6 +610,7 @@ export default {
         !this.error.validPhone
       ) {
         this.e1 = 2;
+        console.log(this.addressObjForApi);
       }
     },
     nextContractStep() {
@@ -618,16 +633,6 @@ export default {
         this.e1 = 3;
       }
     },
-    checkCreatingGroup() {
-      if (this.groups.success) {
-        this.changeShow();
-      } else {
-        this.showSnackBar('Tạo khu trọ thất bại', { color: 'red' });
-      }
-    },
-    changeShow() {
-      this.show = false;
-    },
     closeDialog() {
       this.$emit('close');
     },
@@ -642,22 +647,9 @@ export default {
     },
     setPlace(place) {
       this.place = place;
-      this.addMarker();
       this.addressString = `${this.place.formatted_address}`;
       console.log(this.place);
       this.addressString1 = `~${this.addressString.substring(5)}`;
-    },
-    addMarker() {
-      const marker = {
-        lat: this.place.geometry.location.lat(),
-        lng: this.place.geometry.location.lng(),
-      };
-      this.marker = { position: marker };
-      this.center = marker;
-      console.log(this.marker);
-      this.newGroupValue.latitude = this.marker.position.lat;
-      this.newGroupValue.longitude = this.marker.position.lng;
-      this.setNewGroupValue(this.newGroupValue);
     },
     geolocate() {
       if (navigator.geolocation) {
@@ -710,6 +702,12 @@ export default {
         this.coordsToString.selectableAddresses = formattedAddresses;
       });
     },
+    findProvinceByName(provinceName) {
+      return this.provinces.data.find(
+        (item) =>
+          item.toLowerCase().includes(provinceName) || provinceName.includes(item.toLowerCase()), // eslint-disable-line
+      );
+    },
     findDistrictByName(districtName) {
       const district = this.districts.data.find((d) => {
         const include = d.districtName
@@ -729,7 +727,9 @@ export default {
     },
     findStreetByName(streetName) {
       const street = this.streets.data.find((s) => {
-        const include = s.streetName.trim().toLowerCase().includes(streetName.trim().toLowerCase());
+        const include =
+          s.streetName.trim().toLowerCase().includes(streetName.trim().toLowerCase()) ||
+          streetName.trim().toLowerCase().includes(s.streetName.trim().toLowerCase());
         return include;
       });
       return street;
@@ -835,24 +835,49 @@ export default {
       return { servicePrice, servicePriceUnit };
     },
     getAddress() {
-      this.errorMsg.fullAddres = ' ';
       this.errorMsg.buildingNo = ' ';
-      if (this.newGroupValue.buildingNo.trim() !== '') {
-        let address = this.addressString.split(this.newGroupValue.buildingNo);
-        if (address.length === 1) {
-          this.errorMsg.fullAddres = 'Số nhà không trùng khớp';
+      if (this.place.address_components) {
+        if (
+          this.place.formatted_address
+            .split(',')
+            .reverse()[1]
+            .toLowerCase() // eslint-disable-line
+            .includes('hồ chí minh')
+        ) {
+          let { province, districtName, wardName, streetName, buildingNumber } = ''; // eslint-disable-line
+          this.place.address_components.forEach((item) => {
+            if (item.types.includes('street_number') || item.types.includes('premise')) {
+              buildingNumber = item.long_name;
+            } else if (item.types.includes('route')) {
+              streetName = item.long_name;
+            } else if (item.types.includes('administrative_area_level_2')) {
+              districtName = item.long_name;
+            } else if (item.types.includes('administrative_area_level_1')) {
+              province = item.long_name;
+            } else if (item.types.includes('sublocality_level_1')) {
+              wardName = item.long_name;
+            }
+          });
+          if (!buildingNumber && streetName) {
+            buildingNumber =
+              this.place.formatted_address.split(streetName)[0].trim() === ''
+                ? this.place.formatted_address.split(streetName)[0].trim() // eslint-disable-line
+                : null; // eslint-disable-line
+          }
+          if (!wardName) {
+            wardName = this.place.formatted_address.split(',')[1].trim();
+            return { districtName, wardName, streetName, buildingNumber }; // eslint-disable-line
+          }
+          if (!streetName || !wardName || !province) {
+            this.errorMsg.buildingNo = 'Địa chỉ không hợp lệ';
+            return false;
+          }
+        } else {
+          this.errorMsg.buildingNo = 'Hệ thống tạm thời chỉ hỗ trợ địa bàn Thành phố Hồ Chí Minh';
           return false;
         }
-        address = this.addressString.split(this.newGroupValue.buildingNo)[1].trim();
-        let [streetName, wardName, districtName] = address.split(',');
-        if (streetName.startsWith('Đường')) {
-          streetName = `${streetName.split('Đường')[1]}`;
-        }
-        wardName = wardName.trim();
-        districtName = districtName.trim();
-        return { streetName, wardName, districtName };
       }
-      this.errorMsg.buildingNo = 'Vui lòng điền số nhà';
+      this.errorMsg.buildingNo = 'Vui lòng điền địa chỉ chi tiết của khu trọ!';
       return false;
     },
     getTimes(from, to, sort) {
@@ -923,7 +948,8 @@ export default {
     },
     ...mapState('renter/common', ['provinces', 'wards', 'districts', 'streets']),
     addressObjForApi() {
-      const { streetName, wardName, districtName } = this.getAddress();
+      const { districtName, wardName, streetName, buildingNumber } = this.getAddress(); // eslint-disable-line
+      console.log(districtName, wardName, streetName, buildingNumber);
       const district = this.findDistrictByName(districtName);
       const ward = this.findWardByName(wardName, district.wards);
       const street = this.findStreetByName(streetName);
@@ -932,7 +958,7 @@ export default {
         districtId: district.districtId,
         wardId: ward.wardId,
         streetName,
-        buildingNo: this.newGroupValue.buildingNo,
+        buildingNo: buildingNumber,
       };
       if (street) {
         obj.streetId = street.streetId;
