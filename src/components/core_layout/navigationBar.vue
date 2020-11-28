@@ -137,7 +137,7 @@
                 <v-list-item-icon>
                   <v-icon color="#727cf5">explore</v-icon>
                 </v-list-item-icon>
-                <v-list-item-title>Khám phá</v-list-item-title>
+                <v-list-item-title>Thị trường thuê trọ</v-list-item-title>
               </v-list-item>
             </v-list>
             <v-list v-if="isLoggedIn">
@@ -208,7 +208,7 @@
                 <v-list-item-icon>
                   <v-icon color="#727cf5">explore</v-icon>
                 </v-list-item-icon>
-                <v-list-item-title>Khám phá</v-list-item-title>
+                <v-list-item-title>Thị trường thuê trọ</v-list-item-title>
               </v-list-item>
               <v-list-item @click="logout">
                 <v-list-item-icon>
