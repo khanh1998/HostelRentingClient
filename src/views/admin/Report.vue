@@ -445,7 +445,7 @@ import mobileMixin from '../../components/mixins/mobile';
 import UnCheckedReservedFeeContracts from '../../components/view_contracts/UnCheckedReservedFeeContracts.vue';
 
 export default {
-  name: 'ViewContractVendor',
+  name: 'Report',
   mixins: [mobileMixin],
   components: { pdfDocument, UnCheckedReservedFeeContracts },
   data: () => ({
