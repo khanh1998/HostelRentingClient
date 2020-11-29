@@ -4,66 +4,11 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-dialog width="500" persistent :value="uncheckedReserveFee.length > 0">
-      <UnCheckedReservedFeeContracts :contracts="uncheckedReserveFee" />
-    </v-dialog>
-    <v-dialog width="500" persistent :value="uncheckedRestFee.length > 0">
-      <UnCheckedRestFeeContracts :contracts="uncheckedRestFee" />
-    </v-dialog>
-    <v-dialog width="500" persistent :value="uncheckedAllFee.length > 0">
-      <UnCheckedAllFeeContracts :contracts="uncheckedAllFee" />
-    </v-dialog>
-    <v-dialog width="300" persistent v-model="cancelContract.show">
-      <v-card v-if="cancelContract.show">
-        <v-card-title>Hủy hợp đồng</v-card-title>
-        <v-card-text>
-          Hợp đồng thuê nhà giữ bạn và {{ cancelContract.tableItem.renterName }} có thời hạn đến
-          ngày {{ cancelContract.tableItem.endTime }}, bạn có chắc chắn muốn hủy?
-        </v-card-text>
-        <v-card-actions>
-          <v-btn @click="cancelContract.show = false"> Đóng </v-btn>
-          <v-btn @click="findContract(cancelContract.contract.contractId)"> Hủy hợp đồng </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-      <v-card v-if="currentContract">
-        <v-toolbar dark color="#727cf5">
-          <v-btn icon dark @click="dialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>Thông tin hợp đồng</v-toolbar-title>
-        </v-toolbar>
-        <div style="height: calc(100vh - 64px); overflow: hidden">
-          <v-progress-linear
-            v-model="progressBar.value"
-            :active="true"
-            :indeterminate="false"
-            :query="true"
-          ></v-progress-linear>
-          <pdfDocument :url="currentContract.contractUrl" :scale="scale">
-            <template v-slot:footer>
-              <v-card v-if="cancelContract.show">
-                <v-card-text>
-                  <v-checkbox
-                    v-model="cancelContract.agree"
-                    label="Tôi đã đọc và muốn hủy hợp đồng"
-                  ></v-checkbox>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    :disabled="!cancelContract.agree"
-                    @click="doCancelContract"
-                    >Hủy hợp đồng</v-btn
-                  >
-                </v-card-actions>
-              </v-card>
-            </template>
-          </pdfDocument>
-        </div>
-      </v-card>
+      <UnCheckedReservedFeeContracts :contracts="uncheckedReserveFee"/>
     </v-dialog>
     <div v-if="!isLoading">
       <v-row class="d-flex justify-space-between ma-0 pl-md-13 mt-5 font-nunito">
+        <v-col cols="12" md="1" />
         <v-col cols="12" md="3" class="py-0 mb-3">
           <v-card class="pa-3">
             <div class="d-flex">
@@ -72,6 +17,12 @@
                 class="text-gray font-nunito size9rem mt-2"
                 >KHU TRỌ</span
               >
+              <!-- <v-spacer/>
+            <div>
+              <v-btn icon>
+                <v-icon color="#727cf5">search</v-icon>
+              </v-btn>
+            </div> -->
             </div>
             <v-text-field
               label="Tìm kiếm khu trọ"
@@ -105,7 +56,23 @@
                       {{ item.address.districtName }}, {{ item.address.provinceName }}</small
                     >
                   </span>
+                  <!-- <span class="d-flex flex-column" v-if="groupSearch.length === 0">
+                  <span
+                    class="font-weight-bold size9rem font-nunito cursor"
+                    v-bind:style="index % 2 === 0 ? 'color: #727cf5;' : 'color: #39afd1;'"
+                    >Không có khu trọ</span
+                  >
+                </span> -->
                 </v-list-item>
+                <!-- <v-list-item class="px-0 d-flex justify-start align-start" v-if="groupSearch.length === 0">
+                <span class="d-flex flex-column">
+                  <span
+                    class="font-weight-bold size9rem font-nunito cursor"
+                    v-bind:style="index % 2 === 0 ? 'color: #727cf5;' : 'color: #39afd1;'"
+                    >Không có khu trọ</span
+                  >
+                </span>
+              </v-list-item> -->
               </template>
             </v-virtual-scroll>
             <v-autocomplete
@@ -142,7 +109,7 @@
             </v-autocomplete>
           </v-card>
         </v-col>
-        <v-col cols="12" md="9" class="py-0 mb-3">
+        <v-col cols="12" md="7" class="py-0 mb-3">
           <v-card class="pa-4" v-if="selectedGroup !== null">
             <v-card-title>
               <v-spacer></v-spacer>
@@ -180,19 +147,49 @@
                         >
                       </v-list-item>
                       <v-divider />
-                      <div v-for="s in statusNames" :key="s">
-                        <v-list-item
-                          style="min-height: 20px !important"
-                          class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                      <v-list-item
+                        style="min-height: 20px !important"
+                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                      >
+                        <v-list-item-title
+                          class="item-hover font-nunito text-gray size9rem"
+                          @click="statusName = 'sắp hết hạn'"
+                          >Sắp hết hạn</v-list-item-title
                         >
-                          <v-list-item-title
-                            class="item-hover font-nunito text-gray size9rem"
-                            @click="statusName = s"
-                            >{{ s }}</v-list-item-title
-                          >
-                        </v-list-item>
-                        <v-divider />
-                      </div>
+                      </v-list-item>
+                      <v-divider />
+                      <v-list-item
+                        style="min-height: 20px !important"
+                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                      >
+                        <v-list-item-title
+                          class="item-hover font-nunito size9rem text-gray"
+                          @click="statusName = 'đang thuê'"
+                          >Đang thuê</v-list-item-title
+                        >
+                      </v-list-item>
+                      <v-divider />
+                      <v-list-item
+                        style="min-height: 20px !important"
+                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                      >
+                        <v-list-item-title
+                          class="item-hover font-nunito size9rem text-gray"
+                          @click="statusName = 'chờ xác nhận'"
+                          >Chờ xác nhận</v-list-item-title
+                        >
+                      </v-list-item>
+                      <v-divider />
+                      <v-list-item
+                        style="min-height: 20px !important"
+                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                      >
+                        <v-list-item-title
+                          class="item-hover font-nunito size9rem text-gray"
+                          @click="statusName = 'hết hiệu lực'"
+                          >Hết hiệu lực</v-list-item-title
+                        >
+                      </v-list-item>
                     </v-list>
                   </v-menu> -->
                   <v-menu bottom right>
@@ -324,6 +321,30 @@
               <template v-slot:top>
                 <v-toolbar flat>
                   <v-toolbar-title>{{ toolbarGroupName }}</v-toolbar-title>
+                  <v-dialog
+                    v-model="dialog"
+                    fullscreen
+                    hide-overlay
+                    transition="dialog-bottom-transition"
+                  >
+                    <v-card v-if="currentContract">
+                      <v-toolbar dark color="#727cf5">
+                        <v-btn icon dark @click="dialog = false">
+                          <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                        <v-toolbar-title>Thông tin hợp đồng</v-toolbar-title>
+                      </v-toolbar>
+                      <div style="height: calc(100vh - 64px); overflow: hidden">
+                        <v-progress-linear
+                          v-model="progressBar.value"
+                          :active="true"
+                          :indeterminate="false"
+                          :query="true"
+                        ></v-progress-linear>
+                        <pdfDocument :url="currentContract.contractUrl" :scale="scale" />
+                      </div>
+                    </v-card>
+                  </v-dialog>
                 </v-toolbar>
               </template>
               <template v-slot:item.status="{ item }">
@@ -342,14 +363,6 @@
                 >
                   <v-icon>create</v-icon>
                 </v-btn>
-                <v-btn
-                  depressed
-                  icon
-                  v-if="item.statusCode !== 'INACTIVE'"
-                  @click="showCancelContract(item)"
-                >
-                  <v-icon>cancel</v-icon>
-                </v-btn>
               </template>
               <template v-slot:no-data>
                 <p style="font-size: 18px">Không có hợp đồng</p>
@@ -367,6 +380,30 @@
               class="elevation-1 ma-3 mt-0 hidden-md-and-up"
               style="background-color: white"
             >
+              <v-dialog
+                v-model="dialog"
+                fullscreen
+                hide-overlay
+                transition="dialog-bottom-transition"
+              >
+                <v-card v-if="currentContract">
+                  <v-toolbar dark color="#727cf5">
+                    <v-btn icon dark @click="dialog = false">
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title>Thông tin hợp đồng</v-toolbar-title>
+                  </v-toolbar>
+                  <div style="height: calc(100vh - 64px); overflow: hidden">
+                    <v-progress-linear
+                      v-model="progressBar.value"
+                      :active="true"
+                      :indeterminate="false"
+                      :query="true"
+                    ></v-progress-linear>
+                    <pdfDocument :url="currentContract.contractUrl" :scale="scale" />
+                  </div>
+                </v-card>
+              </v-dialog>
               <template v-slot:item.status="{ item }">
                 <v-chip :color="item.color">{{ item.status.toUpperCase() }}</v-chip>
               </template>
@@ -396,6 +433,7 @@
             Chọn khu phòng trọ
           </v-card>
         </v-col>
+        <v-col cols="12" md="1" />
       </v-row>
     </div>
   </div>
@@ -405,18 +443,11 @@ import { mapActions, mapGetters } from 'vuex';
 import pdfDocument from '../../components/vendor/pdfviewer/PDFDocument.vue';
 import mobileMixin from '../../components/mixins/mobile';
 import UnCheckedReservedFeeContracts from '../../components/view_contracts/UnCheckedReservedFeeContracts.vue';
-import UnCheckedRestFeeContracts from '../../components/view_contracts/UnCheckedRestFeeContracts.vue';
-import UnCheckedAllFeeContracts from '../../components/view_contracts/UnCheckedAllFeeContracts.vue';
 
 export default {
-  name: 'ViewContractVendor',
+  name: 'Report',
   mixins: [mobileMixin],
-  components: {
-    pdfDocument,
-    UnCheckedReservedFeeContracts,
-    UnCheckedRestFeeContracts,
-    UnCheckedAllFeeContracts,
-  },
+  components: { pdfDocument, UnCheckedReservedFeeContracts },
   data: () => ({
     // search
     search: '',
@@ -491,25 +522,12 @@ export default {
     searchQuery: '',
     statusName: 'tất cả',
     // selectedGroupInMobile: null,
-    statusNames: [
-      'Đã thanh toán cọc',
-      'Đã ký',
-      'Đã thanh toán toàn bộ',
-      'Đã nhận cọc',
-      'Sắp hết hạn',
-      'Đang thuê',
-      'Chờ ký',
-      'Hết hiệu lực',
-      'Bị hủy',
-    ],
-    cancelContract: {
-      show: false,
-      contract: null,
-      tableItem: null,
-      showResult: false,
-      success: false,
-    },
   }),
+  // watch: {
+  //   searchInAC(val) {
+  //     return val && val !== this.selectInAC && this.groupSearch();
+  //   },
+  // },
   methods: {
     ...mapActions({
       getContracts: 'user/getContracts',
@@ -535,9 +553,7 @@ export default {
       endDate.setMonth(endDate.getMonth() + duration);
       return endDate.getTime();
     },
-    getStatus(contract) {
-      // eslint-disable-next-line
-      const { status, startTime, duration, paid, reserved } = contract;
+    getStatus(status, startTime, duration) {
       let contractStatus = '';
       let color = 'blue';
       const now = new Date();
@@ -547,101 +563,115 @@ export default {
       const endTime = new Date(startTime);
       endTime.setMonth(endTime.getMonth() + duration + 1);
       const temp = endTime.getTime();
-      if (reserved) {
-        switch (status) {
-          case 'ACCEPTED':
-            if (paid) {
-              contractStatus = 'Đã thanh toán cọc';
-              color = 'light-green';
-              break;
-            } else {
-              contractStatus = 'Đã ký';
-              color = 'light-green';
-              break;
-            }
-          case 'REVERSED':
-            if (paid) {
-              contractStatus = 'Đã thanh toán toàn bộ';
-              color = 'light-green';
-              break;
-            } else {
-              contractStatus = 'Đã nhận cọc';
-              color = 'light-green';
-              break;
-            }
-          case 'ACTIVATED':
-            if (temp >= dateP) {
-              contractStatus = 'Sắp hết hạn';
-              color = 'rgb(255,179,2)';
-              break;
-            } else {
-              contractStatus = 'Đang thuê';
-              color = 'rgb(86,240,0)';
-              break;
-            }
-          case 'INACTIVE':
-            contractStatus = 'Chờ ký';
-            color = 'rgb(45,204,255)';
+      // console.log(`aa${dateP}`);
+      // console.log(`bb${endTime}`);
+      // console.log(`cc${temp}`);
+
+      // switch (status) {
+      //   case 'ACTIVATED':
+      //     contractStatus = 'sắp hết hạn';
+      //     color = 'rgb(244, 128, 36)';
+      //     break;
+      //   default:
+      //     contractStatus = 'hết hiệu lực';
+      //     color = 'rgb(235, 96, 96)';
+      //     break;
+      // }
+      // if (status === 'REVERSED') {
+      //   contractStatus = 'cọc';
+      //   color = 'rgb(235, 84, 36)';
+      // }
+      // if (status === 'ACTIVATED') {
+      //   contractStatus = 'đang thuê';
+      //   color = 'rgb(124, 217, 146)';
+      // }
+      // if (status === 'INACTIVE') {
+      //   contractStatus = 'chờ xác nhận';
+      //   color = 'rgb(247, 228, 99)';
+      // }
+      // contractStatus = 'hết hiệu lực';
+      // color = 'rgb(235, 96, 96)';
+      switch (status) {
+        case 'REVERSED':
+          contractStatus = 'cọc';
+          color = 'rgb(235, 84, 36)';
+          break;
+        case 'ACTIVATED':
+          if (temp >= dateP) {
+            contractStatus = 'sắp hết hạn';
+            color = 'rgb(255,179,2)';
             break;
-          case 'EXPIRED':
-            contractStatus = 'Hết hiệu lực';
-            color = 'rgb(158,167,173)';
+          } else {
+            contractStatus = 'đang thuê';
+            color = 'rgb(86,240,0)';
             break;
-          case 'CANCELED':
-            contractStatus = 'Bị hủy';
-            color = 'rgb(158,167,173)';
+          }
+        case 'INACTIVE':
+          contractStatus = 'chờ xác nhận';
+          color = 'rgb(45,204,255)';
+          break;
+        default:
+          contractStatus = 'hết hiệu lực';
+          color = 'rgb(158,167,173)';
+          break;
+      }
+      return { contractStatus, color };
+    },
+    getStatusForCompare(status, startTime, duration) {
+      let contractStatus = '';
+      let color = 'blue';
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      const date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const dateP = Date.parse(date);
+      const endTime = new Date(startTime);
+      endTime.setMonth(endTime.getMonth() + duration + 1);
+      const temp = endTime.getTime();
+      switch (status) {
+        case 'REVERSED':
+          contractStatus = 'cọc';
+          color = 'rgb(235, 84, 36)';
+          break;
+        case 'ACTIVATED':
+          if (temp >= dateP) {
+            contractStatus = 'sắp hết hạn';
+            color = 'rgb(255,179,2)';
             break;
-          default:
+          } else {
+            contractStatus = 'đang thuê';
+            color = 'rgb(86,240,0)';
             break;
-        }
-      } else {
-        switch (status) {
-          case 'ACCEPTED':
-            if (paid) {
-              contractStatus = 'Đã thanh toán';
-              color = 'light-green';
-              break;
-            } else {
-              contractStatus = 'Đã ký';
-              color = 'light-green';
-              break;
-            }
-          case 'ACTIVATED':
-            if (temp >= dateP) {
-              contractStatus = 'sắp hết hạn';
-              color = 'rgb(255,179,2)';
-              break;
-            } else {
-              contractStatus = 'đang thuê';
-              color = 'rgb(86,240,0)';
-              break;
-            }
-          case 'INACTIVE':
-            contractStatus = 'chờ xác nhận';
-            color = 'rgb(45,204,255)';
-            break;
-          case 'EXPIRED':
-            contractStatus = 'hết hiệu lực';
-            color = 'rgb(158,167,173)';
-            break;
-          case 'CANCELED':
-            contractStatus = 'Bị hủy';
-            color = 'rgb(158,167,173)';
-            break;
-          default:
-            break;
-        }
+          }
+        case 'INACTIVE':
+          contractStatus = 'chờ xác nhận';
+          color = 'rgb(45,204,255)';
+          break;
+        default:
+          contractStatus = 'hết hiệu lực';
+          color = 'rgb(158,167,173)';
+          break;
       }
       return { contractStatus, color };
     },
     findContract(contractId) {
+      // console.log(contractId);
       const createdContract = this.findContractById()(contractId);
       this.currentContract = createdContract;
       this.vendor = createdContract.vendor;
       this.renter = createdContract.renter;
+      // this.school = createdContract.renter.school;
+      // this.address = createdContract.renter.school.address;
+      // this.rules = createdContract.group.regulations;
       this.groupName = createdContract.group.groupName;
       this.roomName = createdContract.room.roomName;
+      // this.startTime = this.getDateByTimestamp(createdContract.startTime);
+      // this.duration = createdContract.duration;
+      this.price = createdContract.type.price;
       this.deposit = createdContract.type.deposit;
+      // this.services = createdContract.group.services;
+      // this.facilities = createdContract.type.facilities;
+      // console.log(this.contractDetail);
+      // console.log(this.rules);
       this.dialog = true;
     },
     goToNextTab() {
@@ -669,80 +699,29 @@ export default {
       }
       return this.allContracts.filter((item) => item.status === status);
     },
-    mapContract(item) {
-      return {
-        contractId: item.contractId,
-        renterName: item.renter.username,
-        groupName: item.group.groupName,
-        roomName: item.room.roomName,
-        startTime: this.getDateByTimestamp(item.startTime),
-        endTime: this.getDateByTimestamp(this.getEndDate(item.startTime, item.duration)),
-        status: this.getStatus(item).contractStatus,
-        statusCode: item.status,
-        color: this.getStatus(item).color,
-        buildingNo: item.group.buildingNo,
-        streetName: item.group.address.streetName,
-        wardName: item.group.address.wardName,
-        districtName: item.group.address.districtName,
-        provinceName: item.group.address.provinceName,
-        contractUrl: item.contractUrl,
-        paid: item.paid,
-        downPayment: item.downPayment,
-        reserve: item.reserve,
-      };
-    },
-    showCancelContract(item) {
-      const { contractId } = item;
-      const contract = this.findContractById()(contractId);
-      this.cancelContract.show = true;
-      this.cancelContract.contract = contract;
-      this.cancelContract.tableItem = item;
-    },
-    doCancelContract(contractId) {
-      console.log(contractId);
-    },
   },
   created() {
     this.getUser().then(() => {
       this.getGroups().then(() => {
-        this.clickGroup(this.groups.data[0]);
         this.getContracts();
+        // this.searchQuery = this.groups.data[0].groupName;
+        // this.selectedGroupInMobile = this.groups.data[0].groupId;
       });
     });
   },
   computed: {
-    scale() {
-      if (this.isMobile) {
-        return 2;
-      }
-      return 1;
-    },
     isLoading() {
       const loadingUser = this.$store.state.user.user.isLoading;
       const loadingContracts = this.$store.state.user.contracts.isLoading;
       const loadingGroups = this.$store.state.vendor.group.groups.isLoading;
+      // const loadingDeals = this.$store.state.user.deals.isLoading;
+      // const loadingProvinces = this.$store.state.renter.common.provinces.isLoading;
       return loadingUser || loadingGroups || loadingContracts;
     },
     uncheckedReserveFee() {
-      const l = this.contracts.data.filter(
-        (c) => c.reserved && c.paid === true && c.status === 'ACCEPTED',
+      return this.contracts.data.filter(
+        (c) => c.reserved && c.paid === true && c.status === 'INACTIVE',
       );
-      console.log(l);
-      return l;
-    },
-    uncheckedRestFee() {
-      const l = this.contracts.data.filter(
-        (c) => c.reserved && c.paid === true && c.status === 'RESERVED',
-      );
-      console.log(l);
-      return l;
-    },
-    uncheckedAllFee() {
-      const l = this.contracts.data.filter(
-        (c) => !c.reserved && c.paid === true && c.status === 'ACCEPTED',
-      );
-      console.log(l);
-      return l;
     },
     contracts() {
       return this.$store.state.user.contracts;
@@ -780,7 +759,27 @@ export default {
             reserve: item.reserve,
           }));
       }
-      return result.map((contract) => this.mapContract(contract));
+      return this.contracts.data.filter((itemFilter) => itemFilter.group.groupName === this.selectedGroup)
+        .filter((itemFilter2) => this.statusName === this.getStatusForCompare(itemFilter2.status, itemFilter2.startTime, itemFilter2.duration).contractStatus).map((item) => ({
+          contractId: item.contractId,
+          renterName: item.renter.username,
+          groupName: item.group.groupName,
+          roomName: item.room.roomName,
+          startTime: this.getDateByTimestamp(item.startTime),
+          endTime: this.getDateByTimestamp(this.getEndDate(item.startTime, item.duration)),
+          status: this.getStatus(item.status, item.startTime, item.duration).contractStatus,
+          statusCode: item.status,
+          color: this.getStatus(item.status, item.startTime, item.duration).color,
+          buildingNo: item.group.buildingNo,
+          streetName: item.group.address.streetName,
+          wardName: item.group.address.wardName,
+          districtName: item.group.address.districtName,
+          provinceName: item.group.address.provinceName,
+          contractUrl: item.contractUrl,
+          paid: item.paid,
+          downPayment: item.downPayment,
+          reserve: item.reserve,
+        }));
     },
     items() {
       return this.rules.map((item) => ({

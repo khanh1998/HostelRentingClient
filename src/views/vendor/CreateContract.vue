@@ -1,5 +1,5 @@
 <template>
-  <v-card class="overflow-y-auto" max-height="100%" ref="contractView" id="contractView">
+  <div class="overflow-y-auto" max-height="100%" ref="contractView" id="contractView">
     <v-dialog v-model="showUserEmptyFields" width="350" persistent>
       <v-card>
         <v-card-title> Vui lòng cập nhật thông tin để tạo hợp đồng </v-card-title>
@@ -96,7 +96,12 @@
       </template>
     </v-snackbar>
     <!-- <div class="d-flex justify-center title">{{ heading }}</div> -->
-    <v-tabs v-if="ready" v-model="tabs.index" class="font-nunito font-weight-bold" color="#727cf5">
+    <v-tabs
+      v-if="ready && isMobile"
+      v-model="tabs.index"
+      class="font-nunito font-weight-bold"
+      color="#727cf5"
+    >
       <v-tab> 1. Thông tin hai bên </v-tab>
       <v-tab> 2. THÔNG TIN HỢP ĐỒNG </v-tab>
       <v-tab-item v-if="contract">
@@ -119,7 +124,43 @@
         />
       </v-tab-item>
     </v-tabs>
-  </v-card>
+    <v-row class="d-flex justify-space-between ma-0 pl-md-13 pt-10 font-nunito" no-gutters>
+      <v-col cols="12" md="1" />
+      <v-col cols="12" md="10">
+        <v-card>
+          <v-tabs
+            v-if="ready && !isMobile"
+            v-model="tabs.index"
+            class="font-nunito font-weight-bold"
+            color="#727cf5"
+          >
+            <v-tab> 1. Thông tin hai bên </v-tab>
+            <v-tab> 2. THÔNG TIN HỢP ĐỒNG </v-tab>
+            <v-tab-item v-if="contract">
+              <div class="d-flex flex-column justify-center align-end">
+                <InfomationSection :renter="renter" :vendor="vendor" />
+                <v-btn class="ma-4 btn-primary" @click="goToNextTab"
+                  >Tiếp tục <v-icon small>arrow_forward_ios</v-icon></v-btn
+                >
+              </div>
+            </v-tab-item>
+            <v-tab-item v-if="contract">
+              <TermsOfContractSection
+                @newValue="receiveNewTermsOfContract"
+                :type="type"
+                :group="group"
+                @clickCreateContract="doCreateContract"
+                @clickUpdateContract="doUpdateContract"
+                :contractObj="contractFull"
+                :mode="mode"
+              />
+            </v-tab-item>
+          </v-tabs>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="1" />
+    </v-row>
+  </div>
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
@@ -368,6 +409,16 @@ export default {
     },
     showUserEmptyFields() {
       return !this.isValidRenter || !this.isValidVendor;
+    },
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+          return true;
+        case 'sm':
+          return true;
+        default:
+          return false;
+      }
     },
   },
   created() {
