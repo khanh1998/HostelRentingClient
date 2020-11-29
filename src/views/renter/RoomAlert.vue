@@ -52,6 +52,11 @@
                     </v-btn>
                   </v-col>
                 </div>
+                <div class="d-flex" v-if="locationChecker === -1">
+                  <v-col cols="11" class="d-flex flex-column pa-0">
+                    <span style="color: red">Nhập khu vực cần tìm kiếm</span>
+                  </v-col>
+                </div>
               </v-col>
               <v-col cols="4" class="d-flex flex-column px-6">
                 <span class="field-name font-weight-medium">Ngày nhận phòng: </span>
@@ -97,15 +102,9 @@
                   solo
                   class="size-sub-2 font-nunito form"
                 ></v-select>
-                <!-- <v-chip-group v-model="chip" color="#4250f2">
-                  <v-chip filter class="font-nunito">3 km</v-chip>
-                  <v-chip filter class="font-nunito">5 km</v-chip>
-                  <v-chip filter class="font-nunito">7 km</v-chip>
-                  <v-chip filter class="font-nunito">10 km</v-chip>
-                </v-chip-group> -->
               </v-col>
               <v-col cols="4" class="d-flex flex-column px-6">
-                <span class="field-name font-weight-medium">Giá tối đa mà bạn muốn trả:</span>
+                <span class="field-name font-weight-medium">Giá tối đa:</span>
                 <v-text-field
                   hide-details
                   v-model="request.maxPrice"
@@ -164,7 +163,7 @@
                   :value="request.createdAt"
                   :key="request.createdAt"
                   class="ml-2 mr-2 mb-2"
-                  style="height: 200px"
+                  style="height: 140px"
                 >
                   <v-row no-gutters>
                     <v-col cols="1" class="d-flex justify-center align-center">
@@ -186,8 +185,8 @@
                       <span class="text-muted font-nunito">{{ request.maxDistance }} km</span>
                     </v-col>
                 </v-col> -->
-                    <v-col cols="11" sm="11" md="11" class="d-flex py-4 px-4">
-                      <v-col cols="12" sm="10" md="10" class="d-flex flex-column align-start">
+                    <v-col cols="9" sm="9" md="9" class="d-flex py-4 px-4">
+                      <v-col cols="12" sm="12" md="12" class="d-flex flex-column align-start">
                         <span
                           class="text-primary-dark font-nunito type-name pt-2"
                           v-if="request.address"
@@ -202,18 +201,16 @@
                           </v-row>
                         </span>
                         <span class="my-2">
-                          <v-row>
+                          <v-row no-gutters>
                             <v-col cols="5">
-                              <span class="font-nunito pr-2" style="color: #727cf5"
-                                >Bán kính :</span
-                              >
+                              <span class="font-nunito pr-2" style="color: #727cf5">Bán kính</span>
                               <span class="text-muted font-nunito"
                                 >{{ request.maxDistance }} km</span
                               >
                             </v-col>
                             <v-col cols="7">
                               <span class="font-nunito pr-2" style="color: #727cf5"
-                                >Diện tích tối thiểu :</span
+                                >Diện tích tối thiểu</span
                               >
                               <span class="text-muted font-nunito"
                                 >{{ request.minSuperficiality }} m2</span
@@ -221,7 +218,7 @@
                             </v-col>
                             <v-col cols="5">
                               <span class="font-nunito pr-2" style="color: #727cf5"
-                                >Giá tối đa :</span
+                                >Giá tối đa</span
                               >
                               <span class="text-muted font-nunito"
                                 >{{ request.maxPrice }} Triệu</span
@@ -229,7 +226,7 @@
                             </v-col>
                             <v-col cols="7">
                               <span class="font-nunito pr-2" style="color: #727cf5"
-                                >Ngày nhận phòng :</span
+                                >Ngày nhận phòng</span
                               >
                               <span class="text-muted font-nunito">{{
                                 new Date(request.dueTime).toLocaleDateString('vi')
@@ -239,13 +236,14 @@
                         </span>
                       </v-col>
                     </v-col>
-                    <v-col cols="12"><v-divider></v-divider></v-col>
+                    <v-col cols="2" class="d-flex justify-center align-center">
+                      <v-list-item-action>
+                        <v-btn @click="getResult(request.requestId)" dark color="#727CF5">
+                          Xem phòng
+                        </v-btn>
+                      </v-list-item-action>
+                    </v-col>
                   </v-row>
-                  <v-list-item-action class="pr-10">
-                    <v-btn @click="getResult(request.requestId)" dark color="#727CF5">
-                      Xem phòng
-                    </v-btn>
-                  </v-list-item-action>
                 </v-list-item>
               </v-list-item-group>
             </v-list>
@@ -616,15 +614,16 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
+// import axios from 'axios';
 import { mapActions, mapState } from 'vuex';
+// import HostelSuggest from '@/views/renter/HostelSuggest.vue';
 import validateMixin from '../../components/mixins/validate';
 import snackbarMixin from '../../components/mixins/snackBar';
 // import CarouselItem from '../../components/home/TopCarouselItem.vue';
 
 export default {
   name: 'RoomAlert',
-  // components: { CarouselItem },
+  // components: { HostelSuggest },
   mixins: [validateMixin, snackbarMixin],
   data: () => ({
     result: null,
@@ -660,6 +659,7 @@ export default {
     // superficialities: ['10 ㎡', '15 ㎡', '20 ㎡', '25 ㎡', '30 ㎡', '40 ㎡'],
     superficialities: ['10 m2', '15 m2', '20 m2', '25 m2', '30 m2', '40 m2'],
     searchQuery: '',
+    locationChecker: 0,
   }),
   methods: {
     ...mapActions({
@@ -671,18 +671,23 @@ export default {
       return this.result.groups.find((group) => group.groupId === groupId);
     },
     doCreateRoomRequest() {
-      this.request.maxDistance = Number(this.chipDistance.split('km')[0].trim());
-      this.request.minSuperficiality = Number(this.chipSuperficiality.split('m2')[0].trim());
-      this.request.maxPrice = Number(this.request.maxPrice);
-      // console.log(this.request.maxDistance);
-      // console.log(this.request.minSuperficiality);
-      this.createRoomRequest(this.request).then(() => {
-        if (this.requests.success) {
-          this.showSnackBar('Tạo request thành công', { color: 'green' });
-        } else {
-          this.showSnackBar('Tạo request thất bại', { color: 'red' });
-        }
-      });
+      if (!this.request.address) {
+        this.locationChecker = -1;
+      } else {
+        this.locationChecker = 0;
+        this.request.maxDistance = Number(this.chipDistance.split('km')[0].trim());
+        this.request.minSuperficiality = Number(this.chipSuperficiality.split('m2')[0].trim());
+        this.request.maxPrice = Number(this.request.maxPrice);
+        // console.log(this.request.maxDistance);
+        // console.log(this.request.minSuperficiality);
+        this.createRoomRequest(this.request).then(() => {
+          if (this.requests.success) {
+            this.showSnackBar('Tạo request thành công', { color: 'green' });
+          } else {
+            this.showSnackBar('Tạo request thất bại', { color: 'red' });
+          }
+        });
+      }
     },
     setPlace(place) {
       this.currentPlace = place;
@@ -701,17 +706,24 @@ export default {
         });
       }
     },
+    // toTheNextPage(link) {
+    //   if (link !== '#') {
+    //     this.$router.push(link);
+    //   }
+    // },
     getResult(requestId) {
-      this.isLoadingResult = true;
-      try {
-        axios.get(`/api/v1/types?requestId=${requestId}`).then((res) => {
-          this.result = res.data.data;
-          this.isLoadingResult = false;
-        });
-      } catch (error) {
-        console.log(error);
-        this.isLoadingResult = false;
-      }
+      // this.isLoadingResult = true;
+      // try {
+      //   axios.get(`/api/v1/types?requestId=${requestId}`).then((res) => {
+      //     this.result = res.data.data;
+      //     this.isLoadingResult = false;
+      //   });
+      this.$router.push(`request/${requestId}`);
+      //   console.log(this.result);
+      // } catch (error) {
+      //   console.log(error);
+      //   this.isLoadingResult = false;
+      // }
     },
     getDistance(distance) {
       return `${distance} km`;

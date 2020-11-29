@@ -44,7 +44,7 @@
           <v-row>
             <v-col class="px-5 pt-0">
               <v-switch
-                class="ml-auto mb-4"
+                class="ml-auto mb-4 filter"
                 height="10"
                 v-model="filterSelected.disabledPrice"
                 label="Lọc"
