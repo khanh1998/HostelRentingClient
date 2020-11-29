@@ -68,17 +68,6 @@
         </div>
         <div class="mt-3 d-flex align-center">
           <v-img
-            class="shrink mr-2"
-            src="@/assets/home/distance.png"
-            transition="scale-transition"
-            max-width="25px"
-            max-height="25px"
-          />
-          <span class="blue--text font-nunito">BigC:</span>
-          <span class="item-text item-text-detail ml-auto font-nunito">300 m</span>
-        </div>
-        <div class="mt-3 d-flex align-center">
-          <v-img
             class="shrink mr-5"
             src="@/assets/home/superficies.svg"
             transition="scale-transition"
@@ -215,8 +204,8 @@ export default {
 .btnDetail {
   width: 100%;
 }
-.v-btn:hover {
-  color: #fff;
+.btnDetail:hover {
+  color: #fff !important;
   background-color: #4250f2 !important;
   border-color: #3645f1 !important;
 }

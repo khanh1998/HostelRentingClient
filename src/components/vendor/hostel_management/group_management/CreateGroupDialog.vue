@@ -601,7 +601,7 @@ export default {
     nextServiceStep() {
       this.check = true;
       if (
-        // this.getAddress() !== false &&
+        this.getAddress() !== false &&
         !this.error.name &&
         !this.error.startTime &&
         !this.error.endTime &&
@@ -634,6 +634,29 @@ export default {
       }
     },
     closeDialog() {
+      this.e1 = 1;
+      this.newGroupValue = {
+        services: [],
+        avatar: null,
+        regulation: [],
+        newRegulations: [],
+        groupName: '',
+        categoryId: null,
+        ownerJoin: false,
+        curfewTime: {
+          limit: false,
+          startTime: '',
+          endTime: '',
+        },
+        managerName: null,
+        managerPhone: null,
+        downPayment: 0,
+        buildingNo: '',
+        latitude: 0,
+        longitude: 0,
+        address: null,
+        schedules: [],
+      };
       this.$emit('close');
     },
     setCurfewtime() {
@@ -648,8 +671,8 @@ export default {
     setPlace(place) {
       this.place = place;
       this.addressString = `${this.place.formatted_address}`;
-      console.log(this.place);
-      this.addressString1 = `~${this.addressString.substring(5)}`;
+      this.newGroupValue.latitude = this.place.geometry.location.lat();
+      this.newGroupValue.longitude = this.place.geometry.location.lng();
     },
     geolocate() {
       if (navigator.geolocation) {
@@ -747,7 +770,6 @@ export default {
       console.log(this.addressObjForApi);
     },
     insertGroup() {
-      console.log(this.newGroupValue);
       const regulation = this.newGroupValue.regulation.map((item) => ({ regulationId: item }));
       const groupService = this.newGroupValue.services
         .filter((item) => item.serviceId)
@@ -784,7 +806,7 @@ export default {
       const reqObj = {
         address: this.addressObjForApi,
         appendixContract: 'string',
-        buildingNo: this.newGroupValue.buildingNo,
+        buildingNo: this.addressObjForApi.buildingNo,
         categoryId: this.newGroupValue.categoryId,
         curfewTime:
           this.newGroupValue.curfewTime.limit === true

@@ -177,6 +177,7 @@ const actions = {
       let result = types;
       if (filterParam) {
         if (filterParam.categoriesIds.length !== 0) {
+          console.log('vao');
           result = result.filter((c) => filterParam.categoriesIds.includes(c.category.categoryId));
         }
         if (filterParam.facilitiesIds.length !== 0) {

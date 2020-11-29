@@ -181,6 +181,9 @@
                         label="Nhập mã xác nhận"
                         color="#727cf5"
                       ></v-text-field>
+                      <span class="font-nuntio red--text size-caption" v-if="showErrorWrongOTP"
+                        >Sai mã xác nhận</span
+                      >
                       <span class="text-gray-dark font-nunito">
                         Gửi lại mã sau: <span class="font-weight-bold">{{ timeleft }}</span
                         >s
@@ -464,7 +467,7 @@ export default {
     role: '',
     school: '',
     hometown: '',
-
+    showErrorWrongOTP: false,
     rules: {
       required: (value) => !!value || 'Xin đừng để trống!',
       password: {
@@ -490,6 +493,7 @@ export default {
       createVendor: 'user/registerVendor',
     }),
     verifyPhoneNumber() {
+      this.showErrorWrongOTP = false;
       this.validateFormUsernamePassword();
       this.sendOtp();
     },
@@ -532,6 +536,7 @@ export default {
           this.showRole = true;
         })
         .catch((error) => {
+          this.showErrorWrongOTP = true;
           console.log(error);
         });
     },
