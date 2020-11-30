@@ -133,22 +133,20 @@
                               Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
                               trực tuyến.<br />
                               Hỗ trợ thanh toán bằng
-                              <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text>
+                              <v-btn :href="getParamForUrl" target="_blank" rounded text>
                                 <v-img
                                   height="30px"
                                   width="30px"
                                   src="../../assets/logo-momo.png"
                                 ></v-img>
-                                <v-card-subtitle class="pl-1 pr-0"
-                                  >Bạn phải có tài khoản MoMo</v-card-subtitle
-                                >
                               </v-btn>
                             </v-card-subtitle>
                             <v-card-text class="pt-0 pb-0 hidden-sm-and-up">
                               * Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
                               trực tuyến.<br />
                               * Hỗ trợ thanh toán bằng
-                              <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text>
+                              <!-- <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text> -->
+                              <v-btn :href="getParamForUrl" rounded text>
                                 <v-img
                                   height="30px"
                                   width="30px"
@@ -472,6 +470,7 @@ export default {
       let url = null;
       console.log(this.contract.group.vendorId);
       const { phone } = this.contract.vendor;
+      // const phone = '0987654320';
       if (downPayment.toString().includes('.')) {
         if (downPayment.toString().split('.')[0] === 0) {
           result = `${downPayment.toString().split('.')[1]}00000`;

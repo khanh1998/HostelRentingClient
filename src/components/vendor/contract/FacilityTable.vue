@@ -8,7 +8,7 @@
   >
     <template v-slot:top>
       <v-toolbar flat>
-        <v-toolbar-title>Nội thất</v-toolbar-title>
+        <v-toolbar-title><div v-if="check === 1">Nội thất</div></v-toolbar-title>
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
@@ -24,17 +24,19 @@
 <script>
 export default {
   name: 'FacilityTable',
-  props: ['facilities'],
+  props: ['facilities', 'check'],
   data: () => ({
     facilityItems: [],
     dialogF: false,
     dialogDeleteF: false,
     headersF: [
-      { text: 'Số thứ tự', align: 'start', value: 'no' },
+      {
+        text: 'Số thứ tự', align: 'start', value: 'no', sortable: false,
+      },
       {
         text: 'Nội dung',
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'facilityName',
       },
       // { text: 'Số lượng', value: 'count' },

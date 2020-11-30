@@ -11,6 +11,7 @@ import FilterResult from '../../views/renter/FilterResult.vue';
 import DiscoveryOverivew from '../../views/renter/DiscoveryOverview.vue';
 import DiscoveryDistrict from '../../views/renter/DiscoveryDistrict.vue';
 import RoomAlert from '../../views/renter/RoomAlert.vue';
+import HostelSuggest from '../../views/renter/HostelSuggest.vue';
 
 const routes = [
   {
@@ -87,6 +88,13 @@ const routes = [
         path: 'room-alert',
         name: 'RoomAlert',
         component: RoomAlert,
+        props: true,
+        meta: { requiresAuth: true, is_renter: true },
+      },
+      {
+        path: 'request/:requestId',
+        name: 'HostelSuggest',
+        component: HostelSuggest,
         props: true,
         meta: { requiresAuth: true, is_renter: true },
       },

@@ -293,28 +293,34 @@
       </template>
     </v-snackbar>
     <v-container v-if="!isLoading">
-      <v-row class="d-flex justify-end pr-10 pb-0">
-        <v-col :cols="isMobile ? '7' : '5'">
-          <v-text-field
-            label="Tìm kiếm chủ trọ, nhà trọ"
-            v-model="searchQuery"
-            append-icon="search"
-            solo
-            hide-details
-            class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
-            height="35"
-            rounded
-          ></v-text-field>
-          <v-text-field
-            label="Tìm kiếm"
-            v-model="searchQuery"
-            append-icon="search"
-            solo
-            hide-details
-            class="mt-3 text-muted pa-0 size-sub-2 chat hidden-sm-and-up"
-            height="35"
-            rounded
-          ></v-text-field>
+      <v-row
+        :class="isMobile ? 'd-flex justify-end pr-10 pb-0' : 'd-flex justify-center pr-10 pb-0'"
+      >
+        <v-col cols="11" sm="11" md="11" lg="11" xl="10">
+          <v-row no-gutters class="d-flex justify-end pr-10 pb-0">
+            <v-col :cols="isMobile ? '7' : '3'">
+              <v-text-field
+                label="Tìm kiếm chủ trọ, nhà trọ"
+                v-model="searchQuery"
+                append-icon="search"
+                solo
+                hide-details
+                class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
+                height="35"
+                rounded
+              ></v-text-field>
+              <v-text-field
+                label="Tìm kiếm"
+                v-model="searchQuery"
+                append-icon="search"
+                solo
+                hide-details
+                class="mt-3 text-muted pa-0 size-sub-2 chat hidden-sm-and-up"
+                height="35"
+                rounded
+              ></v-text-field>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -694,13 +700,10 @@ export default {
       if (!this.searchQuery) {
         return this.contracts.data;
       }
-      return this.$store.state.user.contracts.data.filter((item) => {
-        const username =
-          item.vendor.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1;
-        const groupname =
-          item.group.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1;
-        return username || groupname;
-      });
+      return this.$store.state.user.contracts.data.filter(
+        (item) => item.vendor.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1 ||
+          item.group.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+      );
     },
     isMobile() {
       switch (this.$vuetify.breakpoint.name) {
