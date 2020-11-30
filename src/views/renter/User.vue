@@ -93,10 +93,9 @@
                 <v-col cols="12">
                   <v-row no-gutters>
                     <v-col cols="4" class="d-flex justify-start">
-                      <v-card-text
-                        style="font-size: 16px"
-                        class="pa-0 py-0 pt-2 font-weight-medium"
-                        >{{ user.data.role.roleName }}</v-card-text
+                      <v-card-text style="font-size: 16px" class="pa-0 py-0 pt-2 font-weight-medium"
+                        >{{ user.data.role === 'RENTER' ? 'Khách thuê' : '' }}
+                        {{ user.data.role === 'VENDOR' ? 'Chủ trọ' : '' }}</v-card-text
                       >
                     </v-col>
                     <v-col cols="8" class="d-flex justify-start">
@@ -191,7 +190,10 @@
               </v-row>
               <v-row no-gutters v-if="editProfile">
                 <v-col cols="12" md="8" class="d-flex flex-column justify-center pt-2">
-                  <span class="field-name font-weight-medium">{{ user.data.role.roleName }}</span>
+                  <span class="field-name font-weight-medium"
+                    >{{ user.data.role === 'RENTER' ? 'Khách thuê' : '' }}
+                    {{ user.data.role === 'VENDOR' ? 'Chủ trọ' : '' }}</span
+                  >
                   <div>
                     <v-text-field
                       color="#727CF5"
@@ -501,7 +503,9 @@
                         style="font-size: 16px"
                         class="font-weight-bold pa-0 py-0 pt-2 pb-2 d-flex justify-center pl-3 pr-3"
                       >
-                        <p v-if="!user.data.citizenIdBackImg" class="d-flex justify-center">Thiếu ảnh</p>
+                        <p v-if="!user.data.citizenIdBackImg" class="d-flex justify-center">
+                          Thiếu ảnh
+                        </p>
                         <v-img
                           height="240"
                           width="260"
@@ -603,10 +607,9 @@
                 <v-col cols="12">
                   <v-row no-gutters>
                     <v-col cols="4" class="d-flex justify-start">
-                      <v-card-text
-                        style="font-size: 16px"
-                        class="pa-0 py-0 pt-2 font-weight-medium"
-                        >{{ user.data.role.roleName }}</v-card-text
+                      <v-card-text style="font-size: 16px" class="pa-0 py-0 pt-2 font-weight-medium"
+                        >{{ user.data.role === 'RENTER' ? 'Khách thuê' : '' }}
+                        {{ user.data.role === 'VENDOR' ? 'Chủ trọ' : '' }}</v-card-text
                       >
                     </v-col>
                     <v-col cols="8" class="d-flex justify-start">
@@ -701,7 +704,10 @@
               </v-row>
               <v-row no-gutters v-if="editProfile">
                 <v-col cols="12" md="8" class="d-flex flex-column justify-center pt-2 pr-4">
-                  <span class="field-name font-weight-medium">{{ user.data.role.roleName }}</span>
+                  <span class="field-name font-weight-medium"
+                    >{{ user.data.role === 'RENTER' ? 'Khách thuê' : '' }}
+                    {{ user.data.role === 'VENDOR' ? 'Chủ trọ' : '' }}</span
+                  >
                   <div>
                     <v-text-field
                       color="#727CF5"
@@ -1011,7 +1017,9 @@
                         style="font-size: 16px"
                         class="font-weight-bold pa-0 py-0 pt-2 pb-2 d-flex justify-center pl-3 pr-3"
                       >
-                        <p v-if="!user.data.citizenIdBackImg" class="d-flex justify-center">Thiếu ảnh</p>
+                        <p v-if="!user.data.citizenIdBackImg" class="d-flex justify-center">
+                          Thiếu ảnh
+                        </p>
                         <v-img
                           height="240"
                           width="260"

@@ -76,7 +76,7 @@
             rounded
             class="mr-5 font-weight-regular font-nunito hidden-sm-and-down"
             style="letter-spacing: 0.01rem !important"
-            v-if="!user || (user && user.role.roleName === 'Người thuê')"
+            v-if="!user || (user && user.role === 'RENTER')"
             :to="`/room-alert`"
           >
             <v-icon left>mdi-home-search</v-icon>Đăng ký tìm phòng
@@ -88,7 +88,7 @@
             dark
             color="blue"
             class="hidden-xs-only"
-            v-if="user && user.role.roleName === 'Chủ trọ'"
+            v-if="user && user.role === 'VENDOR'"
           >
             <v-icon left>settings</v-icon>Quản lý phòng trọ
           </v-btn>
@@ -147,7 +147,7 @@
                 </v-list-item-icon>
                 <v-list-item-title>Tài khoản</v-list-item-title>
               </v-list-item>
-              <v-list-item to="/vendor/booking" v-if="user && user.role.roleName === 'Chủ trọ'">
+              <v-list-item to="/vendor/booking" v-if="user && user.role === 'VENDOR'">
                 <v-list-item-icon>
                   <v-icon color="#727cf5">mdi-account-clock-outline</v-icon>
                 </v-list-item-icon>
@@ -165,14 +165,14 @@
               <v-list-item
                 to="/room-alert"
                 class="hidden-md-and-up"
-                v-if="user.role.roleName === 'Người thuê'"
+                v-if="user.role === 'RENTER'"
               >
                 <v-list-item-icon>
                   <v-icon color="#727cf5">mdi-home-search</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Đăng ký tìm phòng</v-list-item-title>
               </v-list-item>
-              <v-list-item to="/cart" v-if="user.role.roleName === 'Người thuê'">
+              <v-list-item to="/cart" v-if="user.role === 'RENTER'">
                 <v-list-item-icon>
                   <v-icon color="#727cf5">mdi-account-clock-outline</v-icon>
                 </v-list-item-icon>
@@ -181,7 +181,7 @@
               <v-list-item
                 to="/contract"
                 _class="hidden-md-and-up"
-                v-if="user.role.roleName === 'Người thuê'"
+                v-if="user.role === 'RENTER'"
               >
                 <v-list-item-icon>
                   <v-icon color="#727cf5">mdi-file-document-edit</v-icon>
@@ -191,7 +191,7 @@
               <v-list-item
                 to="/vendor"
                 class="hidden-sm-and-up"
-                v-if="user.role.roleName === 'Chủ trọ'"
+                v-if="user.role === 'VENDOR'"
               >
                 <v-list-item-icon>
                   <v-icon color="#727cf5">settings</v-icon>

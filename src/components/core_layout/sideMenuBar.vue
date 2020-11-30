@@ -68,9 +68,10 @@
             </v-avatar>
           </v-btn>
           <span class="font-nunito size-1rem white--text mt-3">{{ userData.username }}</span>
-          <span class="font-nunito size9rem mt-1" style="color: #cedce4">{{
-            userData.role.roleName
-          }}</span>
+          <span class="font-nunito size9rem mt-1" style="color: #cedce4"
+            >{{ userData.role === 'RENTER' ? 'Khách thuê' : '' }}
+            {{ userData.role === 'VENDOR' ? 'Chủ trọ' : '' }}
+          </span>
         </div>
         <v-expansion-panels accordion>
           <v-expansion-panel v-for="(item, i) in itemsMobile" :key="i">

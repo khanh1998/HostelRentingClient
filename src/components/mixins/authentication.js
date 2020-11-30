@@ -59,11 +59,11 @@ const authenticationMixins = {
         this.$cookies.set('firebaseRefreshToken', refreshToken);
         let role = 'admin';
         const id = this.userData.userId;
-        switch (this.userData.role.roleId) {
-          case 1:
+        switch (this.userData.role) {
+          case 'VENDOR':
             role = 'vendors';
             break;
-          case 2:
+          case 'RENTER':
             role = 'renters';
             break;
           default:

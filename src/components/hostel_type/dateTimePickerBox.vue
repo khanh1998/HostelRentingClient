@@ -342,7 +342,7 @@ export default {
       return this.$store.state.user.user;
     },
     isVendor() {
-      return this.userState.data && this.userState.data.role.roleName === 'Chủ trọ';
+      return this.userState.data && this.userState.data.role === 'VENDOR';
     },
     loginRouteObject() {
       return {

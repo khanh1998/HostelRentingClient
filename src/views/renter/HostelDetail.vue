@@ -615,7 +615,7 @@ export default {
       const suggestionTypes = this.$store.state.renter.hostelType.suggestedTypes;
       if (
         renter &&
-        renter.role.code === 'RENTER' &&
+        renter.role === 'RENTER' &&
         !suggestionTypes.data.types &&
         renter.school &&
         renter.hometown

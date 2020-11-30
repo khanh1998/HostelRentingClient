@@ -69,7 +69,7 @@ export default {
       getUser: 'user/getUser',
     }),
     getDestination(message) {
-      switch (this.user.role.code) {
+      switch (this.user.role) {
         case 'RENTER':
           return this.getDestinationForRenter(message);
         case 'VENDOR':
