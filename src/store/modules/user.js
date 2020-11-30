@@ -8,6 +8,8 @@ const myState = () => ({
   },
   contracts: {
     data: [],
+    page: [1],
+    size: 50,
     isLoading: false,
     isCreating: false,
     isUpdating: false,
@@ -730,7 +732,7 @@ const actions = {
     if (userId && role && state.user.data) {
       try {
         commit(mutationTypes.GET_CONTRACTS_REQUEST);
-        const res = await window.axios.get(`/api/v1/${role}/${userId}/contracts`);
+        const res = await window.axios.get(`/api/v1/${role}/${userId}/contracts?sortBy=updatedAt&asc=true`);
         if (res.status === 200) {
           commit(mutationTypes.GET_CONTRACTS_SUCCESS, res.data.data);
         } else {

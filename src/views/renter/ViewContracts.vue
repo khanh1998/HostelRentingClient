@@ -259,6 +259,26 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="resign.show" hide-overlay persistent width="350">
+      <v-card v-if="resign.contract && !resign.showResult" :loading="contracts.isUpdating">
+        <v-card-title>Gia hạn hợp đồng</v-card-title>
+        <v-card-text>
+          Hợp đồng thuê nhà giữa bạn và abc còn đến ngày {{ getEndDate(resign.contract) }}, bạn có
+          muốn gia hạn hợp đồng?
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="resign.show = false">Đóng</v-btn>
+          <v-btn @click="doResignContract">Gia hạn</v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-if="resign.showResult">
+        <v-card-title v-if="resign.success">Gia hạn hợp đồng thành công</v-card-title>
+        <v-card-title v-if="!resign.success">Gia hạn hợp đồng thất bại</v-card-title>
+        <v-card-actions>
+          <v-btn @click="resign.show = false">Đóng</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-snackbar
       v-model="snackBarMixin.show"
       :multi-line="snackBarMixin.multiLine"
@@ -338,6 +358,7 @@
                 @momo-payment="showMoMoPayment"
                 @paid-rest="paidTheRestOfContract"
                 @pay-all-fee="showPayAllFee"
+                @resign="showResignContract"
               />
             </div>
           </v-row>
@@ -396,6 +417,12 @@ export default {
       success: false,
       showResult: false,
     },
+    resign: {
+      show: false,
+      contract: null,
+      showResult: false,
+      success: null,
+    },
   }),
   methods: {
     ...mapActions({
@@ -405,6 +432,38 @@ export default {
       updateContract: 'user/updateContract',
       sendNotification: 'user/sendNotification',
     }),
+    getEndDate(contract) {
+      const { startTime, duration } = contract;
+      const endDate = new Date(startTime);
+      endDate.setMonth(endDate.getMonth() + duration);
+      return endDate.toLocaleDateString('vi');
+    },
+    showResignContract(contractId) {
+      this.resign.show = true;
+      this.resign.contract = this.contracts.data.find((c) => c.contractId === contractId);
+      this.resign.showResult = false;
+      this.resign.success = null;
+    },
+    doResignContract() {
+      const { contract } = this.resign;
+      contract.resign = 'REQUEST';
+      this.updateContract(contract).then(() => {
+        const { success } = this.contracts;
+        this.resign.showResult = true;
+        this.resign.success = success;
+        if (success) {
+          this.sendNotification({
+            title: `${contract.renter.username} yêu cầu gia hạn hợp đồng`,
+            body: `${contract.group.groupName}, ${contract.type.title}, ${contract.room.roomName}`,
+            action: actions.RESIGN_REQUEST,
+            id: contract.contractId,
+            icon: contract.renter.avatar,
+            vendorId: contract.vendor.userId,
+            renterId: null,
+          });
+        }
+      });
+    },
     doPayAllFee() {
       const contract = this.contracts.data.find((c) => c.contractId === this.payAllFee.contractId);
       contract.roomId = contract.room.roomId;

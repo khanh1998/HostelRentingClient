@@ -228,9 +228,15 @@
                     ><p class="hidden-sm-and-up">Hợp đồng có hiệu lực</p></v-col
                   >
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
+                    <v-spacer />
                     <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
                       xem chi tiết hợp đồng</v-chip
                     >
+                    <v-spacer />
+                    <v-chip @click="$emit('resign', contract.contractId)" color="#727CF5" dark>
+                      Gia hạn hợp đồng</v-chip
+                    >
+                    <v-spacer />
                   </v-col>
                 </v-row>
               </v-stepper-content>
@@ -329,7 +335,8 @@
                     ><p class="hidden-sm-and-up">Thanh toán tiền</p></v-col
                   >
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
-                    Thông tin thanh toán đã được gửi tới chủ trọ, hãy đợi đến khi chủ trọ xác nhận đã nhận được tiền.
+                    Thông tin thanh toán đã được gửi tới chủ trọ, hãy đợi đến khi chủ trọ xác nhận
+                    đã nhận được tiền.
                   </v-col>
                 </v-row>
               </v-stepper-content>
@@ -342,9 +349,23 @@
                     ><p class="hidden-sm-and-up">Đã ký hợp đồng</p></v-col
                   >
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
+                    <v-spacer />
                     <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
                       xem chi tiết hợp đồng</v-chip
                     >
+                    <v-spacer />
+                    <v-chip
+                      v-if="resignable"
+                      @click="$emit('resign', contract.contractId)"
+                      color="#727CF5"
+                      dark
+                    >
+                      Gia hạn hợp đồng</v-chip
+                    >
+                    <v-chip v-if="contract.resign === 'REJECT'"> Từ chối gia hạn </v-chip>
+                    <v-chip v-if="contract.resign === 'AGREE'"> Đã gia hạn </v-chip>
+                    <v-chip v-if="contract.resign === 'REQUEST'"> Đang chờ trả lời </v-chip>
+                    <v-spacer />
                   </v-col>
                 </v-row>
               </v-stepper-content>
@@ -368,9 +389,13 @@ export default {
     mapDialog: false,
   }),
   computed: {
-    // ...mapGetters({
-    //   getUserById: 'vendor/overview/getUserById',
-    // }),
+    resignable() {
+      const { status, resign } = this.contract;
+      if (status === 'ACTIVATED' && !resign) {
+        return true;
+      }
+      return false;
+    },
     contractSignable() {
       if (this.contract.reserved) {
         if (this.contract.status === 'RESERVED') {

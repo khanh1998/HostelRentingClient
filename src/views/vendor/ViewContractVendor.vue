@@ -12,8 +12,14 @@
     <v-dialog width="500" persistent :value="uncheckedAllFee.length > 0">
       <UnCheckedAllFeeContracts :contracts="uncheckedAllFee" />
     </v-dialog>
+    <v-dialog width="500" persistent :value="uncheckedResignRequest.length > 0">
+      <UnCheckedResignRequest :contracts="uncheckedResignRequest" />
+    </v-dialog>
     <v-dialog width="300" persistent v-model="cancelContract.show">
-      <v-card v-if="cancelContract.show">
+      <v-card
+        v-if="cancelContract.show && !cancelContract.showResult"
+        :loading="contracts.isUpdating"
+      >
         <v-card-title>Hủy hợp đồng</v-card-title>
         <v-card-text>
           Hợp đồng thuê nhà giữ bạn và {{ cancelContract.tableItem.renterName }} có thời hạn đến
@@ -22,6 +28,20 @@
         <v-card-actions>
           <v-btn @click="cancelContract.show = false"> Đóng </v-btn>
           <v-btn @click="findContract(cancelContract.contract.contractId)"> Hủy hợp đồng </v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-if="cancelContract.show && cancelContract.showResult">
+        <v-card-title v-if="cancelContract.success">Hủy hợp đồng thành công</v-card-title>
+        <v-card-title v-if="!cancelContract.success">Hủy hợp đồng thất bại</v-card-title>
+        <v-card-text> </v-card-text>
+        <v-card-actions>
+          <v-btn @click="cancelContract.show = false"> Đóng </v-btn>
+          <v-btn
+            v-if="!cancelContract.showResult"
+            @click="findContract(cancelContract.contract.contractId)"
+          >
+            Hủy hợp đồng
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -50,9 +70,7 @@
                   ></v-checkbox>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn
-                    :disabled="!cancelContract.agree"
-                    @click="doCancelContract"
+                  <v-btn :disabled="!cancelContract.agree" @click="doCancelContract"
                     >Hủy hợp đồng</v-btn
                   >
                 </v-card-actions>
@@ -143,7 +161,7 @@
           </v-card>
         </v-col>
         <v-col cols="12" md="9" class="py-0 mb-3">
-          <v-card class="pa-4" v-if="selectedGroup !== null">
+          <v-card class="pa-4">
             <v-card-title>
               <v-spacer></v-spacer>
               <v-spacer></v-spacer>
@@ -360,9 +378,6 @@
               <v-pagination v-model="page" :length="pageCount" color="#727cf5"></v-pagination>
             </div>
           </v-card>
-          <v-card class="pa-4 d-flex justify-center" v-if="selectedGroup === null">
-            Chọn khu phòng trọ
-          </v-card>
         </v-col>
       </v-row>
     </div>
@@ -375,6 +390,8 @@ import mobileMixin from '../../components/mixins/mobile';
 import UnCheckedReservedFeeContracts from '../../components/view_contracts/UnCheckedReservedFeeContracts.vue';
 import UnCheckedRestFeeContracts from '../../components/view_contracts/UnCheckedRestFeeContracts.vue';
 import UnCheckedAllFeeContracts from '../../components/view_contracts/UnCheckedAllFeeContracts.vue';
+import UnCheckedResignRequest from '../../components/view_contracts/UnCheckedResignRequest.vue';
+import actions from '../../config/pushNotificationActions';
 
 export default {
   name: 'ViewContractVendor',
@@ -384,6 +401,7 @@ export default {
     UnCheckedReservedFeeContracts,
     UnCheckedRestFeeContracts,
     UnCheckedAllFeeContracts,
+    UnCheckedResignRequest,
   },
   data: () => ({
     // search
@@ -437,7 +455,7 @@ export default {
     school: {},
     address: {},
     rules: [],
-    groupName: {},
+    groupName: null,
     roomName: {},
     startTime: {},
     duration: 0,
@@ -483,6 +501,8 @@ export default {
       getContracts: 'user/getContracts',
       getUser: 'user/getUser',
       getGroups: 'vendor/group/getGroups',
+      activateContract: 'user/activateContract',
+      sendNotification: 'user/sendNotification',
     }),
     ...mapGetters({
       findContractById: 'user/findContractById',
@@ -665,15 +685,41 @@ export default {
       this.cancelContract.show = true;
       this.cancelContract.contract = contract;
       this.cancelContract.tableItem = item;
+      this.cancelContract.success = null;
+      this.cancelContract.showResult = false;
     },
-    doCancelContract(contractId) {
-      console.log(contractId);
+    doCancelContract() {
+      this.dialog = false;
+      const { contract } = this.cancelContract;
+      const { contractId, qrCode } = contract;
+      const payload = {
+        qrCode,
+        contractId,
+        status: 'CANCELLED',
+      };
+      this.cancelContract.showResult = true;
+      this.activateContract(payload).then(() => {
+        const { success } = this.contracts;
+        if (success) {
+          this.sendNotification({
+            title: `${contract.vendor.username} đã hủy hợp đồng`,
+            body: `${contract.group.groupName}, ${contract.type.title}, ${contract.room.roomName}`,
+            action: actions.CANCEL_CONTRACT,
+            id: contract.contractId,
+            icon: contract.vendor.avatar,
+            vendorId: null,
+            renterId: contract.renter.userId,
+          });
+        }
+        this.cancelContract.showResult = true;
+        this.cancelContract.success = success;
+      });
     },
   },
   created() {
     this.getUser().then(() => {
       this.getGroups().then(() => {
-        this.clickGroup(this.groups.data[0]);
+        // this.clickGroup(this.groups.data[0]);
         this.getContracts();
       });
     });
@@ -712,6 +758,11 @@ export default {
       console.log(l);
       return l;
     },
+    uncheckedResignRequest() {
+      const l = this.contracts.data.filter((c) => c.resign === 'REQUEST');
+      console.log(l);
+      return l;
+    },
     contracts() {
       return this.$store.state.user.contracts;
     },
@@ -724,10 +775,12 @@ export default {
       );
     },
     allContracts() {
-      let result = [];
-      result = this.contracts.data.filter(
-        (contract) => contract.group.groupName === this.selectedGroup,
-      );
+      let result = this.contracts.data;
+      if (this.selectedGroup) {
+        result = result.filter(
+          (contract) => contract.group.groupName === this.selectedGroup,
+        );
+      }
       if (this.statusName) {
         result = result.filter((contract) => {
           const s1 = this.getStatus(contract).contractStatus.toLowerCase();
