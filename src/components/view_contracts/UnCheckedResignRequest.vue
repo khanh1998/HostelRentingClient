@@ -188,9 +188,11 @@ export default {
       activateContract: 'user/activateContract',
       sendNotification: 'user/sendNotification',
     }),
-    agreeResign() {},
+    agreeResign() {
+      const { contractId } = this.evidences.contract;
+      this.$router.push(`/vendor/contract?contractId=${contractId}&mode=resign`);
+    },
     rejectResign() {
-      console.log('reject resign');
       const { contract } = this.evidences;
       contract.resign = 'REJECT';
       contract.roomId = contract.room.roomId;

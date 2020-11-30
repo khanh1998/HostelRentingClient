@@ -246,7 +246,7 @@ export default {
     mode: {
       type: String,
       validator(value) {
-        return ['create', 'view', 'update'].indexOf(value) !== -1;
+        return ['create', 'view', 'update', 'resign'].indexOf(value) !== -1;
       },
     },
     contractObj: {
@@ -353,7 +353,7 @@ export default {
   },
   created() {
     this.getRoomsOfType();
-    if (this.mode === 'update' || this.mode === 'view') {
+    if (this.mode === 'update' || this.mode === 'view' || this.mode === 'resign') {
       const {
         roomId,
         duration,

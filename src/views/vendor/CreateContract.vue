@@ -304,7 +304,7 @@ export default {
         }
         return null;
       }
-      if (this.mode === 'update') {
+      if (this.mode === 'update' || this.mode === 'resign') {
         return this.contractFull.renter;
       }
       return null;
@@ -313,7 +313,7 @@ export default {
       if (this.mode === 'create' && this.booking) {
         return this.booking.vendor;
       }
-      if (this.mode === 'update') {
+      if (this.mode === 'update' || this.mode === 'resign') {
         return this.contractFull.vendor;
       }
       return null;
@@ -322,7 +322,7 @@ export default {
       if (this.mode === 'create' && this.booking) {
         return this.booking.group;
       }
-      if (this.mode === 'update') {
+      if (this.mode === 'update' || this.mode === 'resign') {
         return this.contractFull.group;
       }
       return null;
@@ -331,7 +331,7 @@ export default {
       if (this.mode === 'create' && this.booking) {
         return this.booking.type;
       }
-      if (this.mode === 'update') {
+      if (this.mode === 'update' || this.mode === 'resign') {
         return this.contractFull.type;
       }
       return null;
@@ -392,7 +392,7 @@ export default {
         console.log('here');
         this.ready = true;
       }
-      if (this.mode === 'update') {
+      if (this.mode === 'update' || this.mode === 'resign') {
         this.getOneContract(this.contractId).then(() => {
           this.contractFull = this.findContractById()(this.contractId);
           if (this.contractFull.room) {

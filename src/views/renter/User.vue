@@ -209,8 +209,8 @@
                       color="#727CF5"
                       v-model="newUser.yearOfBirth"
                       type="number"
-                      :rules="isPositiveNum"
                       :step="1"
+                      :min="1900"
                       solo
                       dense
                       clearable
@@ -384,7 +384,7 @@
                       <span class="field-name font-weight-medium">Ngày cấp</span>
                       <div>
                         <v-menu
-                          v-model="menu2"
+                          v-model="menu1"
                           :close-on-content-click="false"
                           :nudge-right="40"
                           transition="scale-transition"
@@ -405,8 +405,8 @@
                             locale="vi-vn"
                             v-model="datePicker.value"
                             color="#727CF5"
-                            no-title="true"
-                            @input="menu2 = false"
+                            :no-title="true"
+                            @input="menu1 = false"
                           ></v-date-picker>
                         </v-menu>
                       </div>
@@ -574,8 +574,8 @@
                       <v-img
                         height="240"
                         width="260"
-                        v-if="user.data.citizenIdBackImg"
-                        :src="user.data.citizenIdBackImg"
+                        v-if="newUser.citizenIdBackImg"
+                        :src="newUser.citizenIdBackImg"
                       >
                         <template v-slot:placeholder>
                           <v-row class="fill-height ma-0" align="center" justify="center">
@@ -719,8 +719,8 @@
                       color="#727CF5"
                       v-model="newUser.yearOfBirth"
                       type="number"
-                      :rules="isPositiveNum"
                       :step="1"
+                      :min="1900"
                       solo
                       dense
                       clearable
@@ -915,7 +915,7 @@
                             locale="vi-vn"
                             v-model="datePicker.value"
                             color="#727CF5"
-                            no-title="true"
+                            :no-title="true"
                             @input="menu2 = false"
                           ></v-date-picker>
                         </v-menu>
@@ -1108,190 +1108,7 @@
             </v-col>
           </v-row>
         </v-col>
-        <!-- <v-col cols="12" md="3">
-          <p v-if="!editProfile">{{ user.data.role.roleName }}: {{ user.data.username }}</p>
-          <v-text-field v-if="editProfile" label="Tên" v-model="newUser.username"></v-text-field>
-          <p v-if="!editProfile">Năm sinh: {{ user.data.yearOfBirth }}</p>
-          <v-text-field
-            v-if="editProfile"
-            type="number"
-            label="Năm sinh"
-            v-model="newUser.yearOfBirth"
-          ></v-text-field>
-          <div v-if="user.data.role.code === 'RENTER'">
-            <p v-if="!editProfile && user.data.hometown">
-              Quê quán: {{ user.data.hometown.provinceName }}
-            </p>
-            <v-autocomplete
-              v-if="editProfile"
-              v-model="newUser.hometown.provinceId"
-              :items="provinces.items"
-              item-text="provinceName"
-              item-value="provinceId"
-              dense
-              label="Quê quán"
-              chips
-            ></v-autocomplete>
-            <p v-if="!editProfile && user.data.school">
-              Trường đại học: {{ user.data.school.schoolName }}
-            </p>
-            <v-autocomplete
-              v-if="editProfile"
-              v-model="newUser.school.schoolId"
-              :items="schools.items"
-              item-text="schoolName"
-              item-value="schoolId"
-              dense
-              label="Trường đại học"
-              chips
-            ></v-autocomplete>
-          </div>
-
-          <p v-if="!editProfile">Số điện thoại: {{ user.data.phone }}</p>
-          <p v-if="!editProfile">Email: {{ user.data.email }}</p>
-          <v-text-field v-if="editProfile" label="Email" v-model="newUser.email"></v-text-field>
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-col>
-            <p>Chứng minh nhân dân</p>
-            <p v-if="!editProfile">Số chứng minh nhân dân: {{ user.data.citizenIdNum }}</p>
-            <v-text-field
-              v-if="editProfile"
-              label="Số chứng minh nhân dân"
-              type="number"
-              v-model="newUser.citizenIdNum"
-            ></v-text-field>
-            <p v-if="!editProfile">Nơi cấp: {{ user.data.idIssuedLocation }}</p>
-            <v-text-field
-              v-if="editProfile"
-              label="Nơi cấp"
-              v-model="newUser.idIssuedLocation"
-            ></v-text-field>
-            <p v-if="!editProfile">
-              Thời gian cấp:{{ new Date(user.data.idIssuedDate).toLocaleDateString('vi') }}
-            </p>
-            <v-menu
-              v-if="editProfile"
-              v-model="menu2"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="datePicker.value"
-                  label="Thời gian cấp"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                locale="vi-vn"
-                v-model="datePicker.value"
-                @input="menu2 = false"
-              ></v-date-picker>
-            </v-menu>
-
-            <p v-if="!editProfile">Địa chỉ thường trú: {{ user.data.householdAddress }}</p>
-            <v-text-field
-              v-if="editProfile"
-              label="Địa chỉ thường trú"
-              v-model="newUser.householdAddress"
-            ></v-text-field>
-          </v-col>
-        </v-col>
-        <v-col cols="12" md="3">
-          <p v-if="!editProfile">Địa chỉ hiện tại: {{ user.data.currentAddress }}</p>
-          <v-text-field
-            v-if="editProfile"
-            label="Địa chỉ hiện tại"
-            v-model="newUser.currentAddress"
-          ></v-text-field>
-          <p>Mặt trước của CMND</p>
-          <div v-if="!editProfile">
-            <p v-if="!user.data.citizenIdFrontImg">Thiếu ảnh mặt trước của CMND</p>
-            <v-img
-              height="240"
-              width="260"
-              v-if="user.data.citizenIdFrontImg"
-              :src="user.data.citizenIdFrontImg"
-            >
-              <template v-slot:placeholder>
-                <v-row class="fill-height ma-0" align="center" justify="center">
-                  <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                </v-row>
-              </template>
-              <p>Mặt trước của CMND</p>
-            </v-img>
-          </div>
-
-          <div v-if="editProfile">
-            <v-img
-              height="128"
-              width="256"
-              v-if="newUser.citizenIdFrontImg"
-              :src="newUser.citizenIdFrontImg"
-            >
-              <template v-slot:placeholder>
-                <v-row class="fill-height ma-0" align="center" justify="center">
-                  <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                </v-row>
-              </template>
-              <p>Mặt trước của CMND</p>
-            </v-img>
-            <v-btn v-if="editProfile" class="ml-2" @click="uploadFrontIDCardImage" depressed>
-              <v-icon>add_photo_alternate</v-icon>Tải lên ảnh mới</v-btn
-            >
-          </div>
-
-          <p>Mặt sau của CMND</p>
-          <div v-if="!editProfile">
-            <p v-if="!user.data.citizenIdBackImg">Thiếu ảnh mặt sau của CMND</p>
-            <v-img
-              height="128"
-              width="256"
-              v-if="user.data.citizenIdBackImg"
-              :src="user.data.citizenIdBackImg"
-            >
-              <template v-slot:placeholder>
-                <v-row class="fill-height ma-0" align="center" justify="center">
-                  <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                </v-row>
-              </template>
-              <p>Mặt sau của CMND</p>
-            </v-img>
-          </div>
-          <div v-if="editProfile">
-            <v-img
-              height="128"
-              width="256"
-              v-if="newUser.citizenIdBackImg"
-              :src="newUser.citizenIdBackImg"
-            >
-              <template v-slot:placeholder>
-                <v-row class="fill-height ma-0" align="center" justify="center">
-                  <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                </v-row>
-              </template>
-              <p>Mặt sau của CMND</p>
-            </v-img>
-            <v-btn class="ml-2" @click="uploadBackIDCardImage" depressed>
-              <v-icon>add_photo_alternate</v-icon>Tải lên ảnh mới</v-btn
-            >
-          </div>
-        </v-col> -->
       </v-row>
-      <!-- <v-row>
-        <v-col>
-          <v-btn v-if="updatable && editProfile" @click="updateUserInfo" color="primary">
-            <v-icon>update</v-icon> Cập nhật ngay
-          </v-btn>
-        </v-col>
-      </v-row> -->
     </v-card>
   </v-container>
 </template>
@@ -1472,6 +1289,7 @@ export default {
       value: '',
     },
     menu2: false,
+    menu1: false,
   }),
   watch: {
     newUser: {
