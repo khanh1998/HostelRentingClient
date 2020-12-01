@@ -449,7 +449,7 @@ import InitSchedule from './InitSchedule.vue';
 import AvatarManagement from './AvatarManagement.vue';
 
 export default {
-  name: 'CreateGroupDialog',
+  name: 'CreateGroupDialogMobile',
   props: ['show'],
   components: {
     ServiceManagement,

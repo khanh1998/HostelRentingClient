@@ -48,6 +48,7 @@ const myState = () => ({
     longitude: 0,
     address: null,
     schedules: [],
+    appendixContract: null,
   },
   newType: {},
   newRoom: {

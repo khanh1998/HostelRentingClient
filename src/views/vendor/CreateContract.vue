@@ -151,6 +151,7 @@
                 :group="group"
                 @clickCreateContract="doCreateContract"
                 @clickUpdateContract="doUpdateContract"
+                @clickResignContract="doResignContract"
                 :contractObj="contractFull"
                 :mode="mode"
               />
@@ -238,6 +239,45 @@ export default {
           };
           this.sendNotification(payload);
         }
+      });
+    },
+    updateResignStatus() {
+      const constract = this.contractFull;
+      constract.resign = 'AGREE';
+      return this.updateContract(constract);
+    },
+    sendNoti() {
+      this.showCreateSuccess = true;
+      this.createSuccess = this.contracts.success;
+      if (this.createSuccess) {
+        const payload = {
+          title: `${this.group.vendor.username} đồng ý gia hạn hợp đồng`,
+          body: `${this.group.groupName}, ${this.type.title}`,
+          action: actions.NEW_CONTRACT,
+          id: this.contracts.newlyCreatedContract.contractId,
+          icon: this.vendor.avatar,
+          vendorId: null,
+          renterId: this.renter.userId,
+        };
+        this.sendNotification(payload);
+      }
+    },
+    doResignContract() {
+      if (this.isEmptyField()) {
+        this.showEmptyFields = true;
+        return;
+      }
+      // this.contract.bookingId = this.bookingId;
+      // const { deal } = this.booking;
+      // this.contract.dealId = deal ? deal.dealId : null;
+      this.contract.renterId = this.renter.userId;
+      this.contract.vendorId = this.vendor.userId;
+      this.contract.duration = Number(this.contract.duration);
+      console.log(this.contract);
+      this.createContract(this.contract).then(() => {
+        this.updateResignStatus().then(() => {
+          this.sendNoti();
+        });
       });
     },
     goToNextTab() {

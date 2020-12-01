@@ -275,7 +275,7 @@
                       >
                         <v-list-item-title
                           class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = 'tất cả'"
+                          @click="statusName = ''"
                           >Tất cả</v-list-item-title
                         >
                       </v-list-item>
@@ -507,7 +507,7 @@ export default {
     selectedGroup: null,
     toolbarGroupName: null,
     searchQuery: '',
-    statusName: 'tất cả',
+    statusName: '',
     // selectedGroupInMobile: null,
     statusNames: [
       'Đã thanh toán cọc',

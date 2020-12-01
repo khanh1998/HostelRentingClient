@@ -442,7 +442,11 @@
               min-height="370"
               style="box-shadow: none !important"
             >
-              <span>Hợp đồng</span>
+              <span>Phụ lục hợp đồng</span>
+              <TextEditor
+                @appendixContent="receiveAppendixContent"
+                :editorContent="downloadedAppendixContract"
+              />
             </v-card>
             <v-divider></v-divider>
             <div class="d-flex px-4 py-3">
@@ -498,6 +502,7 @@ import ServiceManagement from './ServiceManagement.vue';
 import RegulationManagement from './RegulationManagement.vue';
 import InitSchedule from './InitSchedule.vue';
 import AvatarManagement from './AvatarManagement.vue';
+import TextEditor from '../../contract/TextEditor.vue';
 
 export default {
   name: 'CreateGroupDialog',
@@ -507,6 +512,7 @@ export default {
     RegulationManagement,
     InitSchedule,
     AvatarManagement,
+    TextEditor,
   },
   data: () => ({
     addressString1: '321',
@@ -531,9 +537,11 @@ export default {
       },
       services: [],
       schedules: [],
+      appendixContract: null,
     },
+    downloadedAppendixContract: null,
     // thuy
-    e1: 1,
+    e1: 5,
     stepHeader: ['Thông tin', 'Dịch vụ', 'Nội quy', 'Lịch rảnh', 'Hợp đồng mẫu'],
     groupInfo: {
       groupName: '',
@@ -598,6 +606,10 @@ export default {
       setNewGroupValue: 'vendor/group/setNewGroupValue',
       getProvinces: 'renter/common/getProvinces',
     }),
+    receiveAppendixContent(content) {
+      this.newGroupValue.appendixContract = content;
+      this.setNewGroupValue(this.newGroupValue);
+    },
     nextServiceStep() {
       this.check = true;
       if (
@@ -805,7 +817,7 @@ export default {
         }));
       const reqObj = {
         address: this.addressObjForApi,
-        appendixContract: 'string',
+        appendixContract: this.newGroupValue.appendixContract,
         buildingNo: this.addressObjForApi.buildingNo,
         categoryId: this.newGroupValue.categoryId,
         curfewTime:
@@ -934,6 +946,13 @@ export default {
       }
       return preSort;
     },
+    downloadTemplate(url) {
+      fetch(url)
+        .then((res) => res.text())
+        .then((text) => {
+          this.downloadedAppendixContract = text;
+        });
+    },
   },
   computed: {
     ...mapState({
@@ -1052,6 +1071,8 @@ export default {
     this.updateSelectableAddress();
   },
   created() {
+    const url = 'https://youthhostelstorage.blob.core.windows.net/template/contract_appendix.html';
+    this.downloadTemplate(url);
     if (!this.user) {
       this.getUser().then(() => {
         this.newGroup.vendorId = this.user.userId;

@@ -66,7 +66,7 @@
                           no-title
                           @input="menu1 = false"
                           locale="vi"
-                          :allowed-dates="allowedDates"
+                          :allowed-dates="validDates"
                         ></v-date-picker>
                       </v-menu>
                     </v-col>
@@ -224,6 +224,13 @@
                 >
                   Cập nhật hợp đồng
                 </v-btn>
+                <v-btn
+                  v-if="mode === 'resign'"
+                  class="ma-4 btn-primary"
+                  @click="$emit('clickResignContract')"
+                >
+                  Gia hạn hợp đồng
+                </v-btn>
               </v-col>
             </v-row>
           </v-row>
@@ -291,7 +298,7 @@
                           no-title
                           @input="menu1 = false"
                           locale="vi"
-                          :allowed-dates="allowedDates"
+                          :allowed-dates="validDates"
                         ></v-date-picker>
                       </v-menu>
                     </v-col>
@@ -391,9 +398,11 @@
               <v-col cols="12" md="7">
                 <v-row>
                   <v-col cols="12" md="5">
-                    <FacilityTable :facilities="type.facilities" :check="check"/>
+                    <FacilityTable :facilities="type.facilities" :check="check" />
                   </v-col>
-                  <v-col cols="12" md="7"><RegulationTable :rules="group.regulations" :check="check"/> </v-col>
+                  <v-col cols="12" md="7"
+                    ><RegulationTable :rules="group.regulations" :check="check" />
+                  </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12">
@@ -493,7 +502,7 @@ export default {
   },
   data: () => ({
     contractTemplateUrl:
-      'https://youthhostelstorage.blob.core.windows.net/template/contract_template.html',
+      'https://youthhostelstorage.blob.core.windows.net/template/contract_appendix.html',
     menu1: null,
     startTime: new Date().toISOString().substr(0, 10),
     contract: {
@@ -520,6 +529,17 @@ export default {
     check: 1,
   }),
   methods: {
+    validDates(dayStr) {
+      let today = new Date();
+      if (this.mode === 'resign') {
+        const { startTime, duration } = this.contractObj;
+        today = new Date(this.getEndDate(startTime, duration));
+      }
+      today.setHours(0, 0, 0, 0);
+      const selectDay = new Date(dayStr);
+      selectDay.setHours(0, 0, 0, 0);
+      return selectDay.getTime() >= today.getTime();
+    },
     receiveSelectServiceIds(selectServiceIds) {
       console.log(selectServiceIds);
       this.contract.groupServiceIds = selectServiceIds;
@@ -553,6 +573,13 @@ export default {
         this.$emit('clickCreateContract');
       }
     },
+    getEndDate(startDate, duration) {
+      console.log(startDate, duration);
+      const endDate = new Date(startDate);
+      endDate.setMonth(endDate.getMonth() + duration);
+      endDate.setDate(endDate.getDate() + 1);
+      return endDate.toISOString().substr(0, 10);
+    },
   },
   computed: {
     physicalContractImages() {
@@ -566,7 +593,15 @@ export default {
       return new Date(this.startTime).toLocaleDateString('vi');
     },
     availableRooms() {
-      // return this.rooms.data.filter((r) => r.available || r.roomId === this.contract.roomId);
+      if (this.mode === 'resign') {
+        return this.rooms.data.filter((r) => {
+          const res =
+            r.available ||
+            r.roomId === this.contract.roomId ||
+            r.roomId === this.contractObj.room.roomId;
+          return res;
+        });
+      }
       return this.rooms.data.filter((r) => r.available || r.roomId === this.contract.roomId);
     },
     outOfRoomHint() {
@@ -618,6 +653,9 @@ export default {
       this.contract.appendixContract = appendixContract;
       this.contract.contractId = contractId;
       this.startTime = new Date(startTime).toISOString().substr(0, 10);
+      if (this.mode === 'resign') {
+        this.startTime = this.getEndDate(startTime, duration);
+      }
       this.contract.paid = paid;
       this.contract.downPayment = downPayment;
       this.contract.reserved = reserved;
