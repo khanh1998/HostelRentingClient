@@ -541,7 +541,7 @@ export default {
     },
     downloadedAppendixContract: null,
     // thuy
-    e1: 5,
+    e1: 1,
     stepHeader: ['Thông tin', 'Dịch vụ', 'Nội quy', 'Lịch rảnh', 'Hợp đồng mẫu'],
     groupInfo: {
       groupName: '',
