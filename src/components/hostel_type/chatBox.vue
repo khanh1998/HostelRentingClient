@@ -491,8 +491,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import dateTimePickerStepper from './dateTimePickerStepper.vue';
 import firebase from '../../config/firebase';
-// import utils from '../../utils/firebaseNotification';
-
+import actions from '../../config/pushNotificationActions';
 // const { sendBookingNotification } = utils;
 const { store } = firebase;
 const chatCollectionRef = store.collection('chat');
@@ -552,7 +551,7 @@ export default {
       this.sendNotification({
         title: `Trả giá mới từ: ${this.userState.data.username}`,
         body: `${this.info.price}tr -> ${this.bargainOverlay.price}tr`,
-        action: 'NEW_MESSAGE',
+        action: actions.NEW_MESSAGE,
         id: '',
         icon: this.userState.data.avatar,
         vendorId: Number(this.id.vendorId),
@@ -598,8 +597,8 @@ export default {
         this.sendNotification({
           title: `Lịch hẹn mới từ: ${this.userState.data.username}`,
           body: `Thời gian: ${new Date(meetTime).toLocaleString()}`,
-          action: 'NEW_MESSAGE',
-          id: '',
+          action: actions.NEW_BOOKING,
+          id: newContent.book.bookingId,
           icon: this.userState.data.avatar,
           vendorId: Number(this.id.vendorId),
           renterId: null,
