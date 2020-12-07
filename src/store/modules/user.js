@@ -266,7 +266,7 @@ const mutations = {
       (c) => Number(c.contractId) === Number(contract.contractId),
     );
     if (oldContractIndex > -1) {
-      state.contracts.data[oldContractIndex] = contract;
+      state.contracts.data.splice(oldContractIndex, 1, contract);
     } else {
       state.contracts.data.unshift(contract);
     }
@@ -732,7 +732,7 @@ const actions = {
     if (userId && role && state.user.data) {
       try {
         commit(mutationTypes.GET_CONTRACTS_REQUEST);
-        const res = await window.axios.get(`/api/v1/${role}/${userId}/contracts?sortBy=updatedAt&asc=true`);
+        const res = await window.axios.get(`/api/v1/${role}/${userId}/contracts?sortBy=updatedAt&asc=false`);
         if (res.status === 200) {
           commit(mutationTypes.GET_CONTRACTS_SUCCESS, res.data.data);
         } else {
