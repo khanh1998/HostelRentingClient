@@ -29,7 +29,7 @@
           {{ contracts.error }}
         </v-card-text>
         <v-card-actions>
-          <v-btn to="/vendor">Màn hình chính</v-btn>
+          <v-btn to="/vendor">Quay lại tổng quan</v-btn>
           <v-btn to="/vendor/view-contract">Xem hợp đồng</v-btn>
           <v-btn @click="showUpdateSuccess = false">
             <v-icon>close</v-icon>
@@ -232,7 +232,7 @@ export default {
             title: 'Hợp đồng thuê nhà nháp',
             body: `${this.group.groupName}, ${this.type.title}`,
             action: actions.NEW_CONTRACT,
-            id: this.contracts.newlyCreatedContract.contractId,
+            id: this.contracts.newlyCreated.contractId,
             icon: this.vendor.avatar,
             vendorId: null,
             renterId: this.renter.userId,
@@ -253,7 +253,7 @@ export default {
         const payload = {
           title: `${this.group.vendor.username} đồng ý gia hạn hợp đồng`,
           body: `${this.group.groupName}, ${this.type.title}`,
-          action: actions.NEW_CONTRACT,
+          action: actions.AGREE_RESIGN_REQUEST,
           id: this.contracts.newlyCreatedContract.contractId,
           icon: this.vendor.avatar,
           vendorId: null,
@@ -298,6 +298,16 @@ export default {
           console.log('update contract success: ', this.contracts.success, this.contracts.error);
           this.showSnackBar('cập nhật hợp đồng thành công', { color: 'green' });
           this.updateSuccess = true;
+          const payload = {
+            title: 'Hợp đồng thuê nhà nháp được cập nhật',
+            body: `${this.group.groupName}, ${this.type.title}`,
+            action: actions.UPDATE_CONTRACT,
+            id: this.contract.contractId,
+            icon: this.contractFull.vendor.avatar,
+            vendorId: null,
+            renterId: this.contractFull.renter.userId,
+          };
+          this.sendNotification(payload);
         }
         if (this.contracts.success === false) {
           this.updateSuccess = false;

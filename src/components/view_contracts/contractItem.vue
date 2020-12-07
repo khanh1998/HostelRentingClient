@@ -79,7 +79,9 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="12" md="1" class="d-flex flex-column justify-center align-center"> </v-col>
+        <v-col cols="12" md="1" class="d-flex flex-column justify-center align-center">
+          <v-chip color="red" v-if="isExpired">Hết hạn</v-chip>
+        </v-col>
       </v-row>
       <v-row>
         <v-col>
@@ -226,14 +228,15 @@
                     ><p class="hidden-sm-and-up">Hợp đồng có hiệu lực</p></v-col
                   >
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
-                    <v-spacer />
                     <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
                       xem chi tiết hợp đồng</v-chip
                     >
-                    <v-spacer />
-                    <v-chip @click="$emit('resign', contract.contractId)" color="#727CF5" dark>
+                    <v-chip v-if="resignable" @click="$emit('resign', contract.contractId)" color="#727CF5" dark>
                       Gia hạn hợp đồng</v-chip
                     >
+                    <v-chip v-if="contract.resign === 'REJECT'"> Từ chối gia hạn </v-chip>
+                    <v-chip v-if="contract.resign === 'AGREE'"> Đã gia hạn </v-chip>
+                    <v-chip v-if="contract.resign === 'REQUEST'"> Đang chờ trả lời </v-chip>
                     <v-spacer />
                   </v-col>
                 </v-row>
@@ -241,7 +244,7 @@
             </v-stepper-items>
           </v-stepper>
           <v-stepper v-model="step" v-if="!contract.reserved" class="elevation-0">
-            <v-stepper-header>
+            <v-stepper-header v-if="step < 3">
               <v-stepper-step :complete="step > 0" step="1" color="#727CF5">
                 Hợp đồng được tạo
               </v-stepper-step>
@@ -347,11 +350,9 @@
                     ><p class="hidden-sm-and-up">Đã ký hợp đồng</p></v-col
                   >
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
-                    <v-spacer />
                     <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
                       xem chi tiết hợp đồng</v-chip
                     >
-                    <v-spacer />
                     <v-chip
                       v-if="resignable"
                       @click="$emit('resign', contract.contractId)"
@@ -388,11 +389,26 @@ export default {
   }),
   computed: {
     resignable() {
-      const { status, resign } = this.contract;
-      if (status === 'ACTIVATED' && !resign) {
+      console.log('called');
+      // eslint-disable-next-line
+      const { status, resign, startTime, duration } = this.contract;
+      const oneMonth = 30 * 24 * 60 * 60 * 1000;
+      const endTime = this.getEndDate(startTime, duration);
+      const now = Date.now();
+      const diff = endTime - now;
+      console.log({ endTime, now, oneMonth });
+      console.log(diff - oneMonth);
+      if (status === 'ACTIVATED' && diff > 0 && !resign && diff < oneMonth) {
         return true;
       }
       return false;
+    },
+    isExpired() {
+      const { startTime, duration } = this.contract;
+      const endTime = this.getEndDate(startTime, duration);
+      const now = Date.now();
+      const diff = endTime - now;
+      return diff < 0;
     },
     contractSignable() {
       if (this.contract.reserved) {
@@ -468,7 +484,6 @@ export default {
       const { downPayment } = this.contract;
       let result = null;
       let url = null;
-      console.log(this.contract.group.vendorId);
       const { phone } = this.contract.vendor;
       // const phone = '0987654320';
       if (downPayment.toString().includes('.')) {

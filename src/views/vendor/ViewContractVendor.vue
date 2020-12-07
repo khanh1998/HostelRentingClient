@@ -560,13 +560,14 @@ export default {
       const { status, startTime, duration, paid, reserved } = contract;
       let contractStatus = '';
       let color = 'blue';
-      const now = new Date();
+      let now = new Date();
       now.setHours(0, 0, 0, 0);
-      const date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const dateP = Date.parse(date);
-      const endTime = new Date(startTime);
+      now = now.getTime();
+      let endTime = new Date(startTime);
       endTime.setMonth(endTime.getMonth() + duration + 1);
-      const temp = endTime.getTime();
+      endTime = endTime.getTime();
+      const diff = (endTime - now) / 1000; // seconds
+      const oneMonth = 30 * 24 * 60 * 60;
       if (reserved) {
         switch (status) {
           case 'ACCEPTED':
@@ -579,7 +580,7 @@ export default {
               color = 'light-green';
               break;
             }
-          case 'REVERSED':
+          case 'RESERVED':
             if (paid) {
               contractStatus = 'Đã thanh toán toàn bộ';
               color = 'light-green';
@@ -590,7 +591,7 @@ export default {
               break;
             }
           case 'ACTIVATED':
-            if (temp >= dateP) {
+            if (diff < oneMonth) {
               contractStatus = 'Sắp hết hạn';
               color = 'rgb(255,179,2)';
               break;
@@ -627,7 +628,7 @@ export default {
               break;
             }
           case 'ACTIVATED':
-            if (temp >= dateP) {
+            if (diff < oneMonth) {
               contractStatus = 'sắp hết hạn';
               color = 'rgb(255,179,2)';
               break;
@@ -766,8 +767,10 @@ export default {
     isLoading() {
       const loadingUser = this.$store.state.user.user.isLoading;
       const loadingContracts = this.$store.state.user.contracts.isLoading;
+      const updatingContracts = this.$store.state.user.contracts.isUpdating;
+      const creatingContracts = this.$store.state.user.contracts.isCreating;
       const loadingGroups = this.$store.state.vendor.group.groups.isLoading;
-      return loadingUser || loadingGroups || loadingContracts;
+      return loadingUser || loadingGroups || loadingContracts || creatingContracts || updatingContracts;
     },
     uncheckedReserveFee() {
       const l = this.contracts.data.filter(

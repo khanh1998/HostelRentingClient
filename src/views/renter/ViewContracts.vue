@@ -7,7 +7,7 @@
     <v-dialog v-model="signing" hide-overlay persistent width="300">
       <v-card color="#727CF5" dark>
         <v-card-text>
-          Đang ký hợp đồng
+          {{' '}}
           <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
         </v-card-text>
       </v-card>
@@ -263,8 +263,8 @@
       <v-card v-if="resign.contract && !resign.showResult" :loading="contracts.isUpdating">
         <v-card-title>Gia hạn hợp đồng</v-card-title>
         <v-card-text>
-          Hợp đồng thuê nhà giữa bạn và abc còn đến ngày {{ getEndDate(resign.contract) }}, bạn có
-          muốn gia hạn hợp đồng?
+          Hợp đồng thuê nhà giữa bạn và {{resign.contract.vendor.username}} còn đến ngày {{ getEndDate(resign.contract) }}, bạn có
+          muốn gửi yêu cầu gia hạn hợp đồng?
         </v-card-text>
         <v-card-actions>
           <v-btn @click="resign.show = false">Đóng</v-btn>
@@ -272,8 +272,8 @@
         </v-card-actions>
       </v-card>
       <v-card v-if="resign.showResult">
-        <v-card-title v-if="resign.success">Gia hạn hợp đồng thành công</v-card-title>
-        <v-card-title v-if="!resign.success">Gia hạn hợp đồng thất bại</v-card-title>
+        <v-card-title v-if="resign.success">Gửi yêu cầu gia hạn hợp đồng thành công</v-card-title>
+        <v-card-title v-if="!resign.success">Gửi yêu cầu gia hạn hợp đồng thất bại</v-card-title>
         <v-card-actions>
           <v-btn @click="resign.show = false">Đóng</v-btn>
         </v-card-actions>

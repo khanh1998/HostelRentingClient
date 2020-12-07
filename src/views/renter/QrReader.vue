@@ -245,15 +245,11 @@
 </template>
 <script>
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader';
-// import pdf from 'vue-pdf';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import snackBarMixin from '../../components/mixins/snackBar';
 import InfomationSection from '../../components/vendor/contract/InfomationSection.vue';
 import servicesBox from '../../components/hostel_type/servicesBox.vue';
-// import HostelGroupServiceEditor from '../../components/vendor/hostel_management/HostelGroupServiceEditor.vue';
-// import RegulationTable from '../../components/vendor/contract/RegulationTable.vue';
-// import FacilityTable from '../../components/vendor/contract/FacilityTable.vue';
-// import TermsOfContractSection from '../../components/vendor/contract/TermsOfContractSection.vue';
+import actions from '../../config/pushNotificationActions';
 
 export default {
   name: 'QR-Reader',
@@ -295,6 +291,7 @@ export default {
       getContracts: 'user/getContracts',
       getOneContract: 'user/getOneContract',
       activateContract: 'user/activateContract',
+      sendNotification: 'user/sendNotification',
     }),
     startTimeString(time) {
       return new Date(time).toLocaleDateString('vi-vn');
@@ -315,7 +312,17 @@ export default {
         case 'booking':
           console.log('booking', content);
           this.updateBookingStatus(Number(content)).then(() => {
+            const booking = this.bookings.data.find((item) => item.bookingId === Number(content));
             this.dialog = true;
+            this.sendNotification({
+              title: `${booking.renter.username} xác nhận gặp mặt`,
+              body: `${booking.type.title}`,
+              action: actions.SCAN_BOOKING,
+              id: Number(content),
+              icon: booking.renter.avatar,
+              vendorId: booking.vendor.userId,
+              renterId: null,
+            });
           });
           break;
         case 'contract':

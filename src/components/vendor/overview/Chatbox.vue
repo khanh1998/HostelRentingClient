@@ -1,10 +1,10 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div v-if="chatShow" style="height: 100%; overflow-y: hidden;" class="d-flex flex-column">
+  <div v-if="chatShow" style="height: 100%; overflow-y: hidden" class="d-flex flex-column">
     <!-- dialog xác nhận đồng ý trả giá -->
     <v-overlay v-model="dialogAccept" width="350" absolute>
       <v-card class="white">
-        <v-card-title style="backgroundcolor: #98b7d7; color: #727cf5;">Xác nhận</v-card-title>
+        <v-card-title style="backgroundcolor: #98b7d7; color: #727cf5">Xác nhận</v-card-title>
         <v-card-text class="text-center mt-3" style="fontsize: 20px; color: black"
           >Bạn sẽ chấp nhận trả giá này ?</v-card-text
         >
@@ -19,7 +19,7 @@
     <!-- dialog xác nhận từ chối trả giá -->
     <v-overlay v-model="dialogDeny" width="350" absolute>
       <v-card class="white">
-        <v-card-title style="backgroundcolor: #98b7d7; color: #727cf5;">Xác nhận</v-card-title>
+        <v-card-title style="backgroundcolor: #98b7d7; color: #727cf5">Xác nhận</v-card-title>
         <v-card-text class="text-center mt-3" style="fontsize: 20px; color: black"
           >Bạn sẽ từ chối trả giá này ?</v-card-text
         >
@@ -32,11 +32,14 @@
       </v-card>
     </v-overlay>
     <!-- sub header thông tin phòng trọ -->
+    <v-overlay :value="isLoading" absolute>
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
     <v-card
       v-if="!userState.isLoading && userState.success"
       width="100%"
       class="d-flex flex-column pa-2"
-      style="z-index: 9999;"
+      style="z-index: 9999"
     >
       <div class="d-flex align-center">
         <v-avatar color="#727cf5" height="30" width="30" min-width="30">
@@ -60,11 +63,11 @@
       </div>
       <div v-show="showType">
         <div class="d-flex flex-column justify-center">
-          <span class="size-sub-3 d-flex align-center font-nunito" style="color: #4250f2;"
+          <span class="size-sub-3 d-flex align-center font-nunito" style="color: #4250f2"
             ><v-icon small color="#727cf5" class="mr-1" left>mdi-home-currency-usd</v-icon
             >{{ type.price }} {{ type.priceUnit }}</span
           >
-          <span class="size-sub-3 d-flex align-center font-nunito" style="color: #4250f2;"
+          <span class="size-sub-3 d-flex align-center font-nunito" style="color: #4250f2"
             ><v-icon small color="#727cf5" class="mr-1" left>mdi-home-group</v-icon
             >{{ group.groupName }}</span
           >
@@ -106,14 +109,12 @@
                 v-if="item.bargain"
                 class="event d-flex flex-column justify-center align-center pa-2 renterEvent"
                 _class="blue lighten-5 border-deal pa-1"
-                style="width: 100%;"
+                style="width: 100%"
               >
-                <span
-                  class="font-weight-bold text-primary font-nunito"
-                  style="font-size: 0.9375rem;"
+                <span class="font-weight-bold text-primary font-nunito" style="font-size: 0.9375rem"
                   >TRẢ GIÁ MỚI</span
                 >
-                <div class="d-flex justify-space-between align-center my-4" style="width: 100%;">
+                <div class="d-flex justify-space-between align-center my-4" style="width: 100%">
                   <span
                     class="font-nunito font-weight-regular text-gray text-subtitle-2 d-flex align-center"
                     ><v-icon class="mr-1">mdi-home-currency-usd</v-icon>
@@ -123,8 +124,8 @@
                     <v-icon color="#ffbc00">
                       {{
                         Number(item.bargain.originalPrice) >= Number(item.bargain.newPrice)
-                        ? 'mdi mdi-arrow-down-bold'
-                        : 'mdi mdi-arrow-up-bold'
+                          ? 'mdi mdi-arrow-down-bold'
+                          : 'mdi mdi-arrow-up-bold'
                       }}
                     </v-icon>
                     {{ item.bargain.newPrice }} {{ type.priceUnit }}
@@ -158,7 +159,7 @@
                     </span>
                     <span v-if="item.bargain.status === 'cancel'" class="text-subtitle-2">
                       <v-card color="#e4e6eb" class="py-2 mb-3 ma-1">
-                        {{ renter.username }} <span style="opacity:0.8">đã hủy trả giá này</span>
+                        {{ renter.username }} <span style="opacity: 0.8">đã hủy trả giá này</span>
                       </v-card>
                     </span>
                   </v-col>
@@ -167,25 +168,29 @@
               <p
                 v-if="item.book"
                 v-ripple
-                style="width: 100%;"
+                style="width: 100%"
                 class="renterEvent lighten-5 pa-2 rounded cursor"
                 @click="viewListBookings()"
               >
-                <span class="font-weight-bold" style ="color: #727CF5">LỊCH HẸN</span>
+                <span class="font-weight-bold" style="color: #727cf5">LỊCH HẸN</span>
                 <!-- <v-divider class="my-1"></v-divider>Ngày: -->
-                <br/>
-                <v-row no-gutters class="font-nunito mt-3 mb-3" style="font-size:14px">
+                <br />
+                <v-row no-gutters class="font-nunito mt-3 mb-3" style="font-size: 14px">
                   <v-col cols="3"><v-icon left>event</v-icon></v-col>
-                  <v-col cols="8" class="ml-1 d-flex justify-start"><span>{{ item.book.date }}</span></v-col>
+                  <v-col cols="8" class="ml-1 d-flex justify-start"
+                    ><span>{{ item.book.date }}</span></v-col
+                  >
                   <v-col cols="3"><v-icon left>access_time</v-icon></v-col>
-                  <v-col cols="8" class="ml-1 d-flex justify-start"><span>{{ item.book.time }}</span></v-col>
+                  <v-col cols="8" class="ml-1 d-flex justify-start"
+                    ><span>{{ item.book.time }}</span></v-col
+                  >
                   <v-col cols="3"><v-icon left>mdi-home-group</v-icon></v-col>
-                  <v-col cols="8" class="ml-1 d-flex justify-start"><span>{{ group.address.streetName }}</span></v-col>
+                  <v-col cols="8" class="ml-1 d-flex justify-start"
+                    ><span>{{ group.address.streetName }}</span></v-col
+                  >
                 </v-row>
                 <span v-if="item.book.cancel">
-                  <v-card color="#e4e6eb" class="py-2 mb-3 ma-1">
-                    Lịch hẹn đã hủy
-                  </v-card>
+                  <v-card color="#e4e6eb" class="py-2 mb-3 ma-1"> Lịch hẹn đã hủy </v-card>
                 </span>
               </p>
               <span
@@ -210,7 +215,7 @@
                 getTimeSendMsg(item.createdAt)
               }}</span>
               <span
-                style="width: auto; max-width: 75%;"
+                style="width: auto; max-width: 75%"
                 v-ripple
                 class="red lighten-5 pa-2 rounded"
                 v-if="item.bargain && !item.bargain.dealId"
@@ -236,13 +241,7 @@
         :disabled="hasAPendingBargain"
         v-on:keyup.enter="sendMessage"
       ></v-text-field>
-      <v-btn
-        icon
-        class="ma-1"
-        depressed
-        @click="sendMessage"
-        :disabled="hasAPendingBargain"
-      >
+      <v-btn icon class="ma-1" depressed @click="sendMessage" :disabled="hasAPendingBargain">
         <v-icon color="#727cf5">send</v-icon>
       </v-btn>
     </div>
@@ -275,6 +274,7 @@ export default {
     dialogDeny: false,
     bargainDocId: null,
     showType: false,
+    isLoading: false,
   }),
   methods: {
     ...mapActions({
@@ -322,7 +322,9 @@ export default {
         typeId,
         vendorId,
       };
+      this.isLoading = true;
       await this.createDeal(deal);
+      console.log(this.newlyCreatedDeal);
       this.doc.ref.collection('messages').doc(this.bargainDocId).update({
         'bargain.status': 'accept',
       });
@@ -337,6 +339,7 @@ export default {
         createdAt: Date.now(),
       });
       this.dialogAccept = false;
+      this.isLoading = false;
       this.$nextTick(() => this.scrollToBottom());
     },
 
