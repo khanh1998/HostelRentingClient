@@ -905,7 +905,7 @@ export default {
   border: 1px solid #dee2e6 !important;
 }
 .checkbox .theme--light.v-label {
-  color: #6c757d !important;
+  color: #212121 !important;
   font-size: 0.875rem !important;
   font-family: 'Nunito', sans-serif !important;
 }

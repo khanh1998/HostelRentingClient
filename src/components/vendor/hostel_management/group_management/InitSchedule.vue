@@ -56,7 +56,37 @@
                 >
               </div>
             </template>
-            <v-card class="pt-4" min-width="500" max-width="500">
+            <v-card class="hidden-xs-only pt-4" min-width="500" max-width="500">
+              <v-checkbox
+                v-model="selectAll"
+                label="Tất cả các ngày trong tuần"
+                class="filter checkbox-primary checkbox-small mt-0 ml-5 mb-1"
+                color="#4250f2"
+                hide-details
+                @click="selectAllDay()"
+              ></v-checkbox>
+              <v-divider></v-divider>
+              <div class="d-flex flex-wrap pr-5">
+                <v-checkbox
+                  v-model="selectDay"
+                  v-for="item in allSchedule"
+                  v-bind:key="item.scheduleId"
+                  :label="item.dayOfWeek"
+                  :value="item.scheduleId"
+                  hide-details
+                  class="filter mt-1 text-capitalize ml-5 checkbox-small"
+                  color="#727cf5"
+                ></v-checkbox>
+              </div>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn text @click="menu = false" class="font-nunito size-sub-3"> Hủy </v-btn>
+                <v-btn color="#4250f2" text class="font-nunito size-sub-3" @click="addSchedule()">
+                  Thêm
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+            <v-card class="hidden-sm-and-up pt-4" min-width="400" max-width="400">
               <v-checkbox
                 v-model="selectAll"
                 label="Tất cả các ngày trong tuần"

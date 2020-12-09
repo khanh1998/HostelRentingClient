@@ -171,8 +171,8 @@
     </v-container>
     <v-container v-if="!isLoading" class="pa-0 hidden-sm-and-up">
       <v-row justify="center" class="ma-0 pa-0">
-        <v-col cols="12" class="d-flex align-center">
-          <span class="page-title">Bạn đang quản lý {{ groups.length }} khu trọ</span>
+        <v-col cols="12" class="d-flex align-center py-0">
+          <span class="page-mobile-title">Bạn đang quản lý {{ groups.length }} khu trọ</span>
           <v-btn
             class="ml-auto btn-success btn-sm font-nunito white--text"
             @click="openCreateGroupMobileDialog = true"
@@ -292,6 +292,7 @@
         </v-col>
       </v-row>
       <CreateGroupMobileDialog
+        class="hidden-sm-and-up"
         :show="openCreateGroupMobileDialog"
         @close="openCreateGroupMobileDialog = false"
       />

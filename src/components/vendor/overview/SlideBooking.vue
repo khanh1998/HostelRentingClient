@@ -26,16 +26,93 @@
       </v-card>
     </v-dialog>
     <v-row class="d-flex justify-space-between ma-0">
-      <v-col cols="12" md="4" class="pl-md-13 py-0 d-flex justify-center justify-md-start">
-        <span class="div-title">Lịch hẹn xem phòng</span>
+      <v-col
+        cols="12"
+        md="4"
+        class="pl-md-13 py-0 d-flex justify-sm-center justify-md-start align-center"
+      >
+        <span class="div-title">Lịch hẹn xem phòng sắp tới</span>
+        <v-btn
+          icon
+          v-show="!showMobileSearchBar"
+          @click="showMobileSearchBar = !showMobileSearchBar"
+          class="hidden-sm-and-up ml-auto"
+          ><v-icon color="#727cf5">search</v-icon></v-btn
+        >
+      </v-col>
+      <v-col cols="12" class="hidden-sm-and-up d-flex align-center pa-0">
+        <v-btn icon v-show="showMobileSearchBar"
+          ><v-icon color="#727cf5" @click="showMobileSearchBar = !showMobileSearchBar"
+            >mdi-chevron-double-left</v-icon
+          ></v-btn
+        >
+        <v-text-field
+          v-show="showMobileSearchBar"
+          label="Tìm theo tên người thuê"
+          v-model="searchQuery"
+          solo
+          hide-details
+          class="text-muted py-1 size-sub-2 light-text-field font-nunito"
+          clearable
+          _input="changeSearchQuery"
+          style="
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 0px;
+            transition: opacity 0.25s ease-out;
+          "
+        ></v-text-field>
+        <!-- <v-menu open-on-hover offset-y left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-bind="attrs"
+                v-on="on"
+                elevation="0"
+                height="38"
+                class="font-nunito size9rem btn-dropdown d-flex align-center justify-center px-0"
+                style="
+                  background-color: #727cf5 !important;
+                  border-top-left-radius: 0;
+                  border-bottom-left-radius: 0;
+                  border-top-right-radius: 0.15rem !important;
+                  border-bottom-right-radius: 0.15rem !important;
+                "
+                ><v-icon small color="#fff">search</v-icon>
+                <v-icon small color="#fff">arrow_drop_down</v-icon></v-btn
+              >
+            </template>
+            <v-list>
+              <v-list-item
+                style="min-height: 20px !important"
+                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                @click="showSearchGroup = true"
+              >
+                <v-list-item-title class="item-hover font-nunito text-gray size9rem"
+                  >Khu trọ</v-list-item-title
+                >
+              </v-list-item>
+              <v-list-item
+                style="min-height: 20px !important"
+                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                @click="showSearchGroup = false"
+              >
+                <v-list-item-title class="item-hover font-nunito size9rem text-gray"
+                  >Quản lý</v-list-item-title
+                >
+              </v-list-item>
+            </v-list>
+          </v-menu> -->
       </v-col>
       <v-col cols="12" md="4" class="pa-0 d-flex justify-center justify-md-end">
-        <v-btn-toggle v-model="filterBooking" tile color="#4250f2" group>
+        <v-btn-toggle v-model="filterBooking" tile color="#4250f2" group class="hidden-xs-only">
           <v-btn value="day" small class="font-nunito"> Hôm nay </v-btn>
           <v-btn value="week" small class="font-nunito"> Tuần này </v-btn>
           <v-btn value="month" small class="font-nunito"> Tháng này </v-btn>
         </v-btn-toggle>
-        <v-btn icon v-show="!showSearchBar" @click="showSearchBar = !showSearchBar"
+        <v-btn
+          icon
+          v-show="!showSearchBar"
+          @click="showSearchBar = !showSearchBar"
+          class="hidden-xs-only"
           ><v-icon color="#98a6ad">search</v-icon></v-btn
         >
       </v-col>
@@ -62,7 +139,7 @@
         </v-col>
       </v-row>
     </div>
-    <v-slide-group v-if="bookings.length > 0" show-arrows>
+    <v-slide-group v-if="bookings.length > 0" show-arrows class="hidden-xs-only">
       <v-slide-item
         v-for="booking in bookings"
         :key="booking.bookingId"
@@ -132,16 +209,94 @@
         </v-card>
       </v-slide-item>
     </v-slide-group>
-    <span class="font-nunito size1rem text-primary text-center ma-4" v-if="bookings.length === 0"
+    <span
+      class="hidden-xs-only font-nunito size1rem text-primary text-center ma-4"
+      v-if="bookings.length === 0"
       >Bạn không có lịch hẹn xem phòng nào vào thời gian này!</span
     >
     <span
       v-if="bookings.length > 0"
-      class="ml-auto mr-8 font-nunito text-primary-hover size-sub-3 cursor"
+      class="hidden-xs-only ml-auto mr-8 font-nunito text-primary-hover size-sub-3 cursor"
       @click="viewBookings()"
     >
       Xem thêm
     </span>
+    <v-slide-group v-if="allBooking.length > 0" show-arrows class="hidden-sm-and-up">
+      <v-slide-item
+        v-for="booking in allBooking"
+        :key="booking.bookingId"
+        v-slot:default="{ active, toggle }"
+        class="my-3"
+      >
+        <v-card
+          class="ma-5 pa-3"
+          :color="active ? 'indigo lighten-5' : 'white'"
+          max-width="250"
+          @click="toggle"
+          v-if="booking.status !== 'CANCELLED'"
+        >
+          <span
+            class="text-muted font-nunito d-flex"
+            style="font-weight: 400 !important; color: #98a6ad !important; font-size: 0.9375rem"
+            ><span>{{ getDateString(Number(booking.meetTime)) }}</span>
+            <span class="ml-auto">{{ getTimeString(Number(booking.meetTime)) }}</span>
+            <v-badge color="red" content="Mới!" bordered left v-if="booking.new"> </v-badge>
+          </span>
+          <v-list-item dense class="pa-0">
+            <v-list-item-avatar
+              color="#727cf5"
+              height="35"
+              width="35"
+              min-width="35"
+              class="d-flex justify-center"
+            >
+              <v-img :src="booking.renter.avatar" v-if="booking.renter.avatar"></v-img>
+              <span class="text-overline white--text" v-else>{{
+                getAvatarTitle(booking.renter.username)
+              }}</span>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title
+                _style="fontsize: 16px; fontweight: bold; color: #1f17ff;"
+                class="font-nunito text-primary-dark"
+                >{{ booking.renter.username }}</v-list-item-title
+              >
+              <v-list-item-subtitle style="color: coral">
+                {{ booking.renter.phone }}</v-list-item-subtitle
+              >
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-btn
+                v-if="booking.status === 'INCOMING'"
+                icon
+                @click="changeToString(booking.bookingId)"
+              >
+                <v-icon> mdi-qrcode </v-icon>
+              </v-btn>
+              <v-btn
+                v-if="booking.status === 'DONE' && !booking.contractId"
+                icon
+                :to="`/vendor/contract?bookingId=${booking.bookingId}&mode=create`"
+              >
+                <v-icon>far fa-handshake</v-icon></v-btn
+              >
+              <v-btn v-if="booking.status === 'DONE' && booking.contractId" icon>
+                <v-icon>done_all</v-icon></v-btn
+              >
+            </v-list-item-action>
+          </v-list-item>
+          <div class="text d-flex align-center">
+            <v-icon class="px-2">home</v-icon>
+            <span class="size9rem font-nunito text-black">{{ booking.group.groupName }}</span>
+          </div>
+        </v-card>
+      </v-slide-item>
+    </v-slide-group>
+    <span
+      class="hidden-sm-and-up font-nunito size1rem text-primary text-center ma-4"
+      v-if="allBooking.length === 0"
+      >Bạn không có lịch hẹn xem phòng nào vào thời gian này!</span
+    >
   </div>
 </template>
 <script>
@@ -268,6 +423,21 @@ export default {
       }
       return null;
     },
+    allBooking() {
+      if (this.searchQuery && this.searchQuery.trim() !== '') {
+        return this.$store.state.user.bookings.data
+          .filter((booking) => booking.status === 'INCOMING')
+          .filter((item2) => {
+            const res =
+              item2.renter.username.toLowerCase().indexOf(this.searchQuery.trim().toLowerCase()) !==
+              -1;
+            return res;
+          });
+      }
+      return this.$store.state.user.bookings.data.filter(
+        (booking) => booking.status === 'INCOMING',
+      );
+    },
   },
   created() {
     if (this.bookings.length === 0) {
@@ -285,6 +455,7 @@ export default {
     scanedBookingId: null,
     filterBooking: 'week',
     showSearchBar: false,
+    showMobileSearchBar: false,
   }),
   watch: {
     newMessage: {

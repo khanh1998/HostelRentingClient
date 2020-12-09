@@ -5,6 +5,7 @@
       max-width="1000"
       scrollable
       transition="dialog-bottom-transition"
+      fullscreen
       persistent
     >
       <v-overlay :value="isLoading" absolute>
@@ -16,22 +17,13 @@
         style="border-radius: 0px !important"
       >
         <v-card
-          class="d-flex px-4 py-3 align-center ma-0 justify-space-between bg-primary"
+          class="d-flex px-4 py-3 align-center ma-0 justify-space-between main-bg"
           style="
             border-color: rgb(255, 255, 255);
             box-shadow: rgba(154, 161, 171, 0.15) 0px 0px 35px 0px !important;
             border-radius: 0px !important;
           "
         >
-          <!-- <v-img
-            alt="Hostel Renting"
-            class="shrink mr-2"
-            contain
-            src="@/assets/logo-sac.png"
-            transition="scale-transition"
-            max-width="40"
-            max-height="40"
-          /> -->
           <v-icon class="ml-4" color="rgb(255, 255, 255, 0.8)">mdi-home-group</v-icon>
 
           <span
@@ -44,42 +36,26 @@
           >
         </v-card>
         <v-stepper v-model="e1">
-          <v-stepper-header class="ma-auto px-16" _style="width: 70% !important">
-            <template v-for="n in 5">
+          <v-stepper-header class="ma-auto px-16">
+            <template v-for="n in 4">
               <v-stepper-step :key="`${n}-step`" :complete="e1 > n" :step="n" color="#727cf5">
                 <span class="font-nunito size9rem text-gray">{{ stepHeader[n - 1] }}</span>
               </v-stepper-step>
-              <v-divider v-if="n !== 5" :key="n"></v-divider>
+              <v-divider v-if="n !== 4" :key="n"></v-divider>
             </template>
           </v-stepper-header>
-          <!-- <v-stepper-content step="1" class="pa-0">
-            <v-card
-              class="overflow-y-auto d-flex flex-column py-1 mx-10 my-3"
-              max-height="350"
-              min-height="350"
-            >
-              1
-            </v-card>
-            <v-divider></v-divider>
-            <div class="d-flex justify-end pa-4">
-              <v-btn class="btn btn-primary font-nunito mx-2" @click="e1 = 2"> Tiếp tục </v-btn>
-              <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="closeDialog()"
-                >Hủy</v-btn
-              >
-            </div>
-          </v-stepper-content> -->
           <v-stepper-content step="1" class="pa-0 mt-2">
             <v-card
               class="overflow-y-auto d-flex flex-column pb-3 px-10 my-0"
-              max-height="370"
-              min-height="370"
+              max-height="430"
+              min-height="430"
               style="box-shadow: none !important"
             >
-              <v-row class="ma-0">
-                <v-col cols="8" class="py-0">
+              <v-row class="ma-0 d-flex justify-space-between">
+                <v-col cols="9" class="py-0 pr-md-10">
                   <v-row class="ma-0">
-                    <v-col cols="7" class="d-flex flex-column">
-                      <span class="field-name font-weight-medium"
+                    <v-col cols="5" class="d-flex flex-column pb-0">
+                      <span class="field-name"
                         >Tên khu trọ<span class="red--text ml-1">(*)</span></span
                       >
                       <v-text-field
@@ -91,13 +67,10 @@
                         v-model="newGroupValue.groupName"
                         @input="setNewGroupValue(newGroupValue)"
                       />
-                      <span class="font-nunito red--text size-caption" v-show="check && error.name"
-                        >Vui lòng điền tên khu trọ</span
-                      >
                     </v-col>
-                    <v-col cols="5" class="d-flex flex-column">
+                    <v-col cols="4" class="d-flex flex-column pb-0">
                       <span class="field-name font-weight-medium"
-                        >Loại<span class="red--text ml-1">(*)</span></span
+                        >Hình thức cho thuê<span class="red--text ml-1">(*)</span></span
                       >
                       <v-select
                         v-model="newGroupValue.categoryId"
@@ -112,17 +85,28 @@
                         class="size-sub-2 font-nunito form"
                       ></v-select>
                     </v-col>
-                    <v-col cols="12" class="d-flex flex-column">
+                    <v-col cols="3" class="d-flex align-end pb-0">
+                      <v-checkbox
+                        v-model="newGroupValue.ownerJoin"
+                        @click="setNewGroupValue(newGroupValue)"
+                        label="Chung chủ"
+                        color="#727cf5"
+                        class="filter font-nunito size-sub-2 checkbox ma-0"
+                        hide-details
+                      ></v-checkbox>
+                    </v-col>
+                    <v-col cols="12" v-show="check && error.name" class="py-0">
+                      <span class="font-nunito red--text size-caption"
+                        >Vui lòng điền tên khu trọ</span
+                      >
+                    </v-col>
+                    <v-col cols="9" class="d-flex flex-column mt-3">
                       <span class="field-name font-weight-medium"
-                        >Địa chỉ đầy đủ<span class="red--text ml-1">(*)</span>
+                        >Địa chỉ cho thuê<span class="red--text ml-1">(*)</span>
                         <span class="font-nunito size-caption text-gray ml-2 mt-auto"
-                          >Để lấy vị trí chính xác, vui lòng nhập địa chỉ rõ 5 cấp.</span
+                          >Để lấy vị trí chính xác, vui lòng nhập địa chỉ đầy đủ rõ 5 cấp.</span
                         ></span
                       >
-                      <!-- <span class="font-nunito size-caption"
-                        >Ví dụ: 1426 đường Nguyễn Duy Trinh, phường Long Trường, quận 9, thành phố
-                        Hồ Chí Minh</span
-                      > -->
                       <gmap-autocomplete
                         placeholder="Bao gồm số nhà, tên đường, phường, quận, thành phố"
                         @place_changed="setPlace"
@@ -135,171 +119,20 @@
                         "
                         class="address-autocomplete px-3"
                       ></gmap-autocomplete>
-                      <!-- <v-text-field
-                        class="size-sub-2 font-nunito form"
-                        solo
-                        dense
-                        light
-                        label="Số nhà"
-                        hide-details
-                        v-model="newGroupValue.buildingNo"
-                        @input="setNewGroupValue(newGroupValue)"
-                      /> -->
                     </v-col>
-                    <!-- <v-col cols="9" class="d-flex flex-column justify-end">
-                      <gmap-autocomplete
-                        placeholder="Địa chỉ đầy đủ"
-                        @place_changed="setPlace"
-                        :options="gmap"
-                        :value="addressString1"
-                        :selectFirstOnEnter="true"
-                        style="
-                          border: 1px solid #dee2e6 !important;
-                          border-radius: 4px;
-                          height: 38px !important;
-                        "
-                        class="address-autocomplete px-3"
-                      ></gmap-autocomplete>
-                    </v-col> -->
-                    <v-col cols="12" class="d-flex flex-column py-0">
-                      <span class="size-caption red--text font-nunito">{{
-                        errorMsg.buildingNo
-                      }}</span>
-                    </v-col>
-                    <v-col cols="3" class="d-flex align-start pr-0">
-                      <v-checkbox
-                        v-model="newGroupValue.ownerJoin"
-                        @click="setNewGroupValue(newGroupValue)"
-                        label="Chung chủ"
-                        color="#727cf5"
-                        class="filter font-nunito size-sub-2 checkbox ma-0"
-                        hide-details
-                      ></v-checkbox>
-                      <span class="red--text pl-1 pt-auto">(*)</span>
-                    </v-col>
-                    <v-col cols="9" class="d-flex flex-column justify-end">
-                      <div class="d-flex mb-2 justify-center">
-                        <v-radio-group
-                          v-model="groupInfo.curfewTime.radiogroup"
-                          hide-details
-                          row
-                          class="filter my-0"
-                          @change="setCurfewtime()"
-                        >
-                          <v-radio
-                            label="Giờ giấc tự do"
-                            value="free"
-                            color="#727cf5"
-                            class="radioGroup font-nunito"
-                          ></v-radio>
-                          <v-radio
-                            label="Giới nghiêm"
-                            value="limit"
-                            color="#727cf5"
-                            class="radioGroup font-nunito ml-4"
-                          ></v-radio>
-                        </v-radio-group>
-                        <span class="red--text mt-1">(*)</span>
-                      </div>
-                      <v-row class="ma-0" v-show="showCurfewTime">
-                        <v-col cols="6" class="py-0 pl-0 d-flex flex-column">
-                          <v-autocomplete
-                            v-model="newGroupValue.curfewTime.startTime"
-                            :items="getTimes('00:00', '23:30', 'asc')"
-                            label="Mở cổng"
-                            class="size9rem font-nunito form my-0 py-0 pr-0"
-                            solo
-                            dense
-                            color="indigo"
-                            hide-details
-                            background-color="white"
-                            no-data-text="Không có kết quả phù hợp"
-                            style="border: 1px solid #e1e1e1 !important; border-radius: 4px"
-                          ></v-autocomplete>
-                          <span
-                            class="font-nunito red--text size-caption"
-                            v-show="check && error.startTime"
-                            >Vui lòng chọn giờ mở cổng</span
-                          >
-                        </v-col>
-                        <v-col cols="6" class="py-0 pr-0 d-flex flex-column">
-                          <v-autocomplete
-                            v-model="newGroupValue.curfewTime.endTime"
-                            :items="getTimes('00:30', '24:00', 'desc')"
-                            label="Đóng cổng"
-                            class="size9rem font-nunito form my-0 py-0"
-                            solo
-                            dense
-                            color="indigo"
-                            hide-details
-                            background-color="white"
-                            no-data-text="Không có kết quả phù hợp"
-                            style="border: 1px solid #e1e1e1 !important; border-radius: 4px"
-                          ></v-autocomplete>
-                          <span
-                            class="font-nunito red--text size-caption"
-                            v-show="check && error.endTime"
-                            >Vui lòng chọn giờ đóng cổng</span
-                          >
-                        </v-col>
-                      </v-row>
-                    </v-col>
-                    <v-col cols="4" class="d-flex flex-column">
+                    <v-col cols="3" class="d-flex flex-column mt-3">
                       <span class="field-name font-weight-medium d-flex align-center font-nunito"
-                        >Người liên lạc
-                        <v-tooltip right>
-                          <template v-slot:activator="{ on, attrs }">
-                            <span
-                              v-bind="attrs"
-                              v-on="on"
-                              class="red--text font-nunito font-weight-bold ml-2"
-                              >?</span
-                            >
-                          </template>
-                          <span class="font-nunito"
-                            >Là người có thể liên lạc khi tới xem phòng, nếu là chủ trọ, bạn có thể
-                            để trống</span
-                          >
-                        </v-tooltip>
-                      </span>
-                      <v-text-field
-                        class="size-sub-2 form"
-                        color="#727cf5"
-                        label="Tên"
-                        solo
-                        dense
-                        hide-details
-                        light
-                        v-model="newGroupValue.managerName"
-                        @input="setNewGroupValue(newGroupValue)"
-                      />
-                    </v-col>
-                    <v-col cols="4" class="d-flex align-end">
-                      <v-text-field
-                        class="size-sub-2 form"
-                        color="#727cf5"
-                        label="Số điện thoại"
-                        solo
-                        dense
-                        light
-                        hide-details
-                        v-model="newGroupValue.managerPhone"
-                        @input="setNewGroupValue(newGroupValue)"
-                      />
-                    </v-col>
-                    <v-col cols="4" class="d-flex flex-column">
-                      <span class="field-name font-weight-medium d-flex align-center font-nunito"
-                        >Cọc giữ chỗ<span class="red--text ml-1">(*)</span>
+                        >Số tiền cọc giữ phòng<span class="red--text ml-1">(*)</span>
                         <v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
                             <span
                               v-bind="attrs"
                               v-on="on"
-                              class="red--text font-nunito font-weight-bold ml-2"
+                              class="red--text font-nunito font-weight-bold ml-auto"
                               >?</span
                             >
                           </template>
-                          <span class="font-nunito">Tiền cọc giữ chỗ thuê cần phải đóng</span>
+                          <span class="font-nunito">Tiền cọc giữ chỗ phòng</span>
                         </v-tooltip>
                       </span>
                       <v-text-field
@@ -314,38 +147,286 @@
                         suffix="VNĐ"
                         step="100000"
                         min="0"
-                        :rules="[rules.min(groupInfo.downPayment)]"
                         @input="setNewGroupValue(newGroupValue)"
                       />
                     </v-col>
-                    <v-col cols="4" class="d-flex flex-column py-0">
-                      <span
-                        class="font-nunito red--text size-caption"
-                        v-show="check && error.manageName"
-                        >Vui lòng điền tên người liên lạc</span
-                      >
+                    <v-col cols="12" class="d-flex flex-column py-0">
+                      <span class="size-caption red--text font-nunito">{{
+                        errorMsg.buildingNo
+                      }}</span>
                     </v-col>
-                    <v-col cols="4" class="d-flex flex-column py-0">
-                      <span
-                        class="font-nunito red--text size-caption"
-                        v-show="check && error.managePhone"
-                        >Vui lòng điền số điện thoại người liên lạc</span
+                    <v-col cols="9" class="d-flex">
+                      <span class="field-name mt-1"
+                        >Khung giờ đóng cửa:<span class="red--text ml-1">(*)</span></span
                       >
-                      <span
-                        class="font-nunito red--text size-caption"
-                        v-show="check && error.validPhone"
-                        >Số điện thoại không hợp lệ</span
+                      <div class="d-flex ml-5 justify-center">
+                        <v-radio-group
+                          v-model="groupInfo.curfewTime.radiogroup"
+                          hide-details
+                          class="filter my-0"
+                          @change="setCurfewtime()"
+                          v-if="showCurfewTime"
+                        >
+                          <v-radio
+                            label="Giới nghiêm"
+                            value="limit"
+                            color="#727cf5"
+                            class="radioGroup font-nunito"
+                          ></v-radio>
+                          <v-radio
+                            label="Giờ giấc tự do"
+                            value="free"
+                            color="#727cf5"
+                            class="radioGroup font-nunito"
+                          ></v-radio>
+                        </v-radio-group>
+                        <v-radio-group
+                          v-model="groupInfo.curfewTime.radiogroup"
+                          hide-details
+                          class="filter my-0"
+                          @change="setCurfewtime()"
+                          v-if="!showCurfewTime"
+                          row
+                        >
+                          <v-radio
+                            label="Giới nghiêm"
+                            value="limit"
+                            color="#727cf5"
+                            class="radioGroup font-nunito"
+                          ></v-radio>
+                          <v-radio
+                            label="Giờ giấc tự do"
+                            value="free"
+                            color="#727cf5"
+                            class="radioGroup font-nunito"
+                          ></v-radio>
+                        </v-radio-group>
+                      </div>
+                      <div class="d-flex ml-auto mb-6" v-if="showCurfewTime">
+                        <div class="pt-0 d-flex flex-column mr-2">
+                          <v-autocomplete
+                            v-model="newGroupValue.curfewTime.startTime"
+                            :items="getTimes('00:00', '23:30', 'asc')"
+                            label="Mở cổng"
+                            class="size9rem font-nunito form my-0 py-0 pr-0"
+                            solo
+                            dense
+                            color="indigo"
+                            hide-details
+                            background-color="white"
+                            no-data-text="Không có kết quả phù hợp"
+                            style="
+                              border: 1px solid #e1e1e1 !important;
+                              border-radius: 4px;
+                              width: 130px !important;
+                            "
+                          ></v-autocomplete>
+                          <span
+                            class="font-nunito red--text size-caption"
+                            v-show="check && error.startTime"
+                            >Vui lòng chọn giờ mở cổng</span
+                          >
+                        </div>
+                        <div cols="4" class="pt-0 d-flex flex-column ml-2">
+                          <v-autocomplete
+                            v-model="newGroupValue.curfewTime.endTime"
+                            :items="getTimes('00:30', '24:00', 'desc')"
+                            label="Đóng cổng"
+                            class="size9rem font-nunito form my-0 py-0"
+                            solo
+                            dense
+                            color="indigo"
+                            hide-details
+                            background-color="white"
+                            no-data-text="Không có kết quả phù hợp"
+                            style="
+                              border: 1px solid #e1e1e1 !important;
+                              border-radius: 4px;
+                              width: 130px !important;
+                            "
+                          ></v-autocomplete>
+                          <span
+                            class="font-nunito red--text size-caption"
+                            v-show="check && error.endTime"
+                            >Vui lòng chọn giờ đóng cổng</span
+                          >
+                        </div>
+                      </div>
+                    </v-col>
+                    <v-col cols="3" class="d-flex flex-column" v-if="gender.length > 0">
+                      <v-select
+                        v-model="ruleGender"
+                        @change="setGender()"
+                        :items="gender"
+                        item-text="regulationName"
+                        item-value="regulationId"
+                        label="Giới tính"
+                        dense
+                        hide-details
+                        solo
+                        class="size-sub-2 font-nunito dropdownSmall"
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="12" class="d-flex py-0">
+                      <span class="font-nunito size9rem text-primary font-weight-bold mt-5"
+                        >Nội quy :</span
                       >
+                      <v-col cols="6" class="d-flex flex-column justify-center">
+                        <v-autocomplete
+                          v-model="ruleSelect"
+                          :items="unselectedRules"
+                          label="Tìm kiếm theo tên nội quy có sẵn"
+                          item-text="regulationName"
+                          item-value="regulationId"
+                          class="size9rem font-nunito light-autocomplete"
+                          dense
+                          solo
+                          clearable
+                          color="#727cf5"
+                          hide-details
+                          background-color="#F1F3FA"
+                          no-data-text="Điền nội quy khác và nhấn Bổ sung nội quy nếu nội quy không có sẵn"
+                          hide-selected
+                          rounded
+                          @change="addRule()"
+                        >
+                        </v-autocomplete>
+                      </v-col>
+                      <v-spacer></v-spacer>
+                      <v-col cols="4" class="d-flex flex-column">
+                        <div class="d-flex">
+                          <v-text-field
+                            label="Nội quy khác"
+                            v-model="newRule"
+                            solo
+                            hide-details
+                            class="text-muted size-sub-2 light-text-field font-nunito"
+                            style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
+                          ></v-text-field>
+                          <v-btn
+                            class="btn-success btn-sm font-nunito white--text"
+                            @click="addNewRules()"
+                            style="
+                              border-top-left-radius: 0px !important;
+                              border-bottom-left-radius: 0px !important;
+                            "
+                            >Bổ sung</v-btn
+                          >
+                        </div>
+                        <!-- <span class="size-caption red--text font-nunito" v-show="isDuplicate"
+                          >Nội quy đã tồn tại</span
+                        > -->
+                      </v-col>
+                    </v-col>
+                    <v-col cols="12" class="py-0" v-if="newGroupValue.regulations.length > 0">
+                      <v-card class="d-flex flex-wrap py-3" outlined>
+                        <v-chip
+                          v-for="(item, index) in newGroupValue.newRegulations"
+                          v-bind:key="index"
+                          class="font-nunito mx-1 mb-2"
+                          small
+                          outlined
+                        >
+                          {{item.regulationName}}
+                        </v-chip>
+                        <v-chip
+                          v-for="(item, index) in newGroupValue.regulations"
+                          v-bind:key="index"
+                          class="font-nunito mx-1 mb-2"
+                          small
+                          outlined
+                        >
+                          {{ getRuleById(item.regulationId) }}
+                        </v-chip>
+                      </v-card>
                     </v-col>
                   </v-row>
                 </v-col>
-                <v-col cols="4" class="d-flex flex-column pl-10">
-                  <v-card outlined min-height="330" max-height="330">
-                    <v-col cols="12" class="d-flex flex-column px-5">
-                      <span class="field-name font-weight-medium">Ảnh đại diện khu trọ</span>
-                      <AvatarManagement />
+                <v-col cols="3" class="d-flex flex-column pa-0">
+                  <v-row class="ma-0">
+                    <v-col cols="12" class="pb-0">
+                      <v-card outlined min-height="220" max-height="220">
+                        <v-col cols="12" class="d-flex flex-column px-5">
+                          <span
+                            class="font-nunito size9rem text-primary font-weight-bold"
+                            style="text-align: center"
+                            >Quản lý / Người liên lạc
+                            <v-tooltip right>
+                              <template v-slot:activator="{ on, attrs }">
+                                <span
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  class="red--text font-nunito font-weight-bold ml-2"
+                                  >?</span
+                                >
+                              </template>
+                              <span class="font-nunito"
+                                >Là người có thể liên lạc khi tới xem phòng, nếu là chủ trọ, bạn có
+                                thể để trống</span
+                              >
+                            </v-tooltip></span
+                          >
+                          <v-row class="ma-0 mt-5">
+                            <v-col cols="12" class="d-flex flex-column">
+                              <v-text-field
+                                class="size-sub-2 form light-autocomplete"
+                                color="#727cf5"
+                                label="Tên quản lý"
+                                solo
+                                dense
+                                hide-details
+                                light
+                                v-model="newGroupValue.managerName"
+                                @input="setNewGroupValue(newGroupValue)"
+                                background-color="#f1f3fa"
+                              />
+                            </v-col>
+                            <v-col cols="12" class="d-flex flex-column py-0">
+                              <span
+                                class="font-nunito red--text size-caption"
+                                v-show="check && error.manageName"
+                                >Vui lòng điền tên người liên lạc</span
+                              >
+                            </v-col>
+                            <v-col cols="12" class="d-flex flex-column">
+                              <v-text-field
+                                class="size-sub-2 form light-autocomplete"
+                                color="#727cf5"
+                                label="Số điện thoại"
+                                solo
+                                dense
+                                light
+                                hide-details
+                                v-model="newGroupValue.managerPhone"
+                                @input="setNewGroupValue(newGroupValue)"
+                                background-color="#f1f3fa"
+                              />
+                            </v-col>
+                            <v-col cols="12" class="d-flex flex-column py-0">
+                              <span
+                                class="font-nunito red--text size-caption"
+                                v-show="check && error.managePhone"
+                                >Vui lòng điền số điện thoại người liên lạc</span
+                              >
+                              <span
+                                class="font-nunito red--text size-caption"
+                                v-show="check && error.validPhone"
+                                >Số điện thoại không hợp lệ</span
+                              >
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-card>
                     </v-col>
-                  </v-card>
+                    <v-col cols="12" class="py-0">
+                      <v-card outlined min-height="150" max-height="150">
+                        <v-col cols="12" class="d-flex flex-column px-5">
+                          <span class="field-name font-weight-medium">Ảnh đại diện khu trọ</span>
+                          <AvatarManagement />
+                        </v-col>
+                      </v-card>
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
             </v-card>
@@ -365,8 +446,8 @@
           <v-stepper-content step="2" class="pa-0 mt-2">
             <v-card
               class="overflow-y-auto d-flex flex-column pt-1 pb-3 px-16 my-0"
-              max-height="370"
-              min-height="370"
+              max-height="430"
+              min-height="430"
               style="box-shadow: none !important"
             >
               <ServiceManagement />
@@ -387,7 +468,7 @@
               >
             </div>
           </v-stepper-content>
-          <v-stepper-content step="3" class="pa-0 mt-2">
+          <!-- <v-stepper-content step="3" class="pa-0 mt-2">
             <v-card
               class="overflow-y-auto d-flex flex-column pt-1 pb-3 px-10 my-0"
               max-height="370"
@@ -409,19 +490,19 @@
                 >Đóng</v-btn
               >
             </div>
-          </v-stepper-content>
-          <v-stepper-content step="4" class="pa-0 mt-2">
+          </v-stepper-content> -->
+          <v-stepper-content step="3" class="pa-0 mt-2">
             <v-card
               class="overflow-y-auto d-flex flex-column pt-1 pb-3 px-10 my-0"
-              max-height="370"
-              min-height="370"
+              max-height="430"
+              min-height="430"
               style="box-shadow: none !important"
             >
               <InitSchedule />
             </v-card>
             <v-divider></v-divider>
             <div class="d-flex px-4 py-3">
-              <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="e1 = 3"
+              <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="e1 = 2"
                 >Quay lại</v-btn
               >
               <v-spacer></v-spacer>
@@ -435,19 +516,20 @@
               >
             </div>
           </v-stepper-content>
-          <v-stepper-content step="5" class="pa-0 mt-2">
+          <!-- <v-stepper-content step="4" class="pa-0 mt-2">
             <v-card
               class="overflow-y-auto d-flex flex-column pt-1 pb-3 px-10 my-0"
               max-height="370"
               min-height="370"
               style="box-shadow: none !important"
             >
+              <AppendixContract />
               <span>Phụ lục hợp đồng</span>
-              <TextEditor
+          <TextEditor
                 @appendixContent="receiveAppendixContent"
                 :editorContent="downloadedAppendixContract"
               />
-            </v-card>
+          </v-card>
             <v-divider></v-divider>
             <div class="d-flex px-4 py-3">
               <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="e1 = 4"
@@ -461,7 +543,7 @@
                 >Đóng</v-btn
               >
             </div>
-          </v-stepper-content>
+          </v-stepper-content> -->
         </v-stepper>
       </v-card>
     </v-dialog>
@@ -499,57 +581,57 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import ServiceManagement from './ServiceManagement.vue';
-import RegulationManagement from './RegulationManagement.vue';
+// import RegulationManagement from './RegulationManagement.vue';
 import InitSchedule from './InitSchedule.vue';
 import AvatarManagement from './AvatarManagement.vue';
-import TextEditor from '../../contract/TextEditor.vue';
+// import AppendixContract from './AppendixContract.vue';
+// import TextEditor from '../../contract/TextEditor.vue';
 
 export default {
   name: 'CreateGroupDialog',
   props: ['show'],
   components: {
     ServiceManagement,
-    RegulationManagement,
+    // RegulationManagement,
     InitSchedule,
     AvatarManagement,
-    TextEditor,
+    // TextEditor,
+    // AppendixContract,
   },
   data: () => ({
-    addressString1: '321',
-    newGroup: {
-      vendorId: 0,
-      buildingNo: '',
-      longitude: '',
-      latitude: '',
-      managerName: '',
-      managerPhone: '',
-      ownerJoin: false,
-      imgUrl: null,
-      address: {
-        provinceId: 1,
-        provinceName: 'Thành phố Hồ Chí Minh',
-        districtId: null,
-        districtName: '',
-        wardId: null,
-        wardName: '',
-        streetId: null,
-        streetName: '',
-      },
-      services: [],
-      schedules: [],
-      appendixContract: null,
-    },
+    // newGroup: {
+    //   vendorId: 0,
+    //   buildingNo: '',
+    //   longitude: '',
+    //   latitude: '',
+    //   managerName: '',
+    //   managerPhone: '',
+    //   ownerJoin: false,
+    //   imgUrl: null,
+    //   address: {
+    //     provinceId: 1,
+    //     provinceName: 'Thành phố Hồ Chí Minh',
+    //     districtId: null,
+    //     districtName: '',
+    //     wardId: null,
+    //     wardName: '',
+    //     streetId: null,
+    //     streetName: '',
+    //   },
+    //   services: [],
+    //   schedules: [],
+    //   appendixContract: null,
+    // },
     downloadedAppendixContract: null,
-    // thuy
     e1: 1,
-    stepHeader: ['Thông tin', 'Dịch vụ', 'Nội quy', 'Lịch rảnh', 'Hợp đồng mẫu'],
+    stepHeader: ['Thông tin', 'Dịch vụ', 'Lịch rảnh', 'Hợp đồng mẫu'],
     groupInfo: {
       groupName: '',
       category: 0,
       address: '',
       ownerJoin: false,
       curfewTime: {
-        radiogroup: 'free',
+        radiogroup: 'limit',
         startTime: '',
         endTime: '',
       },
@@ -559,12 +641,12 @@ export default {
       },
       downPayment: 0,
     },
-    rules: {
-      min(value) {
-        return (value || 'Giá không hợp lệ') > 0 || 'Không hợp lệ';
-      },
-    },
-    showCurfewTime: false,
+    // rules: {
+    //   min(value) {
+    //     return (value || 'Giá không hợp lệ') > 0 || 'Không hợp lệ';
+    //   },
+    // },
+    showCurfewTime: true,
     // map
     center: { lat: 10.8230989, lng: 106.6296638 },
     marker: { position: { lat: 10.8230989, lng: 106.6296638 } },
@@ -579,13 +661,6 @@ export default {
       },
       strictBounds: true,
     },
-    buildingNo: '',
-    coordsToString: {
-      addressComponents: [],
-      selectableAddresses: [],
-      selectedAddress: '',
-    },
-    addressComponents: [],
     warningDialog: false,
     warningTitle: '',
     emptyElement: '',
@@ -594,6 +669,10 @@ export default {
       buildingNo: '',
     },
     check: false,
+    ruleGender: -1,
+    ruleSelect: '',
+    unselectedRules: [],
+    newRule: '',
   }),
   methods: {
     ...mapActions({
@@ -606,6 +685,33 @@ export default {
       setNewGroupValue: 'vendor/group/setNewGroupValue',
       getProvinces: 'renter/common/getProvinces',
     }),
+    setGender() {
+      if (this.ruleGender !== -1) {
+        this.newGroupValue.regulations.push({ regulationId: this.ruleGender });
+        this.setNewGroupValue(this.newGroupValue);
+      }
+    },
+    addRule() {
+      this.newGroupValue.regulations.push({ regulationId: this.ruleSelect });
+      this.initUnselectedRules();
+    },
+    initUnselectedRules() {
+      console.log('vao');
+      let rules = this.allRules;
+      rules = rules.filter((item) => !item.regulationName.toLowerCase().includes('giới tính'));
+      this.newGroupValue.regulations.forEach((item) => {
+        rules = rules.filter((rule) => rule.regulationId !== item.regulationId);
+      });
+      this.unselectedRules = rules;
+    },
+    addNewRules() {
+      if (this.newRule.trim() !== '') {
+        this.newGroupValue.newRegulations.push({ regulationName: this.newRule });
+      }
+    },
+    getRuleById(id) {
+      return this.allRules.find((item) => item.regulationId === id).regulationName;
+    },
     receiveAppendixContent(content) {
       this.newGroupValue.appendixContract = content;
       this.setNewGroupValue(this.newGroupValue);
@@ -613,7 +719,7 @@ export default {
     nextServiceStep() {
       this.check = true;
       if (
-        this.getAddress() !== false &&
+        // this.getAddress() !== false &&
         !this.error.name &&
         !this.error.startTime &&
         !this.error.endTime &&
@@ -622,6 +728,7 @@ export default {
         !this.error.validPhone
       ) {
         this.e1 = 2;
+        console.log(this.newGroupValue);
         console.log(this.addressObjForApi);
       }
     },
@@ -633,10 +740,12 @@ export default {
           'Cài đặt lịch rảnh các ngày trong tuần để người thuê có thể gặp bạn hoặc quản lý của khu trọ để xem phòng trọ.';
         this.warningDialog = true;
       } else {
-        this.e1 = 5;
+        // this.e1 = 5;
+        this.insertGroup();
       }
     },
     nextRegulationStep() {
+      console.log(this.newGroupValue);
       if (this.newGroupValue.services.length === 0) {
         this.warningTitle = 'Vui lòng điền các dịch vụ tính tiền ở khu trọ của bạn!';
         this.emptyElement = '';
@@ -699,44 +808,38 @@ export default {
         });
       }
     },
-    async searchByCoord(coords) {
-      const key = 'AIzaSyDNBmxVGbZ4Je5XHPRqqaZPmDFKjKPPhXk';
-      const { lat, lng } = coords;
-      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${key}`;
-      let res = await fetch(url);
-      if (res.status === 200) {
-        res = await res.json();
-        const includeRoutes = res.results.filter((item) => {
-          const indexR = item.address_components.findIndex((compo) => {
-            const includeRoute = compo.types.includes('route');
-            return includeRoute;
-          });
-          return indexR > -1;
-        });
-        let formattedAddresses = includeRoutes.map((item) => {
-          const addressComponents = item.address_components;
-          const streetNumber = addressComponents.find((compo) => {
-            const isInclude = compo.types.includes('street_number');
-            return isInclude;
-          });
-          if (streetNumber) {
-            const shortName = streetNumber.short_name;
-            return item.formatted_address.substring(shortName.length + 1);
-          }
-          return item.formatted_address;
-        });
-        formattedAddresses = new Set(formattedAddresses);
-        return Array.from(formattedAddresses);
-      }
-      console.log(this.marker);
-      return null;
-    },
-    updateSelectableAddress() {
-      const { position } = this.marker;
-      this.searchByCoord(position).then((formattedAddresses) => {
-        this.coordsToString.selectableAddresses = formattedAddresses;
-      });
-    },
+    // async searchByCoord(coords) {
+    //   const key = 'AIzaSyDNBmxVGbZ4Je5XHPRqqaZPmDFKjKPPhXk';
+    //   const { lat, lng } = coords;
+    //   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${key}`;
+    //   let res = await fetch(url);
+    //   if (res.status === 200) {
+    //     res = await res.json();
+    //     const includeRoutes = res.results.filter((item) => {
+    //       const indexR = item.address_components.findIndex((compo) => {
+    //         const includeRoute = compo.types.includes('route');
+    //         return includeRoute;
+    //       });
+    //       return indexR > -1;
+    //     });
+    //     let formattedAddresses = includeRoutes.map((item) => {
+    //       const addressComponents = item.address_components;
+    //       const streetNumber = addressComponents.find((compo) => {
+    //         const isInclude = compo.types.includes('street_number');
+    //         return isInclude;
+    //       });
+    //       if (streetNumber) {
+    //         const shortName = streetNumber.short_name;
+    //         return item.formatted_address.substring(shortName.length + 1);
+    //       }
+    //       return item.formatted_address;
+    //     });
+    //     formattedAddresses = new Set(formattedAddresses);
+    //     return Array.from(formattedAddresses);
+    //   }
+    //   console.log(this.marker);
+    //   return null;
+    // },
     findProvinceByName(provinceName) {
       return this.provinces.data.find(
         (item) =>
@@ -769,31 +872,31 @@ export default {
       });
       return street;
     },
-    emitNewAddress() {
-      this.newGroupValue.address = this.addressObjForApi;
-      this.setNewGroupValue(this.newGroupValue);
-      this.$emit('newValue', {
-        coords: {
-          longitude: this.marker.position.lng,
-          latitude: this.marker.position.lat,
-        },
-        address: this.addressObjForApi,
-      });
-      console.log(this.addressObjForApi);
-    },
+    // emitNewAddress() {
+    //   this.newGroupValue.address = this.addressObjForApi;
+    //   this.setNewGroupValue(this.newGroupValue);
+    //   this.$emit('newValue', {
+    //     coords: {
+    //       longitude: this.marker.position.lng,
+    //       latitude: this.marker.position.lat,
+    //     },
+    //     address: this.addressObjForApi,
+    //   });
+    //   console.log(this.addressObjForApi);
+    // },
     insertGroup() {
-      const regulation = this.newGroupValue.regulation.map((item) => ({ regulationId: item }));
+      // const regulation = this.newGroupValue.regulation.map((item) => ({ regulationId: item }));
       const groupService = this.newGroupValue.services
         .filter((item) => item.serviceId)
         .map((item) => ({
           serviceId: item.serviceId,
           price:
             item.price !== -1 && item.price !== -2
-              ? this.getPriceUnit(item.price).servicePrice // eslint-disable-line
+              ? this.getPriceUnit(item.price.replaceAll('.', '')).servicePrice // eslint-disable-line
               : item.price, // eslint-disable-line
           priceUnit:
             item.price !== -1 && item.price !== -2
-              ? this.getPriceUnit(item.price).servicePriceUnit // eslint-disable-line
+              ? this.getPriceUnit(item.price.replaceAll('.', '')).servicePriceUnit // eslint-disable-line
               : null, // eslint-disable-line
           timeUnit: item.timeUnit,
           userUnit: item.price !== -1 && item.price !== -2 ? item.userUnit : null,
@@ -804,11 +907,11 @@ export default {
         .map((item) => ({
           price:
             item.price !== -1 && item.price !== -2
-              ? this.getPriceUnit(item.price).servicePrice // eslint-disable-line
+              ? this.getPriceUnit(item.price.replaceAll('.', '')).servicePrice // eslint-disable-line
               : item.price, // eslint-disable-line
           priceUnit:
             item.price !== -1 && item.price !== -2
-              ? this.getPriceUnit(item.price).servicePriceUnit // eslint-disable-line
+              ? this.getPriceUnit(item.price.replaceAll('.', '')).servicePriceUnit // eslint-disable-line
               : null, // eslint-disable-line
           timeUnit: item.timeUnit,
           userUnit: item.price !== -1 && item.price !== -2 ? item.userUnit : null,
@@ -832,7 +935,7 @@ export default {
         managerName: this.newGroupValue.managerName,
         managerPhone: this.newGroupValue.managerPhone,
         ownerJoin: this.newGroupValue.ownerJoin,
-        regulations: regulation,
+        regulations: this.newGroupValue.regulations,
         newRegulations: this.newGroupValue.newRegulations.map((item) => ({
           regulationName: item,
         })),
@@ -892,6 +995,7 @@ export default {
               wardName = item.long_name;
             }
           });
+          console.log(!wardName, wardName);
           if (!buildingNumber && streetName) {
             buildingNumber =
               this.place.formatted_address.split(streetName)[0].trim() === ''
@@ -899,11 +1003,18 @@ export default {
                 : null; // eslint-disable-line
           }
           if (!wardName) {
-            wardName = this.place.formatted_address.split(',')[1].trim();
+            const addressItem = this.place.formatted_address.split(',');
+            wardName = addressItem.find((item) => item.toLowerCase().includes('phường'));
+            if (!wardName) {
+              const index = addressItem.findIndex((item) => item.includes(streetName));
+              wardName = addressItem[index + 1];
+            }
+            // wardName = this.place.formatted_address.split(',')[1].trim();
             return { districtName, wardName, streetName, buildingNumber }; // eslint-disable-line
           }
           if (!streetName || !wardName || !province) {
             this.errorMsg.buildingNo = 'Địa chỉ không hợp lệ';
+            console.log('vao');
             return false;
           }
         } else {
@@ -969,6 +1080,11 @@ export default {
     },
     allRules() {
       return this.$store.state.renter.common.rules.data;
+    },
+    gender() {
+      return this.allRules.filter(
+        (item) => item.regulationName.toLowerCase().includes('giới tính'), // eslint-disable-line
+      ); // eslint-disable-line
     },
     allSchedule() {
       return this.$store.state.renter.common.schedule.data;
@@ -1045,32 +1161,45 @@ export default {
         validPhone,
       };
     },
+    isDuplicate() {
+      let dupplicateExistRules = false;
+      let dupplicateNewRules = false;
+      if (this.allRules.length > 0) {
+        dupplicateExistRules =
+          this.allRules.filter(
+            (rule) =>
+              rule.regulationName.trim().toLowerCase() === this.newRule.trim().toLowerCase(), // eslint-disable-line
+          ).length > 0;
+      }
+      if (this.newGroupValue.newRegulations.length > 0) {
+        dupplicateNewRules =
+          this.newGroupValue.newRegulations.filter(
+            (rule) => rule.trim().toLowerCase() === this.newRule.trim().toLowerCase(),
+          ).length > 0;
+      }
+      return dupplicateExistRules || dupplicateNewRules;
+    },
   },
   watch: {
-    marker: {
-      handler() {
-        this.updateSelectableAddress();
-      },
-      deep: true,
-    },
-    'coordsToString.selectedAddress': {
-      handler() {
-        this.emitNewAddress();
-      },
-      deep: true,
-    },
-    buildingNo: {
-      handler() {
-        this.emitNewAddress();
-        this.addressString1 = `${this.buildingNo} `;
-      },
-    },
+    // marker: {
+    //   handler() {
+    //     this.updateSelectableAddress();
+    //   },
+    //   deep: true,
+    // },
+    // buildingNo: {
+    //   handler() {
+    //     this.emitNewAddress();
+    //     this.addressString1 = `${this.buildingNo} `;
+    //   },
+    // },
   },
   mounted() {
     this.geolocate();
-    this.updateSelectableAddress();
+    // this.updateSelectableAddress();
   },
   created() {
+    this.initUnselectedRules();
     const url = 'https://youthhostelstorage.blob.core.windows.net/template/contract_appendix.html';
     this.downloadTemplate(url);
     if (!this.user) {
@@ -1080,7 +1209,6 @@ export default {
     } else {
       this.newGroup.vendorId = this.user.userId;
     }
-    // if (this.categories.length === 0) {
     this.getAllCategories().then(() => {
       this.newGroupValue.categoryId = this.$store.state.renter.filterResult.filter.categories.select;
     });
@@ -1088,7 +1216,9 @@ export default {
       this.getAllServices();
     }
     if (this.allRules.length === 0) {
-      this.getAllRules();
+      this.getAllRules().then(() => {
+        this.initUnselectedRules();
+      });
     }
     if (this.provinces.data.length === 0) {
       this.getProvinces();
@@ -1096,11 +1226,14 @@ export default {
     if (this.allSchedule.length === 0) {
       this.getAllSchedule();
     }
-    // }
   },
 };
 </script>
 <style>
+.dropdownSmall.theme--light.v-select .v-select__selection--comma {
+  font-size: 0.8rem !important;
+  color: #212121 !important;
+}
 .field-name {
   color: #212121 !important;
   font-family: Nunito, sans-serif !important;
@@ -1113,7 +1246,7 @@ export default {
   border: 1px solid #dee2e6 !important;
 }
 .checkbox .theme--light.v-label {
-  color: #6c757d !important;
+  color: #212121 !important;
   font-size: 0.875rem !important;
   font-family: 'Nunito', sans-serif !important;
 }

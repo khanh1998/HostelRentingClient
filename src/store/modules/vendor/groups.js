@@ -29,8 +29,9 @@ const myState = () => ({
   },
   newGroup: {
     services: [],
+    newServices: [],
     avatar: null,
-    regulation: [],
+    regulations: [],
     newRegulations: [],
     groupName: '',
     categoryId: null,

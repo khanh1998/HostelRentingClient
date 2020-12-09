@@ -13,8 +13,8 @@
         />
       </v-card>
     </v-dialog>
-    <v-row v-if="!isLoading" class="d-flex">
-      <v-col cols="12" md="9" class="d-flex flex-column">
+    <v-row v-if="!isLoading" class="d-flex py-0 my-0">
+      <v-col cols="12" md="9" class="d-flex flex-column py-0">
         <SlideBooking />
       </v-col>
     </v-row>
@@ -26,10 +26,10 @@
     <div
       v-if="!isLoading"
       class="d-flex flex-row flex-nowrap"
-      style="overflow-y: hidden; height: 100%;"
+      style="overflow-y: hidden; height: 100%"
     >
       <div
-        style="width: 25vw; position: fixed; z-index: 3; bottom: 0; right: 0; top: 70px;"
+        style="width: 25vw; position: fixed; z-index: 3; bottom: 0; right: 0; top: 70px"
         v-show="showChatList"
         class="hidden-sm-and-down primary-box-shadown"
       >
@@ -42,15 +42,13 @@
       dark
       large
       color="purple"
-      style="position: fixed; right: 10px; bottom: 25px; z-index: 1031;"
+      style="position: fixed; right: 10px; bottom: 25px; z-index: 1031"
       @click="showChatList = !showChatList"
     >
-      <v-icon dark>
-        mdi-chat-processing
-      </v-icon>
+      <v-icon dark> mdi-chat-processing </v-icon>
     </v-btn>
     <v-card
-      style="position: fixed; right: 330px; bottom: 0px; height: auto; width: 300px; z-index: 101;"
+      style="position: fixed; right: 330px; bottom: 0px; height: auto; width: 300px; z-index: 101"
       elevation="10"
     >
       <Chatbox
@@ -62,7 +60,7 @@
       />
     </v-card>
     <v-card
-      style="position: fixed; right: 650px; bottom: 0px; height: auto; width: 300px; z-index: 101;"
+      style="position: fixed; right: 650px; bottom: 0px; height: auto; width: 300px; z-index: 101"
       elevation="10"
     >
       <Chatbox
@@ -74,7 +72,7 @@
       />
     </v-card>
     <v-card
-      style="position: fixed; right: 970px; bottom: 0px; height: auto; width: 300px; z-index: 101;"
+      style="position: fixed; right: 970px; bottom: 0px; height: auto; width: 300px; z-index: 101"
       elevation="10"
     >
       <Chatbox

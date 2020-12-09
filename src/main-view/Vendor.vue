@@ -254,6 +254,9 @@ export default {
 }
 </style>
 <style>
+.main-bg {
+  background: linear-gradient(135deg, #8f75da 0, #727cf5 60%) !important;
+}
 .primary-box-shadown {
   box-shadow: 0 0 40px 0 rgba(154, 161, 171, 0.15) !important;
 }
@@ -290,6 +293,12 @@ export default {
   font-family: 'Nunito', sans-serif !important;
   color: #6c757d !important;
   font-size: 1.075rem !important;
+}
+.page-mobile-title {
+  font-weight: 700 !important;
+  font-family: 'Nunito', sans-serif !important;
+  color: #6c757d !important;
+  font-size: 1rem !important;
 }
 .nav-icon {
   color: #313a46 !important;
