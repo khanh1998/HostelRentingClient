@@ -343,8 +343,9 @@
                     </v-col>
                     <v-col cols="6" sm="6" class="d-flex flex-column">
                       <span class="font-weight-bold text-gray-black">Tiền thuê </span>
-                      <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
-                        ><span>{{ type.price }}</span>
+                      <span class="text size-sub-2 px-3 py-2 mt-2 d-flex">
+                        <span v-if="contractObj.deal">{{ contractObj.deal.offeredPrice }}</span>
+                        <span v-if="!contractObj.deal">{{ type.price }}</span>
                         <span class="ml-auto">triệu/tháng</span>
                       </span>
                     </v-col>
