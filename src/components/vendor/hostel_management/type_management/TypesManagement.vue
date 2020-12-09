@@ -170,6 +170,395 @@
         <v-divider></v-divider>
         <v-card-text class="py-0 d-flex" style="height: 500px">
           <v-row>
+            <v-col cols="12" class="py-0">
+              <span class="font-nunito text-muted font-italic">
+                Bạn có thể lấy gợi ý các thông tin từ các nhóm phòng của các khu trọ mà bạn đã tạo
+                từ trước
+              </span>
+            </v-col>
+            <v-col cols="5" class="d-flex flex-column justify-center">
+              <v-autocomplete
+                v-model="groupSelected"
+                :items="groups"
+                label="Chọn khu trọ"
+                item-text="groupName"
+                item-value="groupId"
+                class="size9rem font-nunito light-autocomplete"
+                dense
+                outlined
+                clearable
+                color="#727cf5"
+                hide-details
+                background-color="#f1f3fa"
+                no-data-text="Không có kết quả phù hợp"
+                hide-selected
+              >
+                <template slot="selection" slot-scope="{ item }">
+                  <span class="font-nunito text-primary">{{ item.groupName }}</span>
+                </template>
+                <template slot="item" slot-scope="{ item }">
+                  <span class="d-flex flex-column mb-3">
+                    <span class="font-nunito size9rem text-primary-dark">{{ item.groupName }}</span>
+                    <span class="font-nunito size-sub-3 text-gray"
+                      >{{ item.buildingNo }}, {{ item.address.streetName }},
+                      {{ item.address.districtName }} , {{ item.address.provinceName }}</span
+                    >
+                  </span>
+                </template></v-autocomplete
+              >
+            </v-col>
+            <v-col cols="7" class="d-flex flex-column justify-center">
+              <v-autocomplete
+                v-model="typeSelected"
+                :items="types"
+                label="Chọn nhóm phòng"
+                item-text="title"
+                item-value="typeId"
+                class="text-gray size9rem font-weight-regular font-nunito light-autocomplete"
+                outlined
+                dense
+                clearable
+                color="#727cf5"
+                hide-details
+                background-color="#f1f3fa"
+                no-data-text="Không có kết quả phù hợp"
+                @change="suggestType()"
+              >
+                <template slot="selection" slot-scope="{ item }">
+                  <span class="font-nunito text-gray">{{ item.title }}</span>
+                </template>
+              </v-autocomplete>
+            </v-col>
+            <v-col cols="8">
+              <v-row class="ma-0">
+                <v-col cols="7" class="d-flex flex-column pb-0">
+                  <span class="field-name font-weight-medium"
+                    >Tên nhóm phòng<span class="red--text ml-1">(*)</span></span
+                  >
+                  <v-text-field
+                    class="size-sub-2 font-nunito form"
+                    solo
+                    dense
+                    light
+                    hide-details
+                    v-model="newTypeValue.title"
+                    @input="setCreateTypeValue(newTypeValue)"
+                  />
+                  <span class="font-nunito red--text size-caption" v-show="showMessage.typeName"
+                    >Vui lòng điền tên nhóm phòng!</span
+                  >
+                </v-col>
+                <v-col cols="5" class="d-flex flex-column pb-0">
+                  <span class="field-name font-weight-medium"
+                    >Giá thuê<span class="red--text ml-1">(*)</span></span
+                  >
+                  <v-text-field
+                    class="size-sub form font-nunito"
+                    type="number"
+                    color="#727cf5"
+                    solo
+                    dense
+                    light
+                    v-model="newTypeValue.price"
+                    :suffix="newTypeValue.priceUnit"
+                    step="0.1"
+                    min="0"
+                    :rules="[rules.minPrice(newTypeValue.price)]"
+                    @input="setCreateTypeValue(newTypeValue)"
+                  />
+                </v-col>
+                <v-col cols="4" class="d-flex flex-column pb-0">
+                  <span class="field-name font-weight-medium"
+                    >Diện tích<span class="red--text ml-1">(*)</span></span
+                  >
+                  <v-text-field
+                    class="size-sub form font-nunito"
+                    type="number"
+                    color="#727cf5"
+                    solo
+                    dense
+                    light
+                    v-model="newTypeValue.superficiality"
+                    suffix="m2"
+                    step="5"
+                    min="0"
+                    :rules="[rules.min(newTypeValue.superficiality)]"
+                    @input="setCreateTypeValue(newTypeValue)"
+                  />
+                  <span
+                    class="font-nunito red--text size-caption"
+                    v-show="showMessage.superficiality"
+                    >Diện tích phải lớn hơn 0!</span
+                  >
+                </v-col>
+                <v-col cols="4" class="d-flex flex-column pb-0">
+                  <span class="field-name font-weight-medium"
+                    >Sức chứa<span class="red--text ml-1">(*)</span></span
+                  >
+                  <v-text-field
+                    class="size-sub form font-nunito"
+                    type="number"
+                    color="#727cf5"
+                    solo
+                    dense
+                    light
+                    v-model="newTypeValue.capacity"
+                    suffix="người"
+                    step="1"
+                    min="0"
+                    :rules="[rules.min(newTypeValue.capacity)]"
+                    @input="setCreateTypeValue(newTypeValue)"
+                  />
+                  <span class="font-nunito red--text size-caption" v-show="showMessage.capacity"
+                    >Sức chứa phải lớn hơn 0!</span
+                  >
+                </v-col>
+                <v-col cols="4" class="d-flex flex-column pb-0">
+                  <span class="field-name font-weight-medium"
+                    >Cọc thế chân<span class="red--text ml-1">(*)</span></span
+                  >
+                  <v-text-field
+                    class="size-sub form font-nunito"
+                    type="number"
+                    color="#727cf5"
+                    solo
+                    dense
+                    light
+                    v-model="newTypeValue.deposit"
+                    suffix="tháng"
+                    step="1"
+                    min="0"
+                    :rules="[rules.min(newTypeValue.deposit)]"
+                    @input="setCreateTypeValue(newTypeValue)"
+                  />
+                </v-col>
+                <v-col cols="12" class="pt-1">
+                  <div class="d-flex align-start">
+                    <span class="field-name font-weight-medium mt-2">Tiện ích</span>
+                    <v-col cols="5" class="ml-3 pa-0 d-flex flex-column justify-start">
+                      <v-text-field
+                        label="Tên tiện ích"
+                        v-model="searchFacilitiesQuery"
+                        solo
+                        hide-details
+                        prepend-inner-icon="search"
+                        class="text-muted size-sub-2 light-text-field font-nunito"
+                        clearable
+                        rounded
+                      ></v-text-field>
+                    </v-col>
+                    <v-spacer></v-spacer>
+                    <v-col cols="3" class="pa-0 d-flex flex-column justify-start">
+                      <v-text-field
+                        label="Tiện ích khác"
+                        v-model="newFacility"
+                        solo
+                        hide-details
+                        class="text-muted size-sub-2 light-text-field font-nunito"
+                        style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
+                      ></v-text-field>
+                      <span class="size-caption red--text font-nunito" v-show="isDuplicate"
+                        >Tiện ích đã tồn tại</span
+                      >
+                    </v-col>
+                    <v-btn
+                      class="btn-success btn-sm font-nunito white--text"
+                      @click="addNewFacility()"
+                      style="
+                        border-top-left-radius: 0px !important;
+                        border-bottom-left-radius: 0px !important;
+                      "
+                      >Bổ sung</v-btn
+                    >
+                  </div>
+                  <v-card
+                    class="overflow-y-auto mt-4 d-flex flex-wrap py-1"
+                    max-height="150"
+                    min-height="120"
+                    outlined
+                  >
+                    <v-col
+                      cols="3"
+                      v-for="item in newFacilitiesDisplay"
+                      :key="item"
+                      class="pa-0 ma-0 d-flex align-center"
+                    >
+                      <v-checkbox
+                        v-model="newFacilitiesSelectes"
+                        v-bind:key="item"
+                        :label="item"
+                        :value="item"
+                        hide-details
+                        class="filter mt-2 ml-3 checkbox"
+                        color="#727cf5"
+                        @click="setCreateTypeValue(newTypeValue)"
+                      ></v-checkbox>
+                    </v-col>
+                    <v-col
+                      cols="3"
+                      v-for="item in facilities"
+                      :key="item.facilityId"
+                      class="pa-0 ma-0 d-flex align-center"
+                    >
+                      <v-checkbox
+                        v-model="newTypeValue.facilityIds"
+                        v-bind:key="item.facilityId"
+                        :label="item.facilityName"
+                        :value="item.facilityId"
+                        hide-details
+                        class="filter mt-2 ml-3 checkbox"
+                        color="#727cf5"
+                        @click="setCreateTypeValue(newTypeValue)"
+                      ></v-checkbox>
+                    </v-col>
+                    <span
+                      v-if="facilities.length === 0 && newFacilitiesDisplay.length === 0"
+                      class="d-flex flex-column align-center ma-auto font-nunito text-primary"
+                    >
+                      <span
+                        >Nếu phòng trọ của bạn có tiện ích không có sẵn trong danh sách gợi ý.</span
+                      >
+                      <span
+                        >Hãy điền tiện ích khác và ấn nút
+                        <span style="color: #0acf97 !important">"Bổ sung"</span> để thêm tiện ích
+                        mới</span
+                      >
+                    </span>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col cols="4" class="d-flex flex-column pl-10">
+              <v-card outlined min-height="390" max-height="400">
+                <v-col cols="12" class="d-flex flex-column px-5">
+                  <span class="field-name font-weight-medium">Hình ảnh</span>
+                  <span class="font-nunito red--text size-caption" v-show="showMessage.image"
+                    >Tải ít nhất một hình ảnh về phòng trọ của bạn!</span
+                  >
+                  <v-row
+                    class="cursor ma-0 pa-5"
+                    style="border: 2px dashed #dee2e6; border-radius: 6px"
+                    @click="openImageUploadDialog"
+                  >
+                    <v-icon color="#98a6ad" large class="ma-auto">mdi-file-image-outline</v-icon>
+                  </v-row>
+                  <v-row>
+                    <div class="d-flex flex-wrap align-center pa-2">
+                      <div
+                        v-for="(image, index) in newTypeValue.image"
+                        :key="image.resourceUrl"
+                        class="type-image ma-2 d-flex flex column"
+                        v-bind:style="{ 'background-image': 'url(' + image.resourceUrl + ')' }"
+                        style="
+                          width: 6rem;
+                          height: 4rem;
+                          background-repeat: no-repeat;
+                          background-size: 6rem 4rem;
+                          position: relative;
+                        "
+                      >
+                        <v-hover v-slot="{ hover }">
+                          <div style="height: 100%; width: 100%">
+                            <v-expand-transition>
+                              <v-icon
+                                size="25"
+                                color="#fff"
+                                v-if="hover"
+                                class="d-flex transition-fast-in-fast-out cursor"
+                                style="
+                                  height: 100%;
+                                  width: 110px;
+                                  position: absolute;
+                                  top: 0;
+                                  background-color: rgba(0, 0, 0, 0.45);
+                                  border-radius: 0.25rem;
+                                "
+                                @click="removeImage(index)"
+                              >
+                                mdi-delete-forever
+                              </v-icon>
+                            </v-expand-transition>
+                          </div>
+                        </v-hover>
+                      </div>
+                    </div>
+                  </v-row>
+                  <v-dialog v-model="dialog.show" width="350">
+                    <v-card height="350" :loading="isFileUploading">
+                      <div class="d-flex flex-column align-center justify-center">
+                        <input
+                          type="file"
+                          multiple
+                          @change="onFileChange"
+                          ref="fileSelect"
+                          lang="vi"
+                          accept="image/*"
+                          class="ma-2"
+                        />
+                        <div class="d-flex flex-wrap" style="height: 250px; overflow-y: auto">
+                          <v-img
+                            v-for="url in upload.imageUrls"
+                            :key="url"
+                            :src="url"
+                            height="100"
+                            width="100"
+                            class="ma-1 elevation-2"
+                          ></v-img>
+                        </div>
+                      </div>
+                      <v-card-actions>
+                        <v-spacer />
+                        <v-btn
+                          color="primary"
+                          v-if="this.upload.imageUrls.length > 0"
+                          @click="uploadImages"
+                        >
+                          <v-icon>cloud_upload</v-icon> Tải lên
+                        </v-btn>
+                        <v-spacer />
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-col>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions class="d-flex justify-end pa-4">
+          <v-btn class="btn btn-light elevation-0 font-nunito" @click="closeCreateTypeDialog()">
+            <span>Quay lại</span>
+          </v-btn>
+          <v-btn class="btn btn-primary font-nunito" @click="insertNewType()">Tiếp theo</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- <v-dialog
+      v-model="showCreateTypeDialog"
+      scrollable
+      max-width="1000"
+      transition="dialog-bottom-transition"
+      persistent
+      hide-overlay
+    >
+      <v-overlay :value="isLoading || isTypeCreating || isRoomsCreating" absolute>
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
+      <v-card class="d-flex flex-column" v-if="!isLoading">
+        <v-row class="d-flex px-4 py-3 align-center ma-0 justify-space-between bg-primary">
+          <v-icon class="mr-1" color="rgb(255, 255, 255, 0.8)">room_preferences</v-icon>
+          <span
+            class="font-nunito white--text font-weight-bold"
+            style="font-size: 1.125rem !important"
+            >Phân loại nhóm mới
+          </span>
+          <v-btn icon @click="closeCreateTypeDialog()" class="mr-4"
+            ><v-icon size="20" color="rgb(255, 255, 255, 0.75)">close</v-icon></v-btn
+          >
+        </v-row>
+        <v-divider></v-divider>
+        <v-card-text class="py-0 d-flex" style="height: 500px">
+          <v-row>
             <v-col cols="8">
               <v-row class="ma-0">
                 <v-col cols="7" class="d-flex flex-column pb-0">
@@ -474,7 +863,7 @@
           <v-btn class="btn btn-primary font-nunito" @click="insertNewType()">Lưu</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
     <v-dialog
       v-model="showChooseExistTypeDialog"
       scrollable
@@ -1172,8 +1561,8 @@ export default {
       if (
         !this.showMessage.typeName &&
         !this.showMessage.superficiality &&
-        !this.showMessage.capacity &&
-        !this.showMessage.image
+        !this.showMessage.capacity
+        // !this.showMessage.image
       ) {
         let { typePrice, typePriceUnit } = this.getPriceUnit(this.newTypeValue.price);
         if (this.showChooseExistTypeDialog) {
