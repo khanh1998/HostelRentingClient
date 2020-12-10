@@ -39,7 +39,7 @@
               >
             </v-col>
             <v-btn class="mx-5 px-10 btn-success btn-sm font-nunito" to="groups"
-              >Quản lý nhà trọ</v-btn
+              >Quản lý các khu trọ</v-btn
             >
           </v-row>
         </v-col>
