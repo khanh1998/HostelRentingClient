@@ -272,7 +272,7 @@
             <treeView :utitlities="utilities" />
           </v-col>
         </v-row>
-        <v-row class="mt-5" v-if="statistic">
+        <v-row class="mt-5" v-if="statistic && (districtStat || wardStat || streetStat)">
           <v-col cols="12" md="8">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
               >GIÁ TRUNG BÌNH MỘT PHÒNG TRỌ</span
