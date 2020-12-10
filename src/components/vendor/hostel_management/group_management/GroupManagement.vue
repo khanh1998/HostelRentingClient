@@ -685,6 +685,9 @@ export default {
       this.validate();
       if (this.emptyElement === '') {
         const regulation = this.newGroupValue.regulation.map((item) => ({ regulationId: item }));
+        this.newGroupValue.statePrice.forEach((item) => {
+          this.newGroupValue.services[item].price = -1;
+        });
         const groupService = this.newGroupValue.services
           .filter((item) => item.serviceId)
           .map((item) => ({

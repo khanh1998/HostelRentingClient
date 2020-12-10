@@ -28,24 +28,24 @@
         >
           <span
             class="font-nunito text-black size-sub-3 d-flex flex-column justify-center align-center"
-            style="width: 60%; height: 100%; border-right: 1px solid #eef2f7"
+            style="width: 50%; height: 100%; border-right: 1px solid #eef2f7"
             >Bắt buộc
           </span>
           <span
             class="font-nunito text-black size-sub-3 d-flex flex-column justify-center align-center"
-            style="width: 40%"
+            style="width: 50%"
             >STT
           </span>
         </v-col>
         <v-col
-          cols="3"
+          cols="2"
           class="d-flex py-0 align-center justify-center"
           style="border-right: 1px solid #eef2f7"
         >
           <span class="font-nunito text-black size-sub-3">Tên</span>
         </v-col>
         <v-col
-          cols="4"
+          cols="5"
           class="d-flex py-0 align-center justify-center"
           style="border-right: 1px solid #eef2f7"
         >
@@ -75,103 +75,7 @@
           <v-row
             class="mx-0 pa-0 service-item cursor"
             style="border-bottom: 1px solid #eef2f7"
-            v-if="newGroup.services.length >= 5"
-          >
-            <v-col
-              cols="2"
-              class="d-flex justify-center align-center pa-0"
-              style="border-right: 1px solid #eef2f7; border-left: 1px solid #eef2f7"
-            >
-              <v-checkbox
-                v-model="newGroup.services[index].isRequired"
-                color="#727cf5"
-                hide-details
-                class="filter my-0 pl-7 d-flex align-center"
-                @change="setNewGroupValue(newGroup)"
-                style="width: 60%; height: 50px; border-right: 1px solid #eef2f7"
-              ></v-checkbox>
-              <span
-                class="font-nunito text-gray size-sub-3 d-flex flex-column justify-center align-center"
-                style="width: 40%"
-                >{{ index + 1 }}
-              </span>
-            </v-col>
-            <v-col cols="3" class="d-flex align-center" style="border-right: 1px solid #eef2f7">
-              <span
-                class="font-nunito text-gray size-sub-3"
-                v-if="isRequiredService(item.serviceName)"
-                >{{ item.serviceName }}</span
-              >
-              <v-autocomplete
-                v-else
-                v-model="newGroup.services[index].serviceId"
-                :items="unselectedService"
-                item-text="serviceName"
-                item-value="serviceId"
-                class="size-sub-3 font-nunito form mx-1"
-                solo
-                dense
-                color="indigo"
-                hide-details
-                cache-items
-                background-color="white"
-                no-data-text="Không có kết quả phù hợp"
-                style="border: 1px solid #e1e1e1 !important; border-radius: 4px"
-                _input="selectService(index)"
-                ><template slot="item" slot-scope="{ item }">
-                  <span class="font-nunito font-weight-medium size-sub-3">{{
-                    item.serviceName
-                  }}</span>
-                  <!-- <span class="font-nunito font-italic size-sub-3"
-                  >- {{ item.address.districtName }}, {{ item.address.province.provinceName }}</span
-                > -->
-                </template></v-autocomplete
-              >
-            </v-col>
-            <v-col
-              cols="4"
-              class="d-flex py-0 align-center justify-center"
-              style="border-right: 1px solid #eef2f7"
-            >
-              <span
-                class="font-nunit text-gray size-sub-3"
-                v-if="item.price && item.price !== -2 && item.price !== -1"
-                >{{ item.price }}</span
-              >
-              <span
-                class="font-nunito text-primary size-sub-3 ml-1"
-                v-if="item.price && item.price !== -2 && item.price !== -1"
-                >VNĐ/{{ item.userUnit }}</span
-              >
-              <span
-                class="font-nunito text-gray size-sub-3"
-                v-if="
-                  item.priceSuggestion && (!item.price || item.price === -2 || item.price === -1)
-                "
-                >{{ item.priceSuggestion }}</span
-              >
-            </v-col>
-            <v-col
-              cols="2"
-              class="d-flex py-0 align-center justify-center"
-              style="border-right: 1px solid #eef2f7"
-            >
-              <span class="font-nunito text-gray size-sub-3">{{ item.timeUnit }}</span>
-            </v-col>
-            <v-col cols="1" class="d-flex py-0 align-center justify-center">
-              <v-btn icon @click="removeService(item.serviceName)"
-                ><v-icon small color="#98a6ad">mdi mdi-delete</v-icon></v-btn
-              >
-            </v-col>
-          </v-row>
-          <v-row
-            v-else
-            class="mx-0 py-0 pl-0 pr-4 service-item cursor"
-            style="
-              border-bottom: 1px solid #eef2f7;
-              border-left: 2px solid #eef2f7;
-              border-right: 2px solid #eef2f7;
-            "
+            v-if="newGroup.services.length >= 4"
           >
             <v-col
               cols="2"
@@ -268,6 +172,153 @@
                 class="font-nunito red--text size-caption"
                 >{{ priceError }}</span
               >
+            </v-col>
+            <v-col
+              cols="2"
+              class="d-flex py-2 align-start justify-center"
+              style="border-right: 1px solid #eef2f7"
+            >
+              <v-select
+                :items="service.timeUnit"
+                dense
+                hide-details
+                v-model="newGroup.services[index].timeUnit"
+                class="form size-sub-3 font-nunito"
+                solo
+              ></v-select>
+            </v-col>
+            <v-col cols="1" class="d-flex py-0 align-center justify-center">
+              <v-btn icon @click="removeService(item.serviceName)"
+                ><v-icon small color="#98a6ad">mdi mdi-delete</v-icon></v-btn
+              >
+            </v-col>
+          </v-row>
+          <v-row
+            v-else
+            class="mx-0 py-0 pl-0 pr-4 service-item cursor"
+            style="
+              border-bottom: 1px solid #eef2f7;
+              border-left: 2px solid #eef2f7;
+              border-right: 2px solid #eef2f7;
+            "
+          >
+            <v-col
+              cols="2"
+              class="d-flex justify-center align-center pa-0"
+              style="border-right: 1px solid #eef2f7; border-left: 1px solid #eef2f7"
+            >
+              <div style="width: 50%; height: 100%" class="d-flex align-center justify-center">
+                <v-checkbox
+                  v-model="newGroup.services[index].isRequired"
+                  color="#727cf5"
+                  hide-details
+                  class="filter ma-0"
+                  @change="setNewGroupValue(newGroup)"
+                ></v-checkbox>
+              </div>
+              <span
+                class="ml-auto font-nunito text-gray size-sub-3 d-flex flex-column justify-center align-center"
+                style="width: 50%; height: 100%; border-left: 1px solid #eef2f7"
+                >{{ index + 1 }}
+              </span>
+            </v-col>
+            <v-col cols="2" class="d-flex align-start py-2" style="border-right: 1px solid #eef2f7">
+              <span
+                class="font-nunito text-gray size-sub-3 my-auto"
+                v-if="
+                  isRequiredService(item.serviceName) && newGroup.services[index].serviceId !== -1
+                "
+                >{{ item.serviceName }}</span
+              >
+              <v-autocomplete
+                v-if="
+                  !isRequiredService(item.serviceName) && newGroup.services[index].serviceId !== -1
+                "
+                v-model="newGroup.services[index].serviceId"
+                :items="unselectedService"
+                item-text="serviceName"
+                item-value="serviceId"
+                class="size-sub-3 font-nunito form"
+                solo
+                dense
+                color="indigo"
+                hide-details
+                cache-items
+                background-color="white"
+                no-data-text='Chọn " Dịch vụ khác " nếu dịch vụ bạn muốn chọn không tồn tại'
+                style="border: 1px solid #e1e1e1 !important; border-radius: 4px"
+                @change="selectService(index)"
+              >
+                <template slot="item" slot-scope="{ item }">
+                  <span class="font-nunito font-weight-medium size-sub-3">{{
+                    item.serviceName
+                  }}</span>
+                </template></v-autocomplete
+              >
+              <v-text-field
+                v-if="newGroup.services[index].serviceId === -1"
+                v-model="newGroup.services[index].serviceName"
+                dense
+                label="Tên dịch vụ"
+                class="py-1 form size-sub-3 font-nunito"
+                solo
+                autofocus
+                hide-details
+              />
+            </v-col>
+            <v-col cols="3" class="d-flex flex-column py-2 align-start justify-start">
+              <div style="width: 100% !important" class="d-flex py-0">
+                <v-text-field
+                  v-model="newGroup.services[index].price"
+                  dense
+                  label="Giá tiền"
+                  class="py-0 form size-sub-3 font-nunito addnew-service my-0"
+                  solo
+                  hide-details
+                  style="width: 50% !important"
+                  @input="inputDownPayment(index)"
+                  :disabled="newGroup.statePrice.includes(index)"
+                />
+                <v-text-field
+                  v-model="newGroup.services[index].userUnit"
+                  dense
+                  class="py-0 size-sub-3 font-nunito userUnit-textfield my-0"
+                  filled
+                  prefix="VNĐ/"
+                  hide-details
+                  append-icon="mdi mdi-pencil"
+                  style="width: 50% !important"
+                  :disabled="newGroup.statePrice.includes(index)"
+                  v-bind:style="
+                    newGroup.statePrice.includes(index)
+                      ? 'background-color: #cccccc'
+                      : 'background-color: rgba(57, 175, 209, 0.05)'
+                  "
+                />
+              </div>
+              <span
+                v-if="
+                  !isValidPrice(newGroup.services[index].price) &&
+                  !newGroup.statePrice.includes(index)
+                "
+                class="font-nunito red--text size-caption"
+                >{{ priceError }}</span
+              >
+            </v-col>
+            <v-col
+              cols="2"
+              class="d-flex py-2 align-start justify-center"
+              style="border-right: 1px solid #eef2f7"
+            >
+              <v-checkbox
+                v-model="newGroup.statePrice"
+                :value="index"
+                color="#727cf5"
+                hide-details
+                class="filter small-label mt-2 font-nunito size-sub-3"
+                label="Giá nhà nước"
+                @change="setNewGroupValue(newGroup)"
+              ></v-checkbox>
             </v-col>
             <v-col
               cols="2"
@@ -997,7 +1048,7 @@ export default {
   border-left: 0px solid !important;
   border-bottom-right-radius: 4px !important;
   border: 0px !important;
-  background-color: rgba(57, 175, 209, 0.25) !important;
+  /* background-color: rgba(57, 175, 209, 0.25) !important; */
 }
 .userUnit-textfield .v-text-field__prefix,
 .v-text-field__suffix {
@@ -1045,5 +1096,8 @@ export default {
 }
 .service-item:hover {
   background-color: #f1f3fa;
+}
+.small-label .v-label {
+  font-size: 0.875rem !important;
 }
 </style>

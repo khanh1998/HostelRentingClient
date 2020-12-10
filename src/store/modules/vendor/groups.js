@@ -29,6 +29,7 @@ const myState = () => ({
   },
   newGroup: {
     services: [],
+    statePrice: [],
     newServices: [],
     avatar: null,
     regulations: [],

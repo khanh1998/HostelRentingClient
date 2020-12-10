@@ -656,19 +656,26 @@ export default {
     },
     proviceStat() {
       console.log(this.group.address);
-      return this.statistic.provinces.filter(
-        (p) => p.provinceId === this.group.address.provinceId,
-      )[0];
+      if (this.group.address && this.group.address.provinceId) {
+        return this.statistic.provinces.filter(
+          (p) => p.provinceId === this.group.address.provinceId,
+        )[0];
+      }
+      return null;
     },
     districtStat() {
-      console.log(this.proviceStat);
-      return this.proviceStat.districts.filter(
-        (d) => d.districtId === this.group.address.districtId,
-      )[0];
+      if (this.proviceStat) {
+        return this.proviceStat.districts.filter(
+          (d) => d.districtId === this.group.address.districtId,
+        )[0];
+      }
+      return null;
     },
     wardStat() {
-      console.log(this.districtStat);
-      return this.districtStat.wards.filter((w) => w.wardId === this.group.address.wardId)[0];
+      if (this.districtStat) {
+        return this.districtStat.wards.filter((w) => w.wardId === this.group.address.wardId)[0];
+      }
+      return null;
     },
     streetStat() {
       if (this.wardStat) {
