@@ -868,6 +868,7 @@ export default {
     this.updateSelectableAddress();
   },
   created() {
+    console.log('thuy', this.allRules.length);
     if (!this.user) {
       this.getUser().then(() => {
         this.newGroup.vendorId = this.user.userId;

@@ -22,15 +22,17 @@
           >
             <h2
               class="font-weight-bold font-nunito"
-              :style="{ color: '#656565', fontSize: '1.7rem' }"
+              :style="{ color: '#656565', fontSize: '1.25rem' }"
             >
-              {{ info.title }}
-            </h2>
-            <span class="text-muted font-nunito" style="font-size: 0.9rem">
               {{ group.address.streetName }}, {{ group.address.wardName }},
               {{ group.address.districtName }},
               {{ group.address.provinceName }}
-            </span>
+            </h2>
+            <!-- <span class="text-muted font-nunito" style="font-size: 0.9rem">
+              {{ group.address.streetName }}, {{ group.address.wardName }},
+              {{ group.address.districtName }},
+              {{ group.address.provinceName }}
+            </span> -->
             <div style="width: 100%" class="d-flex flex-wrap mt-3 justify-space-between">
               <div class="d-flex flex-column">
                 <span
@@ -111,9 +113,10 @@
                 class="font-nunito py-1 d-flex justify-center breadcrumbs"
               ></v-breadcrumbs>
             </div>
-            <span class="font-weight-medium text-h5 text-primary text-center"
+            <span class="font-weight-medium text-h5 text-primary text-center" v-if="info.price > 0"
               >{{ info.price }} {{ info.priceUnit }}/tháng</span
             >
+            <span class="font-weight-medium text-h5 text-primary text-center" v-else>Miễn phí</span>
             <v-row class="d-flex justify-end align-end">
               <v-col cols="12" md="11" class="d-flex rounded-0 d-flex justify-space-around">
                 <div
@@ -127,7 +130,10 @@
                     <span class="text-uppercase font-nunito text-caption font-weight-medium"
                       >Cọc thế chân</span
                     >
-                    <span class="font-nunito text-caption">{{ info.deposit }} tháng tiền thuê</span>
+                    <span class="font-nunito text-caption" v-if="info.deposit > 0"
+                      >{{ info.deposit }} tháng tiền thuê</span
+                    >
+                    <span class="font-nunito text-caption" v-else>Không cọc</span>
                   </v-col>
                   <v-col cols="5" class="d-flex flex-column">
                     <span class="text-uppercase font-nunito text-caption font-weight-medium"

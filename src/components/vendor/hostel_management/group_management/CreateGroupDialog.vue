@@ -37,11 +37,11 @@
         </v-card>
         <v-stepper v-model="e1">
           <v-stepper-header class="ma-auto px-16">
-            <template v-for="n in 4">
+            <template v-for="n in 3">
               <v-stepper-step :key="`${n}-step`" :complete="e1 > n" :step="n" color="#727cf5">
                 <span class="font-nunito size9rem text-gray">{{ stepHeader[n - 1] }}</span>
               </v-stepper-step>
-              <v-divider v-if="n !== 4" :key="n"></v-divider>
+              <v-divider v-if="n !== 3" :key="n"></v-divider>
             </template>
           </v-stepper-header>
           <v-stepper-content step="1" class="pa-0 mt-2">
@@ -256,7 +256,6 @@
                     <v-col cols="3" class="d-flex flex-column" v-if="gender.length > 0">
                       <v-select
                         v-model="ruleGender"
-                        @change="setGender()"
                         :items="gender"
                         item-text="regulationName"
                         item-value="regulationId"
@@ -318,26 +317,87 @@
                         > -->
                       </v-col>
                     </v-col>
-                    <v-col cols="12" class="py-0" v-if="newGroupValue.regulations.length > 0">
+                    <v-col
+                      cols="12"
+                      class="py-0"
+                      v-if="
+                        newGroupValue.regulations.length > 0 ||
+                        newGroupValue.newRegulations.length > 0
+                      "
+                    >
                       <v-card class="d-flex flex-wrap py-3" outlined>
-                        <v-chip
+                        <div
                           v-for="(item, index) in newGroupValue.newRegulations"
                           v-bind:key="index"
-                          class="font-nunito mx-1 mb-2"
-                          small
-                          outlined
+                          class="font-nunito size-sub-3 mx-1 mb-2 py-1 d-flex align-center"
+                          style="
+                            border-radius: 1rem;
+                            border: 1px solid #cccccc;
+                            text-align: center;
+                            position: relative;
+                          "
                         >
-                          {{item.regulationName}}
-                        </v-chip>
-                        <v-chip
-                          v-for="(item, index) in newGroupValue.regulations"
-                          v-bind:key="index"
-                          class="font-nunito mx-1 mb-2"
-                          small
-                          outlined
+                          <v-hover v-slot="{ hover }">
+                            <div>
+                              <span class="mx-2">{{ item.regulationName }}</span>
+                              <v-expand-transition>
+                                <v-icon
+                                  size="25"
+                                  color="#fff"
+                                  v-if="hover"
+                                  class="d-flex transition-fast-in-fast-out cursor"
+                                  style="
+                                    height: 100%;
+                                    width: 100%;
+                                    position: absolute;
+                                    top: 0;
+                                    background-color: rgba(0, 0, 0, 0.45);
+                                    border-radius: 1rem;
+                                  "
+                                  @click="removeNewRegulation(index)"
+                                >
+                                  mdi-delete-forever
+                                </v-icon>
+                              </v-expand-transition>
+                            </div>
+                          </v-hover>
+                        </div>
+                        <div
+                          v-for="item in newGroupValue.regulations"
+                          v-bind:key="item.regulationId"
+                          class="font-nunito size-sub-3 mx-1 mb-2 py-1 d-flex align-center"
+                          style="
+                            border-radius: 1rem;
+                            border: 1px solid #cccccc;
+                            text-align: center;
+                            position: relative;
+                          "
                         >
-                          {{ getRuleById(item.regulationId) }}
-                        </v-chip>
+                          <v-hover v-slot="{ hover }">
+                            <div>
+                              <span class="mx-2">{{ getRuleById(item.regulationId) }}</span>
+                              <v-expand-transition>
+                                <v-icon
+                                  size="25"
+                                  color="#fff"
+                                  v-if="hover"
+                                  class="d-flex transition-fast-in-fast-out cursor"
+                                  style="
+                                    height: 100%;
+                                    width: 100%;
+                                    position: absolute;
+                                    top: 0;
+                                    background-color: rgba(0, 0, 0, 0.45);
+                                    border-radius: 1rem;
+                                  "
+                                  @click="removeRegulation(item.regulationId)"
+                                >
+                                  mdi-delete-forever
+                                </v-icon>
+                              </v-expand-transition>
+                            </div>
+                          </v-hover>
+                        </div>
                       </v-card>
                     </v-col>
                   </v-row>
@@ -581,7 +641,6 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import ServiceManagement from './ServiceManagement.vue';
-// import RegulationManagement from './RegulationManagement.vue';
 import InitSchedule from './InitSchedule.vue';
 import AvatarManagement from './AvatarManagement.vue';
 // import AppendixContract from './AppendixContract.vue';
@@ -592,39 +651,39 @@ export default {
   props: ['show'],
   components: {
     ServiceManagement,
-    // RegulationManagement,
     InitSchedule,
     AvatarManagement,
     // TextEditor,
     // AppendixContract,
   },
   data: () => ({
-    // newGroup: {
-    //   vendorId: 0,
-    //   buildingNo: '',
-    //   longitude: '',
-    //   latitude: '',
-    //   managerName: '',
-    //   managerPhone: '',
-    //   ownerJoin: false,
-    //   imgUrl: null,
-    //   address: {
-    //     provinceId: 1,
-    //     provinceName: 'Thành phố Hồ Chí Minh',
-    //     districtId: null,
-    //     districtName: '',
-    //     wardId: null,
-    //     wardName: '',
-    //     streetId: null,
-    //     streetName: '',
-    //   },
-    //   services: [],
-    //   schedules: [],
-    //   appendixContract: null,
-    // },
+    newGroup: {
+      vendorId: 0,
+      buildingNo: '',
+      longitude: '',
+      latitude: '',
+      managerName: '',
+      managerPhone: '',
+      ownerJoin: false,
+      imgUrl: null,
+      address: {
+        provinceId: 1,
+        provinceName: 'Thành phố Hồ Chí Minh',
+        districtId: null,
+        districtName: '',
+        wardId: null,
+        wardName: '',
+        streetId: null,
+        streetName: '',
+      },
+      services: [],
+      schedules: [],
+      appendixContract: null,
+    },
     downloadedAppendixContract: null,
     e1: 1,
-    stepHeader: ['Thông tin', 'Dịch vụ', 'Lịch rảnh', 'Hợp đồng mẫu'],
+    // stepHeader: ['Thông tin', 'Dịch vụ', 'Lịch rảnh', 'Hợp đồng mẫu'],
+    stepHeader: ['Thông tin', 'Dịch vụ', 'Lịch rảnh'],
     groupInfo: {
       groupName: '',
       category: 0,
@@ -696,7 +755,6 @@ export default {
       this.initUnselectedRules();
     },
     initUnselectedRules() {
-      console.log('vao');
       let rules = this.allRules;
       rules = rules.filter((item) => !item.regulationName.toLowerCase().includes('giới tính'));
       this.newGroupValue.regulations.forEach((item) => {
@@ -728,7 +786,7 @@ export default {
         !this.error.validPhone
       ) {
         this.e1 = 2;
-        console.log(this.newGroupValue);
+        this.setGender();
         console.log(this.addressObjForApi);
       }
     },
@@ -745,7 +803,6 @@ export default {
       }
     },
     nextRegulationStep() {
-      console.log(this.newGroupValue);
       if (this.newGroupValue.services.length === 0) {
         this.warningTitle = 'Vui lòng điền các dịch vụ tính tiền ở khu trọ của bạn!';
         this.emptyElement = '';
@@ -886,6 +943,9 @@ export default {
     // },
     insertGroup() {
       // const regulation = this.newGroupValue.regulation.map((item) => ({ regulationId: item }));
+      this.newGroupValue.statePrice.forEach((item) => {
+        this.newGroupValue.services[item].price = -1;
+      });
       const groupService = this.newGroupValue.services
         .filter((item) => item.serviceId)
         .map((item) => ({
@@ -1063,6 +1123,16 @@ export default {
         .then((text) => {
           this.downloadedAppendixContract = text;
         });
+    },
+    removeRegulation(regulationId) {
+      this.newGroupValue.regulations = this.newGroupValue.regulations.filter(
+        (item) => item.regulationId !== regulationId,
+      );
+    },
+    removeNewRegulation(index) {
+      this.newGroupValue.newRegulations = this.newGroupValue.newRegulations.filter(
+        (_, i) => i !== index,
+      );
     },
   },
   computed: {

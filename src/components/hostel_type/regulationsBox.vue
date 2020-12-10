@@ -4,10 +4,10 @@
       <v-chip
         v-for="item in regulations"
         v-bind:key="item.regulationId"
-        :color="item.allowed ? '#f1f3fa' : 'red lighten-4'"
+        :color="notAllowRule(item.regulationName) ? 'red lighten-4' : '#f1f3fa'"
         class="font-nunito"
       >
-        <v-icon small color="#4250f2" v-if="item.allowed">done</v-icon>
+        <v-icon small color="#4250f2" v-if="!notAllowRule(item.regulationName)">done</v-icon>
         <v-icon x-small color="red" v-else>close</v-icon>
         {{ item.regulationName }}
       </v-chip>
@@ -21,5 +21,10 @@ export default {
     icons: ['ac_unit', 'kitchen'],
   }),
   props: ['regulations'],
+  methods: {
+    notAllowRule(ruleName) {
+      return ruleName.toLowerCase().includes('cấm') || ruleName.toLowerCase().includes('không');
+    },
+  },
 };
 </script>
