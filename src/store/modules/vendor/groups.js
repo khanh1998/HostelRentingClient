@@ -51,6 +51,7 @@ const myState = () => ({
     address: null,
     schedules: [],
     appendixContract: null,
+    types: [],
   },
   newType: {},
   newRoom: {

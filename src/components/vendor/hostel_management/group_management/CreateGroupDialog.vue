@@ -37,11 +37,11 @@
         </v-card>
         <v-stepper v-model="e1">
           <v-stepper-header class="ma-auto px-16">
-            <template v-for="n in 3">
+            <template v-for="n in stepHeader.length">
               <v-stepper-step :key="`${n}-step`" :complete="e1 > n" :step="n" color="#727cf5">
                 <span class="font-nunito size9rem text-gray">{{ stepHeader[n - 1] }}</span>
               </v-stepper-step>
-              <v-divider v-if="n !== 3" :key="n"></v-divider>
+              <v-divider v-if="n !== stepHeader.length" :key="n"></v-divider>
             </template>
           </v-stepper-header>
           <v-stepper-content step="1" class="pa-0 mt-2">
@@ -493,7 +493,7 @@
             <v-divider></v-divider>
             <div class="d-flex px-4 py-3">
               <v-spacer></v-spacer>
-              <v-btn class="btn btn-primary font-nunito mx-2" @click="nextServiceStep()">
+              <v-btn class="btn btn-primary font-nunito mx-2" @click="nextStep2()">
                 Tiếp tục
               </v-btn>
               <v-btn
@@ -510,7 +510,7 @@
               min-height="430"
               style="box-shadow: none !important"
             >
-              <ServiceManagement />
+              <WholeHouse />
             </v-card>
             <v-divider></v-divider>
             <div class="d-flex px-4 py-3">
@@ -518,7 +518,32 @@
                 >Quay lại</v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn class="btn btn-primary font-nunito mx-2" @click="nextRegulationStep()">
+              <v-btn class="btn btn-primary font-nunito mx-2" @click="nextStep3()">
+                Tiếp tục
+              </v-btn>
+              <v-btn
+                class="btn btn-outline-primary elevation-0 font-nunito mx-2"
+                @click="closeDialog()"
+                >Đóng</v-btn
+              >
+            </div>
+          </v-stepper-content>
+          <v-stepper-content step="3" class="pa-0 mt-2">
+            <v-card
+              class="overflow-y-auto d-flex flex-column pt-1 pb-3 px-16 my-0"
+              max-height="430"
+              min-height="430"
+              style="box-shadow: none !important"
+            >
+              <ServiceManagement />
+            </v-card>
+            <v-divider></v-divider>
+            <div class="d-flex px-4 py-3">
+              <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="e1 = 2"
+                >Quay lại</v-btn
+              >
+              <v-spacer></v-spacer>
+              <v-btn class="btn btn-primary font-nunito mx-2" @click="nextStep4()">
                 Tiếp tục
               </v-btn>
               <v-btn
@@ -551,7 +576,7 @@
               >
             </div>
           </v-stepper-content> -->
-          <v-stepper-content step="3" class="pa-0 mt-2">
+          <v-stepper-content step="4" class="pa-0 mt-2">
             <v-card
               class="overflow-y-auto d-flex flex-column pt-1 pb-3 px-10 my-0"
               max-height="430"
@@ -643,6 +668,7 @@ import { mapActions, mapState } from 'vuex';
 import ServiceManagement from './ServiceManagement.vue';
 import InitSchedule from './InitSchedule.vue';
 import AvatarManagement from './AvatarManagement.vue';
+import WholeHouse from '../category/WholeHouse.vue';
 // import AppendixContract from './AppendixContract.vue';
 // import TextEditor from '../../contract/TextEditor.vue';
 
@@ -653,6 +679,7 @@ export default {
     ServiceManagement,
     InitSchedule,
     AvatarManagement,
+    WholeHouse,
     // TextEditor,
     // AppendixContract,
   },
@@ -683,7 +710,7 @@ export default {
     downloadedAppendixContract: null,
     e1: 1,
     // stepHeader: ['Thông tin', 'Dịch vụ', 'Lịch rảnh', 'Hợp đồng mẫu'],
-    stepHeader: ['Thông tin', 'Dịch vụ', 'Lịch rảnh'],
+    stepHeader: ['Thông tin Khu trọ', 'Thông tin các Phòng', 'Dịch vụ', 'Lịch rảnh'],
     groupInfo: {
       groupName: '',
       category: 0,
@@ -774,7 +801,7 @@ export default {
       this.newGroupValue.appendixContract = content;
       this.setNewGroupValue(this.newGroupValue);
     },
-    nextServiceStep() {
+    nextStep2() {
       this.check = true;
       if (
         // this.getAddress() !== false &&
@@ -790,6 +817,9 @@ export default {
         console.log(this.addressObjForApi);
       }
     },
+    nextStep3() {
+      this.e1 = 3;
+    },
     nextContractStep() {
       const emptyDay = this.newGroupValue.schedules.filter((item) => item.timeRange.length === 0);
       if (emptyDay.length === 7) {
@@ -802,13 +832,13 @@ export default {
         this.insertGroup();
       }
     },
-    nextRegulationStep() {
+    nextStep4() {
       if (this.newGroupValue.services.length === 0) {
         this.warningTitle = 'Vui lòng điền các dịch vụ tính tiền ở khu trọ của bạn!';
         this.emptyElement = '';
         this.warningDialog = true;
       } else {
-        this.e1 = 3;
+        this.e1 = 4;
       }
     },
     closeDialog() {
