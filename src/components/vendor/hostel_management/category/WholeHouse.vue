@@ -24,7 +24,7 @@
                 step="5"
                 min="0"
                 :rules="[rules.min(newTypeValue.superficiality)]"
-                _input="setCreateTypeValue(newTypeValue)"
+                @input="setCreateTypeValue(newTypeValue)"
               />
               <span class="font-nunito red--text size-caption" v-show="showMessage.superficiality"
                 >Diện tích phải lớn hơn 0!</span
@@ -50,7 +50,7 @@
                 step="0.1"
                 min="0"
                 :rules="[rules.minPrice(newTypeValue.price)]"
-                _input="setCreateTypeValue(newTypeValue)"
+                @input="setCreateTypeValue(newTypeValue)"
               />
             </v-col>
           </v-row>
@@ -74,7 +74,7 @@
                 step="1"
                 min="0"
                 :rules="[rules.min(newTypeValue.capacity)]"
-                _input="setCreateTypeValue(newTypeValue)"
+                @input="setCreateTypeValue(newTypeValue)"
               />
               <span class="font-nunito red--text size-caption" v-show="showMessage.capacity"
                 >Số lượng người phải lớn hơn 0!</span
@@ -141,7 +141,7 @@
                 hide-details
                 class="filter mt-2 ml-3 checkbox"
                 color="#727cf5"
-                _click="setCreateTypeValue(newTypeValue)"
+                @click="setCreateTypeValue(newTypeValue)"
               ></v-checkbox>
             </v-col>
             <v-col
@@ -158,7 +158,7 @@
                 hide-details
                 class="filter mt-2 ml-3 checkbox"
                 color="#727cf5"
-                _click="setCreateTypeValue(newTypeValue)"
+                @click="setCreateTypeValue(newTypeValue)"
               ></v-checkbox>
             </v-col>
             <span
@@ -346,18 +346,6 @@ export default {
   name: 'WholeHouse',
   mixins: [fileMixins, snackBarMixin],
   data: () => ({
-    newTypeValue: {
-      title: '',
-      price: 0,
-      priceUnit: 'triệu',
-      superficiality: 0,
-      deposit: 1,
-      capacity: 0,
-      rooms: [],
-      image: [],
-      facilityIds: [],
-      newFacilities: [],
-    },
     rules: {
       minPrice(value) {
         return (value || 'Giá không hợp lệ') > 0 || 'Không hợp lệ';
@@ -452,6 +440,11 @@ export default {
       }
       return this.allFacilities;
     },
+    newTypeValue() {
+      const newType = this.$store.state.vendor.group.createType.data;
+      newType.priceUnit = 'triệu';
+      return newType;
+    },
   },
   methods: {
     ...mapActions({
@@ -467,6 +460,7 @@ export default {
         this.newFacilities.unshift(this.newFacility);
         this.newFacilitiesSelectes.push(this.newFacility);
         this.newFacility = '';
+        this.setCreateTypeValue(this.newTypeValue);
       }
     },
     // upload

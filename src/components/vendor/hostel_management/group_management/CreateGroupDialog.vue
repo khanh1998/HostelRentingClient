@@ -818,7 +818,9 @@ export default {
       }
     },
     nextStep3() {
-      this.e1 = 3;
+      console.log(this.newGroupValue);
+      console.log(this.newTypeValue);
+      // this.e1 = 3;
     },
     nextContractStep() {
       const emptyDay = this.newGroupValue.schedules.filter((item) => item.timeRange.length === 0);
@@ -1278,6 +1280,9 @@ export default {
           ).length > 0;
       }
       return dupplicateExistRules || dupplicateNewRules;
+    },
+    newTypeValue() {
+      return this.$store.state.vendor.group.createType.data;
     },
   },
   watch: {

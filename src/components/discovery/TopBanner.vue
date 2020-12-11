@@ -7,9 +7,10 @@
   >
     <v-row class="fill-height ma-0" align="center" justify="center">
       <v-col cols="12">
-        <p class="text-h3 font-weight-medium text-center white--text">Thị trường thuê trọ</p>
+        <p class="text-h3 font-weight-medium text-center white--text">Thị trường thuê phòng trọ</p>
         <p class="text-center white--text text-h6">
-          Tìm hiểu về giá cả nhà trọ trên từng khu vực để giúp bạn tìm được một căn phòng ưng ý.
+          Tìm hiểu về giá cả thuê phòng trọ trên từng khu vực để giúp bạn tìm được một căn phòng ưng
+          ý.
         </p>
       </v-col>
     </v-row>
