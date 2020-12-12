@@ -74,10 +74,10 @@ const myState = () => ({
     data: {
       title: '',
       price: 0,
-      priceUnit: null,
-      superficiality: 0,
+      priceUnit: 'triệu',
+      superficiality: '',
       deposit: 1,
-      capacity: 0,
+      capacity: '',
       rooms: [],
       image: [],
       facilityIds: [],

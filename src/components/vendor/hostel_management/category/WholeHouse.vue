@@ -385,6 +385,7 @@ export default {
   computed: {
     newGroupValue() {
       const newGroupData = this.$store.state.vendor.group.newGroup;
+      console.log(newGroupData.types.length);
       if (newGroupData.types.length === 0) {
         newGroupData.types.push({
           title: 'Phòng ngủ',

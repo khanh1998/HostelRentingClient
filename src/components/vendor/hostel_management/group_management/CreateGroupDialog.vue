@@ -74,7 +74,7 @@
                       >
                       <v-select
                         v-model="newGroupValue.categoryId"
-                        @change="setNewGroupValue(newGroupValue)"
+                        @change="(newGroupValue.types = []), setNewGroupValue(newGroupValue)"
                         :items="categories"
                         item-text="categoryName"
                         item-value="categoryId"
@@ -509,8 +509,18 @@
               max-height="430"
               min-height="430"
               style="box-shadow: none !important"
+              v-bind:style="
+                getCategoryById().categoryName.toLowerCase() === 'nhà cho thuê phòng'
+                  ? 'background-color: #f1f3fa;'
+                  : 'background-color: #fff;'
+              "
             >
-              <WholeHouse />
+              <WholeHouseCategory
+                v-if="getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn'"
+              />
+              <HostelRoomCategory
+                v-if="getCategoryById().categoryName.toLowerCase() === 'nhà cho thuê phòng'"
+              />
             </v-card>
             <v-divider></v-divider>
             <div class="d-flex px-4 py-3">
@@ -668,7 +678,8 @@ import { mapActions, mapState } from 'vuex';
 import ServiceManagement from './ServiceManagement.vue';
 import InitSchedule from './InitSchedule.vue';
 import AvatarManagement from './AvatarManagement.vue';
-import WholeHouse from '../category/WholeHouse.vue';
+import WholeHouseCategory from '../category/WholeHouse.vue';
+import HostelRoomCategory from '../category/Hostel_Room.vue';
 // import AppendixContract from './AppendixContract.vue';
 // import TextEditor from '../../contract/TextEditor.vue';
 
@@ -679,7 +690,8 @@ export default {
     ServiceManagement,
     InitSchedule,
     AvatarManagement,
-    WholeHouse,
+    WholeHouseCategory,
+    HostelRoomCategory,
     // TextEditor,
     // AppendixContract,
   },
@@ -710,7 +722,7 @@ export default {
     downloadedAppendixContract: null,
     e1: 1,
     // stepHeader: ['Thông tin', 'Dịch vụ', 'Lịch rảnh', 'Hợp đồng mẫu'],
-    stepHeader: ['Thông tin Khu trọ', 'Thông tin các Phòng', 'Dịch vụ', 'Lịch rảnh'],
+    stepHeader: ['Thông tin Khu trọ', 'Chi tiết các phòng', 'Dịch vụ', 'Lịch rảnh'],
     groupInfo: {
       groupName: '',
       category: 0,
@@ -770,6 +782,7 @@ export default {
       getAllSchedule: 'renter/common/getAllSchedule',
       setNewGroupValue: 'vendor/group/setNewGroupValue',
       getProvinces: 'renter/common/getProvinces',
+      getAllFacilities: 'renter/common/getAllFacilities1',
     }),
     setGender() {
       if (this.ruleGender !== -1) {
@@ -814,13 +827,43 @@ export default {
       ) {
         this.e1 = 2;
         this.setGender();
+        console.log(this.newGroupValue);
         console.log(this.addressObjForApi);
       }
     },
     nextStep3() {
       console.log(this.newGroupValue);
       console.log(this.newTypeValue);
-      // this.e1 = 3;
+      if (
+        this.getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn' &&
+        this.validWholeHouseData()
+      ) {
+        this.e1 = 3;
+      } else if (this.getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn') {
+        this.e1 = 3;
+      }
+    },
+    validWholeHouseData() {
+      let flat = 0;
+      this.newGroupValue.types.forEach((newType) => {
+        if (newType.title.trim() === '' || newType.roomsNumber < 1) {
+          console.log('vao');
+          flat += 1;
+        }
+      });
+      if (this.newGroupValue.types.length === 0) {
+        flat += 1;
+      }
+      if (this.newTypeValue.superficiality.trim() === '' || this.newTypeValue.superficiality < 1) {
+        flat += 1;
+      }
+      if (this.newTypeValue.price.trim() === '' || this.newTypeValue.price < 0) {
+        flat += 1;
+      }
+      if (this.newTypeValue.capacity.trim() === '' || this.newTypeValue.capacity < 1) {
+        flat += 1;
+      }
+      return flat === 0;
     },
     nextContractStep() {
       const emptyDay = this.newGroupValue.schedules.filter((item) => item.timeRange.length === 0);
@@ -1166,6 +1209,9 @@ export default {
         (_, i) => i !== index,
       );
     },
+    getCategoryById() {
+      return this.categories.find((item) => item.categoryId === this.newGroupValue.categoryId);
+    },
   },
   computed: {
     ...mapState({
@@ -1191,13 +1237,19 @@ export default {
     allSchedule() {
       return this.$store.state.renter.common.schedule.data;
     },
+    allFacilities() {
+      return this.$store.state.renter.common.facilities.data;
+    },
     isLoading() {
       const allServices = this.$store.state.renter.common.services.isLoading;
       const allCategories = this.$store.state.renter.filterResult.filter.categories.isLoading;
       const allRules = this.$store.state.renter.common.rules.isLoading;
       const allSchedule = this.$store.state.renter.common.schedule.isLoading;
       const isCreatingGroup = this.$store.state.vendor.group.groups.isCreating;
-      return allServices || allCategories || allRules || allSchedule || isCreatingGroup;
+      const allFacilities = this.$store.state.renter.common.facilities.isLoading;
+      return (
+        allServices || allCategories || allRules || allSchedule || isCreatingGroup || allFacilities
+      );
     },
     isCreatedGroupStatus() {
       return this.$store.state.vendor.group.groups.success;
@@ -1324,6 +1376,10 @@ export default {
       this.getAllRules().then(() => {
         this.initUnselectedRules();
       });
+    }
+    if (this.allFacilities.length === 0) {
+      console.log('object');
+      this.getAllFacilities();
     }
     if (this.provinces.data.length === 0) {
       this.getProvinces();
