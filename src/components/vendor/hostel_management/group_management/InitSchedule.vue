@@ -1,11 +1,11 @@
 <template>
   <v-row
-    style="background-color: #f7f7f9; border-radius: 0.5rem"
-    class="my-3 d-flex flex-column pl-4"
+    style="background-color: #f1f3fa; border-radius: 0.5rem"
+    class="my-3 d-flex flex-column pl-4 mx-10"
   >
     <v-col cols="12" class="pa-0">
-      <v-row class="ma-0">
-        <v-col cols="3">
+      <v-row class="mx-5">
+        <v-col cols="2">
           <v-autocomplete
             v-model="from"
             :items="timeFrom"
@@ -20,7 +20,7 @@
             style="border: 1px solid #e1e1e1 !important; border-radius: 4px"
           ></v-autocomplete>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="2">
           <v-autocomplete
             v-model="to"
             :items="timeTo"
@@ -38,8 +38,9 @@
         <v-col cols="2">
           <div v-show="!visibleCreateSchedule">
             <v-btn
-              class="bg-danger-lighten elevation-0 text-danger font-nunito size9rem d-flex justify-start ml-auto"
+              class="btn-success white--text font-nunito size9rem d-flex justify-start"
               style="letter-spacing: 0.01rem !important"
+              height="40"
               ><v-icon small class="mr-1">mdi-calendar-week</v-icon>Áp dụng</v-btn
             >
           </div>
@@ -50,7 +51,8 @@
                 <v-btn
                   v-bind="attrs"
                   v-on="on"
-                  class="bg-danger-lighten elevation-0 text-danger font-nunito size9rem d-flex justify-start ml-auto"
+                  height="40"
+                  class="btn-success white--text font-nunito size9rem d-flex justify-start"
                   style="letter-spacing: 0.01rem !important"
                   ><v-icon small class="mr-1">mdi-calendar-week</v-icon>Áp dụng</v-btn
                 >
@@ -118,7 +120,7 @@
             </v-card>
           </v-menu>
         </v-col>
-        <v-col cols="4" class="px-0 d-flex align-end">
+        <v-col cols="6" class="px-0 d-flex align-end">
           <span class="red--text font-nunito size-caption">{{ errorMsg }}</span>
         </v-col>
       </v-row>
@@ -133,18 +135,17 @@
           v-bind:key="item.scheduleId"
           style="border-radius: 0.35rem"
         >
-          <v-btn
-            class="elevation-0 font-nunito size9rem d-flex justify-center font-weight-600 text-capitalize"
+          <span
+            class="font-nunito size9rem d-flex justify-center font-weight-600 text-capitalize py-2"
             style="
               letter-spacing: 0.01rem !important;
               border: 1px solid #324581;
               color: #324581;
               background-color: #fff;
+              width: 110px;
+              border-radius: 0.25rem;
             "
-            max-width="110"
-            min-width="110"
-            _click="openDialog(item.scheduleId)"
-            ><v-icon small class="mr-1">mdi-alarm-plus</v-icon>{{ item.dayOfWeek }}</v-btn
+            ><v-icon small class="mr-1">mdi-alarm-plus</v-icon>{{ item.dayOfWeek }}</span
           >
           <div v-if="item.timeRange.length > 0" class="d-flex flex-column align-center mt-2">
             <div

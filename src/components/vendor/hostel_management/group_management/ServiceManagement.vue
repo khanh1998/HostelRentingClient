@@ -725,7 +725,7 @@ export default {
     isValidPrice(price) {
       const pattern = /\b[0-9]+\b/;
       let result = true;
-      if (price.trim() === '') {
+      if (String(price).trim() === '') {
         this.priceError = 'Vui lòng điền giá tiền';
         result = false;
       } else if (!pattern.test(price.replaceAll('.', ''))) {

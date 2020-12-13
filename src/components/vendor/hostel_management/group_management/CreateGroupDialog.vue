@@ -93,6 +93,7 @@
                         color="#727cf5"
                         class="filter font-nunito size-sub-2 checkbox ma-0"
                         hide-details
+                        v-if="getCategoryById().categoryName.toLowerCase() !== 'nhà nguyên căn'"
                       ></v-checkbox>
                     </v-col>
                     <v-col cols="12" v-show="check && error.name" class="py-0">
@@ -123,31 +124,16 @@
                     <v-col cols="3" class="d-flex flex-column mt-3">
                       <span class="field-name font-weight-medium d-flex align-center font-nunito"
                         >Số tiền cọc giữ phòng<span class="red--text ml-1">(*)</span>
-                        <v-tooltip top>
-                          <template v-slot:activator="{ on, attrs }">
-                            <span
-                              v-bind="attrs"
-                              v-on="on"
-                              class="red--text font-nunito font-weight-bold ml-auto"
-                              >?</span
-                            >
-                          </template>
-                          <span class="font-nunito">Tiền cọc giữ chỗ phòng</span>
-                        </v-tooltip>
                       </span>
                       <v-text-field
-                        class="size-sub form"
-                        type="number"
-                        color="#727cf5"
-                        solo
                         dense
-                        light
+                        label="Giá tiền"
+                        class="py-0 form size-sub-2 font-nunito my-0"
+                        solo
                         hide-details
                         v-model="newGroupValue.downPayment"
                         suffix="VNĐ"
-                        step="100000"
-                        min="0"
-                        @input="setNewGroupValue(newGroupValue)"
+                        @input="inputDownPayment(newGroupValue.downPayment)"
                       />
                     </v-col>
                     <v-col cols="12" class="d-flex flex-column py-0">
@@ -208,18 +194,14 @@
                             v-model="newGroupValue.curfewTime.startTime"
                             :items="getTimes('00:00', '23:30', 'asc')"
                             label="Mở cổng"
-                            class="size9rem font-nunito form my-0 py-0 pr-0"
-                            solo
+                            class="size9rem font-nunito light-autocomplete my-0 py-0 pr-0"
+                            outlined
                             dense
                             color="indigo"
                             hide-details
                             background-color="white"
                             no-data-text="Không có kết quả phù hợp"
-                            style="
-                              border: 1px solid #e1e1e1 !important;
-                              border-radius: 4px;
-                              width: 130px !important;
-                            "
+                            style="border-radius: 4px; width: 130px !important"
                           ></v-autocomplete>
                           <span
                             class="font-nunito red--text size-caption"
@@ -232,18 +214,14 @@
                             v-model="newGroupValue.curfewTime.endTime"
                             :items="getTimes('00:30', '24:00', 'desc')"
                             label="Đóng cổng"
-                            class="size9rem font-nunito form my-0 py-0"
-                            solo
+                            class="size9rem font-nunito light-autocomplete my-0 py-0"
+                            outlined
                             dense
                             color="indigo"
                             hide-details
                             background-color="white"
                             no-data-text="Không có kết quả phù hợp"
-                            style="
-                              border: 1px solid #e1e1e1 !important;
-                              border-radius: 4px;
-                              width: 130px !important;
-                            "
+                            style="border-radius: 4px; width: 130px !important"
                           ></v-autocomplete>
                           <span
                             class="font-nunito red--text size-caption"
@@ -259,11 +237,11 @@
                         :items="gender"
                         item-text="regulationName"
                         item-value="regulationId"
-                        label="Giới tính"
+                        label="Giới tính người thuê"
                         dense
                         hide-details
-                        solo
-                        class="size-sub-2 font-nunito dropdownSmall"
+                        outlined
+                        class="size-sub-2 font-nunito dropdownSmall light-autocomplete"
                       ></v-select>
                     </v-col>
                     <v-col cols="12" class="d-flex py-0">
@@ -312,9 +290,9 @@
                             >Bổ sung</v-btn
                           >
                         </div>
-                        <!-- <span class="size-caption red--text font-nunito" v-show="isDuplicate"
+                        <span class="size-caption red--text font-nunito" v-show="isDuplicate"
                           >Nội quy đã tồn tại</span
-                        > -->
+                        >
                       </v-col>
                     </v-col>
                     <v-col
@@ -510,7 +488,7 @@
               min-height="430"
               style="box-shadow: none !important"
               v-bind:style="
-                getCategoryById().categoryName.toLowerCase() === 'nhà cho thuê phòng'
+                getCategoryById().categoryName.toLowerCase() !== 'nhà nguyên căn'
                   ? 'background-color: #f1f3fa;'
                   : 'background-color: #fff;'
               "
@@ -521,13 +499,25 @@
               <HostelRoomCategory
                 v-if="getCategoryById().categoryName.toLowerCase() === 'nhà cho thuê phòng'"
               />
+              <HostelBedCategory
+                v-if="getCategoryById().categoryName.toLowerCase() === 'ký túc xá'"
+              />
             </v-card>
             <v-divider></v-divider>
             <div class="d-flex px-4 py-3">
               <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="e1 = 1"
                 >Quay lại</v-btn
               >
+              {{ newTypeValue }}
               <v-spacer></v-spacer>
+              <v-btn
+                class="btn btn-primary font-nunito mx-2"
+                :disabled="newGroupValue.errorHostelRoom.length > 0"
+                @click="nextStep3()"
+                v-if="getCategoryById().categoryName.toLowerCase() === 'nhà cho thuê phòng'"
+              >
+                Tiếp tục
+              </v-btn>
               <v-btn class="btn btn-primary font-nunito mx-2" @click="nextStep3()">
                 Tiếp tục
               </v-btn>
@@ -597,7 +587,7 @@
             </v-card>
             <v-divider></v-divider>
             <div class="d-flex px-4 py-3">
-              <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="e1 = 2"
+              <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="e1 = 3"
                 >Quay lại</v-btn
               >
               <v-spacer></v-spacer>
@@ -680,6 +670,7 @@ import InitSchedule from './InitSchedule.vue';
 import AvatarManagement from './AvatarManagement.vue';
 import WholeHouseCategory from '../category/WholeHouse.vue';
 import HostelRoomCategory from '../category/Hostel_Room.vue';
+import HostelBedCategory from '../category/Hostel_Bed.vue';
 // import AppendixContract from './AppendixContract.vue';
 // import TextEditor from '../../contract/TextEditor.vue';
 
@@ -692,6 +683,7 @@ export default {
     AvatarManagement,
     WholeHouseCategory,
     HostelRoomCategory,
+    HostelBedCategory,
     // TextEditor,
     // AppendixContract,
   },
@@ -722,7 +714,7 @@ export default {
     downloadedAppendixContract: null,
     e1: 1,
     // stepHeader: ['Thông tin', 'Dịch vụ', 'Lịch rảnh', 'Hợp đồng mẫu'],
-    stepHeader: ['Thông tin Khu trọ', 'Chi tiết các phòng', 'Dịch vụ', 'Lịch rảnh'],
+    stepHeader: ['Thông tin Khu trọ', 'Chi tiết các phòng', 'Phí dịch vụ', 'Lịch rảnh'],
     groupInfo: {
       groupName: '',
       category: 0,
@@ -739,11 +731,26 @@ export default {
       },
       downPayment: 0,
     },
-    // rules: {
-    //   min(value) {
-    //     return (value || 'Giá không hợp lệ') > 0 || 'Không hợp lệ';
-    //   },
-    // },
+    rules: {
+      min(value) {
+        return value > 0;
+      },
+      minPrice(value) {
+        return value >= 0;
+      },
+      maxSuperficiality(value) {
+        return value <= 50;
+      },
+      maxCapacity(value) {
+        return value <= 20;
+      },
+      maxDeposit(value) {
+        return value <= 12;
+      },
+      maxEmptyRooms(value, maxValue) {
+        return value <= maxValue;
+      },
+    },
     showCurfewTime: true,
     // map
     center: { lat: 10.8230989, lng: 106.6296638 },
@@ -783,6 +790,7 @@ export default {
       setNewGroupValue: 'vendor/group/setNewGroupValue',
       getProvinces: 'renter/common/getProvinces',
       getAllFacilities: 'renter/common/getAllFacilities1',
+      createListHostelType: 'vendor/group/createListHostelType',
     }),
     setGender() {
       if (this.ruleGender !== -1) {
@@ -803,8 +811,9 @@ export default {
       this.unselectedRules = rules;
     },
     addNewRules() {
-      if (this.newRule.trim() !== '') {
-        this.newGroupValue.newRegulations.push({ regulationName: this.newRule });
+      if (this.newRule.trim() !== '' && !this.isDuplicate) {
+        this.newGroupValue.newRegulations.unshift({ regulationName: this.newRule });
+        this.newRule = '';
       }
     },
     getRuleById(id) {
@@ -826,20 +835,20 @@ export default {
         !this.error.validPhone
       ) {
         this.e1 = 2;
-        this.setGender();
         console.log(this.newGroupValue);
         console.log(this.addressObjForApi);
       }
     },
     nextStep3() {
-      console.log(this.newGroupValue);
-      console.log(this.newTypeValue);
       if (
         this.getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn' &&
         this.validWholeHouseData()
       ) {
         this.e1 = 3;
-      } else if (this.getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn') {
+      } else if (
+        this.getCategoryById().categoryName.toLowerCase() === 'nhà cho thuê phòng' &&
+        this.newGroupValue.errorHostelRoom.length === 0
+      ) {
         this.e1 = 3;
       }
     },
@@ -940,38 +949,6 @@ export default {
         });
       }
     },
-    // async searchByCoord(coords) {
-    //   const key = 'AIzaSyDNBmxVGbZ4Je5XHPRqqaZPmDFKjKPPhXk';
-    //   const { lat, lng } = coords;
-    //   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${key}`;
-    //   let res = await fetch(url);
-    //   if (res.status === 200) {
-    //     res = await res.json();
-    //     const includeRoutes = res.results.filter((item) => {
-    //       const indexR = item.address_components.findIndex((compo) => {
-    //         const includeRoute = compo.types.includes('route');
-    //         return includeRoute;
-    //       });
-    //       return indexR > -1;
-    //     });
-    //     let formattedAddresses = includeRoutes.map((item) => {
-    //       const addressComponents = item.address_components;
-    //       const streetNumber = addressComponents.find((compo) => {
-    //         const isInclude = compo.types.includes('street_number');
-    //         return isInclude;
-    //       });
-    //       if (streetNumber) {
-    //         const shortName = streetNumber.short_name;
-    //         return item.formatted_address.substring(shortName.length + 1);
-    //       }
-    //       return item.formatted_address;
-    //     });
-    //     formattedAddresses = new Set(formattedAddresses);
-    //     return Array.from(formattedAddresses);
-    //   }
-    //   console.log(this.marker);
-    //   return null;
-    // },
     findProvinceByName(provinceName) {
       return this.provinces.data.find(
         (item) =>
@@ -1004,20 +981,7 @@ export default {
       });
       return street;
     },
-    // emitNewAddress() {
-    //   this.newGroupValue.address = this.addressObjForApi;
-    //   this.setNewGroupValue(this.newGroupValue);
-    //   this.$emit('newValue', {
-    //     coords: {
-    //       longitude: this.marker.position.lng,
-    //       latitude: this.marker.position.lat,
-    //     },
-    //     address: this.addressObjForApi,
-    //   });
-    //   console.log(this.addressObjForApi);
-    // },
     insertGroup() {
-      // const regulation = this.newGroupValue.regulation.map((item) => ({ regulationId: item }));
       this.newGroupValue.statePrice.forEach((item) => {
         this.newGroupValue.services[item].price = -1;
       });
@@ -1081,15 +1045,59 @@ export default {
         newServices: newGroupServices,
         vendorId: this.user.userId,
       };
-      console.log(this.addressObjForApi);
+      if (this.ruleGender !== -1) {
+        reqObj.regulations.push(this.ruleGender);
+      }
       this.createHostelGroup(reqObj).then(() => {
         if (this.isCreatedGroupStatus) {
-          this.closeDialog();
+          if (this.getCategoryById().categoryName.toLowerCase() === 'nhà cho thuê phòng') {
+            this.createTypeWithHostelRoomCategory();
+          }
         } else {
           console.log('not success');
         }
       });
       console.log(reqObj);
+    },
+    createTypeWithHostelRoomCategory() {
+      const { groupId } = this.allGroups[0];
+      const listTypes = this.newGroupValue.types.map((item) => ({
+        capacity: item.capacity,
+        deposit: item.deposit,
+        facilities: this.getTypeFacilities(item.facilities).systemFacilities,
+        newFacilities: this.getTypeFacilities(item.facilities).newFacilities,
+        imageUrls: item.image,
+        price: item.price,
+        priceUnit: item.priceUnit,
+        superficiality: item.superficiality,
+        title: item.title,
+        rooms: item.rooms.map((room) => ({
+          roomName: room.roomName,
+          available: room.available === 0,
+        })),
+      }));
+      const types = { groupID: groupId, list: listTypes };
+      this.createListHostelType(types).then(() => {
+        if (this.isCreatedTypesStatus) {
+          this.closeDialog();
+        } else {
+          console.log('not type succes');
+        }
+      });
+    },
+    getTypeFacilities(allFacilities) {
+      let systemFacilities = allFacilities.filter((item) => item.facilityName);
+      systemFacilities = systemFacilities.map((item) => ({
+        facilityId: this.getFacilityByName(item.facilityName).facilityId,
+      }));
+      let newFacilities = allFacilities.filter((item) => !item.facilityName);
+      newFacilities = newFacilities.map((item) => ({
+        facilityName: item,
+      }));
+      return { systemFacilities, newFacilities };
+    },
+    getFacilityByName(facilityName) {
+      return this.allFacilities.find((item) => item.facilityName === facilityName);
     },
     getPriceUnit(price) {
       let servicePriceUnit = null;
@@ -1212,11 +1220,37 @@ export default {
     getCategoryById() {
       return this.categories.find((item) => item.categoryId === this.newGroupValue.categoryId);
     },
+    inputDownPayment(price) {
+      if (this.isValidPrice(price)) {
+        this.newGroupValue.downPayment = this.formatCurency(
+          this.newGroupValue.downPayment.replaceAll('.', ''),
+        );
+      }
+    },
+    isValidPrice(price) {
+      const pattern = /\b[0-9]+\b/;
+      let result = true;
+      if (String(price).trim() === '') {
+        this.priceError = 'Vui lòng điền giá tiền';
+        result = false;
+      } else if (!pattern.test(price.replaceAll('.', ''))) {
+        this.priceError = 'Không hợp lệ';
+        result = false;
+      }
+      return result;
+    },
+    formatCurency(price) {
+      const format = price.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+      return format;
+    },
   },
   computed: {
     ...mapState({
       groups: (state) => state.vendor.group.groups,
     }),
+    allGroups() {
+      return this.$store.state.vendor.group.groups.data;
+    },
     user() {
       return this.$store.state.user.user.data;
     },
@@ -1230,9 +1264,19 @@ export default {
       return this.$store.state.renter.common.rules.data;
     },
     gender() {
-      return this.allRules.filter(
+      const genderRule = this.allRules.filter(
         (item) => item.regulationName.toLowerCase().includes('giới tính'), // eslint-disable-line
       ); // eslint-disable-line
+      genderRule.forEach((item, index) => {
+        if (item.regulationName.toLowerCase().trim() === 'giới tính: nam') {
+          genderRule[index].regulationName = 'Chỉ Nam';
+        } else if (item.regulationName.toLowerCase().trim() === 'giới tính: nữ') {
+          genderRule[index].regulationName = 'Chỉ Nữ';
+        } else {
+          genderRule[index].regulationName = 'Nam và Nữ';
+        }
+      });
+      return genderRule;
     },
     allSchedule() {
       return this.$store.state.renter.common.schedule.data;
@@ -1246,16 +1290,92 @@ export default {
       const allRules = this.$store.state.renter.common.rules.isLoading;
       const allSchedule = this.$store.state.renter.common.schedule.isLoading;
       const isCreatingGroup = this.$store.state.vendor.group.groups.isCreating;
+      const isCreatingTypes = this.$store.state.vendor.group.types.isCreating;
       const allFacilities = this.$store.state.renter.common.facilities.isLoading;
       return (
-        allServices || allCategories || allRules || allSchedule || isCreatingGroup || allFacilities
+        allServices ||
+        allCategories ||
+        allRules ||
+        allSchedule ||
+        isCreatingGroup ||
+        allFacilities ||
+        isCreatingTypes
       );
     },
     isCreatedGroupStatus() {
       return this.$store.state.vendor.group.groups.success;
     },
+    isCreatedTypesStatus() {
+      return this.$store.state.vendor.group.types.success;
+    },
     newGroupValue() {
-      return this.$store.state.vendor.group.newGroup;
+      const newGroupData = this.$store.state.vendor.group.newGroup;
+      if (this.groupInfo.curfewTime.radiogroup === 'free') {
+        newGroupData.curfewTime.limit = false;
+      } else {
+        newGroupData.curfewTime.limit = true;
+      }
+      const category = this.categories.find((item) => item.categoryId === newGroupData.categoryId);
+      if (category && category.categoryName.toLowerCase() === 'nhà cho thuê phòng') {
+        const error = [];
+        newGroupData.types.forEach((type, i) => {
+          const typeError = {
+            index: i,
+            capacity: false,
+            deposit: false,
+            price: false,
+            rooms: false,
+            roomNullError: [],
+            roomDupplicateError: [],
+            superficiality: false,
+            title: false,
+          };
+          let flat = 0;
+          if (type.title.trim() === '') {
+            typeError.title = true;
+            flat += 1;
+          }
+          if (type.capacity === 0 || type.capacity <= 0) {
+            typeError.capacity = true;
+            flat += 1;
+          }
+          if (type.deposit === '' || type.deposit < 0) {
+            typeError.deposit = true;
+            flat += 1;
+          }
+          if (type.superficiality === '' || type.superficiality <= 0) {
+            typeError.superficiality = true;
+            flat += 1;
+          }
+          if (type.price === '' || type.price < 0) {
+            typeError.price = true;
+            flat += 1;
+          }
+          if (type.rooms.length === 0) {
+            typeError.rooms = true;
+            flat += 1;
+          } else {
+            type.rooms.forEach((room, index) => {
+              if (room.roomName.trim() === '') {
+                flat += 1;
+                typeError.roomNullError.push(index);
+              } else if (
+                type.rooms.filter(
+                  (r) => r.roomName.toLowerCase().trim() === room.roomName.toLowerCase(),
+                ).length >= 2
+              ) {
+                flat += 1;
+                typeError.roomDupplicateError.push(index);
+              }
+            });
+          }
+          if (flat > 0) {
+            error.push(typeError);
+          }
+        });
+        newGroupData.errorHostelRoom = error;
+      }
+      return newGroupData;
     },
     ...mapState('renter/common', ['provinces', 'wards', 'districts', 'streets']),
     addressObjForApi() {
@@ -1328,13 +1448,64 @@ export default {
       if (this.newGroupValue.newRegulations.length > 0) {
         dupplicateNewRules =
           this.newGroupValue.newRegulations.filter(
-            (rule) => rule.trim().toLowerCase() === this.newRule.trim().toLowerCase(),
+            (rule) =>
+              rule.regulationName.trim().toLowerCase() === this.newRule.trim().toLowerCase(), // eslint-disable-line
           ).length > 0;
       }
       return dupplicateExistRules || dupplicateNewRules;
     },
     newTypeValue() {
-      return this.$store.state.vendor.group.createType.data;
+      const newType = this.$store.state.vendor.group.createType.data;
+      if (this.getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn') {
+        const typeError = {
+          capacity: false,
+          deposit: false,
+          price: false,
+          rooms: false,
+          roomNullError: [],
+          roomDupplicateError: [],
+          superficiality: false,
+        };
+        let flat = 0;
+        if (newType.capacity === 0 || newType.capacity <= 0) {
+          typeError.capacity = true;
+          flat += 1;
+        }
+        if (newType.deposit === '' || newType.deposit < 0) {
+          typeError.deposit = true;
+          flat += 1;
+        }
+        if (newType.superficiality === '' || newType.superficiality <= 0) {
+          typeError.superficiality = true;
+          flat += 1;
+        }
+        if (newType.price === '' || newType.price < 0) {
+          typeError.price = true;
+          flat += 1;
+        }
+        // if (type.rooms.length === 0) {
+        //   typeError.rooms = true;
+        //   flat += 1;
+        // } else {
+        //   type.rooms.forEach((room, index) => {
+        //     if (room.roomName.trim() === '') {
+        //       flat += 1;
+        //       typeError.roomNullError.push(index);
+        //     } else if (
+        //       type.rooms.filter(
+        //         (r) => r.roomName.toLowerCase().trim() === room.roomName.toLowerCase(),
+        //       ).length >= 2
+        //     ) {
+        //       flat += 1;
+        //       typeError.roomDupplicateError.push(index);
+        //     }
+        //   });
+        // }
+        if (flat > 0) {
+          newType.error.push(typeError);
+        }
+      }
+      return newType;
     },
   },
   watch: {

@@ -233,6 +233,7 @@
                   :currentBooking="info.currentBooking"
                   :availableRoom="info.availableRoom"
                   v-on:openMessage="chatBox.show = true"
+                  style="display: sticky !important; top: 10"
                 />
               </v-col>
             </v-row>

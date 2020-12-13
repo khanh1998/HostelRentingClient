@@ -6,22 +6,15 @@
       >Phân loại nhóm các phòng có đặc điểm giống nhau</span
     >
     <v-row class="white my-5" :key="index" v-for="(item, index) in newGroupValue.types">
-      <div
-        class="d-flex align-center font-nunito text-primary font-weight-bold size9rem mx-6 mt-2"
-        style="width: 100%"
+      <span class="font-nunito text-primary font-weight-bold size9rem ml-6 mt-2" style="width: 100%"
+        >Nhóm phòng thứ: {{ index + 1 }}
+        <span class="font-nunito text-muted font-italic">
+          Bạn có thể lấy gợi ý các thông tin từ các nhóm phòng của các khu trọ với loại hình cho
+          thuê là "</span
+        ><span class="font-nunito text-muted font-italic">{{ categories.categoryName }}</span
+        ><span class="font-nunito text-muted font-italic">" mà bạn đã tạo từ trước </span></span
       >
-        Nhóm phòng thứ: {{ index + 1 }}
-        <span class="font-nunito text-muted font-italic ml-2" v-if="groups.length > 0">
-          (Bạn có thể lấy gợi ý các thông tin từ các nhóm phòng của các khu trọ mà bạn đã tạo từ
-          trước)
-        </span>
-        <v-btn icon class="ml-auto"
-          ><v-icon color="red" @click="(selectedDeleteTypeIndex = index), (warningDialog = true)"
-            >mdi-delete-circle</v-icon
-          ></v-btn
-        >
-      </div>
-      <v-col cols="6" class="d-flex flex-column justify-center pl-5" v-if="groups.length > 0">
+      <v-col cols="6" class="d-flex flex-column justify-center pl-5">
         <v-autocomplete
           v-model="newGroupValue.types[index].groupSelected"
           :items="groups"
@@ -52,7 +45,7 @@
           </template></v-autocomplete
         >
       </v-col>
-      <v-col cols="6" class="d-flex flex-column justify-center pr-5" v-if="groups.length > 0">
+      <v-col cols="6" class="d-flex flex-column justify-center pr-5">
         <v-autocomplete
           v-model="newGroupValue.types[index].typeSelected"
           :items="getTypesSuggess(newGroupValue.types[index].groupSelected)"
@@ -94,7 +87,7 @@
               >Vui lòng điền tên nhóm phòng!</span
             >
           </v-col>
-          <v-col cols="2" class="d-flex flex-column pb-0">
+          <v-col cols="4" class="d-flex flex-column pb-0">
             <span class="field-name font-weight-medium"
               >Giá thuê<span class="red--text ml-1">(*)</span></span
             >
@@ -106,7 +99,7 @@
               dense
               light
               v-model="newGroupValue.types[index].price"
-              :suffix="newGroupValue.types[index].priceUnit"
+              :suffix="newGroupValue.types[index].priceUnit + ' / người / tháng'"
               step="0.1"
               min="0"
               :rules="[rules.minPrice(newGroupValue.types[index].price)]"
@@ -128,39 +121,11 @@
               suffix="m2"
               step="5"
               min="0"
-              :rules="[
-                rules.min(newGroupValue.types[index].superficiality),
-                rules.maxSuperficiality(newGroupValue.types[index].superficiality),
-              ]"
+              :rules="[rules.min(newGroupValue.types[index].superficiality)]"
               @input="setNewGroupValue(newGroupValue)"
             />
             <span class="font-nunito red--text size-caption" v-show="showMessage.superficiality"
               >Diện tích phải lớn hơn 0!</span
-            >
-          </v-col>
-          <v-col cols="2" class="d-flex flex-column pb-0">
-            <span class="field-name font-weight-medium"
-              >Sức chứa<span class="red--text ml-1">(*)</span></span
-            >
-            <v-text-field
-              class="size-sub form font-nunito"
-              type="number"
-              color="#727cf5"
-              solo
-              dense
-              light
-              v-model="newGroupValue.types[index].capacity"
-              suffix="người"
-              step="1"
-              min="0"
-              :rules="[
-                rules.min(newGroupValue.types[index].capacity),
-                rules.maxCapacity(newGroupValue.types[index].capacity),
-              ]"
-              @input="setNewGroupValue(newGroupValue)"
-            />
-            <span class="font-nunito red--text size-caption" v-show="showMessage.capacity"
-              >Sức chứa phải lớn hơn 0!</span
             >
           </v-col>
           <v-col cols="2" class="d-flex flex-column pb-0">
@@ -178,14 +143,11 @@
               suffix="tháng"
               step="1"
               min="0"
-              :rules="[
-                rules.minPrice(newGroupValue.types[index].deposit),
-                rules.maxDeposit(newGroupValue.types[index].deposit),
-              ]"
+              :rules="[rules.min(newGroupValue.types[index].deposit)]"
               @input="setNewGroupValue(newGroupValue)"
             />
           </v-col>
-          <v-col cols="8" class="pt-0">
+          <v-col cols="8" class="py-0">
             <v-autocomplete
               v-model="newGroupValue.types[index].facilities"
               :items="facilities"
@@ -197,12 +159,11 @@
               label="Tiện ích"
               multiple
               outlined
-              hide-details
               class="size9rem font-nunito light-autocomplete"
               @change="setNewGroupValue(newGroupValue)"
             ></v-autocomplete>
           </v-col>
-          <v-col cols="4" class="pt-0 d-flex">
+          <v-col cols="4" class="py-0 d-flex">
             <div class="pa-0 d-flex flex-column justify-start">
               <v-text-field
                 label="Tiện ích khác"
@@ -226,7 +187,7 @@
               >Bổ sung</v-btn
             >
           </v-col>
-          <v-col cols="2" class="pr-0">
+          <v-col cols="2" class="pr-0 pb-0">
             <v-text-field
               class="size-sub light-autocomplete font-nunito"
               type="number"
@@ -238,17 +199,14 @@
               v-model="newGroupValue.types[index].totalRooms"
               step="1"
               :rules="[rules.min(newGroupValue.types[index].totalRooms)]"
-              @input="
-                (newGroupValue.types[index].emptyRooms = newGroupValue.types[index].totalRooms),
-                  setNewGroupValue(newGroupValue)
-              "
+              @input="setNewGroupValue(newGroupValue)"
               style="
                 border-top-right-radius: 0px !important;
                 border-bottom-right-radius: 0px !important;
               "
             />
           </v-col>
-          <v-col cols="2" class="px-0">
+          <v-col cols="2" class="px-0 pb-0">
             <v-text-field
               class="size-sub light-autocomplete font-nunito"
               type="number"
@@ -259,18 +217,12 @@
               light
               v-model="newGroupValue.types[index].emptyRooms"
               step="1"
-              :rules="[
-                rules.min(newGroupValue.types[index].emptyRooms),
-                rules.maxEmptyRooms(
-                  newGroupValue.types[index].emptyRooms,
-                  Number(newGroupValue.types[index].totalRooms),
-                ),
-              ]"
+              :rules="[rules.min(newGroupValue.types[index].emptyRooms)]"
               @input="setNewGroupValue(newGroupValue)"
               style="border-radius: 0px !important"
             />
           </v-col>
-          <v-col cols="3" class="px-0">
+          <v-col cols="3" class="px-0 pb-0">
             <v-btn
               class="btn-success btn-sm font-nunito white--text"
               @click="initRooms(index)"
@@ -282,24 +234,8 @@
               >Khởi tạo danh sách phòng</v-btn
             >
           </v-col>
-          <v-col
-            cols="5"
-            class="mt-5"
-            v-if="
-              newGroupValue.types[index].totalRooms !== '' &&
-              newGroupValue.types[index].emptyRooms !== '' &&
-              newGroupValue.types[index].totalRooms > 0 &&
-              newGroupValue.types[index].emptyRooms > 0 &&
-              newGroupValue.types[index].emptyRooms <= newGroupValue.types[index].totalRooms &&
-              newGroupValue.types[index].rooms.length === 0
-            "
-          >
-            <span class="font-nunito red--text size-caption">
-              Vui lòng khởi tạo danh sách phòng
-            </span>
-          </v-col>
-          <v-col cols="1" class="pb-0" v-if="newGroupValue.types[index].rooms.length > 0"> </v-col>
-          <v-col cols="3" class="pb-0" v-if="newGroupValue.types[index].rooms.length > 0">
+          <v-col cols="1" class="pb-0"> </v-col>
+          <v-col cols="3" class="pb-0">
             <v-select
               v-model="newGroupValue.types[index].displayRoomStatus"
               :items="displayRooms"
@@ -307,6 +243,7 @@
               dense
               hide-details
               outlined
+              v-if="newGroupValue.types[index].rooms.length > 0"
               class="size-sub-2 font-nunito light-autocomplete"
               @change="filterRoomStatus(index)"
               background-color="#f1f3fa"
@@ -333,7 +270,7 @@
                 hide-delimiter-background
                 show-arrows-on-hover
                 v-if="newGroupValue.types[index].image.length !== 0"
-                style="border: 1px solid #f1f3fa; border-radius: 6px; max-width: 220px !important"
+                style="border: 1px solid #f1f3fa; border-radius: 6px"
               >
                 <v-carousel-item
                   v-for="(image, i) in newGroupValue.types[index].image"
@@ -355,11 +292,7 @@
         >
           <v-row class="ma-0">
             <v-col cols="3" :key="i" v-for="(item, i) in newGroupValue.types[index].roomsDisplay">
-              <v-card
-                class="pt-4 pb-1 pl-2 pr-0 d-flex flex-column justify-center"
-                style="border: 1px solid #e1e1e1"
-                min-height="115"
-              >
+              <v-card class="py-4 pl-2 pr-0" style="border: 1px solid #e1e1e1">
                 <v-row class="d-flex align-start ma-0 pr-0">
                   <v-icon class="mr-2 mt-2">{{
                     item.available === 0 ? 'mdi-door-closed' : 'mdi-door-closed-lock'
@@ -373,35 +306,17 @@
                       light
                       hide-details
                       v-model="newGroupValue.types[index].roomsDisplay[i].roomName"
-                      @input="
-                        (newGroupValue.types[index].rooms[getRoomIndex(index, i)].roomName =
-                          newGroupValue.types[index].roomsDisplay[i].roomName),
-                          setNewGroupValue(newGroupValue)
-                      "
+                      @input="setNewGroupValue(newGroupValue)"
                     />
-                    <span
-                      class="red--text font-nunito size-caption"
-                      v-if="isError(index) && isError(index).roomNullError.includes(i)"
-                      >Tên phòng không nên để trống</span
-                    >
-                    <span
-                      class="red--text font-nunito size-caption"
-                      v-else-if="isError(index) && isError(index).roomDupplicateError.includes(i)"
-                      >Tên phòng bị trùng</span
-                    >
                   </div>
                 </v-row>
                 <v-row class="ma-0">
                   <v-radio-group
                     v-model="newGroupValue.types[index].roomsDisplay[i].available"
                     row
-                    class="filter mt-0"
+                    class="filter mt-1"
                     hide-details
-                    @change="
-                      (newGroupValue.types[index].rooms[getRoomIndex(index, i)].available =
-                        newGroupValue.types[index].roomsDisplay[i].available),
-                        setNewGroupValue(newGroupValue)
-                    "
+                    @change="setNewGroupValue(newGroupValue)"
                   >
                     <v-radio label="Trống" class="radioGroup font-nunito" color="#727cf5"></v-radio>
                     <v-radio
@@ -410,7 +325,7 @@
                       color="#727cf5"
                     ></v-radio>
                   </v-radio-group>
-                  <v-btn icon @click="removeItem(index, item.index)"
+                  <v-btn icon @click="removeItem(index, i)"
                     ><v-icon color="rgba(250, 92, 124, 0.5)"
                       >mdi-delete-circle-outline</v-icon
                     ></v-btn
@@ -469,60 +384,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="warningDialog" max-width="400">
-      <v-card>
-        <v-card-title class="d-flex flex-column justify-center px-8">
-          <v-icon large class="material-icons-outlined" color="#ffbc00">report_problem</v-icon>
-          <span
-            class="text-gray font-nunito mt-1"
-            v-if="newGroupValue.types.length > 1"
-            style="
-              font-size: 1.125rem !important;
-              text-align: center !important;
-              font-weight: 700 !important;
-            "
-            >Bạn có chắc chắn muốn xóa nhóm này!</span
-          >
-          <span
-            class="text-gray font-nunito mt-1"
-            v-if="newGroupValue.types.length === 1"
-            style="
-              font-size: 1.125rem !important;
-              text-align: center !important;
-              font-weight: 700 !important;
-            "
-            >Bạn nên phân loại ít nhất 1 nhóm phòng để quản lý các phòng trọ của khu mình!</span
-          >
-        </v-card-title>
-        <v-card-actions class="d-flex justify-center">
-          <v-btn
-            class="btn-warning mx-2"
-            @click="removeType()"
-            v-if="newGroupValue.types.length > 1"
-          >
-            Xóa
-          </v-btn>
-          <v-btn
-            v-if="newGroupValue.types.length > 1"
-            outlined
-            class="mx-2"
-            color="#ffbc00"
-            @click="(selectedDeleteTypeIndex = -1), (warningDialog = false)"
-          >
-            Hủy
-          </v-btn>
-          <v-btn
-            v-if="newGroupValue.types.length === 1"
-            outlined
-            class="mx-2"
-            color="#ffbc00"
-            @click="warningDialog = false"
-          >
-            Đóng
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-row>
 </template>
 
@@ -532,7 +393,7 @@ import snackBarMixin from '../../../mixins/snackBar';
 import fileMixins from '../../../mixins/file';
 
 export default {
-  name: 'Hostel_Room',
+  name: 'Hostel_Bed',
   mixins: [fileMixins, snackBarMixin],
   data: () => ({
     rules: {
@@ -540,19 +401,7 @@ export default {
         return (value || 'Giá không hợp lệ') > 0 || 'Không hợp lệ';
       },
       minPrice(value) {
-        return value >= 0 || 'Không hợp lệ';
-      },
-      maxSuperficiality(value) {
-        return value <= 50 || 'Diện tích nên ít hơn 50 m2';
-      },
-      maxCapacity(value) {
-        return value <= 20 || 'Sức chứa nên ít hơn 20 người';
-      },
-      maxDeposit(value) {
-        return value <= 12 || 'Cọc thế chân nên ít hơn 1 năm';
-      },
-      maxEmptyRooms(value, maxValue) {
-        return value <= maxValue || 'Không hợp lệ';
+        return (value || 'Giá không hợp lệ') >= 0 || 'Không hợp lệ';
       },
     },
     showMessage: {
@@ -573,11 +422,9 @@ export default {
       show: false,
       files: null,
     },
-    warningDialog: false,
     facilities: [],
     selectedTypeIndex: -1,
     selectedTypeRoomIndex: -1,
-    selectedDeleteTypeIndex: -1,
     displayRooms: ['Tất cả', 'Phòng trống', 'Đang thuê'],
   }),
   computed: {
@@ -602,63 +449,6 @@ export default {
           roomsDisplay: [],
         });
       }
-      const error = [];
-      newGroupData.types.forEach((type, i) => {
-        const typeError = {
-          index: i,
-          capacity: false,
-          deposit: false,
-          price: false,
-          rooms: false,
-          roomNullError: [],
-          roomDupplicateError: [],
-          superficiality: false,
-          title: false,
-        };
-        let flat = 0;
-        if (type.title.trim() === '') {
-          typeError.title = true;
-          flat += 1;
-        }
-        if (type.capacity === 0 || type.capacity <= 0) {
-          typeError.capacity = true;
-          flat += 1;
-        }
-        if (type.deposit === '' || type.deposit < 0) {
-          typeError.deposit = true;
-          flat += 1;
-        }
-        if (type.superficiality === '' || type.superficiality <= 0) {
-          typeError.superficiality = true;
-          flat += 1;
-        }
-        if (type.price === '' || type.price < 0) {
-          typeError.price = true;
-          flat += 1;
-        }
-        if (type.rooms.length === 0) {
-          typeError.rooms = true;
-          flat += 1;
-        } else {
-          type.rooms.forEach((room, index) => {
-            if (room.roomName.trim() === '') {
-              flat += 1;
-              typeError.roomNullError.push(index);
-            } else if (
-              type.rooms.filter(
-                (r) => r.roomName.toLowerCase().trim() === room.roomName.toLowerCase(),
-              ).length >= 2
-            ) {
-              flat += 1;
-              typeError.roomDupplicateError.push(index);
-            }
-          });
-        }
-        if (flat > 0) {
-          error.push(typeError);
-        }
-      });
-      newGroupData.errorHostelRoom = error;
       return newGroupData;
     },
     isDuplicate() {
@@ -696,8 +486,14 @@ export default {
       return this.$store.state.vendor.group.createType.data;
     },
     groups() {
-      const groupsData = this.$store.state.vendor.group.groups.data;
-      return groupsData.filter((item) => item.types.length > 0);
+      return this.$store.state.vendor.group.groups.data;
+      //   return this.$store.state.vendor.group.groups.data.filter(
+      //     (item) => item.categoryId === this.newGroupValue.categoryId,
+      //   );
+    },
+    categories() {
+      const allCategories = this.$store.state.renter.filterResult.filter.categories.data;
+      return allCategories.find((item) => item.categoryId === this.newGroupValue.categoryId);
     },
   },
   methods: {
@@ -710,14 +506,7 @@ export default {
       createHostelType: 'vendor/group/createHostelType',
       setNewGroupValue: 'vendor/group/setNewGroupValue',
     }),
-    getRoomIndex(typeIndex, roomIndex) {
-      return this.newGroupValue.types[typeIndex].rooms.findIndex(
-        (item) => this.newGroupValue.types[typeIndex].roomsDisplay[roomIndex].index === item.index,
-      );
-    },
-    isError(typeIndex) {
-      return this.newGroupValue.errorHostelRoom.find((item) => item.index === typeIndex);
-    },
+
     addNewFacility(index) {
       if (!this.isDuplicate) {
         this.facilities.push({ facilityName: this.newFacility });
@@ -756,28 +545,7 @@ export default {
           this.showSnackBar('Tải ảnh lên thất bại', { color: 'red' });
         });
     },
-    resetNewTypeValue() {
-      return {
-        capacity: '',
-        deposit: '',
-        displayRoomStatus: 'Tất cả',
-        emptyRooms: 0,
-        facilities: [],
-        groupSelected: -1,
-        image: [],
-        price: '',
-        priceUnit: 'triệu',
-        rooms: [],
-        roomsDisplay: [],
-        superficiality: '',
-        title: '',
-        totalRooms: 0,
-        typeSelected: -1,
-      };
-    },
     suggestType(index) {
-      this.newGroupValue.types[index].facilities = [];
-      this.newGroupValue.types[index].image = [];
       if (this.newGroupValue.types[index].typeSelected !== -1) {
         const type = this.getTypesSuggess(this.newGroupValue.types[index].groupSelected).find(
           (item) => item.typeId === this.newGroupValue.types[index].typeSelected,
@@ -801,12 +569,7 @@ export default {
         this.newGroupValue.types[index].roomsDisplay = [];
         for (let i = 0; i < this.newGroupValue.types[index].totalRooms; i += 1) {
           this.newGroupValue.types[index].rooms.push({
-            index: this.newGroupValue.types[index].rooms[0]
-              ? this.newGroupValue.types[index].rooms[ // eslint-disable-line
-                  this.newGroupValue.types[index].rooms.length - 1 // eslint-disable-line
-                ].index + 1 // eslint-disable-line
-              : 0, // eslint-disable-line
-            roomName: `${index + 1}-${i + 1}`,
+            roomName: `Phòng ${index + 1}-${i + 1}`,
             available: i < this.newGroupValue.types[index].emptyRooms ? 0 : 1,
           });
         }
@@ -817,10 +580,7 @@ export default {
     removeItem(typeIndex, roomIndex) {
       this.newGroupValue.types[typeIndex].roomsDisplay = this.newGroupValue.types[
         typeIndex
-      ].roomsDisplay.filter((item) => item.index !== roomIndex);
-      this.newGroupValue.types[typeIndex].rooms = this.newGroupValue.types[typeIndex].rooms.filter(
-        (item) => item.index !== roomIndex,
-      );
+      ].roomsDisplay.filter((_, index) => index !== roomIndex);
       this.setNewGroupValue(this.newGroupValue);
     },
     filterRoomStatus(index) {
@@ -867,14 +627,6 @@ export default {
       }
       const allTypes = this.groups.find((item) => item.groupId === groupSelected).types;
       return allTypes;
-    },
-    removeType() {
-      this.newGroupValue.types = this.newGroupValue.types.filter(
-        (_, index) => index !== this.selectedDeleteTypeIndex,
-      );
-      this.selectedDeleteTypeIndex = -1;
-      this.setNewGroupValue(this.newGroupValue);
-      this.warningDialog = false;
     },
   },
   created() {

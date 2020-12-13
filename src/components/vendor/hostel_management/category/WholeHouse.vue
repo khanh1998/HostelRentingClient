@@ -5,11 +5,8 @@
         <v-col cols="4" class="d-flex py-0">
           <v-row class="ma-0">
             <span class="d-flex flex-column font-nunito text-primary size9rem font-weight-bold">
-              <span>Nhà nguyên căn</span>
-              <span
-                >(Nhiêu m<sup>2</sup>)<span class="red--text ml-1 font-weight-medium">(*)</span
-                >:</span
-              >
+              <span>Diện tích</span>
+              <span>nhà nguyên căn<span class="red--text ml-1 font-weight-medium">(*)</span>:</span>
             </span>
             <v-col cols="6" class="d-flex flex-column pa-0 ml-auto">
               <v-text-field
@@ -23,7 +20,10 @@
                 suffix="m2"
                 step="5"
                 min="0"
-                :rules="[rules.min(newTypeValue.superficiality)]"
+                :rules="[
+                  rules.min(newTypeValue.superficiality),
+                  rules.maxSuperficiality(newTypeValue.superficiality),
+                ]"
                 @input="setCreateTypeValue(newTypeValue)"
               />
               <span class="font-nunito red--text size-caption" v-show="showMessage.superficiality"
@@ -34,7 +34,7 @@
         </v-col>
         <v-col cols="4" class="d-flex py-0">
           <v-row class="ma-0">
-            <span class="field-name font-weight-medium mt-4"
+            <span class="field-name font-weight-medium mt-4 ml-auto"
               >Giá thuê<span class="red--text ml-1">(*)</span>:</span
             >
             <v-col cols="7" class="d-flex flex-column pa-0 ml-auto">
@@ -57,11 +57,10 @@
         </v-col>
         <v-col cols="4" class="d-flex py-0">
           <v-row class="ma-0">
-            <span class="d-flex flex-column field-name font-weight-medium">
-              <span>Số lượng người</span>
-              <span>được ở<span class="red--text ml-1 font-weight-medium">(*)</span>:</span>
-            </span>
-            <v-col cols="6" class="d-flex flex-column pa-0 ml-auto">
+            <span class="field-name font-weight-medium mt-4 ml-auto"
+              >Sức chứa<span class="red--text ml-1">(*)</span>:</span
+            >
+            <v-col cols="7" class="d-flex flex-column pa-0 ml-auto">
               <v-text-field
                 class="size-sub form font-nunito"
                 type="number"
@@ -176,14 +175,14 @@
       </v-row>
     </v-col>
     <v-col cols="3" class="d-flex flex-column">
-      <v-card outlined min-height="290" max-height="290">
+      <v-card outlined min-height="260" max-height="260">
         <v-col cols="12" class="d-flex flex-column px-5">
           <span class="field-name font-weight-medium">Hình ảnh</span>
           <span class="font-nunito red--text size-caption" v-show="showMessage.image"
             >Tải ít nhất một hình ảnh về phòng trọ của bạn!</span
           >
           <v-row
-            class="cursor ma-0 pa-5"
+            class="cursor ma-0 py-2"
             style="border: 2px dashed #dee2e6; border-radius: 6px"
             @click="openImageUploadDialog"
           >
@@ -192,7 +191,7 @@
           <v-row class="px-3 pt-2">
             <v-carousel
               cycle
-              height="150"
+              height="140"
               delimiter-icon="mdi-circle-medium"
               hide-delimiter-background
               show-arrows-on-hover
@@ -347,11 +346,23 @@ export default {
   mixins: [fileMixins, snackBarMixin],
   data: () => ({
     rules: {
-      minPrice(value) {
+      min(value) {
         return (value || 'Giá không hợp lệ') > 0 || 'Không hợp lệ';
       },
-      min(value) {
-        return (value || 'Giá không hợp lệ') >= 0 || 'Không hợp lệ';
+      minPrice(value) {
+        return value >= 0 || 'Không hợp lệ';
+      },
+      maxSuperficiality(value) {
+        return value <= 200 || 'Diện tích nên ít hơn 200 m2';
+      },
+      maxCapacity(value) {
+        return value <= 20 || 'Sức chứa nên ít hơn 20 người';
+      },
+      maxDeposit(value) {
+        return value <= 12 || 'Cọc thế chân nên ít hơn 1 năm';
+      },
+      maxEmptyRooms(value, maxValue) {
+        return value <= maxValue || 'Không hợp lệ';
       },
     },
     showMessage: {
