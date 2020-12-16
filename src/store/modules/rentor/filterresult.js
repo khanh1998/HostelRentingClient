@@ -19,12 +19,8 @@ const myState = {
     },
     around: {
       selects: [],
-      items: [
-        'Chợ, siêu thị, cửa hàng tiện lợi',
-        'Trạm xe buýt',
-        'Bệnh viện, trạm y tế',
-        'Ngân hàng',
-      ],
+      data: [],
+      isLoading: false,
     },
     categories: {
       data: [],
@@ -89,6 +85,10 @@ const mutationTypes = {
   GET_FACILITIES_SUCCESS: 'GET_FACILITIES_SUCCESS',
   GET_FACILITIES_FAILURE: 'GET_FACILITIES_FAILURE',
   GET_FACILITIES_REQUEST: 'GET_FACILITIES_REQUEST',
+  // utilities
+  GET_UTILITIES_SUCCESS: 'GET_UTILITIES_SUCCESS',
+  GET_UTILITIES_FAILURE: 'GET_UTILITIES_FAILURE',
+  GET_UTILITIES_REQUEST: 'GET_UTILITIES_REQUEST',
   // school
   GET_SCHOOLS_SUCCESS: 'GET_SCHOOLS_SUCCESS',
   GET_SCHOOLS_FAILURE: 'GET_SCHOOLS_FAILURE',
@@ -147,6 +147,17 @@ const mutations = {
   },
   GET_FACILITIES_REQUEST(state) {
     state.filter.facility.isLoading = true;
+  },
+  // UTILITIES
+  GET_UTILITIES_SUCCESS(state, inputData) {
+    state.filter.around.data = inputData;
+    state.filter.around.isLoading = false;
+  },
+  GET_UTILITIES_FAILURE(state) {
+    state.filter.around.isLoading = false;
+  },
+  GET_UTILITIES_REQUEST(state) {
+    state.filter.around.isLoading = true;
   },
   // get all school
   GET_SCHOOLS_SUCCESS(state, inputData) {
@@ -279,6 +290,10 @@ const actions = {
         params.filterProperties.facility.selects.forEach((element) => {
           facilitiesStr += `&facilityIds=${element}`;
         });
+        let utilitiesStr = '';
+        params.filterProperties.around.selects.forEach((element) => {
+          utilitiesStr += `&uCategoryIds=${element}`;
+        });
         // school
         let schoolStr = '';
         if (params.filterProperties.schools.select) {
@@ -305,7 +320,7 @@ const actions = {
           const minSuperficiality = params.filterProperties.minArea.select.split(' ')[0];
           minSuperficialityStr = `&minSuperficiality=${minSuperficiality}`;
         }
-        url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=${params.page}&size=${params.size}&sortBy=score`; // eslint-disable-line
+        url = `/api/v1/types?asc=false${coordinatorStr}${distanceStr}${utilitiesStr}${facilitiesStr}${priceStr}${categoryStr}${minSuperficialityStr}${schoolStr}${hometownStr}&page=${params.page}&size=${params.size}&sortBy=score`; // eslint-disable-line
       }
       window.$cookies.set('searchValue', url);
 
@@ -329,6 +344,18 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_FACILITIES_FAILURE);
+    }
+  },
+  async getAllUtilities({ commit }) {
+    // no param
+    try {
+      commit(mutationTypes.GET_UTILITIES_REQUEST);
+      const res = await window.axios.get('/api/v1/ucategories');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_UTILITIES_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_UTILITIES_FAILURE);
     }
   },
   async getAllSchools({ commit }) {

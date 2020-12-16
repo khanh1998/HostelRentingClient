@@ -1,9 +1,9 @@
 <template>
   <div class="px-0">
-    <v-overlay :value="isLoading" absolute>
+    <!-- <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
-    <v-container fluid v-if="!isLoading && isSearchError !== 500" class="px-0">
+    </v-overlay> -->
+    <v-container fluid _v-if="!isLoading && isSearchError !== 500" class="px-0">
       <v-row justify="center" style="background-color: #f3f4f9">
         <v-col
           cols="12"
@@ -243,10 +243,11 @@ export default {
   computed: {
     isLoading() {
       const facilities = this.$store.state.renter.filterResult.filter.facility.isLoading;
+      const around = this.$store.state.renter.filterResult.filter.around.isLoading;
       const result = this.$store.state.renter.filterResult.results.isLoading;
       const categories = this.$store.state.renter.filterResult.filter.categories.isLoading;
       const regulation = this.$store.state.renter.filterResult.filter.regulations.isLoading;
-      return facilities || categories || regulation || result;
+      return facilities || categories || regulation || result || around;
     },
     isSearchError() {
       return this.$store.state.renter.filterResult.results.error;
