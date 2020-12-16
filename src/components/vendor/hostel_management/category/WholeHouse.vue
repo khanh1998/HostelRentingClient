@@ -58,9 +58,9 @@
         <v-col cols="4" class="d-flex py-0">
           <v-row class="ma-0">
             <span class="field-name font-weight-medium mt-4 ml-auto"
-              >Sức chứa<span class="red--text ml-1">(*)</span>:</span
+              >Cọc thế chân<span class="red--text ml-1">(*)</span>:</span
             >
-            <v-col cols="7" class="d-flex flex-column pa-0 ml-auto">
+            <v-col cols="6" class="d-flex flex-column pa-0 ml-auto">
               <v-text-field
                 class="size-sub form font-nunito"
                 type="number"
@@ -68,11 +68,14 @@
                 solo
                 dense
                 light
-                v-model="newTypeValue.capacity"
-                suffix="người"
+                v-model="newTypeValue.deposit"
+                suffix="tháng"
                 step="1"
                 min="0"
-                :rules="[rules.min(newTypeValue.capacity)]"
+                :rules="[
+                  rules.minPrice(newTypeValue.deposit),
+                  rules.maxDeposit(newTypeValue.deposit),
+                ]"
                 @input="setCreateTypeValue(newTypeValue)"
               />
               <span class="font-nunito red--text size-caption" v-show="showMessage.capacity"
@@ -359,7 +362,7 @@ export default {
         return value <= 20 || 'Sức chứa nên ít hơn 20 người';
       },
       maxDeposit(value) {
-        return value <= 12 || 'Cọc thế chân nên ít hơn 1 năm';
+        return value <= 24 || 'Cọc thế chân nên ít hơn 2 năm';
       },
       maxEmptyRooms(value, maxValue) {
         return value <= maxValue || 'Không hợp lệ';

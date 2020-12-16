@@ -508,7 +508,7 @@
               <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="e1 = 1"
                 >Quay lại</v-btn
               >
-              {{ newTypeValue }}
+              {{ newTypeValue.error }}
               <v-spacer></v-spacer>
               <v-btn
                 class="btn btn-primary font-nunito mx-2"
@@ -1321,7 +1321,6 @@ export default {
         newGroupData.types.forEach((type, i) => {
           const typeError = {
             index: i,
-            capacity: false,
             deposit: false,
             price: false,
             rooms: false,
@@ -1458,7 +1457,6 @@ export default {
       const newType = this.$store.state.vendor.group.createType.data;
       if (this.getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn') {
         const typeError = {
-          capacity: false,
           deposit: false,
           price: false,
           rooms: false,
