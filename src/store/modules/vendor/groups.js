@@ -52,6 +52,7 @@ const myState = () => ({
     schedules: [],
     appendixContract: null,
     types: [],
+    errorHostelRoom: [],
   },
   newType: {},
   newRoom: {
@@ -74,14 +75,15 @@ const myState = () => ({
     data: {
       title: '',
       price: 0,
-      priceUnit: null,
-      superficiality: 0,
+      priceUnit: 'triệu',
+      superficiality: '',
       deposit: 1,
-      capacity: 0,
+      capacity: '',
       rooms: [],
       image: [],
       facilityIds: [],
       newFacilities: [],
+      error: [],
     },
   },
 });
@@ -130,6 +132,10 @@ const mutationTypes = {
   CREATE_HOSTEL_TYPE_REQUEST: 'CREATE_HOSTEL_TYPE_REQUEST',
   CREATE_HOSTEL_TYPE_SUCCESS: 'CREATE_HOSTEL_TYPE_SUCCESS',
   CREATE_HOSTEL_TYPE_FAILURE: 'CREATE_HOSTEL_TYPE_FAILURE',
+
+  CREATE_LIST_HOSTEL_TYPE_REQUEST: 'CREATE_LIST_HOSTEL_TYPE_REQUEST',
+  CREATE_LIST_HOSTEL_TYPE_SUCCESS: 'CREATE_LIST_HOSTEL_TYPE_SUCCESS',
+  CREATE_LIST_HOSTEL_TYPE_FAILURE: 'CREATE_LIST_HOSTEL_TYPE_FAILURE',
 
   UPDATE_HOSTEL_TYPE_REQUEST: 'UPDATE_HOSTEL_TYPE_REQUEST',
   UPDATE_HOSTEL_TYPE_SUCCESS: 'UPDATE_HOSTEL_TYPE_SUCCESS',
@@ -247,6 +253,32 @@ const mutations = {
   CREATE_HOSTEL_GROUP_FAILURE: (state, error) => {
     state.groups.isCreating = false;
     state.groups.error = error;
+  },
+
+  CREATE_LIST_HOSTEL_TYPE_REQUEST: (state) => {
+    state.types.isCreating = true;
+    state.types.success = false;
+    state.types.error = null;
+  },
+  CREATE_LIST_HOSTEL_TYPE_SUCCESS: (state, createdNewType) => {
+    state.types.isCreating = false;
+    console.log(createdNewType);
+    const { groups } = state;
+    const { groupId } = createdNewType[0];
+    console.log(groups, createdNewType, groupId);
+    const indexOfGroup = groups.data.findIndex((group) => group.groupId === groupId);
+    console.log(indexOfGroup);
+    console.log(state.groups.data[indexOfGroup].types);
+    createdNewType.forEach((item) => {
+      state.groups.data[indexOfGroup].types.unshift(item);
+    });
+    state.types.isCreating = false;
+    state.types.success = true;
+    state.types.success = true;
+  },
+  CREATE_LIST_HOSTEL_TYPE_FAILURE: (state, error) => {
+    state.types.isCreating = false;
+    state.types.error = error;
   },
 
   UPDATE_HOSTEL_GROUP_REQUEST: (state) => {
@@ -450,6 +482,7 @@ const actions = {
     }
   },
   async createHostelType({ commit }, newType) {
+    console.log(newType);
     try {
       commit(mutationTypes.CREATE_HOSTEL_TYPE_REQUEST);
       const { groupId } = newType;
@@ -459,6 +492,20 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.CREATE_HOSTEL_TYPE_FAILURE, error);
+    }
+  },
+
+  async createListHostelType({ commit }, types) {
+    console.log(types);
+    try {
+      commit(mutationTypes.CREATE_LIST_HOSTEL_TYPE_REQUEST);
+      const { groupID, list } = types;
+      const res = await window.axios.post(`/api/v1/groups/${groupID}/types`, list);
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.CREATE_LIST_HOSTEL_TYPE_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.CREATE_ROOMS_FAILURE, error);
     }
   },
   async getTypesByGroupId({ commit }, groupId) {
@@ -493,6 +540,7 @@ const actions = {
   async createRooms({ commit }, reqObj) {
     try {
       const { rooms, typeId, groupId } = reqObj;
+      console.log(rooms);
       commit(mutationTypes.CREATE_ROOMS_REQUEST);
       const res = await window.axios.post(`/api/v1/types/${typeId}/rooms`, rooms);
       if (res.status >= 200 && res.status <= 299) {

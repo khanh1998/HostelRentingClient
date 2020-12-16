@@ -14,7 +14,10 @@
               @click="openCreateGroupDialog = true"
               ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm khu trọ mới</v-btn
             >
-            <v-btn class="mx-5 px-10 btn-warning btn-sm font-nunito" to="rooms"
+            <v-btn
+              class="mx-5 px-10 btn-warning btn-sm font-nunito"
+              to="rooms"
+              v-if="groups.length > 0"
               >Quản lý chi tiết các khu trọ
             </v-btn>
             <v-spacer></v-spacer>
@@ -124,7 +127,7 @@
             </v-menu>
             <!-- </v-col> -->
           </v-row>
-          <v-card class="mt-5 px-5 py-4">
+          <v-card class="mt-5 px-5 py-4" v-if="groups.length > 0">
             <v-row>
               <div class="d-flex mx-4 py-2" style="width: 100%; border-bottom: 2px solid #eef2f7">
                 <v-col cols="2" class="d-flex align-center">
@@ -164,7 +167,11 @@
               prev-icon="mdi-menu-left"
               next-icon="mdi-menu-right"
               color="#727cf5"
+              v-if="groups.length > 0"
             ></v-pagination>
+            <span class="d-flex flex-column align-center cursor topview-lable mt-16" v-else>
+              Bạn chưa tạo khu trọ nào để quản lý
+            </span>
           </v-row>
         </v-col>
       </v-row>
