@@ -109,7 +109,7 @@ export default {
   props: {
     chatShow: Boolean,
     itemSelected: Object,
-    vendorId: Number,
+    vendorId: String,
   },
   data() {
     return {
@@ -279,7 +279,7 @@ export default {
     },
     async fetchConversations() {
       await chatCollectionRef
-        .where('vendorId', '==', Number(this.vendorId))
+        .where('vendorId', '==', this.vendorId)
         .orderBy('lastedMessage.createdAt', 'desc')
         .onSnapshot((querySnapshot) => {
           this.docRefs = {};

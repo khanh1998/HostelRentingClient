@@ -149,6 +149,7 @@
                 @newValue="receiveNewTermsOfContract"
                 :type="type"
                 :group="group"
+                :booking="booking"
                 @clickCreateContract="doCreateContract"
                 @clickUpdateContract="doUpdateContract"
                 @clickResignContract="doResignContract"
