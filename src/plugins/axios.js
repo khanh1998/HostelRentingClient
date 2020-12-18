@@ -20,6 +20,7 @@ axios.interceptors.request.use(
       '/schools',
       '/statistic',
       '/facilities',
+      '/ucategories',
       '/services',
       '/provinces',
       '/utilities',

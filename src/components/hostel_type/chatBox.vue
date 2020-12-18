@@ -554,7 +554,7 @@ export default {
         action: actions.NEW_MESSAGE,
         id: '',
         icon: this.userState.data.avatar,
-        vendorId: Number(this.id.vendorId),
+        vendorId: this.id.vendorId,
         renterId: null,
       });
     },
@@ -600,7 +600,7 @@ export default {
           action: actions.NEW_BOOKING,
           id: newContent.book.bookingId,
           icon: this.userState.data.avatar,
-          vendorId: Number(this.id.vendorId),
+          vendorId: this.id.vendorId,
           renterId: null,
         });
       });
@@ -626,7 +626,7 @@ export default {
             action: 'NEW_MESSAGE',
             id: '',
             icon: this.userState.data.avatar,
-            vendorId: Number(this.id.vendorId),
+            vendorId: this.id.vendorId,
             renterId: null,
           });
         } else if (type === 'book') {

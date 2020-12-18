@@ -127,26 +127,45 @@
           </v-chip-group>
         </v-expansion-panel-content>
       </v-expansion-panel>
-      <!-- <v-expansion-panel>
-        <v-expansion-panel-header>Tiện nghi xung quanh</v-expansion-panel-header>
-        <v-expansion-panel-content class="noPadding">
-          <v-chip-group v-model="filter.around.selects" column multiple>
-            <v-chip
-              filter
-              outlined
-              v-for="(item, i) in filter.around.items"
-              :key="`item-${i}`"
-              :value="item"
-              >{{ item }}</v-chip
-            >
-          </v-chip-group>
-        </v-expansion-panel-content>
-      </v-expansion-panel> -->
       <v-expansion-panel>
         <v-expansion-panel-header class="text-body-2 header-label">
           <template v-slot:default="{ open }">
             <v-row no-gutters class="d-flex flex colum">
-              <span class="text-body-2 header-label">Tiện nghi</span>
+              <span class="text-body-2 header-label">Tiện nghi xung quanh</span>
+              <v-fade-transition leave-absolute>
+                <span
+                  v-if="!open && filter.around.selects.length !== 0"
+                  key="1"
+                  class="ml-auto text-body-2 text-primary-dark"
+                >
+                  <span v-if="filter.around.selects.length !== filter.around.data.length">
+                    chọn {{ filter.around.selects.length }}
+                  </span>
+                  <span v-else>đã chọn tất cả</span>
+                </span>
+              </v-fade-transition>
+            </v-row>
+          </template>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content class="noPadding">
+          <v-chip-group v-model="filter.around.selects" column multiple>
+            <v-chip
+              class="font-nunito"
+              filter
+              outlined
+              v-for="(item, i) in utilities"
+              :key="`item-${i}`"
+              :value="item.categoryId"
+              >{{ item.name }}</v-chip
+            >
+          </v-chip-group>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel>
+        <v-expansion-panel-header class="text-body-2 header-label">
+          <template v-slot:default="{ open }">
+            <v-row no-gutters class="d-flex flex colum">
+              <span class="text-body-2 header-label">Tiện ích</span>
               <v-fade-transition leave-absolute>
                 <span
                   v-if="!open && filter.facility.selects.length !== 0"
@@ -357,6 +376,7 @@ export default {
   methods: {
     ...mapActions({
       getAllFacilities: 'renter/filterResult/getAllFacilities',
+      getAllUtilities: 'renter/filterResult/getAllUtilities',
       getAllCategories: 'renter/filterResult/getAllCategories',
       getAllRegulations: 'renter/filterResult/getAllRegulations',
       getAllSchools: 'renter/filterResult/getAllSchools',
@@ -422,6 +442,11 @@ export default {
         return this.$store.state.renter.filterResult.filter.facility.data;
       },
     },
+    utilities: {
+      get() {
+        return this.$store.state.renter.filterResult.filter.around.data;
+      },
+    },
     coordinates: {
       get() {
         return this.$store.state.renter.filterResult.search.value;
@@ -445,6 +470,9 @@ export default {
   created() {
     if (this.facilities.length === 0) {
       this.getAllFacilities();
+    }
+    if (this.utilities.length === 0) {
+      this.getAllUtilities();
     }
     if (this.filter.categories.data.length === 0) {
       this.getAllCategories();

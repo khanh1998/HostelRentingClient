@@ -243,10 +243,11 @@ export default {
   computed: {
     isLoading() {
       const facilities = this.$store.state.renter.filterResult.filter.facility.isLoading;
+      const around = this.$store.state.renter.filterResult.filter.around.isLoading;
       const result = this.$store.state.renter.filterResult.results.isLoading;
       const categories = this.$store.state.renter.filterResult.filter.categories.isLoading;
       const regulation = this.$store.state.renter.filterResult.filter.regulations.isLoading;
-      return facilities || categories || regulation || result;
+      return facilities || categories || regulation || result || around;
     },
     isSearchError() {
       return this.$store.state.renter.filterResult.results.error;

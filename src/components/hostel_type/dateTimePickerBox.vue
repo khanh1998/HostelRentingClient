@@ -157,7 +157,7 @@ export default {
     rating: Object,
     groupId: Number,
     type: Object,
-    vendorId: Number,
+    vendorId: String,
     currentBooking: Number,
     availableRoom: Number,
   },

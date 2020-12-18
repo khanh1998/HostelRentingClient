@@ -9,7 +9,7 @@ const myState = () => ({
 
 const myGetters = {
   getUserById: (state) => (id) => {
-    const result = state.usersChatList.data.filter((user) => user.userId === Number(id));
+    const result = state.usersChatList.data.filter((user) => user.userId === id);
     if (result.length > 0) {
       return result[0];
     }
