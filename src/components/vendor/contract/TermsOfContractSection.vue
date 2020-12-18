@@ -92,7 +92,7 @@
                     <v-col cols="6" sm="6" class="d-flex flex-column">
                       <span class="font-weight-bold text-gray-black">Tiền thuê </span>
                       <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
-                        ><span>{{ type.price }}</span>
+                        ><span>{{ this.price }}</span>
                         <span class="ml-auto">triệu/tháng</span>
                       </span>
                     </v-col>
@@ -344,8 +344,7 @@
                     <v-col cols="6" sm="6" class="d-flex flex-column">
                       <span class="font-weight-bold text-gray-black">Tiền thuê </span>
                       <span class="text size-sub-2 px-3 py-2 mt-2 d-flex">
-                        <span v-if="contractObj.deal">{{ contractObj.deal.offeredPrice }}</span>
-                        <span v-if="!contractObj.deal">{{ type.price }}</span>
+                        <span>{{ this.price }}</span>
                         <span class="ml-auto">triệu/tháng</span>
                       </span>
                     </v-col>
@@ -483,6 +482,9 @@ export default {
     group: {
       type: Object,
     },
+    booking: {
+      type: Object,
+    },
     mode: {
       type: String,
       validator(value) {
@@ -506,6 +508,7 @@ export default {
       'https://youthhostelstorage.blob.core.windows.net/template/contract_appendix.html',
     menu1: null,
     startTime: new Date().toISOString().substr(0, 10),
+    price: null,
     contract: {
       paymentDayInMonth: 1,
       roomId: null,
@@ -517,6 +520,7 @@ export default {
       reserved: false,
       paid: false,
       downPayment: 0,
+      dealId: null,
     },
     rooms: {
       data: [],
@@ -633,6 +637,7 @@ export default {
   },
   created() {
     this.getRoomsOfType();
+    this.price = this.type.price;
     if (this.mode === 'update' || this.mode === 'view' || this.mode === 'resign') {
       const {
         roomId,
@@ -645,6 +650,7 @@ export default {
         paid,
         downPayment,
         reserved,
+        deal,
       } = this.contractObj;
       this.contract.roomId = roomId;
       this.contract.duration = duration;
@@ -660,9 +666,17 @@ export default {
       this.contract.paid = paid;
       this.contract.downPayment = downPayment;
       this.contract.reserved = reserved;
+      if (deal) {
+        this.price = deal.offeredPrice;
+      }
     }
     if (this.mode === 'create') {
       this.contract.downPayment = this.group.downPayment;
+      this.contract.dealId = this.booking.deal.dealId;
+      const { deal } = this.booking;
+      if (deal) {
+        this.price = deal.offeredPrice;
+      }
     }
   },
   watch: {
