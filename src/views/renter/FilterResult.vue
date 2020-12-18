@@ -1,9 +1,9 @@
 <template>
   <div class="px-0">
-    <!-- <v-overlay :value="isLoading" absolute>
+    <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay> -->
-    <v-container fluid _v-if="!isLoading && isSearchError !== 500" class="px-0">
+    </v-overlay>
+    <v-container fluid v-if="!isLoading && isSearchError !== 500" class="px-0">
       <v-row justify="center" style="background-color: #f3f4f9">
         <v-col
           cols="12"

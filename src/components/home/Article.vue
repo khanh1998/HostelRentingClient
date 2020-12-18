@@ -256,7 +256,7 @@
         v-if="
           searchValue &&
           (schoolSelected || hometownSelected) &&
-          (type.schoolMate !== 0 || type.compatriot !== 0)
+          (type.schoolmate !== 0 || type.compatriot !== 0)
         "
         style="background: #f3f4f9; padding-left: 7px !important"
       >
@@ -274,12 +274,12 @@
               cols="11"
               md="7"
               style="padding: 0 !important"
-              v-if="schoolSelected && type.schoolMate !== 0"
+              v-if="schoolSelected && type.schoolmate !== 0"
               class="d-flex justify-center align-center"
             >
               <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
               <span class="text-caption"
-                >{{ type.schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                >{{ type.schoolmate }} người học {{ schoolSelected.schoolName }}</span
               >
             </v-col>
             <v-col

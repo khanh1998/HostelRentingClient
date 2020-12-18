@@ -121,6 +121,7 @@
                       cols="12"
                       class="d-flex justify-center font-nunito"
                       style="font-size: 18px"
+                      v-if="this.contract.status === 'ACCEPTED'"
                       ><p class="hidden-sm-and-down">
                         Bạn cần thanh toán tiền cọc giữ chân và gửi thông tin thanh toán để chủ nhà
                         xác nhận
@@ -159,7 +160,11 @@
                             </v-card-text>
                           </div>
                         </v-timeline-item>
-                        <v-timeline-item color="#727CF5" small>
+                        <v-timeline-item
+                          color="#727CF5"
+                          small
+                          v-if="this.contract.status === 'ACCEPTED'"
+                        >
                           <div>
                             Yêu cầu chủ nhà xác nhận tiền cọc giữ chỗ :
                             <v-chip
@@ -231,7 +236,12 @@
                     <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
                       xem chi tiết hợp đồng</v-chip
                     >
-                    <v-chip v-if="resignable" @click="$emit('resign', contract.contractId)" color="#727CF5" dark>
+                    <v-chip
+                      v-if="resignable"
+                      @click="$emit('resign', contract.contractId)"
+                      color="#727CF5"
+                      dark
+                    >
                       Gia hạn hợp đồng</v-chip
                     >
                     <v-chip v-if="contract.resign === 'REJECT'"> Từ chối gia hạn </v-chip>
@@ -271,11 +281,12 @@
                       cols="12"
                       class="d-flex justify-center font-nunito"
                       style="font-size: 18px"
+                      v-if="this.contract.status === 'ACCEPTED'"
                       ><p class="hidden-sm-and-down">
                         Bạn cần thanh toán tiền và gửi thông tin thanh toán để chủ nhà xác nhận
                       </p></v-col
                     >
-                    <v-col cols="12" class="pb-0 pt-0">
+                    <v-col cols="12" class="pb-0 pt-0" v-if="this.contract.status === 'ACCEPTED'">
                       <v-timeline align-top dense>
                         <v-timeline-item color="#727CF5" small>
                           <div>
@@ -305,12 +316,15 @@
                                   width="30px"
                                   src="../../assets/logo-momo.png"
                                 ></v-img>
-                                <!-- <v-card-subtitle class="pl-1 pr-0">Bạn phải có tài khoản MoMo</v-card-subtitle> -->
                               </v-btn>
                             </v-card-text>
                           </div>
                         </v-timeline-item>
-                        <v-timeline-item color="#727CF5" small>
+                        <v-timeline-item
+                          color="#727CF5"
+                          small
+                          v-if="this.contract.status === 'ACCEPTED'"
+                        >
                           <div>
                             Yêu cầu chủ nhà xác nhận đã nhận tiền:
                             <v-chip
