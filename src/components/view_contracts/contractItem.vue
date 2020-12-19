@@ -121,7 +121,6 @@
                       cols="12"
                       class="d-flex justify-center font-nunito"
                       style="font-size: 18px"
-                      v-if="this.contract.status === 'ACCEPTED'"
                       ><p class="hidden-sm-and-down">
                         Bạn cần thanh toán tiền cọc giữ chân và gửi thông tin thanh toán để chủ nhà
                         xác nhận
@@ -160,11 +159,7 @@
                             </v-card-text>
                           </div>
                         </v-timeline-item>
-                        <v-timeline-item
-                          color="#727CF5"
-                          small
-                          v-if="this.contract.status === 'ACCEPTED'"
-                        >
+                        <v-timeline-item color="#727CF5" small>
                           <div>
                             Yêu cầu chủ nhà xác nhận tiền cọc giữ chỗ :
                             <v-chip
@@ -281,12 +276,11 @@
                       cols="12"
                       class="d-flex justify-center font-nunito"
                       style="font-size: 18px"
-                      v-if="this.contract.status === 'ACCEPTED'"
                       ><p class="hidden-sm-and-down">
                         Bạn cần thanh toán tiền và gửi thông tin thanh toán để chủ nhà xác nhận
                       </p></v-col
                     >
-                    <v-col cols="12" class="pb-0 pt-0" v-if="this.contract.status === 'ACCEPTED'">
+                    <v-col cols="12" class="pb-0 pt-0">
                       <v-timeline align-top dense>
                         <v-timeline-item color="#727CF5" small>
                           <div>
@@ -320,11 +314,7 @@
                             </v-card-text>
                           </div>
                         </v-timeline-item>
-                        <v-timeline-item
-                          color="#727CF5"
-                          small
-                          v-if="this.contract.status === 'ACCEPTED'"
-                        >
+                        <v-timeline-item color="#727CF5" small>
                           <div>
                             Yêu cầu chủ nhà xác nhận đã nhận tiền:
                             <v-chip
