@@ -60,8 +60,8 @@
           </v-btn>
         </v-toolbar>
         <v-card-text class="pt-3 d-flex justify-center" style="font-size: 18px">
-          <span v-if="payReserveFee.success">Thanh toán tiền giữ chỗ thành công</span>
-          <span v-if="!payReserveFee.success">Thanh toán tiền giữ chỗ thất bại</span>
+          <span v-if="payReserveFee.success">Gửi thông tin giao dịch thanh toán thành công</span>
+          <span v-if="!payReserveFee.success">Gửi thông tin giao dịch thanh toán thất bại</span>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -98,8 +98,8 @@
           </v-btn>
         </v-toolbar>
         <v-card-text class="pt-3 d-flex justify-center" style="font-size: 18px">
-          <span v-if="payReserveFee.success">Thanh toán tiền giữ chỗ thành công</span>
-          <span v-if="!payReserveFee.success">Thanh toán tiền giữ chỗ thất bại</span>
+          <span v-if="payReserveFee.success">Gửi thông tin giao dịch thanh toán thành công</span>
+          <span v-if="!payReserveFee.success">Gửi thông tin giao dịch thanh toán thất bại</span>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -136,8 +136,8 @@
           </v-btn>
         </v-toolbar>
         <v-card-text class="pt-3 d-flex justify-center" style="font-size: 18px">
-          <span v-if="payAllFee.success">Thanh toán tiền giữ chỗ thành công</span>
-          <span v-if="!payAllFee.success">Thanh toán tiền giữ chỗ thất bại</span>
+          <span v-if="payAllFee.success">Gửi thông tin giao dịch thanh toán thành công</span>
+          <span v-if="!payAllFee.success">Gửi thông tin giao dịch thanh toán thất bại</span>
         </v-card-text>
       </v-card>
     </v-dialog>

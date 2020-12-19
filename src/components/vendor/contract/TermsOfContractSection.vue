@@ -133,7 +133,7 @@
                       <v-card-text v-if="contract.reserved">
                         Lần 1: thanh toán phí giữ chỗ {{ contract.downPayment }} triệu đồng <br />
                         Lần 2: thanh toán phần còn lại
-                        {{ Math.floor(totalPrice - contract.downPayment) }}
+                        {{ (totalPrice - contract.downPayment).toFixed(2) }} triệu đồng
                       </v-card-text>
                     </v-card>
                   </v-row>

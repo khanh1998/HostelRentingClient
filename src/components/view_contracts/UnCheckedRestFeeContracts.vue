@@ -60,7 +60,9 @@
             </v-row>
             <v-row>
               <v-col cols="5"
-                ><span style="font-size: 18px" class="font-weight-bold">Tiền cọc giữ chỗ:</span></v-col
+                ><span style="font-size: 18px" class="font-weight-bold"
+                  >Tiền cọc giữ chỗ:</span
+                ></v-col
               >
               <v-col cols="7"
                 ><span style="font-size: 18px"
@@ -70,21 +72,24 @@
             </v-row>
             <v-row>
               <v-col cols="5"
-                ><span style="font-size: 18px" class="font-weight-bold">Giá thuê:</span></v-col
+                ><span style="font-size: 18px" class="font-weight-bold">Tổng tiền:</span></v-col
               >
               <v-col cols="7"
                 ><span style="font-size: 18px"
-                  >{{ evidences.contract.type.price }} triệu đồng/tháng</span
+                  >{{ evidences.row.totalPrice }} triệu đồng</span
                 ></v-col
               >
             </v-row>
             <v-row>
               <v-col cols="5"
-                ><span style="font-size: 18px" class="font-weight-bold">Số tiền còn lại cần phải trả:</span></v-col
+                ><span style="font-size: 18px" class="font-weight-bold"
+                  >Số tiền còn lại cần phải trả:</span
+                ></v-col
               >
               <v-col cols="7"
                 ><span style="font-size: 18px"
-                  >{{ evidences.contract.type.price - evidences.contract.downPayment}} triệu đồng</span
+                  >{{ evidences.row.totalPrice - evidences.row.downPayment }} triệu
+                  đồng</span
                 ></v-col
               >
             </v-row>
@@ -126,7 +131,7 @@
       hide-default-footer
     >
       <template v-slot:item.actions="{ item }">
-        <v-btn text color="amber" @click="showEvidences(item.contractId)">Kiểm tra</v-btn>
+        <v-btn text color="amber" @click="showEvidences(item.contractId, item)">Kiểm tra</v-btn>
       </template>
     </v-data-table>
     <v-card-subtitle class="pt-3">
@@ -168,6 +173,7 @@ export default {
       lighbox: false,
       showResult: false,
       success: false,
+      row: null,
     },
   }),
   computed: {
@@ -175,16 +181,22 @@ export default {
       contractsStore: (state) => state.user.contracts,
     }),
     tableItems() {
-      return this.contracts.map((c) => ({
-        renterName: c.renter.username,
-        roomName: c.room.roomName,
-        groupName: c.group.groupName,
-        status: c.status,
-        contractId: c.contractId,
-        images: c.images,
-        downPayment: c.downPayment,
-        address: `${c.group.streetName}, ${c.group.wardName}, ${c.group.districtName}`,
-      }));
+      return this.contracts.map((c) => {
+        const price = c.deal ? c.deal.offeredPrice : c.type.price;
+        const obj = {
+          renterName: c.renter.username,
+          roomName: c.room.roomName,
+          groupName: c.group.groupName,
+          status: c.status,
+          contractId: c.contractId,
+          images: c.images,
+          downPayment: c.downPayment,
+          price,
+          totalPrice: (c.type.deposit + 1) * price,
+          address: `${c.group.streetName}, ${c.group.wardName}, ${c.group.districtName}`,
+        };
+        return obj;
+      });
     },
   },
   methods: {
@@ -229,13 +241,14 @@ export default {
       this.evidences.currentImgUrl = url;
       this.evidences.lighbox = true;
     },
-    showEvidences(contractId) {
+    showEvidences(contractId, row) {
       const contract = this.contracts.find((c) => c.contractId === contractId);
       this.evidences.imageUrls = contract.images
         .filter((img) => img.type === 'REST_BILL')
         .map((img) => img.resourceUrl);
       this.evidences.show = true;
       this.evidences.contract = contract;
+      this.evidences.row = row;
     },
   },
 };

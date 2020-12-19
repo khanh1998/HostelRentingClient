@@ -122,8 +122,8 @@
                       class="d-flex justify-center font-nunito"
                       style="font-size: 18px"
                       ><p class="hidden-sm-and-down">
-                        Bạn cần thanh toán tiền cọc giữ chân và gửi thông tin thanh toán để chủ nhà
-                        xác nhận
+                        Bạn cần thanh toán tiền cọc giữ chân ({{ contract.downPayment }} triệu đồng)
+                        và gửi thông tin thanh toán để chủ nhà xác nhận
                       </p></v-col
                     >
                     <v-col cols="12" class="pb-0 pt-0">
@@ -199,9 +199,11 @@
                     ><p class="hidden-sm-and-up">Chủ trọ đã nhận tiền cọc</p></v-col
                   >
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
-                    Bạn hoàn tất việc đóng tiền cọc giữ chỗ,
+                    Bạn hoàn tất việc đóng tiền cọc giữ chỗ, để thanh toán phần tiền còn lại ({{
+                      (totalPrice - contract.downPayment).toFixed(2)
+                    }}
+                    triệu đồng) để hợp đồng chính thức có hiệu lực.
                     <v-chip @click="$emit('paid-rest', contract.contractId)">nhấn vào đây</v-chip>
-                    để thanh toán phần tiền còn lại để hợp đồng chính thức có hiệu lực.
                   </v-col>
                 </v-row>
               </v-stepper-content>
@@ -277,7 +279,7 @@
                       class="d-flex justify-center font-nunito"
                       style="font-size: 18px"
                       ><p class="hidden-sm-and-down">
-                        Bạn cần thanh toán tiền và gửi thông tin thanh toán để chủ nhà xác nhận
+                        Bạn cần thanh toán tiền ({{totalPrice}} triệu đồng) và gửi thông tin thanh toán để chủ nhà xác nhận
                       </p></v-col
                     >
                     <v-col cols="12" class="pb-0 pt-0">
@@ -392,6 +394,15 @@ export default {
     mapDialog: false,
   }),
   computed: {
+    price() {
+      if (this.contract.deal) {
+        return this.contract.deal.offeredPrice;
+      }
+      return this.contract.type.price;
+    },
+    totalPrice() {
+      return (this.contract.type.deposit + 1) * this.price;
+    },
     resignable() {
       console.log('called');
       // eslint-disable-next-line
@@ -462,6 +473,9 @@ export default {
         if (this.contract.status === 'ACTIVATED') {
           return 3;
         }
+      }
+      if (this.contract.status === 'EXPIRED') {
+        return 5;
       }
       return null;
     },
