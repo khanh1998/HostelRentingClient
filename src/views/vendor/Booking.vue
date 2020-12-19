@@ -470,17 +470,6 @@
                       >
                         Hủy hẹn
                       </v-btn>
-                      <v-btn
-                        v-if="selectedEvent.data.status === 'DONE'"
-                        @click="changeToSContractString(se)"
-                        :to="`/vendor/contract?bookingId=${selectedEvent.data.bookingId}&mode=create`"
-                        title="Tạo hợp đồng"
-                        color="#727cf5"
-                        dark
-                      >
-                        <!-- <v-icon left>far fa-handshake</v-icon> -->
-                        Xem hợp đồng
-                      </v-btn>
                     </v-card-actions>
                   </v-card>
                   <v-card color="grey lighten-4" flat class="hidden-sm-and-down">
@@ -682,7 +671,7 @@
                         </v-card>
                       </v-dialog> -->
                       <v-btn
-                        v-if="selectedEvent.data.status === 'DONE'"
+                        v-if="selectedEvent.data.status === 'DONE' && !selectedEvent.data.contractId"
                         @click="changeToSContractString(se)"
                         :to="`/vendor/contract?bookingId=${selectedEvent.data.bookingId}&mode=create`"
                         title="Tạo hợp đồng"
@@ -690,7 +679,7 @@
                         dark
                       >
                         <!-- <v-icon left>far fa-handshake</v-icon> -->
-                        Xem hợp đồng
+                        Tạo hợp đồng
                       </v-btn>
                     </v-card-actions>
                   </v-card>

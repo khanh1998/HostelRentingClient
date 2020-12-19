@@ -17,13 +17,6 @@
                       <span class="text size-sub-2 px-3 py-2 mt-2">{{ group.groupName }}</span>
                     </v-col>
                     <v-col cols="12" class="d-flex flex-column">
-                      <!-- <v-textarea v-model="addressString" rows="2" readonly disabled>
-                      <template v-slot:label>
-                        <div>
-                          Địa chỉ phòng trọ
-                        </div>
-                      </template>
-                    </v-textarea> -->
                       <span class="font-weight-bold text-gray-black"
                         >Chọn phòng <span class="text-danger">(*)</span>
                       </span>
@@ -119,6 +112,11 @@
                       <span class="font-weight-bold text-gray-black">Tiền cọc giữ chỗ</span>
                       <v-text-field
                         v-model="contract.downPayment"
+                        :rules="[
+                          rules.max(contract.downPayment, price),
+                          rules.min(contract.downPayment),
+                        ]"
+                        step="0.1"
                         type="number"
                         suffix="triệu đồng"
                         solo
@@ -126,28 +124,19 @@
                       >
                       </v-text-field>
                     </v-col>
-                    <!-- <v-col cols="12">
-                      <div class="d-flex justify-center align-center">
-                        <v-card>
-                          <v-card-text>
-                            <span class="text-h6 mt-5">Chọn loại hợp đồng</span>
-                            <v-switch
-                              v-model="contract.reserved"
-                              :label="contractTypeString"
-                            ></v-switch>
-                            <v-text-field
-                              v-model="contract.downPayment"
-                              type="number"
-                              label="Tiền cọc giữ chỗ"
-                              suffix="triệu đồng"
-                            >
-                            </v-text-field>
-                          </v-card-text>
-                        </v-card>
-                      </div>
-                    </v-col> -->
                   </v-row>
-                  <!-- </v-container> -->
+                  <v-row>
+                    <v-card>
+                      <v-card-text>
+                        Tổng số tiền phải thanh toán: {{ totalPrice }} triệu đồng
+                      </v-card-text>
+                      <v-card-text v-if="contract.reserved">
+                        Lần 1: thanh toán phí giữ chỗ {{ contract.downPayment }} triệu đồng <br />
+                        Lần 2: thanh toán phần còn lại
+                        {{ Math.floor(totalPrice - contract.downPayment) }}
+                      </v-card-text>
+                    </v-card>
+                  </v-row>
                 </v-card-text>
               </v-col>
               <v-col cols="12" md="7">
@@ -371,6 +360,9 @@
                       <span class="font-weight-bold text-gray-black">Tiền cọc giữ chỗ</span>
                       <v-text-field
                         v-model="contract.downPayment"
+                        :max="price"
+                        min="0.1"
+                        step="0.1"
                         type="number"
                         suffix="triệu đồng"
                         solo
@@ -504,6 +496,14 @@ export default {
     TextEditor,
   },
   data: () => ({
+    rules: {
+      max(value, max) {
+        return (value || 'phí giữ chỗ ') < max || `phí giữ chỗ  nhỏ hơn ${max}`;
+      },
+      min(value) {
+        return (value || 'phí giữ chỗ ') > 0 || 'phí giữ chỗ  lớn hơn 0';
+      },
+    },
     contractTemplateUrl:
       'https://youthhostelstorage.blob.core.windows.net/template/contract_appendix.html',
     menu1: null,
@@ -587,6 +587,9 @@ export default {
     },
   },
   computed: {
+    totalPrice() {
+      return (this.type.deposit + 1) * this.price;
+    },
     physicalContractImages() {
       return this.contract.images.filter((img) => img.type === 'PAPER');
     },

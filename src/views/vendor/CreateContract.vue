@@ -1,5 +1,15 @@
 <template>
   <div class="overflow-y-auto" max-height="100%" ref="contractView" id="contractView">
+    <v-dialog v-model="confirmCreate" width="350" persistent>
+      <v-card>
+        <v-card-title>Bạn có đồng ý ký vào hợp đồng?</v-card-title>
+        <v-card-text></v-card-text>
+        <v-card-actions>
+          <v-btn @click="confirmCreate = false">Hủy</v-btn>
+          <v-btn @click="doCreateContract">Đồng ý</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="showUserEmptyFields" width="350" persistent>
       <v-card>
         <v-card-title> Vui lòng cập nhật thông tin để tạo hợp đồng </v-card-title>
@@ -150,7 +160,7 @@
                 :type="type"
                 :group="group"
                 :booking="booking"
-                @clickCreateContract="doCreateContract"
+                @clickCreateContract="confirmCreate = true"
                 @clickUpdateContract="doUpdateContract"
                 @clickResignContract="doResignContract"
                 :contractObj="contractFull"
@@ -190,6 +200,7 @@ export default {
     showCreateSuccess: null,
     showEmptyFields: false,
     ready: false,
+    confirmCreate: false,
   }),
   methods: {
     ...mapActions({

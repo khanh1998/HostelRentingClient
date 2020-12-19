@@ -66,7 +66,7 @@
                     </v-col>
                     <v-col cols="12" sm="12" md="12" class="d-flex pb-0">
                       <span class="font-weight-bold text-gray-black">CMND số:</span
-                      ><span class="ml-2 text-gray-black">{{ renter.idNum }}</span>
+                      ><span class="ml-2 text-gray-black">{{ renter.citizenIdNum }}</span>
                     </v-col>
                     <v-col cols="5" sm="6" md="6" class="d-flex pb-0">
                       <span class="font-weight-bold text-gray-black">Ngày cấp:</span
@@ -118,7 +118,7 @@
                     </v-col>
                     <v-col cols="12" sm="12" md="12" class="d-flex">
                       <span class="font-weight-bold text-gray-black">CMND số:</span
-                      ><span class="ml-2 text-gray-black">{{ vendor.idNum }}</span>
+                      ><span class="ml-2 text-gray-black">{{ vendor.citizenIdNum }}</span>
                     </v-col>
                     <v-col cols="5" sm="6" md="6" class="d-flex">
                       <span class="font-weight-bold text-gray-black">Ngày cấp:</span
@@ -161,7 +161,7 @@
                     </v-col>
                     <v-col cols="12" sm="12" md="12" class="d-flex">
                       <span class="font-weight-bold text-gray-black">CMND số:</span
-                      ><span class="ml-2 text-gray-black">{{ renter.idNum }}</span>
+                      ><span class="ml-2 text-gray-black">{{ renter.citizenIdNum }}</span>
                     </v-col>
                     <v-col cols="5" sm="6" md="6" class="d-flex">
                       <span class="font-weight-bold text-gray-black">Ngày cấp:</span
