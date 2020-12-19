@@ -60,16 +60,6 @@
             </v-row>
             <v-row>
               <v-col cols="5"
-                ><span style="font-size: 18px" class="font-weight-bold">Tiền cọc giữ chỗ:</span></v-col
-              >
-              <v-col cols="7"
-                ><span style="font-size: 18px"
-                  >{{ evidences.contract.downPayment }} triệu đồng</span
-                ></v-col
-              >
-            </v-row>
-            <v-row>
-              <v-col cols="5"
                 ><span style="font-size: 18px" class="font-weight-bold">Giá thuê:</span></v-col
               >
               <v-col cols="7"
@@ -80,11 +70,21 @@
             </v-row>
             <v-row>
               <v-col cols="5"
-                ><span style="font-size: 18px" class="font-weight-bold">Số tiền còn lại cần phải trả:</span></v-col
+                ><span style="font-size: 18px" class="font-weight-bold">Đặt cọc:</span></v-col
               >
               <v-col cols="7"
                 ><span style="font-size: 18px"
-                  >{{ evidences.contract.type.price - evidences.contract.downPayment}} triệu đồng</span
+                  >{{ evidences.contract.type.deposit }} tháng</span
+                ></v-col
+              >
+            </v-row>
+            <v-row>
+              <v-col cols="5"
+                ><span style="font-size: 18px" class="font-weight-bold">Số tiền phải trả:</span></v-col
+              >
+              <v-col cols="7"
+                ><span style="font-size: 18px"
+                  >{{ evidences.contract.type.price * (evidences.contract.type.deposit + 1)}} triệu đồng</span
                 ></v-col
               >
             </v-row>

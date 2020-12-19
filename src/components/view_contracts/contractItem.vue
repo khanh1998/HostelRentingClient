@@ -349,12 +349,6 @@
               </v-stepper-content>
               <v-stepper-content step="3">
                 <v-row>
-                  <v-col
-                    cols="12"
-                    class="d-flex justify-center font-weight-bold font-nunito"
-                    style="font-size: 18px"
-                    ><p class="hidden-sm-and-up">Đã ký hợp đồng</p></v-col
-                  >
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
                     <v-chip @click="$emit('view-detail', contract.contractId)" color="#727CF5" dark>
                       xem chi tiết hợp đồng</v-chip
@@ -401,7 +395,8 @@ export default {
       return this.contract.type.price;
     },
     totalPrice() {
-      return (this.contract.type.deposit + 1) * this.price;
+      const t = (this.contract.type.deposit + 1) * this.price;
+      return t.toFixed(2);
     },
     resignable() {
       console.log('called');
@@ -468,7 +463,12 @@ export default {
           return 1;
         }
         if (this.contract.status === 'ACCEPTED') {
-          return 2;
+          if (this.contract.paid === false) {
+            return 1;
+          }
+          if (this.contract.paid === true) {
+            return 2;
+          }
         }
         if (this.contract.status === 'ACTIVATED') {
           return 3;

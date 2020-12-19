@@ -588,7 +588,8 @@ export default {
   },
   computed: {
     totalPrice() {
-      return (this.type.deposit + 1) * this.price;
+      const t = (this.type.deposit + 1) * this.price;
+      return t.toFixed(2);
     },
     physicalContractImages() {
       return this.contract.images.filter((img) => img.type === 'PAPER');
