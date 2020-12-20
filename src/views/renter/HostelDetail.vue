@@ -170,12 +170,12 @@
               </div>
               <div
                 class="arrow-price d-flex flex-column"
-                v-if="searchValue && (info.schoolMate !== 0 || info.compatriot !== 0)"
+                v-if="searchValue && (info.schoolmate !== 0 || info.compatriot !== 0)"
               >
-                <span class="text-caption" v-if="schoolSelected && info.schoolMate !== 0">
+                <span class="text-caption" v-if="schoolSelected && info.schoolmate !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
                   <span class="text-caption"
-                    >{{ info.schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                    >{{ info.schoolmate }} người học {{ schoolSelected.schoolName }}</span
                   >
                 </span>
                 <span class="text-caption" v-if="hometownSelected && info.compatriot !== 0">
@@ -203,12 +203,12 @@
               </div>
               <div
                 class="arrow-price d-flex flex-column"
-                v-if="searchValue && (info.schoolMate !== 0 || info.compatriot !== 0)"
+                v-if="searchValue && (info.schoolmate !== 0 || info.compatriot !== 0)"
               >
                 <span class="text-caption" v-if="schoolSelected && schoolMate !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
                   <span class="text-caption"
-                    >{{ info.schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                    >{{ info.schoolmate }} người học {{ schoolSelected.schoolName }}</span
                   >
                 </span>
                 <span class="text-caption" v-if="hometownSelected && compatriot !== 0">
@@ -468,7 +468,7 @@ export default {
 
     getNearByUtilities() {
       this.getUtilities({
-        distance: '10',
+        distance: '3',
         longitude: this.group.longitude,
         latitude: this.group.latitude,
       });

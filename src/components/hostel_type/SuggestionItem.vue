@@ -140,7 +140,7 @@
                 max-height="20"
               />
               <span class="text-body-1 font-weight-bold ml-auto" style="color: #656565">
-                {{ type.schoolMate }}
+                {{ type.schoolmate }}
                 <span class="text-body-2 font-weight-medium" style="color: #656565">người</span>
               </span>
             </div>
@@ -195,7 +195,7 @@ export default {
     getDetail(typeId) {
       this.$router.push(`/detail/${typeId}`);
       this.getUtilities({
-        distance: '10',
+        distance: '3',
         longitude: this.group.longitude,
         latitude: this.group.latitude,
       });
