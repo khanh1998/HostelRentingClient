@@ -102,7 +102,7 @@
           class="d-flex rounded-0 d-flex justify-space-between mt-2 font-nunito"
           style="height: 70px"
         >
-          <div style="width: 60%">
+          <div style="width: 60%" v-if="type.schoolmate > 0">
             <div class="d-flex align-center">
               <v-img
                 src="@/assets/home/school.svg"
@@ -112,7 +112,7 @@
                 max-height="23"
               />
               <span class="text-body-1 font-weight-bold" style="color: #656565">
-                {{ type.compatriot }}
+                {{ type.schoolmate }}
                 <span class="text-body-2 font-weight-medium" style="color: #656565">người</span>
               </span>
             </div>
@@ -130,7 +130,7 @@
               >{{ renter.school.schoolName }}</span
             >
           </div>
-          <div>
+          <div v-if="type.compatriot > 0">
             <div class="d-flex justify-center align-center">
               <v-img
                 src="@/assets/home/hometown.png"
@@ -140,7 +140,7 @@
                 max-height="20"
               />
               <span class="text-body-1 font-weight-bold ml-auto" style="color: #656565">
-                {{ type.schoolmate }}
+                {{ type.compatriot }}
                 <span class="text-body-2 font-weight-medium" style="color: #656565">người</span>
               </span>
             </div>
