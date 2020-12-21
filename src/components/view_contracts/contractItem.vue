@@ -84,7 +84,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col v-if="contract.status !== 'CANCELLED'">
           <v-stepper v-model="step" v-if="contract.reserved" class="elevation-0">
             <v-stepper-header class="elevation-0" v-if="step <= 4">
               <v-stepper-step :complete="step > 0" step="1" color="#727CF5">
@@ -122,15 +122,16 @@
                       class="d-flex justify-center font-nunito"
                       style="font-size: 18px"
                       ><p class="hidden-sm-and-down">
-                        Bạn cần thanh toán tiền cọc giữ chân
-                         và gửi thông tin thanh toán để chủ nhà xác nhận
+                        Bạn cần thanh toán tiền cọc giữ chân và gửi thông tin thanh toán để chủ nhà
+                        xác nhận
                       </p></v-col
                     >
                     <v-col cols="12" class="pb-0 pt-0">
                       <v-timeline align-top dense>
                         <v-timeline-item color="#727CF5" small>
                           <div>
-                            Thanh toán tiền cọc giữ chỗ cho chủ trọ: ({{ contract.downPayment }} triệu đồng)
+                            Thanh toán tiền cọc giữ chỗ cho chủ trọ: ({{ contract.downPayment }}
+                            triệu đồng)
                             <v-card-subtitle class="pt-0 pb-0 hidden-sm-and-down">
                               Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
                               trực tuyến.<br />
@@ -188,6 +189,16 @@
                     Yêu cầu xác nhận tiền của bạn đã được gửi tới chủ nhà. Hãy đợi cho tới khi chủ
                     nhà xác nhận.
                   </v-col>
+                  <v-col>
+                    <v-btn @click="changeMode">
+                      {{ imageEditorMode === 'view' ? 'Cập nhật' : 'Hoàn tất' }}
+                    </v-btn>
+                    <ImageEditor
+                      :mode="imageEditorMode"
+                      @newValues="updateEvidence"
+                      :oldImages="reservedBills"
+                    />
+                  </v-col>
                 </v-row>
               </v-stepper-content>
               <v-stepper-content step="3">
@@ -218,6 +229,16 @@
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
                     Bạn đã thanh toán đầy đủ tiền, hãy chờ chủ trọ xác nhận đã nhận tiền để hợp đồng
                     có hiệu lực.
+                  </v-col>
+                  <v-col>
+                    <v-btn @click="changeMode">
+                      {{ imageEditorMode === 'view' ? 'Cập nhật' : 'Hoàn tất' }}
+                    </v-btn>
+                    <ImageEditor
+                      :mode="imageEditorMode"
+                      :oldImages="restBills"
+                      @newValues="updateEvidence"
+                    />
                   </v-col>
                 </v-row>
               </v-stepper-content>
@@ -286,7 +307,7 @@
                       <v-timeline align-top dense>
                         <v-timeline-item color="#727CF5" small>
                           <div>
-                            Thanh toán tiền cho chủ trọ: ({{totalPrice}} triệu đồng).
+                            Thanh toán tiền cho chủ trọ: ({{ totalPrice }} triệu đồng).
                             <v-card-subtitle class="pt-0 pb-0 hidden-sm-and-down">
                               Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
                               trực tuyến.<br />
@@ -345,6 +366,16 @@
                     Thông tin thanh toán đã được gửi tới chủ trọ, hãy đợi đến khi chủ trọ xác nhận
                     đã nhận được tiền.
                   </v-col>
+                  <v-col>
+                    <v-btn @click="changeMode">
+                      {{ imageEditorMode === 'view' ? 'Cập nhật' : 'Hoàn tất' }}
+                    </v-btn>
+                    <ImageEditor
+                      :mode="imageEditorMode"
+                      @newValues="updateEvidence"
+                      :oldImages="restBills"
+                    />
+                  </v-col>
                 </v-row>
               </v-stepper-content>
               <v-stepper-content step="3">
@@ -371,6 +402,14 @@
             </v-stepper-items>
           </v-stepper>
         </v-col>
+        <v-col v-if="contract.status === 'CANCELLED'">
+          <v-row>
+            <v-col>
+              <p>Hợp đồng đã bị hủy</p>
+              <ImageEditor :oldImages="contract.images" :mode="'view'" />
+            </v-col>
+          </v-row>
+        </v-col>
       </v-row>
     </v-row>
   </v-card>
@@ -378,14 +417,17 @@
 <style scoped></style>
 <script>
 import { mapActions } from 'vuex';
+import ImageEditor from '../vendor/hostel_management/ImageEditor.vue';
+import actions from '../../config/pushNotificationActions';
 
 export default {
   name: 'ContractItem',
   props: ['contract'],
-  components: {},
+  components: { ImageEditor },
   data: () => ({
     dialog: false,
     mapDialog: false,
+    imageEditorMode: 'view',
   }),
   computed: {
     price() {
@@ -393,6 +435,15 @@ export default {
         return this.contract.deal.offeredPrice;
       }
       return this.contract.type.price;
+    },
+    restBills() {
+      return this.contract.images.filter((c) => c.type === 'REST_BILL');
+    },
+    reservedBills() {
+      return this.contract.images.filter((c) => c.type === 'RESERVED_BILL');
+    },
+    pappers() {
+      return this.contract.images.filter((c) => c.type === 'PAPER');
     },
     totalPrice() {
       const t = (this.contract.type.deposit + 1) * this.price;
@@ -523,12 +574,65 @@ export default {
       // console.log(`c${url}`);
       return url;
     },
+    imageType() {
+      if (this.contract.isReserved && this.contract.status === 'ACCEPTED') {
+        return 'RESERVED_BILL';
+      }
+      return 'REST_BILL';
+    },
   },
   methods: {
     ...mapActions({
       getProvinces: 'renter/common/getProvinces',
       getUserByIds: 'vendor/overview/getUserByIds',
+      updateContract: 'user/updateContract',
+      sendNotification: 'user/sendNotification',
     }),
+    changeMode() {
+      if (this.imageEditorMode === 'view') {
+        this.imageEditorMode = 'edit';
+      } else {
+        this.imageEditorMode = 'view';
+      }
+    },
+    updateEvidence(newImages) {
+      console.log(newImages);
+      this.contract.roomId = this.contract.room.roomId;
+      this.contract.paid = true;
+      const images = newImages.map((image) => ({
+        resourceUrl: image.resourceUrl,
+        type: this.imageType,
+      }));
+      let theRest;
+      if (this.imageType === 'REST_BILL') {
+        theRest = this.reservedBills;
+      } else if (this.imageType === 'RESERVED_BILL') {
+        theRest = this.restBills;
+      }
+      this.contract.images = [...this.pappers, ...theRest, ...images];
+      const { contractId } = this.contract;
+      this.updateContract(this.contract).then(() => {
+        const { success } = this.contracts;
+        this.payReserveFee.success = success;
+        this.payReserveFee.showResult = true;
+        if (success) {
+          this.signAndPay.step += 1;
+          const payload = {
+            title: `${this.contract.renter.username} đóng phần tiền còn lại để hoàn tất hợp đồng`,
+            body: `${this.totalPrice - this.contract.downPayment} triệu đồng`,
+            action: actions.RESERVE_FEE_PAID,
+            id: this.contract.contractId,
+            vendorId: this.contract.vendor.userId,
+            renterId: null,
+            icon: this.contract.renter.avatar,
+          };
+          this.sendNotification(payload);
+          this.contractOverlay.contract = this.contracts.data.find(
+            (c) => c.contractId === contractId,
+          );
+        }
+      });
+    },
     getAvatarTitle(name) {
       return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
     },

@@ -11,6 +11,19 @@
         <v-img :src="evidences.currentImgUrl" contain max-height="400" max-width="300"></v-img>
       </div>
     </v-dialog>
+    <v-dialog v-model="warning" max-width="600">
+      <v-card>
+        <v-card-title>Cảnh báo</v-card-title>
+        <v-card-text
+          >Nếu bạn đánh dấu thông tin chuyển khoản là không hợp lệ thì toàn bộ quy trình thanh toán
+          và hợp đồng sẽ bị hủy.</v-card-text
+        >
+        <v-card-actions>
+          <v-btn @click="warning = false">Quay lại</v-btn>
+          <v-btn @click="confirmInvalidReserved">Tiếp tục</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="evidences.show" max-width="350">
       <div class="d-flex justify-center align-center">
         <v-card
@@ -63,9 +76,7 @@
                 ><span style="font-size: 18px" class="font-weight-bold">Giá thuê:</span></v-col
               >
               <v-col cols="7"
-                ><span style="font-size: 18px"
-                  >{{ evidences.price }} triệu đồng/tháng</span
-                ></v-col
+                ><span style="font-size: 18px">{{ evidences.price }} triệu đồng/tháng</span></v-col
               >
             </v-row>
             <v-row>
@@ -85,10 +96,7 @@
                 ></v-col
               >
               <v-col cols="7"
-                ><span style="font-size: 18px"
-                  >{{ evidences.totalPrice}} triệu
-                  đồng</span
-                ></v-col
+                ><span style="font-size: 18px">{{ evidences.totalPrice }} triệu đồng</span></v-col
               >
             </v-row>
             <v-row
@@ -110,7 +118,7 @@
           </v-card-text>
           <v-card-text v-if="evidences.imageUrls.length === 0"> Không có hình ảnh </v-card-text>
           <v-card-actions class="d-flex justify-center">
-            <v-btn @click="confirmInvalidReserved">Không hợp lệ</v-btn>
+            <v-btn @click="warning = true">Không hợp lệ</v-btn>
             <v-btn @click="confirmValidReserved" dark color="#727CF5">Hợp lệ</v-btn>
           </v-card-actions>
         </v-card>
@@ -172,6 +180,7 @@ export default {
       showResult: false,
       success: false,
     },
+    warning: false,
   }),
   computed: {
     ...mapState({
@@ -197,10 +206,30 @@ export default {
       sendNotification: 'user/sendNotification',
     }),
     confirmInvalidReserved() {
-      const contract = this.evidences;
+      this.evidences.showResult = false;
+      this.evidences.success = false;
+      const { contract } = this.evidences;
       contract.roomId = contract.room.roomId;
-      contract.status = '';
+      contract.status = 'CANCELLED';
       this.evidences.show = false;
+      const { contractId, qrCode } = contract;
+      const payload = { contractId, qrCode, status: 'CANCELLED' };
+      this.activateContract(payload).then(() => {
+        this.evidences.success = this.contractsStore.success;
+        if (this.evidences.success) {
+          const p = {
+            title: `${contract.vendor.username} xác nhận KHÔNG nhận được tiền`,
+            body: `Hợp đồng đã bị hủy cho phòng ${contract.room.roomName}`,
+            action: actions.ALL_FEE_RECEIVED,
+            id: contract.contractId,
+            vendorId: null,
+            renterId: contract.renter.userId,
+            icon: contract.renter.avatar,
+          };
+          this.sendNotification(p);
+        }
+        this.evidences.show = false;
+      });
     },
     confirmValidReserved() {
       this.evidences.showResult = false;
