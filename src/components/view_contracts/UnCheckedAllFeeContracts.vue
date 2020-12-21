@@ -64,7 +64,7 @@
               >
               <v-col cols="7"
                 ><span style="font-size: 18px"
-                  >{{ evidences.contract.type.price }} triệu đồng/tháng</span
+                  >{{ evidences.price }} triệu đồng/tháng</span
                 ></v-col
               >
             </v-row>
@@ -80,11 +80,14 @@
             </v-row>
             <v-row>
               <v-col cols="5"
-                ><span style="font-size: 18px" class="font-weight-bold">Số tiền phải trả:</span></v-col
+                ><span style="font-size: 18px" class="font-weight-bold"
+                  >Tổng số tiền phải trả:</span
+                ></v-col
               >
               <v-col cols="7"
                 ><span style="font-size: 18px"
-                  >{{ evidences.contract.type.price * (evidences.contract.type.deposit + 1)}} triệu đồng</span
+                  >{{ evidences.totalPrice}} triệu
+                  đồng</span
                 ></v-col
               >
             </v-row>
@@ -236,6 +239,8 @@ export default {
         .map((img) => img.resourceUrl);
       this.evidences.show = true;
       this.evidences.contract = contract;
+      this.evidences.price = contract.deal ? contract.deal.offeredPrice : contract.type.price;
+      this.evidences.totalPrice = this.evidences.price * (contract.type.deposit + 1);
     },
   },
 };

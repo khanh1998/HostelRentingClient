@@ -29,12 +29,21 @@
         <v-card>
           <v-card-title class="headline">
             <span v-if="!bookings.success" class="red--text"
-              ><v-icon>report</v-icon> Xác thực booking thất bại</span
+              ><v-icon>report</v-icon> Xác thực gặp mặt thất bại</span
             >
             <span v-if="bookings.success" class="green--text"
-              ><v-icon>done_outline</v-icon>Xác thực booking thành công</span
+              ><v-icon>done_outline</v-icon>Xác thực gặp mặt thành công</span
             >
           </v-card-title>
+          <v-card-text v-if="bookings.success">
+            <p>{{ this.booking.vendor.username }}</p>
+            <p>Nhà trọ: {{ this.booking.group.groupName }}</p>
+            <p>Nhà trọ: {{ this.boooking.type.title }}</p>
+            <p>Giá gốc: {{ this.booking.type.price }}</p>
+            <p v-if="this.booking.deal">
+              Giá thương lượng: {{ this.booking.deal.offeredPrice }}
+            </p>
+          </v-card-text>
           <v-card-text v-if="bookings.error" class="d-flex justify-center mt-5">
             <span>{{ bookings.error }}</span>
           </v-card-text>
@@ -269,6 +278,7 @@ export default {
     result: '',
     error: '',
     dialog: false,
+    booking: null,
     updating: false,
     noStreamApiSupport: false,
     previewDialog: {
@@ -311,8 +321,10 @@ export default {
       switch (type) {
         case 'booking':
           console.log('booking', content);
+          this.booking = null;
           this.updateBookingStatus(Number(content)).then(() => {
             const booking = this.bookings.data.find((item) => item.bookingId === Number(content));
+            this.booking = booking;
             this.dialog = true;
             this.sendNotification({
               title: `${booking.renter.username} xác nhận gặp mặt`,
