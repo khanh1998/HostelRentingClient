@@ -122,15 +122,15 @@
                       class="d-flex justify-center font-nunito"
                       style="font-size: 18px"
                       ><p class="hidden-sm-and-down">
-                        Bạn cần thanh toán tiền cọc giữ chân ({{ contract.downPayment }} triệu đồng)
-                        và gửi thông tin thanh toán để chủ nhà xác nhận
+                        Bạn cần thanh toán tiền cọc giữ chân
+                         và gửi thông tin thanh toán để chủ nhà xác nhận
                       </p></v-col
                     >
                     <v-col cols="12" class="pb-0 pt-0">
                       <v-timeline align-top dense>
                         <v-timeline-item color="#727CF5" small>
                           <div>
-                            Thanh toán tiền cọc giữ chỗ cho chủ trọ.
+                            Thanh toán tiền cọc giữ chỗ cho chủ trọ: ({{ contract.downPayment }} triệu đồng)
                             <v-card-subtitle class="pt-0 pb-0 hidden-sm-and-down">
                               Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
                               trực tuyến.<br />
@@ -199,7 +199,7 @@
                     ><p class="hidden-sm-and-up">Chủ trọ đã nhận tiền cọc</p></v-col
                   >
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
-                    Bạn hoàn tất việc đóng tiền cọc giữ chỗ, để thanh toán phần tiền còn lại ({{
+                    Bạn hoàn tất việc đóng tiền cọc giữ chỗ, thanh toán phần tiền còn lại ({{
                       (totalPrice - contract.downPayment).toFixed(2)
                     }}
                     triệu đồng) để hợp đồng chính thức có hiệu lực.
@@ -279,14 +279,14 @@
                       class="d-flex justify-center font-nunito"
                       style="font-size: 18px"
                       ><p class="hidden-sm-and-down">
-                        Bạn cần thanh toán tiền ({{totalPrice}} triệu đồng) và gửi thông tin thanh toán để chủ nhà xác nhận
+                        Bạn cần thanh toán tiền và gửi thông tin thanh toán để chủ nhà xác nhận
                       </p></v-col
                     >
                     <v-col cols="12" class="pb-0 pt-0">
                       <v-timeline align-top dense>
                         <v-timeline-item color="#727CF5" small>
                           <div>
-                            Thanh toán tiền cho chủ trọ.
+                            Thanh toán tiền cho chủ trọ: ({{totalPrice}} triệu đồng).
                             <v-card-subtitle class="pt-0 pb-0 hidden-sm-and-down">
                               Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
                               trực tuyến.<br />

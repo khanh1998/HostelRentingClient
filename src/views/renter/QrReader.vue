@@ -35,17 +35,17 @@
               ><v-icon>done_outline</v-icon>Xác thực gặp mặt thành công</span
             >
           </v-card-title>
-          <v-card-text v-if="bookings.success">
-            <p>{{ this.booking.vendor.username }}</p>
-            <p>Nhà trọ: {{ this.booking.group.groupName }}</p>
-            <p>Nhà trọ: {{ this.boooking.type.title }}</p>
-            <p>Giá gốc: {{ this.booking.type.price }}</p>
-            <p v-if="this.booking.deal">
-              Giá thương lượng: {{ this.booking.deal.offeredPrice }}
+          <v-card-text v-if="bookings.success && booking">
+            <p>Chủ trọ: {{ booking.vendor.username }}</p>
+            <p>Nhà trọ: {{ booking.group.groupName }}</p>
+            <p>Loại phòng: {{ booking.type.title }}</p>
+            <p>Giá gốc: {{ booking.type.price }} triệu đồng</p>
+            <p v-if="booking.deal">
+              Giá thương lượng: {{ booking.deal.offeredPrice }} triệu đồng
             </p>
           </v-card-text>
           <v-card-text v-if="bookings.error" class="d-flex justify-center mt-5">
-            <span>{{ bookings.error }}</span>
+            <span>Mã QR của booking này không thuộc về bạn. Hãy yêu cầu chủ trọ chọn booking khác.</span>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
