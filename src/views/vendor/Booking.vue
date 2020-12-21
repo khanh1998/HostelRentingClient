@@ -82,7 +82,7 @@
                     letter-spacing: 0.01rem !important;
                     background-color: white;
                     border-color: rgba(250, 92, 124, 0.25);
-                    color: #9C27B0;
+                    color: #9c27b0;
                   "
                   @click="changeStatus('CANCELLED')"
                   ><v-icon x-small class="mr-1" color="purple">stop_circle</v-icon>Đã hủy</v-btn
@@ -100,7 +100,8 @@
                     color: #FF572;
                   "
                   @click="changeStatus('CONTRACT')"
-                  ><v-icon x-small class="mr-1" color="deep-orange">stop_circle</v-icon>Đã tạo hợp đồng</v-btn
+                  ><v-icon x-small class="mr-1" color="deep-orange">stop_circle</v-icon>Đã tạo hợp
+                  đồng</v-btn
                 >
               </v-col>
               <v-col cols="4" md="10" class="py-2">
@@ -115,7 +116,8 @@
                     color: #fa5c7c;
                   "
                   @click="changeStatus('NONCONTRACT')"
-                  ><v-icon x-small class="mr-1" color="#fa5c7c">stop_circle</v-icon>Chưa tạo hợp đồng</v-btn
+                  ><v-icon x-small class="mr-1" color="#fa5c7c">stop_circle</v-icon>Chưa tạo hợp
+                  đồng</v-btn
                 >
               </v-col>
             </v-row>
@@ -250,6 +252,12 @@
                     </v-list-item>
                     <v-list-item @click="changeStatus('CANCELLED')">
                       <v-list-item-title>Đã hủy</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="changeStatus('CONTRACT')">
+                      <v-list-item-title>Đã tạo hợp đồng</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="changeStatus('NONCONTRACT')">
+                      <v-list-item-title>Chưa tạo hợp đồng</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -497,6 +505,19 @@
                         @click="showCancelDialog(selectedEvent.data.bookingId)"
                       >
                         Hủy hẹn
+                      </v-btn>
+                      <v-btn
+                        v-if="
+                          selectedEvent.data.status === 'DONE' && !selectedEvent.data.contractId
+                        "
+                        @click="changeToSContractString(se)"
+                        :to="`/vendor/contract?bookingId=${selectedEvent.data.bookingId}&mode=create`"
+                        title="Tạo hợp đồng"
+                        color="#727cf5"
+                        dark
+                      >
+                        <!-- <v-icon left>far fa-handshake</v-icon> -->
+                        Tạo hợp đồng
                       </v-btn>
                     </v-card-actions>
                   </v-card>

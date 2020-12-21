@@ -220,6 +220,8 @@ export default {
       contract.roomId = contract.room.roomId;
       contract.status = 'ACTIVATED';
       contract.paid = false;
+      const price = contract.deal ? contract.deal.offeredPrice : contract.type.price;
+      const totalPrice = ((contract.type.deposit + 1) * price).toFixed(2);
       const { contractId, qrCode } = contract;
       const payload = { contractId, qrCode, status: 'ACTIVATED' };
       this.activateContract(payload).then(() => {
@@ -227,7 +229,7 @@ export default {
         if (this.evidences.success) {
           const p = {
             title: `${contract.vendor.username} xác nhận đã nhận đủ số tiền theo hợp đồng`,
-            body: `${contract.type.price - contract.downPayment} triệu đồng, phòng ${contract.room.roomName}`,
+            body: `${(totalPrice - contract.type.downPayment).toFixed(2)} triệu đồng, phòng ${contract.room.roomName}`,
             action: actions.RESERVE_FEE_RECEIVED,
             id: contract.contractId,
             vendorId: null,

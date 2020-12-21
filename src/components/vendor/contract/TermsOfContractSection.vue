@@ -186,7 +186,7 @@
                     >
                     <div class="d-flex justify-center pt-3">
                       <ImageEditor
-                        :mode="mode"
+                        :mode="'edit'"
                         :check="check"
                         @newValues="receiveNewImages"
                         class="pa-0"
@@ -369,7 +369,19 @@
                         dense
                       >
                       </v-text-field>
-                    </v-col>
+                    </v-col>Ảnh của hợp đồng giấy
+                  </v-row>
+                  <v-row>
+                    <v-card>
+                      <v-card-text>
+                        Tổng số tiền phải thanh toán: {{ totalPrice }} triệu đồng
+                      </v-card-text>
+                      <v-card-text v-if="contract.reserved">
+                        Lần 1: thanh toán phí giữ chỗ {{ contract.downPayment }} triệu đồng <br />
+                        Lần 2: thanh toán phần còn lại
+                        {{ (totalPrice - contract.downPayment).toFixed(2) }} triệu đồng
+                      </v-card-text>
+                    </v-card>
                   </v-row>
                   <span class="text-h6 mt-5">Dịch vụ</span>
                   <span class="text-muted font-italic">Chọn dịch vụ mà bạn sẽ tính tiền</span>
@@ -410,7 +422,7 @@
                   <v-col cols="12">
                     <span>Ảnh của hợp đồng giấy (nếu có)</span>
                     <ImageEditor
-                      :mode="mode"
+                      :mode="'edit'"
                       @newValues="receiveNewImages"
                       class="pa-0"
                       :oldImages="physicalContractImages"

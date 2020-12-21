@@ -209,12 +209,50 @@
                     style="font-size: 18px"
                     ><p class="hidden-sm-and-up">Chủ trọ đã nhận tiền cọc</p></v-col
                   >
-                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
-                    Bạn hoàn tất việc đóng tiền cọc giữ chỗ, thanh toán phần tiền còn lại ({{
-                      (totalPrice - contract.downPayment).toFixed(2)
-                    }}
-                    triệu đồng) để hợp đồng chính thức có hiệu lực.
-                    <v-chip @click="$emit('paid-rest', contract.contractId)">nhấn vào đây</v-chip>
+                  <v-col>
+                    <v-timeline align-top dense>
+                      <v-timeline-item color="#727CF5" small>
+                        <div>
+                          Bạn hoàn tất việc đóng tiền cọc giữ chỗ. Thanh toán phần tiền còn lại cho
+                          chủ trọ: ({{ (totalPrice - contract.downPayment).toFixed(2) }}
+                          triệu đồng)
+                          <v-card-subtitle class="pt-0 pb-0 hidden-sm-and-down">
+                            Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán trực
+                            tuyến.<br />
+                            Hỗ trợ thanh toán bằng
+                            <v-btn :href="getParamForUrl" target="_blank" rounded text>
+                              <v-img
+                                height="30px"
+                                width="30px"
+                                src="../../assets/logo-momo.png"
+                              ></v-img>
+                            </v-btn>
+                          </v-card-subtitle>
+                          <v-card-text class="pt-0 pb-0 hidden-sm-and-up">
+                            * Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
+                            trực tuyến.<br />
+                            * Hỗ trợ thanh toán bằng
+                            <!-- <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text> -->
+                            <v-btn :href="getParamForUrl" rounded text>
+                              <v-img
+                                height="30px"
+                                width="30px"
+                                src="../../assets/logo-momo.png"
+                              ></v-img>
+                              <!-- <v-card-subtitle class="pl-1 pr-0">Bạn phải có tài khoản MoMo</v-card-subtitle> -->
+                            </v-btn>
+                          </v-card-text>
+                        </div>
+                      </v-timeline-item>
+                      <v-timeline-item color="#727CF5" small>
+                        <div>
+                          Yêu cầu chủ nhà xác nhận tiền cọc giữ chỗ :
+                          <v-chip @click="$emit('paid-rest', contract.contractId)"
+                            >nhấn vào đây</v-chip
+                          >
+                        </div>
+                      </v-timeline-item>
+                    </v-timeline>
                   </v-col>
                 </v-row>
               </v-stepper-content>
@@ -405,7 +443,17 @@
         <v-col v-if="contract.status === 'CANCELLED'">
           <v-row>
             <v-col>
-              <p>Hợp đồng đã bị hủy</p>
+              <p>
+                Hợp đồng đã bị hủy bởi chủ trọ
+                <v-chip
+                  v-if="contract.contractUrl"
+                  @click="$emit('view-detail', contract.contractId)"
+                  color="#727CF5"
+                  dark
+                >
+                  xem chi tiết hợp đồng</v-chip
+                >
+              </p>
               <ImageEditor :oldImages="contract.images" :mode="'view'" />
             </v-col>
           </v-row>
@@ -442,7 +490,7 @@ export default {
     reservedBills() {
       return this.contract.images.filter((c) => c.type === 'RESERVED_BILL');
     },
-    pappers() {
+    papers() {
       return this.contract.images.filter((c) => c.type === 'PAPER');
     },
     totalPrice() {
@@ -575,7 +623,7 @@ export default {
       return url;
     },
     imageType() {
-      if (this.contract.isReserved && this.contract.status === 'ACCEPTED') {
+      if (this.contract.reserved && this.contract.status === 'ACCEPTED') {
         return 'RESERVED_BILL';
       }
       return 'REST_BILL';
@@ -605,11 +653,21 @@ export default {
       }));
       let theRest;
       if (this.imageType === 'REST_BILL') {
-        theRest = this.reservedBills;
+        theRest = this.reservedBills.map((image) => ({
+          resourceUrl: image.resourceUrl,
+          type: 'RESERVED_BILL',
+        }));
       } else if (this.imageType === 'RESERVED_BILL') {
-        theRest = this.restBills;
+        theRest = this.restBills.map((image) => ({
+          resourceUrl: image.resourceUrl,
+          type: 'REST_BILL',
+        }));
       }
-      this.contract.images = [...this.pappers, ...theRest, ...images];
+      const papers = this.papers.map((image) => ({
+        resourceUrl: image.resourceUrl,
+        type: 'PAPER',
+      }));
+      this.contract.images = [...papers, ...theRest, ...images];
       const { contractId } = this.contract;
       this.updateContract(this.contract).then(() => {
         const { success } = this.contracts;
@@ -618,8 +676,8 @@ export default {
         if (success) {
           this.signAndPay.step += 1;
           const payload = {
-            title: `${this.contract.renter.username} đóng phần tiền còn lại để hoàn tất hợp đồng`,
-            body: `${this.totalPrice - this.contract.downPayment} triệu đồng`,
+            title: `${this.contract.renter.username}`,
+            body: `Cập nhật thông tin về giao dịch thanh toán cho phòng ${this.contract.room.roomName}`,
             action: actions.RESERVE_FEE_PAID,
             id: this.contract.contractId,
             vendorId: this.contract.vendor.userId,

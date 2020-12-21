@@ -4,14 +4,6 @@
     <v-overlay :value="isLoading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-dialog v-model="signing" hide-overlay persistent width="300">
-      <v-card color="#727CF5" dark>
-        <v-card-text>
-          {{' '}}
-          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
     <v-dialog v-model="signingResult.show" hide-overlay persistent width="300">
       <v-card>
         <v-toolbar color="#727cf5" dark class="font-nunito">
