@@ -520,7 +520,6 @@ export default {
       'https://youthhostelstorage.blob.core.windows.net/template/contract_appendix.html',
     menu1: null,
     startTime: new Date().toISOString().substr(0, 10),
-    price: null,
     contract: {
       paymentDayInMonth: 1,
       roomId: null,
@@ -599,6 +598,9 @@ export default {
     },
   },
   computed: {
+    price() {
+      return this.booking.deal ? this.booking.deal.offeredPrice : this.type.price;
+    },
     totalPrice() {
       const t = (this.type.deposit + 1) * this.price;
       return t.toFixed(2);
@@ -653,7 +655,6 @@ export default {
   },
   created() {
     this.getRoomsOfType();
-    this.price = this.type.price;
     if (this.mode === 'update' || this.mode === 'view' || this.mode === 'resign') {
       const {
         roomId,
@@ -675,6 +676,7 @@ export default {
       this.contract.images = images;
       this.contract.appendixContract = appendixContract;
       this.contract.contractId = contractId;
+      this.contract.dealId = deal.dealId;
       this.startTime = new Date(startTime).toISOString().substr(0, 10);
       if (this.mode === 'resign') {
         this.startTime = this.getEndDate(startTime, duration);
@@ -682,16 +684,12 @@ export default {
       this.contract.paid = paid;
       this.contract.downPayment = downPayment;
       this.contract.reserved = reserved;
-      if (deal) {
-        this.price = deal.offeredPrice;
-      }
     }
     if (this.mode === 'create') {
       this.contract.downPayment = this.group.downPayment;
-      this.contract.dealId = this.booking.deal.dealId;
       const { deal } = this.booking;
       if (deal) {
-        this.price = deal.offeredPrice;
+        this.contract.dealId = this.booking.deal.dealId;
       }
     }
   },

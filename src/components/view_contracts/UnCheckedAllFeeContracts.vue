@@ -267,6 +267,7 @@ export default {
       const contract = this.contracts.find((c) => c.contractId === contractId);
       this.evidences.imageUrls = contract.images
         .filter((img) => img.type === 'REST_BILL')
+        .filter((img) => !img.deleted)
         .map((img) => img.resourceUrl);
       this.evidences.show = true;
       this.evidences.contract = contract;
