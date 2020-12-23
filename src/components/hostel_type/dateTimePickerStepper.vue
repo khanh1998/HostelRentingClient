@@ -25,7 +25,7 @@
               large
               class="pickDay mr-1 d-flex justify-center align-center"
               active-class="white--text"
-              style="height: 60px;"
+              style="height: 60px"
               link
             >
               <div class="d-flex flex-column justify-center align-center pa-1 flex-wrap">
@@ -74,7 +74,7 @@
               class="pickTime mr-2 py-1 text-subtitle-2 text-xs-center font-nunito"
               active-class="white--text"
               link
-              style="width: 60px;"
+              style="width: 60px"
               >{{ item }}</v-chip
             >
           </v-chip-group>
@@ -125,22 +125,22 @@
               <div class="d-flex align-center">
                 <div
                   class="d-flex justify-center align-center pa-2"
-                  style="border: 2px solid #ecedf1; border-radius: 50px;"
+                  style="border: 2px solid #ecedf1; border-radius: 50px"
                 >
                   <v-img max-height="15" max-width="15" src="../../assets/typeDetail/date.png" />
                 </div>
-                <span class="ml-2 text-subtitle-2" style="color: #101526;">{{
+                <span class="ml-2 text-subtitle-2" style="color: #101526">{{
                   schedules[pickedDate].formatDay
                 }}</span>
               </div>
               <div class="d-flex align-center">
                 <div
                   class="d-flex justify-center align-center pa-2"
-                  style="border: 2px solid #ecedf1; border-radius: 50px;"
+                  style="border: 2px solid #ecedf1; border-radius: 50px"
                 >
                   <v-img max-height="15" max-width="15" src="../../assets/typeDetail/time.png" />
                 </div>
-                <span class="ml-2 text-subtitle-2" style="color: #101526;">{{ selectedTime }}</span>
+                <span class="ml-2 text-subtitle-2" style="color: #101526">{{ selectedTime }}</span>
               </div>
             </div>
             <div class="d-flex flex-column mt-2 px-4">
@@ -365,7 +365,7 @@ export default {
   },
   computed: {
     rawSchedule() {
-      return this.$store.state.renter.hostelType.schedules.data.schedules;
+      return this.$store.state.renter.hostelType.schedules.data;
     },
     isLoading() {
       return this.$store.state.renter.hostelType.schedules.isLoading;

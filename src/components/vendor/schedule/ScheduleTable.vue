@@ -4,22 +4,15 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <div v-if="!isLoading">
-      <v-row class="d-flex justify-space-between ma-0 pl-md-13 mt-5 font-nunito">
-        <v-col cols="12" md="1" />
-        <v-col cols="12" md="3" class="py-0 mb-3">
+      <v-row class="d-flex justify-space-between ma-0 mt-5 font-nunito">
+        <!-- <v-col cols="12" md="3" class="py-0 mb-3">
           <v-card class="pa-3">
             <div class="d-flex">
               <span
                 style="letter-spacing: 0.02em; font-weight: 700"
                 class="text-gray font-nunito size9rem mt-2"
-                >KHU TRỌ</span
+                >KHU TRỌ Nè</span
               >
-              <!-- <v-spacer/>
-            <div>
-              <v-btn icon>
-                <v-icon color="#727cf5">search</v-icon>
-              </v-btn>
-            </div> -->
             </div>
             <v-text-field
               label="Tìm kiếm khu trọ"
@@ -89,12 +82,81 @@
               </template>
             </v-autocomplete>
           </v-card>
+        </v-col> -->
+        <v-col cols="6" md="4" xl="4">
+          <v-card>
+            <v-row class="ma-0 px-2 py-3">
+              <v-col cols="12">
+                <v-text-field
+                  label="Khu trọ"
+                  v-model="searchQuery"
+                  append-icon="search"
+                  solo
+                  hide-details
+                  class="text-muted pa-0 size-sub-2 slide-booking icon-gray"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="12" class="pt-2 pb-0" v-if="groupSearch.length > 0">
+                <v-row class="ma-0 px-1" style="background-color: #f1f3fa; border-color: #eef2f7">
+                  <v-col cols="12">
+                    <v-checkbox
+                      v-model="selectedAllGroup"
+                      color="#727cf5"
+                      label="Áp dụng tất cả các khu trọ"
+                      hide-details
+                      class="filter my-0 py-0 px-2 checkbox-small font-nunito"
+                      @click="selectAll()"
+                    ></v-checkbox>
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col cols="12" md="12" class="pt-0">
+                <v-card
+                  class="overflow-y-auto d-flex flex-column py-1"
+                  max-height="250"
+                  min-height="250"
+                  outlined
+                  v-if="groupSearch.length > 0"
+                  style="
+                    border: 0px !important;
+                    border-top-left-radius: 0 !important;
+                    border-top-right-radius: 0 !important;
+                  "
+                >
+                  <div
+                    class="ma-0 d-flex flex-column"
+                    v-for="item in groupSearch"
+                    v-bind:key="item.groupId"
+                  >
+                    <div
+                      class="d-flex px-1 service-item cursor"
+                      style="border: 1px solid #eef2f7; border-top: 0px !important"
+                    >
+                      <v-col cols="2">
+                        <v-checkbox
+                          v-model="selectedGroup"
+                          color="#727cf5"
+                          :value="item.groupId"
+                          hide-details
+                          class="filter my-0 py-0 px-2 checkbox-small"
+                          @change="checkSelectAll()"
+                        ></v-checkbox>
+                      </v-col>
+                      <v-col cols="7" class="d-flex align-center">
+                        <span class="font-nunito size9rem">{{ item.groupName }}</span>
+                      </v-col>
+                    </div>
+                  </div>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-card>
         </v-col>
         <v-col cols="12" md="7" class="py-0 mb-3">
           <div class="font-nunito">
             <v-row no-gutters>
               <v-col v-for="day in daysOfWeek" :key="day">
-                <TableColumn :columnName="day" @new="sendData" :dataT="scheduleList"/>
+                <TableColumn :columnName="day" @new="sendData" :dataT="scheduleList" />
               </v-col>
             </v-row>
             <v-divider />
@@ -155,14 +217,31 @@ export default {
     ],
     scheduleList: [],
     searchQuery: '',
-    selectedGroup: null,
+    selectedGroup: [],
+    selectedAllGroup: false,
     scheduleObjForGet: [],
   }),
   methods: {
     ...mapActions({
       getUser: 'user/getUser',
       getGroups: 'vendor/group/getGroups',
+      getAllSchedule: 'renter/common/getAllSchedule',
     }),
+    selectAll() {
+      const groupIds = [];
+      if (this.selectedAllGroup) {
+        this.groupSearch.forEach((item) => groupIds.push(item.groupId));
+      }
+      this.selectedGroup = groupIds;
+    },
+    checkSelectAll() {
+      if (this.selectedGroup.length === this.groupSearch.length && !this.selectedAllGroup) {
+        this.selectedAllGroup = true;
+      }
+      if (this.selectedGroup.length !== this.groupSearch.length && this.selectedAllGroup) {
+        this.selectedAllGroup = false;
+      }
+    },
     sendData(scheduleObjList, id) {
       // console.log(scheduleObjList);
       // console.log(`bbbbbb${id}`);
@@ -319,30 +398,15 @@ export default {
         (item) => item.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
       );
     },
-    // schedules1() {
-    //   // return this.groups.data.map((item) => ({
-    //   //   scheduleId: item.schedules.,
-    //   //   renterName: item.renter.username,
-    //   //   groupName: item.group.groupName,
-    //   // }));
-    //   // const startTime = '';
-    //   // let endTime = '';
-    //   // let scheduleId = 0;
-    //   return this.groups.data.filter((itemFilter) => itemFilter.group.groupName === this.selectedGroup).forEach((element2) => {
-    //     const scheduleId = this.getScheduleId(element2.dayOfWeek);
-    //     element2.timeRange.forEach((element3) => {
-    //       const startTime = element3.split('-')[0].trim();
-    //       const endTime = element3.split('-')[1].trim();
-    //       this.sendData({ scheduleId, startTime, endTime }, scheduleId);
-    //     });
-    //   });
-    // },
+    allSchedule() {
+      return this.$store.state.renter.common.schedule.data;
+    },
   },
   created() {
-    // this.getUser().then(() => {
-    //   this.getGroups();
-    // });
     this.getGroups();
+    if (this.allSchedule.length === 0) {
+      this.getAllSchedule();
+    }
   },
 };
 </script>
