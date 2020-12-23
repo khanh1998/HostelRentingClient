@@ -4,7 +4,7 @@
       <v-overlay
         :value="isLoading"
         absolute
-        v-if="!isLoading && isSearchError !== 500 && !isPageNotFound"
+        v-if="isLoading && !isSearchError !== 500 && !isPageNotFound"
       >
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
