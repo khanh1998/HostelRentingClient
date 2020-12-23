@@ -61,49 +61,9 @@
             transition: opacity 0.25s ease-out;
           "
         ></v-text-field>
-        <!-- <v-menu open-on-hover offset-y left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                v-bind="attrs"
-                v-on="on"
-                elevation="0"
-                height="38"
-                class="font-nunito size9rem btn-dropdown d-flex align-center justify-center px-0"
-                style="
-                  background-color: #727cf5 !important;
-                  border-top-left-radius: 0;
-                  border-bottom-left-radius: 0;
-                  border-top-right-radius: 0.15rem !important;
-                  border-bottom-right-radius: 0.15rem !important;
-                "
-                ><v-icon small color="#fff">search</v-icon>
-                <v-icon small color="#fff">arrow_drop_down</v-icon></v-btn
-              >
-            </template>
-            <v-list>
-              <v-list-item
-                style="min-height: 20px !important"
-                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                @click="showSearchGroup = true"
-              >
-                <v-list-item-title class="item-hover font-nunito text-gray size9rem"
-                  >Khu trọ</v-list-item-title
-                >
-              </v-list-item>
-              <v-list-item
-                style="min-height: 20px !important"
-                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                @click="showSearchGroup = false"
-              >
-                <v-list-item-title class="item-hover font-nunito size9rem text-gray"
-                  >Quản lý</v-list-item-title
-                >
-              </v-list-item>
-            </v-list>
-          </v-menu> -->
       </v-col>
       <v-col cols="12" md="4" class="pa-0 d-flex justify-center justify-md-end">
-        <v-btn-toggle v-model="filterBooking" tile color="#4250f2" group class="hidden-xs-only">
+        <v-btn-toggle mandatory v-model="filterBooking" tile color="#4250f2" group class="hidden-xs-only">
           <v-btn value="day" small class="font-nunito"> Hôm nay </v-btn>
           <v-btn value="week" small class="font-nunito"> Tuần này </v-btn>
           <v-btn value="month" small class="font-nunito"> Tháng này </v-btn>
@@ -333,12 +293,14 @@ export default {
     getLastDayOfMonth(year, month) {
       return new Date(year, month, 0).getDate();
     },
-    getEndOfWeek(date) {
-      const lastday = date.getDate() - (date.getDay() - 1) + 6;
+    getEndOfWeek() {
+      const date = new Date();
+      const lastday = date.getDate() - date.getDay() + 7;
       return new Date(date.setDate(lastday));
     },
-    getStartOfWeek(date) {
-      const diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
+    getStartOfWeek() {
+      const date = new Date();
+      const diff = date.getDate() - date.getDay() + 1;
       return new Date(date.setDate(diff));
     },
     closeDialog() {
@@ -361,17 +323,20 @@ export default {
           break;
         case 'week':
           min = new Date(
-            this.getStartOfWeek(today).getUTCFullYear(),
-            this.getStartOfWeek(today).getMonth(),
-            this.getStartOfWeek(today).getDate(),
+            this.getStartOfWeek().getUTCFullYear(),
+            this.getStartOfWeek().getMonth(),
+            this.getStartOfWeek().getDate(),
           );
+          console.log(today);
           max = new Date(
-            this.getEndOfWeek(today).getUTCFullYear(),
-            this.getEndOfWeek(today).getMonth(),
-            this.getEndOfWeek(today).getDate(),
+            this.getEndOfWeek().getUTCFullYear(),
+            this.getEndOfWeek().getMonth(),
+            this.getEndOfWeek().getDate(),
           );
+          console.log(today);
           min.setHours(0, 0, 0, 0);
           max.setHours(23, 59, 59, 59);
+          console.log({ min, max });
           break;
         case 'month':
           min = new Date(today.getUTCFullYear(), today.getMonth(), 1);
