@@ -37,6 +37,12 @@
                 </template></v-autocomplete
               >
             </v-col>
+            <v-btn
+              class="bg-danger-lighten elevation-0 text-danger font-nunito size9rem d-flex justify-start"
+              style="letter-spacing: 0.01rem !important"
+              @click="saveSchedule()"
+              ><v-icon class="mr-2">mdi-content-save-cog-outline</v-icon>Lưu thay đổi</v-btn
+            >
           </v-row>
         </v-col>
         <v-col cols="12" md="11" class="my-0 py-0">
@@ -175,7 +181,7 @@
                     </v-card>
                   </v-menu>
                 </v-col>
-                <v-col cols="6" class="px-0 d-flex align-end">
+                <v-col cols="12" class="px-0 d-flex align-end">
                   <span class="red--text font-nunito size-caption">{{ errorMsg }}</span>
                 </v-col>
               </v-row>
@@ -248,53 +254,6 @@
                 </v-col>
               </v-row>
             </v-col>
-            <v-dialog v-model="showAddNewFreeTime" hide-overlay persistent max-width="600px">
-              <v-card class="d-flex pa-4">
-                <v-row class="ma-0">
-                  <v-col cols="4">
-                    <v-autocomplete
-                      v-model="from"
-                      :items="timeFrom"
-                      label="Từ"
-                      class="size9rem font-nunito form"
-                      solo
-                      dense
-                      color="indigo"
-                      hide-details
-                      background-color="white"
-                      no-data-text="Không có kết quả phù hợp"
-                      style="border: 1px solid #e1e1e1 !important; border-radius: 4px"
-                    ></v-autocomplete>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-autocomplete
-                      v-model="to"
-                      :items="timeTo"
-                      label="Đến"
-                      class="size9rem font-nunito form"
-                      solo
-                      dense
-                      color="indigo"
-                      hide-details
-                      background-color="white"
-                      no-data-text="Không có kết quả phù hợp"
-                      style="border: 1px solid #e1e1e1 !important; border-radius: 4px"
-                    ></v-autocomplete>
-                  </v-col>
-                  <v-col cols="4" class="d-flex justify-end">
-                    <v-btn class="btn btn-primary font-nunito mx-4" @click="addNewFreeTime()">
-                      Thêm
-                    </v-btn>
-                    <v-btn
-                      class="btn btn-light red--text elevation-0 font-nunito"
-                      @click="closeDialog()"
-                    >
-                      Hủy
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-dialog>
           </v-row>
         </v-col>
       </v-row>
@@ -308,39 +267,6 @@ export default {
   name: 'VendorScheduleTalbe',
   components: {},
   data: () => ({
-    daysOfWeek: ['Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy', 'Chủ nhật'],
-    schedules: [
-      {
-        scheduleId: 0,
-        timeRange: [],
-      },
-      {
-        scheduleId: 0,
-        timeRange: [],
-      },
-      {
-        scheduleId: 0,
-        timeRange: [],
-      },
-      {
-        scheduleId: 0,
-        timeRange: [],
-      },
-      {
-        scheduleId: 0,
-        timeRange: [],
-      },
-      {
-        scheduleId: 0,
-        timeRange: [],
-      },
-      {
-        scheduleId: 0,
-        timeRange: [],
-      },
-    ],
-    scheduleList: [],
-    searchQuery: '',
     selectedGroup: [],
     selectedAllGroup: false,
     scheduleObjForGet: [],
@@ -374,7 +300,7 @@ export default {
     checkDupplicateTime() {
       const dayDuplicate = [];
       this.selectDay.forEach((item) => {
-        let timeSelected = this.groupSchedules.find((s) => s.scheduleId === item);
+        let timeSelected = this.group.schedules.find((s) => s.scheduleId === item);
         let timeIgnore = [];
         if (timeSelected) {
           timeSelected = timeSelected.timeRange;
@@ -405,19 +331,25 @@ export default {
         });
       } else {
         const time = `${this.from} - ${this.to}`;
-        if (this.groupSchedules.schedules.length === 0) {
+        if (this.group.schedules.length === 0) {
+          const indexGroup = this.groupSearch.findIndex(
+            (item) => item.groupId === this.groupSelected,
+          );
           this.selectDay.forEach((item) => {
-            this.groupSchedules.schedules.push({ scheduleId: item, timeRange: [time] });
+            this.groupSearch[indexGroup].schedules.push({ scheduleId: item, timeRange: [time] });
           });
         } else {
+          const indexGroup = this.groupSearch.findIndex(
+            (item) => item.groupId === this.groupSelected,
+          );
           this.selectDay.forEach((item) => {
             const index = this.groupSchedules.schedules.findIndex(
               (schedule) => schedule.scheduleId === item,
             );
             if (index !== -1) {
-              this.groupSchedules.schedules[index].timeRange.push(time);
+              this.groupSearch[indexGroup].schedules[index].timeRange.push(time);
             } else {
-              this.groupSchedules.schedules.push({ scheduleId: item, timeRange: [time] });
+              this.groupSearch[indexGroup].schedules.push({ scheduleId: item, timeRange: [time] });
             }
           });
         }
@@ -428,7 +360,6 @@ export default {
             schedules: this.groupSchedules.schedules,
           });
         });
-        console.log(this.scheduleObj);
       }
       this.menu = false;
     },
@@ -451,14 +382,6 @@ export default {
             : []; // eslint-disable-line
         }
 
-        // if (index === 0) {
-        //   // min output = start + 30m
-        //   return fromM == 0 // eslint-disable-line
-        //     ? [`${indexHour}:00`, `${indexHour}:30`] // eslint-disable-line
-        //     : fromM < 30 // eslint-disable-line
-        //     ? `${indexHour}:30` // eslint-disable-line
-        //     : []; // eslint-disable-line
-        // }
         if (index === hourArr.length - 1) {
           return toM < 30 ? `${indexHour}:00` : [`${indexHour}:00`, `${indexHour}:30`];
         }
@@ -489,12 +412,6 @@ export default {
             ? `${indexHour}:30` // eslint-disable-line
             : []; // eslint-disable-line
         }
-        // if (index === 0) {
-        //   // min output = start + 30m
-        //   return fromM < 30 // eslint-disable-line
-        //     ? `${indexHour}:30` // eslint-disable-line
-        //     : []; // eslint-disable-line
-        // }
         if (index === hourArr.length - 1) {
           return toM >= 30 // eslint-disable-line
             ? [`${indexHour}:00`, `${indexHour}:30`] // eslint-disable-line
@@ -517,19 +434,14 @@ export default {
       this.to = '';
       this.day = -1;
     },
-    addNewFreeTime() {
-      const time = `${this.from} - ${this.to}`;
-      const index = this.newGroup.schedules.findIndex((item) => item.scheduleId === this.day);
-      this.newGroup.schedules[index].timeRange.push(time);
-      this.setNewGroupValue(this.newGroup);
-      this.closeDialog();
-    },
     removeFreeTime(scheduleId, timeRange) {
-      const index = this.newGroup.schedules.findIndex((item) => item.scheduleId === scheduleId);
-      this.newGroup.schedules[index].timeRange = this.newGroup.schedules[index].timeRange.filter(
-        (item) => item !== timeRange,
+      const indexGroup = this.groupSearch.findIndex((item) => item.groupId === this.groupSelected);
+      const index = this.groupSearch[indexGroup].schedules.findIndex(
+        (item) => item.scheduleId === scheduleId,
       );
-      this.setNewGroupValue(this.newGroup);
+      this.groupSearch[indexGroup].schedules[index].timeRange = this.group.schedules[
+        index
+      ].timeRange.filter((item) => item !== timeRange);
     },
     selectAllGroups() {
       const groupIds = [];
@@ -546,125 +458,8 @@ export default {
         this.selectedAllGroup = false;
       }
     },
-    sendData(scheduleObjList, id) {
-      // console.log(scheduleObjList);
-      // console.log(`bbbbbb${id}`);
-      this.schedules[id - 1].timeRange = [];
-
-      for (let scheduleObj = 0; scheduleObj < scheduleObjList.length; scheduleObj += 1) {
-        const { startTime, endTime, scheduleId } = scheduleObjList[scheduleObj];
-        if (scheduleId === 1) {
-          this.schedules[0].scheduleId = scheduleId;
-          if (this.schedules[0].timeRange.indexOf(`${startTime} - ${endTime}`) === -1) {
-            this.schedules[0].timeRange.push(`${startTime} - ${endTime}`);
-          }
-        }
-        if (scheduleId === 2) {
-          this.schedules[1].scheduleId = scheduleId;
-          if (this.schedules[1].timeRange.indexOf(`${startTime} - ${endTime}`) === -1) {
-            this.schedules[1].timeRange.push(`${startTime} - ${endTime}`);
-          }
-        }
-        if (scheduleId === 3) {
-          this.schedules[2].scheduleId = scheduleId;
-          if (this.schedules[2].timeRange.indexOf(`${startTime} - ${endTime}`) === -1) {
-            this.schedules[2].timeRange.push(`${startTime} - ${endTime}`);
-          }
-        }
-        if (scheduleId === 4) {
-          this.schedules[3].scheduleId = scheduleId;
-          if (this.schedules[3].timeRange.indexOf(`${startTime} - ${endTime}`) === -1) {
-            this.schedules[3].timeRange.push(`${startTime} - ${endTime}`);
-          }
-        }
-        if (scheduleId === 5) {
-          this.schedules[4].scheduleId = scheduleId;
-          if (this.schedules[4].timeRange.indexOf(`${startTime} - ${endTime}`) === -1) {
-            this.schedules[4].timeRange.push(`${startTime} - ${endTime}`);
-          }
-        }
-        if (scheduleId === 6) {
-          this.schedules[5].scheduleId = scheduleId;
-          if (this.schedules[5].timeRange.indexOf(`${startTime} - ${endTime}`) === -1) {
-            this.schedules[5].timeRange.push(`${startTime} - ${endTime}`);
-          }
-        }
-        if (scheduleId === 7) {
-          this.schedules[6].scheduleId = scheduleId;
-          if (this.schedules[6].timeRange.indexOf(`${startTime} - ${endTime}`) === -1) {
-            this.schedules[6].timeRange.push(`${startTime} - ${endTime}`);
-          }
-        }
-      }
-    },
-    customFilter(item, queryText) {
-      const textOne = item.groupName.toLowerCase();
-      const searchText = queryText.toLowerCase();
-
-      return textOne.indexOf(searchText) > -1;
-    },
-    getScheduleId(dayOfWeek) {
-      let scheduleId = 0;
-      switch (dayOfWeek) {
-        case 'thứ hai':
-          scheduleId = 1;
-          break;
-        case 'thứ ba':
-          scheduleId = 2;
-          break;
-        case 'thứ tư':
-          scheduleId = 3;
-          break;
-        case 'thứ năm':
-          scheduleId = 4;
-          break;
-        case 'thứ sáu':
-          scheduleId = 5;
-          break;
-        case 'thứ bảy':
-          scheduleId = 6;
-          break;
-        case 'chủ nhật':
-          scheduleId = 7;
-          break;
-        default:
-          scheduleId = 0;
-          break;
-      }
-      return scheduleId;
-    },
-    clickGroup(group) {
-      this.selectedGroup = group.groupName;
-      this.scheduleList = [];
-      const timeRange = [];
-      group.schedules.forEach((element) => {
-        const { scheduleId } = element;
-        const { dayOfWeek } = element;
-        element.timeRange.forEach((element2) => {
-          const startTime = element2.split('-')[0].trim();
-          const endTime = element2.split('-')[1].trim();
-          const now = Date.now();
-          timeRange.push({
-            startTime,
-            endTime,
-            now,
-          });
-        });
-        this.scheduleList.push({ scheduleId, dayOfWeek, timeRange });
-      });
-      console.log('aaa');
-      console.log(this.scheduleList);
-    },
-  },
-  watch: {
-    schedules: {
-      handler() {
-        this.$emit(
-          'newValue',
-          this.schedules.filter((item) => item.timeRange.length > 0),
-        );
-      },
-      deep: true,
+    saveSchedule() {
+      console.log(this.group.schedules);
     },
   },
   computed: {
