@@ -82,10 +82,42 @@
                     letter-spacing: 0.01rem !important;
                     background-color: white;
                     border-color: rgba(250, 92, 124, 0.25);
-                    color: #fa5c7c;
+                    color: #9c27b0;
                   "
                   @click="changeStatus('CANCELLED')"
-                  ><v-icon x-small class="mr-1" color="#fa5c7c">stop_circle</v-icon>Đã hủy</v-btn
+                  ><v-icon x-small class="mr-1" color="purple">stop_circle</v-icon>Đã hủy</v-btn
+                >
+              </v-col>
+              <v-col cols="4" md="10" class="py-2">
+                <v-btn
+                  min-width="100%"
+                  class="elevation-0 font-nunito size9rem d-flex justify-start"
+                  value="done"
+                  style="
+                    letter-spacing: 0.01rem !important;
+                    background-color: white;
+                    border-color: rgba(250, 92, 124, 0.25);
+                    color: #FF572;
+                  "
+                  @click="changeStatus('CONTRACT')"
+                  ><v-icon x-small class="mr-1" color="deep-orange">stop_circle</v-icon>Đã tạo hợp
+                  đồng</v-btn
+                >
+              </v-col>
+              <v-col cols="4" md="10" class="py-2">
+                <v-btn
+                  min-width="100%"
+                  class="elevation-0 font-nunito size9rem d-flex justify-start"
+                  value="done"
+                  style="
+                    letter-spacing: 0.01rem !important;
+                    background-color: white;
+                    border-color: rgba(250, 92, 124, 0.25);
+                    color: #fa5c7c;
+                  "
+                  @click="changeStatus('NONCONTRACT')"
+                  ><v-icon x-small class="mr-1" color="#fa5c7c">stop_circle</v-icon>Chưa tạo hợp
+                  đồng</v-btn
                 >
               </v-col>
             </v-row>
@@ -220,6 +252,12 @@
                     </v-list-item>
                     <v-list-item @click="changeStatus('CANCELLED')">
                       <v-list-item-title>Đã hủy</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="changeStatus('CONTRACT')">
+                      <v-list-item-title>Đã tạo hợp đồng</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="changeStatus('NONCONTRACT')">
+                      <v-list-item-title>Chưa tạo hợp đồng</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -459,9 +497,7 @@
                       v-if="selectedEvent && selectedEvent.data"
                       class="d-flex justify-center pt-0 pb-6"
                     >
-                      <v-btn class="d-flex justify-end" @click="onClickOutSide">
-                        Trở về
-                      </v-btn>
+                      <v-btn class="d-flex justify-end" @click="onClickOutSide"> Trở về </v-btn>
                       <v-btn
                         v-if="selectedEvent.data.status === 'INCOMING'"
                         dark
@@ -469,6 +505,19 @@
                         @click="showCancelDialog(selectedEvent.data.bookingId)"
                       >
                         Hủy hẹn
+                      </v-btn>
+                      <v-btn
+                        v-if="
+                          selectedEvent.data.status === 'DONE' && !selectedEvent.data.contractId
+                        "
+                        @click="changeToSContractString(se)"
+                        :to="`/vendor/contract?bookingId=${selectedEvent.data.bookingId}&mode=create`"
+                        title="Tạo hợp đồng"
+                        color="#727cf5"
+                        dark
+                      >
+                        <!-- <v-icon left>far fa-handshake</v-icon> -->
+                        Tạo hợp đồng
                       </v-btn>
                     </v-card-actions>
                   </v-card>
@@ -558,11 +607,6 @@
                             ></qrcode-vue>
                           </div>
                         </v-col>
-                        <!-- <v-col cols="12" md="10">
-                          <p class="font-weight-bold">
-                            <v-icon left>category</v-icon> {{ selectedEvent.data.type.title }}
-                          </p>
-                        </v-col> -->
                         <v-col cols="12" md="10">
                           <p class="text-capitalize font-nunito font-weight-bold">
                             <v-icon left>room</v-icon>
@@ -628,11 +672,6 @@
                             }}
                           </span>
                         </v-col>
-                        <!-- <v-col cols="6">
-                          <p class="font-weight-bold">
-                            <v-icon left>category</v-icon> {{ selectedEvent.data.type.title }}
-                          </p>
-                        </v-col> -->
                         <v-col cols="12" md="10">
                           <p class="text-capitalize font-nunito font-weight-bold">
                             <v-icon left>room</v-icon>
@@ -660,18 +699,10 @@
                       >
                         Hủy hẹn
                       </v-btn>
-                      <!-- <v-dialog v-model="dialog3" max-width="500px">
-                        <v-card>
-                          <v-card-title>
-                            <span>Dialog 3</span>
-                          </v-card-title>
-                          <v-card-actions>
-                            <v-btn color="primary" text @click="dialog3 = false">Close</v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog> -->
                       <v-btn
-                        v-if="selectedEvent.data.status === 'DONE' && !selectedEvent.data.contractId"
+                        v-if="
+                          selectedEvent.data.status === 'DONE' && !selectedEvent.data.contractId
+                        "
                         @click="changeToSContractString(se)"
                         :to="`/vendor/contract?bookingId=${selectedEvent.data.bookingId}&mode=create`"
                         title="Tạo hợp đồng"
@@ -716,13 +747,15 @@ export default {
       INCOMING: 'Sắp tới',
       DONE: 'Hoàn tất',
       CANCELLED: 'Đã hủy',
+      CONTRACT: 'Đã tạo hợp đồng',
+      NONCONTRACT: 'Chưa tạo hợp đồng',
     },
     selectedEvent: {},
     selectedElement: null,
     selectedOpen: false,
     events: [],
-    colors: ['rgb(37, 146, 61)', '#ffbc00', '#fa5c7c'],
-    names: ['Sắp tới', 'Hoàn tất', 'Đã hủy'],
+    colors: ['rgb(37, 146, 61)', '#ffbc00', '#fa5c7c', '#9C27B0', '#FF5722'],
+    names: ['Sắp tới', 'Hoàn tất', 'Đã hủy', 'Đã tạo hợp đồng', 'Chưa tạo hợp đồng'],
     cancelDialog: {
       show: false,
       bookingId: undefined,
@@ -751,6 +784,12 @@ export default {
     },
     doneBookings() {
       return this.bookings.data.filter((booking) => booking.status === 'DONE');
+    },
+    doneWithContracts() {
+      return this.doneBookings.filter((b) => b.contractId);
+    },
+    doneWithoutContracts() {
+      return this.doneBookings.filter((b) => !b.contractId);
     },
     cancelledBookings() {
       return this.bookings.data.filter((booking) => booking.status === 'CANCELLED');
@@ -814,6 +853,24 @@ export default {
               timed: true,
               data: booking,
             });
+          } else if (this.status.toUpperCase() === 'CONTRACT' && booking.contractId) {
+            events.push({
+              name: this.getEventName(booking),
+              start: meetTime.getTime(),
+              end: meetTime.setMinutes(meetTime.getMinutes() + 30),
+              color: this.getEventColor(booking),
+              timed: true,
+              data: booking,
+            });
+          } else if (this.status.toUpperCase() === 'NONCONTRACT') {
+            events.push({
+              name: this.getEventName(booking),
+              start: meetTime.getTime(),
+              end: meetTime.setMinutes(meetTime.getMinutes() + 30),
+              color: this.getEventColor(booking),
+              timed: true,
+              data: booking,
+            });
           }
         }
       }
@@ -829,6 +886,10 @@ export default {
           return this.names[1];
         case 'CANCELLED':
           return this.names[2];
+        case 'CONTRACT':
+          return this.names[3];
+        case 'NONCONTRACT':
+          return this.names[4];
         default:
           return null;
       }
@@ -841,6 +902,10 @@ export default {
           return this.colors[1];
         case 'Đã hủy':
           return this.colors[2];
+        case 'Đã tạo hợp đồng':
+          return this.colors[3];
+        case 'Chưa tạo hợp đồng':
+          return this.colors[4];
         default:
           return null;
       }
@@ -894,10 +959,16 @@ export default {
     changeStatus(status) {
       this.status = status;
       let filterData = this.bookings.data.filter((item) => item.status === status);
+      if (status === 'CONTRACT') {
+        filterData = this.doneWithContracts;
+      }
+      if (status === 'NONCONTRACT') {
+        filterData = this.doneWithoutContracts;
+      }
       if (status === 'ALL') {
         filterData = this.bookings.data;
       }
-
+      console.log(filterData);
       const events = [];
       for (let i = 0; i < filterData.length; i += 1) {
         const booking = filterData[i];

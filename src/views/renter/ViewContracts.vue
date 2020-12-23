@@ -4,14 +4,6 @@
     <v-overlay :value="isLoading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-dialog v-model="signing" hide-overlay persistent width="300">
-      <v-card color="#727CF5" dark>
-        <v-card-text>
-          {{' '}}
-          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
     <v-dialog v-model="signingResult.show" hide-overlay persistent width="300">
       <v-card>
         <v-toolbar color="#727cf5" dark class="font-nunito">
@@ -263,8 +255,8 @@
       <v-card v-if="resign.contract && !resign.showResult" :loading="contracts.isUpdating">
         <v-card-title>Gia hạn hợp đồng</v-card-title>
         <v-card-text>
-          Hợp đồng thuê nhà giữa bạn và {{resign.contract.vendor.username}} còn đến ngày {{ getEndDate(resign.contract) }}, bạn có
-          muốn gửi yêu cầu gia hạn hợp đồng?
+          Hợp đồng thuê nhà giữa bạn và {{ resign.contract.vendor.username }} còn đến ngày
+          {{ getEndDate(resign.contract) }}, bạn có muốn gửi yêu cầu gia hạn hợp đồng?
         </v-card-text>
         <v-card-actions>
           <v-btn @click="resign.show = false">Đóng</v-btn>
@@ -365,6 +357,7 @@
                 @paid-rest="paidTheRestOfContract"
                 @pay-all-fee="showPayAllFee"
                 @resign="showResignContract"
+                @show-pay-reserve-fee="showFirstPay"
               />
             </div>
           </v-row>
@@ -438,6 +431,17 @@ export default {
       updateContract: 'user/updateContract',
       sendNotification: 'user/sendNotification',
     }),
+    showFirstPay(contractId) {
+      const contract = this.contracts.data.find(
+        (c) => c.contractId === contractId,
+      );
+      this.payReserveFee.contractId = contractId;
+      if (contract.reserved) {
+        this.payReserveFee.show = true;
+      } else {
+        this.payAllFee.show = true;
+      }
+    },
     getEndDate(contract) {
       const { startTime, duration } = contract;
       const endDate = new Date(startTime);
@@ -700,10 +704,12 @@ export default {
       if (!this.searchQuery) {
         return this.contracts.data;
       }
-      return this.$store.state.user.contracts.data.filter(
-        (item) => item.vendor.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1 ||
-          item.group.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
-      );
+      return this.$store.state.user.contracts.data.filter((item) => {
+        const b =
+          item.vendor.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1 ||
+          item.group.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1;
+        return b;
+      });
     },
     isMobile() {
       switch (this.$vuetify.breakpoint.name) {

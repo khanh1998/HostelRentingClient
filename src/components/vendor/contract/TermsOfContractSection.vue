@@ -186,7 +186,7 @@
                     >
                     <div class="d-flex justify-center pt-3">
                       <ImageEditor
-                        :mode="mode"
+                        :mode="'edit'"
                         :check="check"
                         @newValues="receiveNewImages"
                         class="pa-0"
@@ -369,7 +369,19 @@
                         dense
                       >
                       </v-text-field>
-                    </v-col>
+                    </v-col>Ảnh của hợp đồng giấy
+                  </v-row>
+                  <v-row>
+                    <v-card>
+                      <v-card-text>
+                        Tổng số tiền phải thanh toán: {{ totalPrice }} triệu đồng
+                      </v-card-text>
+                      <v-card-text v-if="contract.reserved">
+                        Lần 1: thanh toán phí giữ chỗ {{ contract.downPayment }} triệu đồng <br />
+                        Lần 2: thanh toán phần còn lại
+                        {{ (totalPrice - contract.downPayment).toFixed(2) }} triệu đồng
+                      </v-card-text>
+                    </v-card>
                   </v-row>
                   <span class="text-h6 mt-5">Dịch vụ</span>
                   <span class="text-muted font-italic">Chọn dịch vụ mà bạn sẽ tính tiền</span>
@@ -410,7 +422,7 @@
                   <v-col cols="12">
                     <span>Ảnh của hợp đồng giấy (nếu có)</span>
                     <ImageEditor
-                      :mode="mode"
+                      :mode="'edit'"
                       @newValues="receiveNewImages"
                       class="pa-0"
                       :oldImages="physicalContractImages"
@@ -508,7 +520,6 @@ export default {
       'https://youthhostelstorage.blob.core.windows.net/template/contract_appendix.html',
     menu1: null,
     startTime: new Date().toISOString().substr(0, 10),
-    price: null,
     contract: {
       paymentDayInMonth: 1,
       roomId: null,
@@ -587,6 +598,9 @@ export default {
     },
   },
   computed: {
+    price() {
+      return this.booking.deal ? this.booking.deal.offeredPrice : this.type.price;
+    },
     totalPrice() {
       const t = (this.type.deposit + 1) * this.price;
       return t.toFixed(2);
@@ -641,7 +655,6 @@ export default {
   },
   created() {
     this.getRoomsOfType();
-    this.price = this.type.price;
     if (this.mode === 'update' || this.mode === 'view' || this.mode === 'resign') {
       const {
         roomId,
@@ -663,6 +676,7 @@ export default {
       this.contract.images = images;
       this.contract.appendixContract = appendixContract;
       this.contract.contractId = contractId;
+      this.contract.dealId = deal.dealId;
       this.startTime = new Date(startTime).toISOString().substr(0, 10);
       if (this.mode === 'resign') {
         this.startTime = this.getEndDate(startTime, duration);
@@ -670,16 +684,12 @@ export default {
       this.contract.paid = paid;
       this.contract.downPayment = downPayment;
       this.contract.reserved = reserved;
-      if (deal) {
-        this.price = deal.offeredPrice;
-      }
     }
     if (this.mode === 'create') {
       this.contract.downPayment = this.group.downPayment;
-      this.contract.dealId = this.booking.deal.dealId;
       const { deal } = this.booking;
       if (deal) {
-        this.price = deal.offeredPrice;
+        this.contract.dealId = this.booking.deal.dealId;
       }
     }
   },

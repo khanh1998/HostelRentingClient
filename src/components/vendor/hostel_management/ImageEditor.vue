@@ -32,13 +32,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- <v-row no-gutters>
-      <v-col>
-        <span class="text-h6"><v-icon left>insert_photo</v-icon>Hình ảnh</span>
-      </v-col>
-    </v-row> -->
     <v-row>
-      <v-col cols="12" :class="check === 1 ? 'd-flex justify-center' : ''">
+      <v-col v-if="mode === 'edit'" cols="12" :class="check === 1 ? 'd-flex justify-center' : ''">
         <v-btn class="ml-2" @click="openImageUploadDialog" depressed>
           <v-icon left>add_photo_alternate</v-icon>Tải lên ảnh mới</v-btn
         >
@@ -63,7 +58,7 @@
                   <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
                 </v-row>
               </template>
-              <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-row v-if="mode === 'edit'" class="fill-height ma-0" align="center" justify="center">
                 <v-btn icon depressed color="blue-grey" @click="removeImage(image.resourceUrl)">
                   <v-icon color="red">delete_forever</v-icon>
                 </v-btn>
@@ -96,7 +91,14 @@ import snackBarMixins from '../../mixins/snackBar';
 
 export default {
   name: 'ImageEditor',
-  props: ['oldImages', 'mode', 'check'],
+  props: {
+    oldImages: {},
+    mode: {
+      default: 'edit',
+      validator: (value) => ['edit', 'view'].includes(value.toLowerCase()),
+    },
+    check: {},
+  },
   mixins: [fileMixins, snackBarMixins],
   data: () => ({
     dialog: {
@@ -105,6 +107,7 @@ export default {
     },
     upload: {
       imageUrls: [],
+      locals: [],
     },
     mergeImages: [],
   }),
@@ -116,6 +119,7 @@ export default {
           ...this.mergeImages.slice(0, index),
           ...this.mergeImages.slice(index + 1),
         ];
+        this.$emit('newValues', this.mergeImages);
       }
     },
     openImageUploadDialog() {
@@ -137,6 +141,7 @@ export default {
         .then(() => {
           this.upload.imageUrls = this.listUploadedFiles.map((url) => ({ resourceUrl: url }));
           this.mergeImages = [...this.mergeImages, ...this.upload.imageUrls];
+          this.$emit('newValues', this.mergeImages);
           this.dialog.show = false;
           this.showSnackBar('Tải ảnh lên thành công', { color: 'green' });
         })
@@ -149,7 +154,7 @@ export default {
   watch: {
     upload: {
       handler() {
-        this.$emit('newValues', this.mergeImages);
+        // this.$emit('newValues', this.mergeImages);
       },
       deep: true,
     },

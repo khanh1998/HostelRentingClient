@@ -90,6 +90,7 @@
                 class="text-gray font-nunito size9rem mt-2"
                 >KHU TRỌ</span
               >
+              <v-btn @click="clickGroup(null)" class="ml-2" elevation="0">Tất cả hợp đồng</v-btn>
             </div>
             <v-text-field
               label="Tìm kiếm khu trọ"
@@ -180,39 +181,6 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="3">
-                  <!-- <v-menu offset-y left>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn icon class="btn-hover pa-0" v-bind="attrs" v-on="on"
-                        ><v-icon size="20">mdi-sort-ascending</v-icon></v-btn
-                      >
-                    </template>
-                    <v-list>
-                      <v-list-item
-                        style="min-height: 20px !important"
-                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                      >
-                        <v-list-item-title
-                          class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = ''"
-                          >Tất cả</v-list-item-title
-                        >
-                      </v-list-item>
-                      <v-divider />
-                      <div v-for="s in statusNames" :key="s">
-                        <v-list-item
-                          style="min-height: 20px !important"
-                          class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                        >
-                          <v-list-item-title
-                            class="item-hover font-nunito text-gray size9rem"
-                            @click="statusName = s"
-                            >{{ s }}</v-list-item-title
-                          >
-                        </v-list-item>
-                        <v-divider />
-                      </div>
-                    </v-list>
-                  </v-menu> -->
                   <v-menu bottom right>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
@@ -228,19 +196,31 @@
                       </v-btn>
                     </template>
                     <v-list>
-                      <v-list-item @click="statusName = 'tất cả'">
+                      <v-list-item @click="statusName = 'Tất cả'">
                         <v-list-item-title>Tất cả</v-list-item-title>
                       </v-list-item>
-                      <v-list-item @click="statusName = 'sắp hết hạn'">
-                        <v-list-item-title>Sắp hết hạn</v-list-item-title>
+                      <v-list-item @click="statusName = 'Chờ ký'">
+                        <v-list-item-title>Chờ ký</v-list-item-title>
                       </v-list-item>
-                      <v-list-item @click="statusName = 'đang thuê'">
+                      <v-list-item @click="statusName = 'Đã ký'">
+                        <v-list-item-title>Đã ký</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item @click="statusName = 'Đã thanh toán cọc'">
+                        <v-list-item-title>Đã thanh toán cọc</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item @click="statusName = 'Đã nhận cọc'">
+                        <v-list-item-title>Đã nhận cọc</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item @click="statusName = 'Đã thanh toán toàn bộ'">
+                        <v-list-item-title>Đã thanh toán toàn bộ</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item @click="statusName = 'Đang thuê'">
                         <v-list-item-title>Đang thuê</v-list-item-title>
                       </v-list-item>
-                      <v-list-item @click="statusName = 'chờ xác nhận'">
-                        <v-list-item-title>Chờ xác nhận</v-list-item-title>
+                      <v-list-item @click="statusName = 'Sắp hết hạn'">
+                        <v-list-item-title>Sắp hết hạn</v-list-item-title>
                       </v-list-item>
-                      <v-list-item @click="statusName = 'hết hiệu lực'">
+                      <v-list-item @click="statusName = 'Hết hiệu lực'">
                         <v-list-item-title>Hết hiệu lực</v-list-item-title>
                       </v-list-item>
                     </v-list>
@@ -275,7 +255,7 @@
                       >
                         <v-list-item-title
                           class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = ''"
+                          @click="statusName = 'Tất cả'"
                           >Tất cả</v-list-item-title
                         >
                       </v-list-item>
@@ -286,8 +266,8 @@
                       >
                         <v-list-item-title
                           class="item-hover font-nunito text-gray size9rem"
-                          @click="statusName = 'sắp hết hạn'"
-                          >Sắp hết hạn</v-list-item-title
+                          @click="statusName = 'Chờ ký'"
+                          >Chờ ký</v-list-item-title
                         >
                       </v-list-item>
                       <v-divider />
@@ -297,30 +277,70 @@
                       >
                         <v-list-item-title
                           class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = 'đang thuê'"
+                          @click="statusName = 'Đã ký'"
+                          >Đã ký</v-list-item-title
+                        >
+                      </v-list-item>
+                      <v-divider />
+                      <v-list-item
+                        style="min-height: 20px !important"
+                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                      >
+                        <v-list-item-title
+                          class="item-hover font-nunito size9rem text-gray"
+                          @click="statusName = 'Đã thanh toán cọc'"
+                          >Đã thanh toán cọc</v-list-item-title
+                        >
+                      </v-list-item>
+                      <v-divider />
+                      <v-list-item
+                        style="min-height: 20px !important"
+                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                      >
+                        <v-list-item-title
+                          class="item-hover font-nunito size9rem text-gray"
+                          @click="statusName = 'Đã nhận cọc'"
+                          >Đã nhận cọc</v-list-item-title
+                        >
+                      </v-list-item>
+                      <v-list-item
+                        style="min-height: 20px !important"
+                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                      >
+                        <v-list-item-title
+                          class="item-hover font-nunito text-gray size9rem"
+                          @click="statusName = 'Đang thuê'"
                           >Đang thuê</v-list-item-title
                         >
                       </v-list-item>
-                      <v-divider />
                       <v-list-item
                         style="min-height: 20px !important"
                         class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
                       >
                         <v-list-item-title
-                          class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = 'chờ xác nhận'"
-                          >Chờ xác nhận</v-list-item-title
+                          class="item-hover font-nunito text-gray size9rem"
+                          @click="statusName = 'Sắp hết hạn'"
+                          >Sắp hết hạn</v-list-item-title
                         >
                       </v-list-item>
-                      <v-divider />
                       <v-list-item
                         style="min-height: 20px !important"
                         class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
                       >
                         <v-list-item-title
-                          class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = 'hết hiệu lực'"
+                          class="item-hover font-nunito text-gray size9rem"
+                          @click="statusName = 'Hết hiệu lực'"
                           >Hết hiệu lực</v-list-item-title
+                        >
+                      </v-list-item>
+                      <v-list-item
+                        style="min-height: 20px !important"
+                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                      >
+                        <v-list-item-title
+                          class="item-hover font-nunito text-gray size9rem"
+                          @click="statusName = 'Bị hủy'"
+                          >Bị hủy</v-list-item-title
                         >
                       </v-list-item>
                     </v-list>
@@ -507,7 +527,7 @@ export default {
     selectedGroup: null,
     toolbarGroupName: null,
     searchQuery: '',
-    statusName: '',
+    statusName: 'Tất cả',
     // selectedGroupInMobile: null,
     statusNames: [
       'Đã thanh toán cọc',
@@ -608,7 +628,7 @@ export default {
             contractStatus = 'Hết hiệu lực';
             color = 'rgb(158,167,173)';
             break;
-          case 'CANCELED':
+          case 'CANCELLED':
             contractStatus = 'Bị hủy';
             color = 'rgb(158,167,173)';
             break;
@@ -645,7 +665,7 @@ export default {
             contractStatus = 'hết hiệu lực';
             color = 'rgb(158,167,173)';
             break;
-          case 'CANCELED':
+          case 'CANCELLED':
             contractStatus = 'Bị hủy';
             color = 'rgb(158,167,173)';
             break;
@@ -673,8 +693,13 @@ export default {
       return new Date(time).toLocaleDateString('vi-vn');
     },
     clickGroup(group) {
-      this.selectedGroup = group.groupName;
-      this.toolbarGroupName = group.groupName;
+      if (group === null) {
+        this.toolbarGroupName = 'Hợp đồng từ tất cả khu trọ';
+        this.selectedGroup = null;
+      } else {
+        this.toolbarGroupName = group.groupName;
+        this.selectedGroup = group.groupName;
+      }
     },
     customFilter(item, queryText) {
       const textOne = item.groupName.toLowerCase();
@@ -770,7 +795,9 @@ export default {
       const updatingContracts = this.$store.state.user.contracts.isUpdating;
       const creatingContracts = this.$store.state.user.contracts.isCreating;
       const loadingGroups = this.$store.state.vendor.group.groups.isLoading;
-      return loadingUser || loadingGroups || loadingContracts || creatingContracts || updatingContracts;
+      return (
+        loadingUser || loadingGroups || loadingContracts || creatingContracts || updatingContracts
+      );
     },
     uncheckedReserveFee() {
       const l = this.contracts.data.filter(
@@ -812,11 +839,9 @@ export default {
     allContracts() {
       let result = this.contracts.data;
       if (this.selectedGroup) {
-        result = result.filter(
-          (contract) => contract.group.groupName === this.selectedGroup,
-        );
+        result = result.filter((contract) => contract.group.groupName === this.selectedGroup);
       }
-      if (this.statusName) {
+      if (this.statusName !== 'Tất cả') {
         result = result.filter((contract) => {
           const s1 = this.getStatus(contract).contractStatus.toLowerCase();
           const s2 = this.statusName.toLowerCase();

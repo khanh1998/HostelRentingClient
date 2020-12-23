@@ -84,7 +84,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col v-if="contract.status !== 'CANCELLED'">
           <v-stepper v-model="step" v-if="contract.reserved" class="elevation-0">
             <v-stepper-header class="elevation-0" v-if="step <= 4">
               <v-stepper-step :complete="step > 0" step="1" color="#727CF5">
@@ -122,15 +122,33 @@
                       class="d-flex justify-center font-nunito"
                       style="font-size: 18px"
                       ><p class="hidden-sm-and-down">
-                        Bạn cần thanh toán tiền cọc giữ chân ({{ contract.downPayment }} triệu đồng)
-                        và gửi thông tin thanh toán để chủ nhà xác nhận
+                        Bạn cần thanh toán tiền cọc giữ chân và gửi thông tin thanh toán để chủ nhà
+                        xác nhận
                       </p></v-col
                     >
                     <v-col cols="12" class="pb-0 pt-0">
                       <v-timeline align-top dense>
+                        <v-timeline-item color="#727CF5" small v-if="signable">
+                          <v-chip @click="$emit('activate', contract.contractId)"
+                            >Ký hợp đồng</v-chip
+                          >
+                          trước {{ lastSignDate.split(',')[0] }} giờ, ngày
+                          {{ lastSignDate.split(',')[1] }}
+                        </v-timeline-item>
+                        <v-timeline-item color="#727CF5" small v-if="payableReserve">
+                          Đã ký vào lúc {{ new Date(contract.lastPayAt).toLocaleString('vi') }}
+                        </v-timeline-item>
                         <v-timeline-item color="#727CF5" small>
                           <div>
-                            Thanh toán tiền cọc giữ chỗ cho chủ trọ.
+                            Thanh toán tiền cọc giữ chỗ cho chủ trọ {{ contract.downPayment }}
+                            triệu đồng,
+                            {{
+                              contract.lastPayAt
+                                ? ` trước ${lastPayDate.split(',')[0]} giờ, ngày ${
+                                    lastPayDate.split(',')[1]
+                                  }`
+                                : ''
+                            }}
                             <v-card-subtitle class="pt-0 pb-0 hidden-sm-and-down">
                               Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
                               trực tuyến.<br />
@@ -162,8 +180,16 @@
                         <v-timeline-item color="#727CF5" small>
                           <div>
                             Yêu cầu chủ nhà xác nhận tiền cọc giữ chỗ :
-                            <v-chip
+                            <!-- <v-chip
                               @click="$emit('pay-reserve-fee', contract.contractId)"
+                              color="#727CF5"
+                              class="ml-2"
+                              dark
+                              >Yêu cầu xác nhận</v-chip
+                            > -->
+                            <v-chip
+                              v-if="payableReserve"
+                              @click="$emit('show-pay-reserve-fee', contract.contractId)"
                               color="#727CF5"
                               class="ml-2"
                               dark
@@ -188,6 +214,16 @@
                     Yêu cầu xác nhận tiền của bạn đã được gửi tới chủ nhà. Hãy đợi cho tới khi chủ
                     nhà xác nhận.
                   </v-col>
+                  <v-col>
+                    <v-btn @click="changeMode">
+                      {{ imageEditorMode === 'view' ? 'Cập nhật' : 'Hoàn tất' }}
+                    </v-btn>
+                    <ImageEditor
+                      :mode="imageEditorMode"
+                      @newValues="updateEvidence"
+                      :oldImages="reservedBills"
+                    />
+                  </v-col>
                 </v-row>
               </v-stepper-content>
               <v-stepper-content step="3">
@@ -198,12 +234,56 @@
                     style="font-size: 18px"
                     ><p class="hidden-sm-and-up">Chủ trọ đã nhận tiền cọc</p></v-col
                   >
-                  <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
-                    Bạn hoàn tất việc đóng tiền cọc giữ chỗ, để thanh toán phần tiền còn lại ({{
-                      (totalPrice - contract.downPayment).toFixed(2)
-                    }}
-                    triệu đồng) để hợp đồng chính thức có hiệu lực.
-                    <v-chip @click="$emit('paid-rest', contract.contractId)">nhấn vào đây</v-chip>
+                  <v-col>
+                    <v-timeline align-top dense>
+                      <v-timeline-item color="#727CF5" small>
+                        <div>
+                          Bạn hoàn tất việc đóng tiền cọc giữ chỗ. Thanh toán phần tiền còn lại cho
+                          chủ trọ: {{ (totalPrice - contract.downPayment).toFixed(2) }} triệu đồng,
+                          {{
+                            contract.lastPayAt
+                              ? ` trước ${lastPayDate.split(',')[0]} giờ, ngày ${
+                                  lastPayDate.split(',')[1]
+                                }`
+                              : ''
+                          }}
+                          <v-card-subtitle class="pt-0 pb-0 hidden-sm-and-down">
+                            Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán trực
+                            tuyến.<br />
+                            Hỗ trợ thanh toán bằng
+                            <v-btn :href="getParamForUrl" target="_blank" rounded text>
+                              <v-img
+                                height="30px"
+                                width="30px"
+                                src="../../assets/logo-momo.png"
+                              ></v-img>
+                            </v-btn>
+                          </v-card-subtitle>
+                          <v-card-text class="pt-0 pb-0 hidden-sm-and-up">
+                            * Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
+                            trực tuyến.<br />
+                            * Hỗ trợ thanh toán bằng
+                            <!-- <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text> -->
+                            <v-btn :href="getParamForUrl" rounded text>
+                              <v-img
+                                height="30px"
+                                width="30px"
+                                src="../../assets/logo-momo.png"
+                              ></v-img>
+                              <!-- <v-card-subtitle class="pl-1 pr-0">Bạn phải có tài khoản MoMo</v-card-subtitle> -->
+                            </v-btn>
+                          </v-card-text>
+                        </div>
+                      </v-timeline-item>
+                      <v-timeline-item color="#727CF5" small>
+                        <div>
+                          Yêu cầu chủ nhà xác nhận tiền cọc giữ chỗ :
+                          <v-chip @click="$emit('paid-rest', contract.contractId)"
+                            >nhấn vào đây</v-chip
+                          >
+                        </div>
+                      </v-timeline-item>
+                    </v-timeline>
                   </v-col>
                 </v-row>
               </v-stepper-content>
@@ -218,6 +298,16 @@
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
                     Bạn đã thanh toán đầy đủ tiền, hãy chờ chủ trọ xác nhận đã nhận tiền để hợp đồng
                     có hiệu lực.
+                  </v-col>
+                  <v-col>
+                    <v-btn @click="changeMode">
+                      {{ imageEditorMode === 'view' ? 'Cập nhật' : 'Hoàn tất' }}
+                    </v-btn>
+                    <ImageEditor
+                      :mode="imageEditorMode"
+                      :oldImages="restBills"
+                      @newValues="updateEvidence"
+                    />
                   </v-col>
                 </v-row>
               </v-stepper-content>
@@ -279,48 +369,73 @@
                       class="d-flex justify-center font-nunito"
                       style="font-size: 18px"
                       ><p class="hidden-sm-and-down">
-                        Bạn cần thanh toán tiền ({{totalPrice}} triệu đồng) và gửi thông tin thanh toán để chủ nhà xác nhận
+                        Bạn cần thanh toán tiền và gửi thông tin thanh toán để chủ nhà xác nhận
                       </p></v-col
                     >
                     <v-col cols="12" class="pb-0 pt-0">
                       <v-timeline align-top dense>
+                        <v-timeline-item color="#727CF5" small v-if="signable">
+                          <v-chip @click="$emit('activate', contract.contractId)"
+                            >Ký hợp đồng</v-chip
+                          >
+                          trước {{ lastSignDate.split(',')[0] }} giờ, ngày
+                          {{ lastSignDate.split(',')[1] }}
+                        </v-timeline-item>
+                        <v-timeline-item color="#727CF5" small v-if="payableReserve">
+                          Đã ký vào lúc {{ new Date(contract.lastPayAt).toLocaleString('vi') }}
+                        </v-timeline-item>
                         <v-timeline-item color="#727CF5" small>
                           <div>
-                            Thanh toán tiền cho chủ trọ.
+                            Thanh toán tiền cọc giữ chỗ cho chủ trọ {{ contract.downPayment }}
+                            triệu đồng,
+                            {{
+                              contract.lastPayAt
+                                ? ` trước ${lastPayDate.split(',')[0]} giờ, ngày ${
+                                    lastPayDate.split(',')[1]
+                                  }`
+                                : ''
+                            }}
                             <v-card-subtitle class="pt-0 pb-0 hidden-sm-and-down">
                               Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
                               trực tuyến.<br />
                               Hỗ trợ thanh toán bằng
-                              <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text>
+                              <v-btn :href="getParamForUrl" target="_blank" rounded text>
                                 <v-img
                                   height="30px"
                                   width="30px"
                                   src="../../assets/logo-momo.png"
                                 ></v-img>
-                                <v-card-subtitle class="pl-1 pr-0"
-                                  >Bạn phải có tài khoản MoMo</v-card-subtitle
-                                >
                               </v-btn>
                             </v-card-subtitle>
                             <v-card-text class="pt-0 pb-0 hidden-sm-and-up">
                               * Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
                               trực tuyến.<br />
                               * Hỗ trợ thanh toán bằng
-                              <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text>
+                              <!-- <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text> -->
+                              <v-btn :href="getParamForUrl" rounded text>
                                 <v-img
                                   height="30px"
                                   width="30px"
                                   src="../../assets/logo-momo.png"
                                 ></v-img>
+                                <!-- <v-card-subtitle class="pl-1 pr-0">Bạn phải có tài khoản MoMo</v-card-subtitle> -->
                               </v-btn>
                             </v-card-text>
                           </div>
                         </v-timeline-item>
                         <v-timeline-item color="#727CF5" small>
                           <div>
-                            Yêu cầu chủ nhà xác nhận đã nhận tiền:
+                            Yêu cầu chủ nhà xác nhận tiền cọc giữ chỗ :
+                            <!-- <v-chip
+                              @click="$emit('pay-reserve-fee', contract.contractId)"
+                              color="#727CF5"
+                              class="ml-2"
+                              dark
+                              >Yêu cầu xác nhận</v-chip
+                            > -->
                             <v-chip
-                              @click="$emit('pay-all-fee', contract.contractId)"
+                              v-if="payableReserve"
+                              @click="$emit('show-pay-reserve-fee', contract.contractId)"
                               color="#727CF5"
                               class="ml-2"
                               dark
@@ -344,6 +459,16 @@
                   <v-col cols="12" class="d-flex justify-center pb-0 pt-0">
                     Thông tin thanh toán đã được gửi tới chủ trọ, hãy đợi đến khi chủ trọ xác nhận
                     đã nhận được tiền.
+                  </v-col>
+                  <v-col>
+                    <v-btn @click="changeMode">
+                      {{ imageEditorMode === 'view' ? 'Cập nhật' : 'Hoàn tất' }}
+                    </v-btn>
+                    <ImageEditor
+                      :mode="imageEditorMode"
+                      @newValues="updateEvidence"
+                      :oldImages="restBills"
+                    />
                   </v-col>
                 </v-row>
               </v-stepper-content>
@@ -371,6 +496,24 @@
             </v-stepper-items>
           </v-stepper>
         </v-col>
+        <v-col v-if="contract.status === 'CANCELLED'">
+          <v-row>
+            <v-col>
+              <p>
+                Hợp đồng đã bị hủy bởi chủ trọ
+                <v-chip
+                  v-if="contract.contractUrl"
+                  @click="$emit('view-detail', contract.contractId)"
+                  color="#727CF5"
+                  dark
+                >
+                  xem chi tiết hợp đồng</v-chip
+                >
+              </p>
+              <ImageEditor :oldImages="contract.images" :mode="'view'" />
+            </v-col>
+          </v-row>
+        </v-col>
       </v-row>
     </v-row>
   </v-card>
@@ -378,21 +521,45 @@
 <style scoped></style>
 <script>
 import { mapActions } from 'vuex';
+import ImageEditor from '../vendor/hostel_management/ImageEditor.vue';
+import actions from '../../config/pushNotificationActions';
 
 export default {
   name: 'ContractItem',
   props: ['contract'],
-  components: {},
+  components: { ImageEditor },
   data: () => ({
     dialog: false,
     mapDialog: false,
+    imageEditorMode: 'view',
   }),
   computed: {
+    lastSignDate() {
+      const date = new Date(this.contract.createdAt);
+      date.setDate(date.getDate() + 3);
+      return date.toLocaleString('vi');
+    },
+    lastPayDate() {
+      const date = new Date(this.contract.lastPayAt);
+      date.setDate(date.getDate() + 5);
+      return new Date(date).toLocaleString('vi');
+    },
     price() {
       if (this.contract.deal) {
         return this.contract.deal.offeredPrice;
       }
       return this.contract.type.price;
+    },
+    restBills() {
+      return this.contract.images.filter((c) => c.type === 'REST_BILL').filter((c) => !c.deleted);
+    },
+    reservedBills() {
+      return this.contract.images
+        .filter((c) => c.type === 'RESERVED_BILL')
+        .filter((c) => !c.deleted);
+    },
+    papers() {
+      return this.contract.images.filter((c) => c.type === 'PAPER').filter((c) => !c.deleted);
     },
     totalPrice() {
       const t = (this.contract.type.deposit + 1) * this.price;
@@ -409,6 +576,16 @@ export default {
       console.log({ endTime, now, oneMonth });
       console.log(diff - oneMonth);
       if (status === 'ACTIVATED' && diff > 0 && !resign && diff < oneMonth) {
+        return true;
+      }
+      return false;
+    },
+    signable() {
+      const curr = new Date().getTime();
+      let boundary = new Date(this.contract.createdAt);
+      boundary = boundary.setDate(boundary.getDate() + 3);
+      console.log(boundary);
+      if (curr < boundary && this.contract.status === 'INACTIVE') {
         return true;
       }
       return false;
@@ -523,12 +700,82 @@ export default {
       // console.log(`c${url}`);
       return url;
     },
+    imageType() {
+      if (this.contract.reserved && this.contract.status === 'ACCEPTED') {
+        return 'RESERVED_BILL';
+      }
+      return 'REST_BILL';
+    },
+    payableReserve() {
+      const { status, paid } = this.contract;
+      if (status === 'ACCEPTED' && paid === false) {
+        return true;
+      }
+      return false;
+    },
   },
   methods: {
     ...mapActions({
       getProvinces: 'renter/common/getProvinces',
       getUserByIds: 'vendor/overview/getUserByIds',
+      updateContract: 'user/updateContract',
+      sendNotification: 'user/sendNotification',
     }),
+    changeMode() {
+      if (this.imageEditorMode === 'view') {
+        this.imageEditorMode = 'edit';
+      } else {
+        this.imageEditorMode = 'view';
+      }
+    },
+    updateEvidence(newImages) {
+      console.log(newImages);
+      this.contract.roomId = this.contract.room.roomId;
+      this.contract.paid = true;
+      const images = newImages.map((image) => ({
+        resourceUrl: image.resourceUrl,
+        type: this.imageType,
+      }));
+      let theRest;
+      if (this.imageType === 'REST_BILL') {
+        theRest = this.reservedBills.map((image) => ({
+          resourceUrl: image.resourceUrl,
+          type: 'RESERVED_BILL',
+        }));
+      } else if (this.imageType === 'RESERVED_BILL') {
+        theRest = this.restBills.map((image) => ({
+          resourceUrl: image.resourceUrl,
+          type: 'REST_BILL',
+        }));
+      }
+      const papers = this.papers.map((image) => ({
+        resourceUrl: image.resourceUrl,
+        type: 'PAPER',
+      }));
+      this.contract.images = [...papers, ...theRest, ...images];
+      const { contractId } = this.contract;
+      this.updateContract(this.contract).then(() => {
+        const { success } = this.contracts;
+        this.payReserveFee.success = success;
+        this.payReserveFee.showResult = true;
+        if (success) {
+          this.signAndPay.step += 1;
+          const payload = {
+            title: `${this.contract.renter.username}`,
+            body: `Cập nhật thông tin về giao dịch thanh toán cho phòng ${this.contract.room.roomName}`,
+            action: actions.RESERVE_FEE_PAID,
+            id: this.contract.contractId,
+            vendorId: this.contract.vendor.userId,
+            renterId: null,
+            icon: this.contract.renter.avatar,
+          };
+          this.sendNotification(payload);
+          this.contractOverlay.contract = this.contracts.data.find(
+            (c) => c.contractId === contractId,
+          );
+        }
+      });
+    },
     getAvatarTitle(name) {
       return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
     },

@@ -1,8 +1,5 @@
 <template>
   <v-data-table dense :headers="headersR" hide-default-footer :items="rules" class="elevation-1">
-    <template v-slot:item.allowed="{ item }">
-      <v-simple-checkbox v-model="item.allowed" disabled></v-simple-checkbox>
-    </template>
     <template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title><div v-if="check === 1">Nội quy</div></v-toolbar-title>
@@ -26,8 +23,6 @@ export default {
         value: 'regulationId',
       },
       { text: 'Nội dung', value: 'regulationName', sortable: false },
-      { text: 'Được làm', value: 'allowed', sortable: false },
-      { value: 'actions', sortable: false },
     ],
     editedIndexR: -1,
     editedItemR: {
