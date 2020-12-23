@@ -51,7 +51,7 @@
                   </v-list-item-content>
                   <v-list-item-avatar tile color="white">
                     <v-img
-                      style="width: 10px;"
+                      style="width: 10px"
                       src="@/assets/home/superficies.svg"
                       transition="scale-transition"
                     />
@@ -80,7 +80,7 @@
           </v-row>
           <v-row class="d-flex mt-10">
             <v-col cols="12" lg="6">
-              <v-card outlined class="flex" width="100%" style="height: 100%;">
+              <v-card outlined class="flex" width="100%" style="height: 100%">
                 <v-card-title class="d-flex justify-center" :style="{ backgroundColor: '#f4f4f4' }">
                   <span class="text-body-1 txt-dark text-capitalize font-nunito font-weight-medium"
                     >THEO PHƯỜNG</span
@@ -99,7 +99,7 @@
                   :headers="headers"
                   :items="itemWards"
                   :items-per-page="5"
-                  class="elevation-1"
+                  class="elevation-1 filter"
                   :search="searchWard"
                   :footer-props="{
                     itemsPerPageAllText: 'Tất cả',
@@ -109,7 +109,7 @@
               </v-card>
             </v-col>
             <v-col cols="12" lg="6">
-              <v-card width="100%" style="height: 100%;" outlined>
+              <v-card width="100%" style="height: 100%" outlined>
                 <v-card-title
                   class="d-flex justify-space-between"
                   :style="{ backgroundColor: '#f4f4f4' }"
@@ -131,7 +131,7 @@
                   :headers="headerStreets"
                   :items="itemStreets"
                   :items-per-page="5"
-                  class="elevation-1"
+                  class="elevation-1 filter"
                   :search="searchStreet"
                   :footer-props="{
                     itemsPerPageAllText: 'Tất cả',
@@ -166,17 +166,16 @@ export default {
     headers: [
       {
         text: 'Phường',
-        value: 'district',
+        value: 'ward',
         align: 'start',
-        filterable: false,
       },
       {
         text: 'Giá trung bình / phòng (Triệu)',
-        value: 'districtAverage',
+        value: 'wardAverage',
       },
       {
         text: 'Diện tích trung bình / phòng (m2)',
-        value: 'districtM2',
+        value: 'wardM2',
       },
     ],
     headerStreets: [
@@ -217,6 +216,7 @@ export default {
       return this.$route.params.districtId;
     },
     district() {
+      console.log(this.districtInput);
       return (
         this.districtInput ||
         this.$store.state.renter.common.districts.data.find(
@@ -225,10 +225,23 @@ export default {
       );
     },
     wards() {
-      return this.district.wards;
+      return this.districtStat.wards;
     },
     streets() {
-      return this.wards.map((ward) => ward.streets).flat();
+      let allStreets = [];
+      this.wards.forEach((item) => {
+        allStreets = [
+          ...allStreets,
+          ...item.streets.map((street) => ({
+            ward: item.wardName,
+            streetId: street.streetId,
+            streetName: street.streetName,
+            avgPrice: street.avgPrice,
+            avgSuperficality: street.avgSuperficality,
+          })),
+        ];
+      });
+      return allStreets;
     },
     streetIds() {
       return this.streets.map((street) => street.streetId);
@@ -245,16 +258,16 @@ export default {
     },
     itemWards() {
       return this.wards.map((ward) => ({
-        district: ward.wardName,
-        districtAverage: this.getWardStat(ward.wardId).avgPrice,
-        districtM2: this.getWardStat(ward.wardId).avgSuperficality,
+        ward: ward.wardName,
+        wardAverage: ward.avgPrice,
+        wardM2: ward.avgSuperficality,
       }));
     },
     itemStreets() {
       return this.streets.map((street) => ({
-        street: street.streetName,
-        streetAverage: this.getStreetStat(street.streetId).avgPrice,
-        streetM2: this.getStreetStat(street.streetId).avgPrice,
+        street: `${street.streetName} (${street.ward})`,
+        streetAverage: street.avgPrice,
+        streetM2: street.avgSuperficality,
       }));
     },
   },
@@ -297,16 +310,11 @@ export default {
     },
   },
   created() {
-    console.log(this.districtInput);
     if (!this.districtInput) {
       this.getProvinces();
       if (!this.statistic) {
         this.getDistrictStatistic(this.districtId);
       }
-    } else {
-      console.log(this.districtInput);
-      this.districtStat = this.districtInput;
-      // console.log(this.districtStat);
     }
   },
 };

@@ -432,10 +432,9 @@ export default {
       sendNotification: 'user/sendNotification',
     }),
     showFirstPay(contractId) {
-      const contract = this.contracts.data.find(
-        (c) => c.contractId === contractId,
-      );
+      const contract = this.contracts.data.find((c) => c.contractId === contractId);
       this.payReserveFee.contractId = contractId;
+      this.payAllFee.contractId = contractId;
       if (contract.reserved) {
         this.payReserveFee.show = true;
       } else {
