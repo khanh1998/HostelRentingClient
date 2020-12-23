@@ -170,12 +170,12 @@
               </div>
               <div
                 class="arrow-price d-flex flex-column"
-                v-if="searchValue && (info.schoolMate !== 0 || info.compatriot !== 0)"
+                v-if="searchValue && (info.schoolmate !== 0 || info.compatriot !== 0)"
               >
-                <span class="text-caption" v-if="schoolSelected && info.schoolMate !== 0">
+                <span class="text-caption" v-if="schoolSelected && info.schoolmate !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
                   <span class="text-caption"
-                    >{{ info.schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                    >{{ info.schoolmate }} người học {{ schoolSelected.schoolName }}</span
                   >
                 </span>
                 <span class="text-caption" v-if="hometownSelected && info.compatriot !== 0">
@@ -203,12 +203,12 @@
               </div>
               <div
                 class="arrow-price d-flex flex-column"
-                v-if="searchValue && (info.schoolMate !== 0 || info.compatriot !== 0)"
+                v-if="searchValue && (info.schoolmate !== 0 || info.compatriot !== 0)"
               >
                 <span class="text-caption" v-if="schoolSelected && schoolMate !== 0">
                   <v-icon color="#ABB4C0" class="mr-2">school</v-icon>
                   <span class="text-caption"
-                    >{{ info.schoolMate }} người học {{ schoolSelected.schoolName }}</span
+                    >{{ info.schoolmate }} người học {{ schoolSelected.schoolName }}</span
                   >
                 </span>
                 <span class="text-caption" v-if="hometownSelected && compatriot !== 0">
@@ -276,13 +276,13 @@
             <!-- <v-btn color="success" class="ml-1" depressed tile>
                   <v-icon small>fas fa-map-signs</v-icon>Bản đồ
             </v-btn>-->
-            <treeView :utitlities="utilities" />
+            <treeView :utitlities="utilities" v-if="utilities.length > 0" />
           </v-col>
         </v-row>
         <v-row class="mt-5" v-if="statistic && (districtStat || wardStat || streetStat)">
           <v-col cols="12" md="8">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
-              >GIÁ TRUNG BÌNH MỘT PHÒNG TRỌ</span
+              >GIÁ TRUNG BÌNH MỘT PHÒNG TRỌ TRONG KHU VỰC</span
             >
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '15%' }" />
@@ -329,6 +329,58 @@
             </v-row>
           </v-col>
         </v-row>
+        <v-row class="mt-5" v-if="statistic && (districtStat || wardStat || streetStat)">
+          <v-col cols="12" md="8">
+            <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
+              >DIỆN TÍCH TRUNG BÌNH MỘT PHÒNG TRỌ TRONG KHU VỰC</span
+            >
+            <div class="d-flex mt-3" :style="{ width: '100%' }">
+              <div class="line-after" :style="{ width: '15%' }" />
+              <div class="line-before" :style="{ width: '85%' }" />
+            </div>
+            <v-row class="d-flex flex-wrap mx-0 font-nunito text-subtitle-2">
+              <v-col cols="12" md="6" class="pl-0" v-if="districtStat">
+                <div class="average-item d-flex align-center">
+                  <v-col cols="7" class="d-flex average-infor">
+                    {{ districtStat.districtName }}
+                  </v-col>
+                  <span class="font-weight-bold mx-auto"
+                    >{{ districtStat.avgSuperficiality }} m<sup>2</sup></span
+                  >
+                </div>
+              </v-col>
+              <v-col cols="12" md="6" class="pl-0" v-if="wardStat">
+                <div class="average-item d-flex align-center">
+                  <v-col cols="7" class="d-flex average-infor">{{ wardStat.wardName }}</v-col>
+                  <span class="font-weight-bold mx-auto"
+                    >{{ wardStat.avgSuperficality }} m<sup>2</sup></span
+                  >
+                </div>
+              </v-col>
+              <v-col cols="12" md="6" class="pl-0" v-if="streetStat">
+                <div class="average-item d-flex align-center">
+                  <v-col cols="7" class="d-flex average-infor">
+                    {{ streetStat.streetName }}
+                  </v-col>
+                  <span class="font-weight-bold mx-auto">
+                    {{ streetStat.avgSuperficality }} m<sup>2</sup>
+                  </span>
+                </div>
+              </v-col>
+              <v-col cols="6" class="pl-0">
+                <v-btn
+                  class="align-center font-weight-medium text-primary-hover"
+                  text
+                  height="100%"
+                  :to="`/discovery/${this.group.address.districtId}`"
+                >
+                  Xem thêm
+                  <v-icon>double_arrow</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
         <v-row class="mt-10">
           <v-col cols="12" md="8">
             <span class="text-subtitle-1 font-nunito font-weight-bold" :style="{ color: '#484848' }"
@@ -358,15 +410,6 @@
                 :style="{ color: '#484848' }"
                 >CÓ THỂ BẠN SẼ THÍCH</span
               >
-              <v-btn
-                class="align-end font-weight-medium ml-auto"
-                text
-                height="100%"
-                color="primary"
-                _:to="`/discovery/${this.district.districtId}`"
-              >
-                Xem thêm
-              </v-btn>
             </div>
             <div class="d-flex mt-3" :style="{ width: '100%' }">
               <div class="line-after" :style="{ width: '15%' }" />
@@ -468,7 +511,7 @@ export default {
 
     getNearByUtilities() {
       this.getUtilities({
-        distance: '10',
+        distance: '3',
         longitude: this.group.longitude,
         latitude: this.group.latitude,
       });
