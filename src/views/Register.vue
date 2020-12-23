@@ -126,6 +126,9 @@
                     <span class="text-muted">Đã có tài khoản?</span>
                     <v-btn text link color="#727cf5" @click="goToLoginPage">Đăng nhập</v-btn>
                   </v-card-text>
+                  <v-card-text class="d-flex justify-center align-center py-0">
+                    <v-btn text link color="#727cf5" to="/">Quay về trang chủ</v-btn>
+                  </v-card-text>
                 </v-card>
                 <!-- vetify -->
                 <v-card
