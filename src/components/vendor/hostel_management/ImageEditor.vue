@@ -1,5 +1,10 @@
 <template>
   <div>
+    <v-dialog v-model="dialog.showCurrImg">
+      <v-card max-height="500px">
+        <v-img :src="dialog.currImg"></v-img>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="dialog.show" width="350">
       <v-card height="350" :loading="isFileUploading">
         <div class="d-flex flex-column align-center justify-center">
@@ -52,6 +57,7 @@
               class="grey lighten-2 ma-2"
               height="120"
               width="120"
+              @click="showCurrImg(image.resourceUrl)"
             >
               <template v-slot:placeholder>
                 <v-row class="fill-height ma-0" align="center" justify="center">
@@ -104,6 +110,8 @@ export default {
     dialog: {
       show: false,
       files: null,
+      currImg: null,
+      showCurrImg: false,
     },
     upload: {
       imageUrls: [],
@@ -112,6 +120,10 @@ export default {
     mergeImages: [],
   }),
   methods: {
+    showCurrImg(url) {
+      this.dialog.currImg = url;
+      this.dialog.showCurrImg = true;
+    },
     removeImage(url) {
       const index = this.mergeImages.findIndex((img) => img.resourceUrl === url);
       if (index > -1) {
