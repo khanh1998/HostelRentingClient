@@ -436,6 +436,7 @@ export default {
         (c) => c.contractId === contractId,
       );
       this.payReserveFee.contractId = contractId;
+      this.payAllFee.contractId = contractId;
       if (contract.reserved) {
         this.payReserveFee.show = true;
       } else {

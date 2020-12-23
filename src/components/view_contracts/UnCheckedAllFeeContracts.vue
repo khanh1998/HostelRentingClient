@@ -239,7 +239,8 @@ export default {
       contract.status = 'ACTIVATED';
       contract.paid = false;
       const price = contract.deal ? contract.deal.offeredPrice : contract.type.price;
-      const totalPrice = ((contract.type.deposit + 1) * price).toFixed(2);
+      let totalPrice = (contract.type.deposit + 1) * price;
+      totalPrice = totalPrice.toFixed(2);
       const { contractId, qrCode } = contract;
       const payload = { contractId, qrCode, status: 'ACTIVATED' };
       this.activateContract(payload).then(() => {

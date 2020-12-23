@@ -128,6 +128,9 @@
                     >
                     <v-col cols="12" class="pb-0 pt-0">
                       <v-timeline align-top dense>
+                        <v-timeline-item color="#727CF5" small v-if="!signable && !payableReserve">
+                          Hết hạn ký và thanh toán tiền giữ chỗ.
+                        </v-timeline-item>
                         <v-timeline-item color="#727CF5" small v-if="signable">
                           <v-chip @click="$emit('activate', contract.contractId)"
                             >Ký hợp đồng</v-chip
@@ -138,7 +141,7 @@
                         <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           Đã ký vào lúc {{ new Date(contract.lastPayAt).toLocaleString('vi') }}
                         </v-timeline-item>
-                        <v-timeline-item color="#727CF5" small>
+                        <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           <div>
                             Thanh toán tiền cọc giữ chỗ cho chủ trọ {{ contract.downPayment }}
                             triệu đồng,
@@ -177,7 +180,7 @@
                             </v-card-text>
                           </div>
                         </v-timeline-item>
-                        <v-timeline-item color="#727CF5" small>
+                        <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           <div>
                             Yêu cầu chủ nhà xác nhận tiền cọc giữ chỗ :
                             <!-- <v-chip
@@ -188,7 +191,6 @@
                               >Yêu cầu xác nhận</v-chip
                             > -->
                             <v-chip
-                              v-if="payableReserve"
                               @click="$emit('show-pay-reserve-fee', contract.contractId)"
                               color="#727CF5"
                               class="ml-2"
@@ -374,6 +376,9 @@
                     >
                     <v-col cols="12" class="pb-0 pt-0">
                       <v-timeline align-top dense>
+                        <v-timeline-item color="#727CF5" small v-if="!signable && !payableReserve">
+                          Hết hạn ký và thanh toán tiền.
+                        </v-timeline-item>
                         <v-timeline-item color="#727CF5" small v-if="signable">
                           <v-chip @click="$emit('activate', contract.contractId)"
                             >Ký hợp đồng</v-chip
@@ -384,9 +389,9 @@
                         <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           Đã ký vào lúc {{ new Date(contract.lastPayAt).toLocaleString('vi') }}
                         </v-timeline-item>
-                        <v-timeline-item color="#727CF5" small>
+                        <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           <div>
-                            Thanh toán tiền cọc giữ chỗ cho chủ trọ {{ contract.downPayment }}
+                            Thanh toán tiền toàn bộ cho chủ trọ {{ totalPrice }}
                             triệu đồng,
                             {{
                               contract.lastPayAt
@@ -423,7 +428,7 @@
                             </v-card-text>
                           </div>
                         </v-timeline-item>
-                        <v-timeline-item color="#727CF5" small>
+                        <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           <div>
                             Yêu cầu chủ nhà xác nhận tiền cọc giữ chỗ :
                             <!-- <v-chip
@@ -707,8 +712,11 @@ export default {
       return 'REST_BILL';
     },
     payableReserve() {
+      const curr = new Date().getTime();
+      let boundary = new Date(this.contract.lastPayAt);
+      boundary = boundary.setDate(boundary.getDate() + 3);
       const { status, paid } = this.contract;
-      if (status === 'ACCEPTED' && paid === false) {
+      if (status === 'ACCEPTED' && paid === false && curr < boundary) {
         return true;
       }
       return false;

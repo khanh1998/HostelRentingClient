@@ -365,7 +365,7 @@ export default {
   },
   computed: {
     rawSchedule() {
-      return this.$store.state.renter.hostelType.schedules.data.schedules;
+      return this.$store.state.renter.hostelType.schedules.data;
     },
     isLoading() {
       return this.$store.state.renter.hostelType.schedules.isLoading;
