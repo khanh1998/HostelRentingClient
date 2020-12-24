@@ -146,7 +146,7 @@
               <v-btn
                 v-if="booking.status === 'INCOMING'"
                 icon
-                @click="changeToString(booking.bookingId)"
+                @click="changeToString(booking)"
               >
                 <v-icon> mdi-qrcode </v-icon>
               </v-btn>
@@ -229,7 +229,7 @@
               <v-btn
                 v-if="booking.status === 'INCOMING'"
                 icon
-                @click="changeToString(booking.bookingId)"
+                @click="changeToString(booking)"
               >
                 <v-icon> mdi-qrcode </v-icon>
               </v-btn>
@@ -283,9 +283,10 @@ export default {
       const d = new Date(milisecond);
       return `${d.getHours()}:${d.getMinutes() < 10 ? '0' : ''}${d.getMinutes()}`;
     },
-    changeToString(bookingId) {
+    changeToString(booking) {
+      const { bookingId, qrCode } = booking;
       this.dialog = true;
-      this.qrvalue = `booking:${bookingId}`;
+      this.qrvalue = `booking:${bookingId}:${qrCode}`;
     },
     viewBookings() {
       this.$router.push('/vendor/booking');

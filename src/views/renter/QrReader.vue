@@ -40,12 +40,13 @@
             <p>Nhà trọ: {{ booking.group.groupName }}</p>
             <p>Loại phòng: {{ booking.type.title }}</p>
             <p>Giá gốc: {{ booking.type.price }} triệu đồng</p>
-            <p v-if="booking.deal">
-              Giá thương lượng: {{ booking.deal.offeredPrice }} triệu đồng
-            </p>
+            <p v-if="booking.deal">Giá thương lượng: {{ booking.deal.offeredPrice }} triệu đồng</p>
           </v-card-text>
           <v-card-text v-if="bookings.error" class="d-flex justify-center mt-5">
-            <span>Mã QR của booking này không thuộc về bạn. Hãy yêu cầu chủ trọ chọn booking khác.</span>
+            <span
+              >Mã QR của booking này không thuộc về bạn. Hãy yêu cầu chủ trọ chọn booking
+              khác.</span
+            >
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
@@ -316,21 +317,22 @@ export default {
     onDecode(result) {
       this.result = result;
       console.log(result);
-      const [type, content] = this.result.split(':');
+      const [type, bookingId, qrCode] = this.result.split(':');
+      const content = { bookingId, qrCode };
       console.log(type, content);
       switch (type) {
         case 'booking':
           console.log('booking', content);
           this.booking = null;
-          this.updateBookingStatus(Number(content)).then(() => {
-            const booking = this.bookings.data.find((item) => item.bookingId === Number(content));
+          this.updateBookingStatus(content).then(() => {
+            const booking = this.bookings.data.find((item) => item.bookingId === Number(bookingId));
             this.booking = booking;
             this.dialog = true;
             this.sendNotification({
               title: `${booking.renter.username} xác nhận gặp mặt`,
               body: `${booking.type.title}`,
               action: actions.SCAN_BOOKING,
-              id: Number(content),
+              id: Number(bookingId),
               icon: booking.renter.avatar,
               vendorId: booking.vendor.userId,
               renterId: null,

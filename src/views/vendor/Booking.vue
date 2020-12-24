@@ -391,7 +391,7 @@
                         <v-col cols="6" md="5" class="mt-2">
                           <div
                             v-if="selectedEvent.data.status === 'INCOMING'"
-                            v-on="changeToString(selectedEvent.data.bookingId)"
+                            v-on="changeToString(selectedEvent.data)"
                           >
                             <p class="mb-3" style="font-size: 14px !important">
                               Mã xác nhận xem phòng
@@ -596,7 +596,7 @@
                         <v-col cols="6" md="5" class="mt-2">
                           <div
                             v-if="selectedEvent.data.status === 'INCOMING'"
-                            v-on="changeToString(selectedEvent.data.bookingId)"
+                            v-on="changeToString(selectedEvent.data)"
                           >
                             <p class="mb-3">Mã xác nhận xem phòng</p>
                             <qrcode-vue
@@ -817,10 +817,11 @@ export default {
       getUser: 'user/getUser',
       cancelBooking: 'user/cancelBooking',
     }),
-    changeToString(bookingId) {
+    changeToString(data) {
+      const { bookingId, qrCode } = data;
       this.dialog = true;
       this.cancelDialog.show = false;
-      this.qrvalue = `booking:${bookingId}`;
+      this.qrvalue = `booking:${bookingId}:${qrCode}`;
     },
     changeToSContractString() {
       this.dialogContract = true;
