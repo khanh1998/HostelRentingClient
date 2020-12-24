@@ -63,7 +63,14 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="4" class="pa-0 d-flex justify-center justify-md-end">
-        <v-btn-toggle mandatory v-model="filterBooking" tile color="#4250f2" group class="hidden-xs-only">
+        <v-btn-toggle
+          mandatory
+          v-model="filterBooking"
+          tile
+          color="#4250f2"
+          group
+          class="hidden-xs-only"
+        >
           <v-btn value="day" small class="font-nunito"> Hôm nay </v-btn>
           <v-btn value="week" small class="font-nunito"> Tuần này </v-btn>
           <v-btn value="month" small class="font-nunito"> Tháng này </v-btn>
@@ -143,11 +150,7 @@
               >
             </v-list-item-content>
             <v-list-item-action>
-              <v-btn
-                v-if="booking.status === 'INCOMING'"
-                icon
-                @click="changeToString(booking)"
-              >
+              <v-btn v-if="booking.status === 'INCOMING'" icon @click="changeToString(booking)">
                 <v-icon> mdi-qrcode </v-icon>
               </v-btn>
               <v-btn
@@ -226,11 +229,7 @@
               >
             </v-list-item-content>
             <v-list-item-action>
-              <v-btn
-                v-if="booking.status === 'INCOMING'"
-                icon
-                @click="changeToString(booking)"
-              >
+              <v-btn v-if="booking.status === 'INCOMING'" icon @click="changeToString(booking)">
                 <v-icon> mdi-qrcode </v-icon>
               </v-btn>
               <v-btn
@@ -363,9 +362,9 @@ export default {
             return res;
           });
       }
-      return this.$store.state.user.bookings.data.filter(
-        (item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime(),
-      );
+      return this.$store.state.user.bookings.data
+        .filter((item) => item.meetTime >= min.getTime() && item.meetTime <= max.getTime())
+        .filter((booking) => !booking.contractId);
     },
     incommingBookings() {
       return this.bookings.filter((booking) => booking.status === 'INCOMING');
