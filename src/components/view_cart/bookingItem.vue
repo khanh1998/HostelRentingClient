@@ -47,7 +47,7 @@
                 ></v-col
               >
               <v-col md="9" class="px-0 pb-0"
-                ><span class="font-nunito title-content">{{ booking.vendor.phone }}</span></v-col
+                ><span class="font-nunito title-content"><a :href="`tel:${booking.vendor.phone}`">{{ booking.vendor.phone }}</a></span></v-col
               >
             </v-row>
             <v-row class="d-flex align-center px-4 ma-0">
@@ -83,7 +83,7 @@
                 ></v-col
               >
               <v-col md="9" class="px-0 pb-0"
-                ><span class="font-nunito title-content">{{ booking.vendor.phone }}</span></v-col
+                ><span class="font-nunito title-content"><a :href="`tel:${booking.vendor.phone}`">{{ booking.vendor.phone }}</a></span></v-col
               >
             </v-row>
             <v-row class="d-flex align-center px-4 ma-0 pt-3">

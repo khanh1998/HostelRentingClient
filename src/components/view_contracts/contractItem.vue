@@ -2,7 +2,7 @@
   <v-card class="mb-2 pa-4">
     <v-row>
       <v-row no-gutters class="d-flex">
-        <v-col cols="12" md="3" class="d-flex align-center">
+        <v-col cols="12" md="2" class="d-flex align-center">
           <v-row class="ma-0">
             <v-col cols="3" class="hidden-sm-and-up">
               <span class="font-nunito text-primary size-sub-2">Chủ trọ: </span>
@@ -79,8 +79,19 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="12" md="1" class="d-flex flex-column justify-center align-center">
+        <v-col cols="12" md="2" class="d-flex flex-column justify-center align-center">
           <v-chip color="red" v-if="isExpired">Hết hạn</v-chip>
+          <v-dialog v-model="evidences.show" width="400">
+            <v-card class="pa-2">
+              <v-container>
+                <ImageEditor :oldImages="contract.images" :mode="'view'" />
+              </v-container>
+            </v-card>
+          </v-dialog>
+          <v-chip v-if="contract.images.length > 0" @click="showEvidences">
+            <v-icon>wallpaper</v-icon>
+            Hình ảnh</v-chip
+          >
         </v-col>
       </v-row>
       <v-row>
@@ -128,6 +139,9 @@
                     >
                     <v-col cols="12" class="pb-0 pt-0">
                       <v-timeline align-top dense>
+                        <v-timeline-item color="#727CF5" small v-if="!signable && !payableReserve">
+                          Hết hạn ký và thanh toán tiền giữ chỗ.
+                        </v-timeline-item>
                         <v-timeline-item color="#727CF5" small v-if="signable">
                           <v-chip @click="$emit('activate', contract.contractId)"
                             >Ký hợp đồng</v-chip
@@ -138,7 +152,7 @@
                         <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           Đã ký vào lúc {{ new Date(contract.lastPayAt).toLocaleString('vi') }}
                         </v-timeline-item>
-                        <v-timeline-item color="#727CF5" small>
+                        <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           <div>
                             Thanh toán tiền cọc giữ chỗ cho chủ trọ {{ contract.downPayment }}
                             triệu đồng,
@@ -177,7 +191,7 @@
                             </v-card-text>
                           </div>
                         </v-timeline-item>
-                        <v-timeline-item color="#727CF5" small>
+                        <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           <div>
                             Yêu cầu chủ nhà xác nhận tiền cọc giữ chỗ :
                             <!-- <v-chip
@@ -188,7 +202,6 @@
                               >Yêu cầu xác nhận</v-chip
                             > -->
                             <v-chip
-                              v-if="payableReserve"
                               @click="$emit('show-pay-reserve-fee', contract.contractId)"
                               color="#727CF5"
                               class="ml-2"
@@ -374,6 +387,9 @@
                     >
                     <v-col cols="12" class="pb-0 pt-0">
                       <v-timeline align-top dense>
+                        <v-timeline-item color="#727CF5" small v-if="!signable && !payableReserve">
+                          Hết hạn ký và thanh toán tiền.
+                        </v-timeline-item>
                         <v-timeline-item color="#727CF5" small v-if="signable">
                           <v-chip @click="$emit('activate', contract.contractId)"
                             >Ký hợp đồng</v-chip
@@ -384,9 +400,9 @@
                         <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           Đã ký vào lúc {{ new Date(contract.lastPayAt).toLocaleString('vi') }}
                         </v-timeline-item>
-                        <v-timeline-item color="#727CF5" small>
+                        <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           <div>
-                            Thanh toán tiền cọc giữ chỗ cho chủ trọ {{ contract.downPayment }}
+                            Thanh toán tiền toàn bộ cho chủ trọ {{ totalPrice }}
                             triệu đồng,
                             {{
                               contract.lastPayAt
@@ -423,7 +439,7 @@
                             </v-card-text>
                           </div>
                         </v-timeline-item>
-                        <v-timeline-item color="#727CF5" small>
+                        <v-timeline-item color="#727CF5" small v-if="payableReserve">
                           <div>
                             Yêu cầu chủ nhà xác nhận tiền cọc giữ chỗ :
                             <!-- <v-chip
@@ -510,7 +526,6 @@
                   xem chi tiết hợp đồng</v-chip
                 >
               </p>
-              <ImageEditor :oldImages="contract.images" :mode="'view'" />
             </v-col>
           </v-row>
         </v-col>
@@ -529,6 +544,10 @@ export default {
   props: ['contract'],
   components: { ImageEditor },
   data: () => ({
+    evidences: {
+      show: false,
+      images: [],
+    },
     dialog: false,
     mapDialog: false,
     imageEditorMode: 'view',
@@ -707,8 +726,11 @@ export default {
       return 'REST_BILL';
     },
     payableReserve() {
+      const curr = new Date().getTime();
+      let boundary = new Date(this.contract.lastPayAt);
+      boundary = boundary.setDate(boundary.getDate() + 3);
       const { status, paid } = this.contract;
-      if (status === 'ACCEPTED' && paid === false) {
+      if (status === 'ACCEPTED' && paid === false && curr < boundary) {
         return true;
       }
       return false;
@@ -721,6 +743,9 @@ export default {
       updateContract: 'user/updateContract',
       sendNotification: 'user/sendNotification',
     }),
+    showEvidences() {
+      this.evidences.show = true;
+    },
     changeMode() {
       if (this.imageEditorMode === 'view') {
         this.imageEditorMode = 'edit';

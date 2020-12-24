@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <v-card v-if="!isLoading">
+  <v-card :loading="isLoading">
     <v-dialog v-model="warningDialog" max-width="400">
       <v-card>
         <v-card-title class="d-flex flex-column justify-center px-8">
