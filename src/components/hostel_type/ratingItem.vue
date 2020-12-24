@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="d-flex align-center" style="border-bottom: 1px dashed rgba(0, 0, 0, 0.1);">
+  <div class="d-flex align-center" style="border-bottom: 1px dashed rgba(0, 0, 0, 0.1)">
     <v-dialog v-model="imageDialog" max-width="80%" v-if="feedback.feedbackImages">
       <v-card>
         <v-carousel
@@ -59,7 +59,7 @@
             accept="image/*"
             class="ma-2"
           />
-          <div class="d-flex flex-wrap" style="height: 250px; overflow-y: auto;">
+          <div class="d-flex flex-wrap" style="height: 250px; overflow-y: auto">
             <v-img
               v-for="url in upload.imageUrls"
               :key="url"
@@ -87,7 +87,7 @@
     >
       <v-card>
         <v-row class="d-flex px-4 py-3 align-center justify-space-between ma-0">
-          <span class="font-nunito text-gray dialog-title" style="font-size: 1.125rem !important;"
+          <span class="font-nunito text-gray dialog-title" style="font-size: 1.125rem !important"
             >Chỉnh sửa đánh giá
           </span>
           <v-btn icon @click="feedbackDialog = false"
@@ -96,7 +96,7 @@
         </v-row>
 
         <v-divider></v-divider>
-        <v-card-text style="height: 400px;" class="py-0">
+        <v-card-text style="height: 400px" class="py-0">
           <v-row class="ma-0 d-flex justify-space-between">
             <v-col cols="12" class="pb-0">
               <v-row>
@@ -197,7 +197,7 @@
           :value="feedback.rating"
         ></v-rating>
         <v-spacer></v-spacer>
-        <v-menu bottom left v-if="renter.userId === feedback.renter.userId">
+        <v-menu bottom left v-if="renter && renter.userId === feedback.renter.userId">
           <template v-slot:activator="{ on, attrs }">
             <v-btn dark icon v-bind="attrs" v-on="on">
               <v-icon color="#adb5bd" small>mdi-dots-vertical</v-icon>
@@ -205,7 +205,7 @@
           </template>
           <v-list>
             <v-list-item
-              style="min-height: 20px !important;"
+              style="min-height: 20px !important"
               class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
               @click="feedbackDialog = true"
             >
@@ -213,7 +213,7 @@
               <v-list-item-title class="item-hover">Chỉnh sửa</v-list-item-title>
             </v-list-item>
             <v-list-item
-              style="min-height: 20px !important;"
+              style="min-height: 20px !important"
               class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
               @click="warningDialog = true"
             >

@@ -325,6 +325,7 @@ export default {
           // i == 0 to confirm filter first day only (first day == today)
           const today = new Date();
           const freeTime = new Date();
+          today.setHours(today.getHours() + 3);
 
           freeTimes = freeTimes.filter((t) => {
             const time = t.split(':');

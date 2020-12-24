@@ -2,10 +2,7 @@
   <div>
     <!-- eslint-disable max-len -->
     <div v-if="list.length > 0">
-      <div
-        class="d-flex"
-        style="border: 1px solid #ccc !important; background: #eeeeee !important;"
-      >
+      <div class="d-flex" style="border: 1px solid #ccc !important; background: #eeeeee !important">
         <v-col cols="6" md="3" class="flex justify-center">
           <span class="text-h5 font-nunito font-weight-bold" :style="{ color: '#F9A825' }">
             {{ rating.average }}
@@ -60,7 +57,7 @@
     <div
       v-else
       class="d-flex pa-4"
-      style="border: 1px solid #ccc !important; background: #eeeeee !important;"
+      style="border: 1px solid #ccc !important; background: #eeeeee !important"
     >
       <span class="font-nunito text-gray size9rem">Chưa có đánh giá nào</span>
     </div>
