@@ -192,7 +192,7 @@
           ></v-select>
           <v-select
             :items="servicesBox.times"
-            label="Thời hạn"
+            label="Tần suất thanh toán"
             dense
             hide-details
             v-model="addNew.timeUnit"
@@ -241,7 +241,7 @@ export default {
         },
         { text: 'Giá (Nghìn đồng)', value: 'price', sortable: true },
         { text: 'Đơn vị', value: 'userUnit', sortable: false },
-        { text: 'Thời hạn', value: 'timeUnit', sortable: false },
+        { text: 'Tần suất thanh toán', value: 'timeUnit', sortable: false },
         { text: () => (this.select ? 'Chọn' : 'Xoá'), value: 'delete', sortable: false },
       ],
       units: ['m³', 'kWh', 'người', 'phòng', 'xe'],

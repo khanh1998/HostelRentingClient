@@ -146,7 +146,7 @@
                           <v-chip @click="$emit('activate', contract.contractId)"
                             >Ký hợp đồng</v-chip
                           >
-                          trước {{ lastSignDate.split(',')[0] }} giờ, ngày
+                          trước {{ lastSignDate.split(',')[0].slice(0, -3) }} giờ, ngày
                           {{ lastSignDate.split(',')[1] }}
                         </v-timeline-item>
                         <v-timeline-item color="#727CF5" small v-if="payableReserve">
@@ -158,7 +158,7 @@
                             triệu đồng,
                             {{
                               contract.lastPayAt
-                                ? ` trước ${lastPayDate.split(',')[0]} giờ, ngày ${
+                                ? ` trước ${lastPayDate.split(',')[0].slice(0, -3)} giờ, ngày ${
                                     lastPayDate.split(',')[1]
                                   }`
                                 : ''
@@ -255,7 +255,7 @@
                           chủ trọ: {{ (totalPrice - contract.downPayment).toFixed(2) }} triệu đồng,
                           {{
                             contract.lastPayAt
-                              ? ` trước ${lastPayDate.split(',')[0]} giờ, ngày ${
+                              ? ` trước ${lastPayDate.split(',')[0].slice(0, -3)} giờ, ngày ${
                                   lastPayDate.split(',')[1]
                                 }`
                               : ''
@@ -394,7 +394,7 @@
                           <v-chip @click="$emit('activate', contract.contractId)"
                             >Ký hợp đồng</v-chip
                           >
-                          trước {{ lastSignDate.split(',')[0] }} giờ, ngày
+                          trước {{ lastSignDate.split(',')[0].slice(0, -3) }} giờ, ngày
                           {{ lastSignDate.split(',')[1] }}
                         </v-timeline-item>
                         <v-timeline-item color="#727CF5" small v-if="payableReserve">
@@ -406,7 +406,7 @@
                             triệu đồng,
                             {{
                               contract.lastPayAt
-                                ? ` trước ${lastPayDate.split(',')[0]} giờ, ngày ${
+                                ? ` trước ${lastPayDate.split(',')[0].slice(0, -3)} giờ, ngày ${
                                     lastPayDate.split(',')[1]
                                   }`
                                 : ''

@@ -29,10 +29,10 @@
         <v-card>
           <v-card-title class="headline">
             <span v-if="!bookings.success" class="red--text"
-              ><v-icon>report</v-icon> Xác thực gặp mặt thất bại</span
+              ><v-icon>report</v-icon> Xác thực thất bại</span
             >
             <span v-if="bookings.success" class="green--text"
-              ><v-icon>done_outline</v-icon>Xác thực gặp mặt thành công</span
+              ><v-icon>done_outline</v-icon>Xác thực thành công</span
             >
           </v-card-title>
           <v-card-text v-if="bookings.success && booking">

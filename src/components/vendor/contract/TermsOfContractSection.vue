@@ -84,14 +84,14 @@
                     </v-col>
                     <v-col cols="6" sm="6" class="d-flex flex-column">
                       <span class="font-weight-bold text-gray-black">Tiền thuê </span>
-                      <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
+                      <span class="size-sub-2 px-3 py-2 mt-2 d-flex"
                         ><span>{{ this.price }}</span>
                         <span class="ml-auto">triệu/tháng</span>
                       </span>
                     </v-col>
                     <v-col cols="6" sm="6" class="d-flex flex-column">
                       <span class="font-weight-bold text-gray-black">Tiền cọc</span>
-                      <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
+                      <span class="size-sub-2 px-3 py-2 mt-2 d-flex"
                         ><span>{{ type.deposit }}</span>
                         <span class="ml-auto">tháng tiền phòng</span>
                       </span>
@@ -332,14 +332,14 @@
                     </v-col>
                     <v-col cols="6" sm="6" class="d-flex flex-column">
                       <span class="font-weight-bold text-gray-black">Tiền thuê </span>
-                      <span class="text size-sub-2 px-3 py-2 mt-2 d-flex">
+                      <span class="size-sub-2 px-3 py-2 mt-2 d-flex">
                         <span>{{ this.price }}</span>
                         <span class="ml-auto">triệu/tháng</span>
                       </span>
                     </v-col>
                     <v-col cols="6" sm="6" class="d-flex flex-column">
                       <span class="font-weight-bold text-gray-black">Tiền cọc</span>
-                      <span class="text size-sub-2 px-3 py-2 mt-2 d-flex"
+                      <span class="size-sub-2 px-3 py-2 mt-2 d-flex"
                         ><span>{{ type.deposit }}</span>
                         <span class="ml-auto">tháng tiền phòng</span>
                       </span>

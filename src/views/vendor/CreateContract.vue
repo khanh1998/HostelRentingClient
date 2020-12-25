@@ -242,7 +242,7 @@ export default {
         this.createSuccess = this.contracts.success;
         if (this.createSuccess) {
           const payload = {
-            title: 'Hợp đồng thuê nhà nháp',
+            title: 'Hợp đồng thuê nhà phác thảo',
             body: `${this.group.groupName}, ${this.type.title}`,
             action: actions.NEW_CONTRACT,
             id: this.contracts.newlyCreated.contractId,
@@ -312,7 +312,7 @@ export default {
           this.showSnackBar('cập nhật hợp đồng thành công', { color: 'green' });
           this.updateSuccess = true;
           const payload = {
-            title: 'Hợp đồng thuê nhà nháp được cập nhật',
+            title: 'Hợp đồng thuê nhà phác thảo được cập nhật',
             body: `${this.group.groupName}, ${this.type.title}`,
             action: actions.UPDATE_CONTRACT,
             id: this.contract.contractId,

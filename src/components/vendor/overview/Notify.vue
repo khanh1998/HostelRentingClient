@@ -13,15 +13,11 @@
             v-on="on"
             v-if="messages.length !== 0"
           >
-            <v-icon color="#727cf5" class="hidden-xs-only">mdi-bell-outline</v-icon>
-            <v-icon color="#fff" class="hidden-sm-and-up">mdi-bell</v-icon>
+            <v-icon class="hidden-xs-only">mdi-bell-outline</v-icon>
+            <v-icon class="hidden-sm-and-up">mdi-bell</v-icon>
           </v-badge>
-          <v-icon v-if="messages.length === 0" class="hidden-xs-only" color="#98a6ad"
-            >mdi-bell-outline</v-icon
-          >
-          <v-icon v-if="messages.length === 0" color="#fff" class="hidden-sm-and-up"
-            >mdi-bell</v-icon
-          >
+          <v-icon v-if="messages.length === 0" class="hidden-xs-only">mdi-bell-outline</v-icon>
+          <v-icon v-if="messages.length === 0" class="hidden-sm-and-up">mdi-bell</v-icon>
         </v-btn>
       </template>
       <v-list

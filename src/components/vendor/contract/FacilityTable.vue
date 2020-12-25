@@ -39,7 +39,7 @@ export default {
         sortable: false,
         value: 'facilityName',
       },
-      // { text: 'Số lượng', value: 'count' },
+      { text: 'Số lượng', value: 'quantity' },
       // { text: 'Đơn vị tính', value: 'unit', sortable: false },
       // { value: 'actions', sortable: false },
     ],
