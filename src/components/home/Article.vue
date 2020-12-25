@@ -11,7 +11,7 @@
       >
         <div class="item-classic-media" style="padding-right: 0px !important">
           <v-carousel
-            height="210"
+            height="235"
             hide-delimiters
             show-arrows-on-hover
             v-if="type.imageUrls.length !== 0"
@@ -19,7 +19,7 @@
             <v-carousel-item v-for="(image, i) in type.imageUrls" :key="i" :src="image.resourceUrl">
             </v-carousel-item>
           </v-carousel>
-          <v-img src="@/assets/image-error.png" v-else style="height: 210px" class="image-box">
+          <v-img src="@/assets/image-error.png" v-else style="height: 235px" class="image-box">
           </v-img>
           <div class="top">
             Top
@@ -56,6 +56,17 @@
               {{ group.address.streetName }}, {{ group.address.wardName }},
               {{ group.address.districtName }},
               {{ group.address.provinceName }}
+            </span>
+            <span class="d-flex font-nunito" v-if="realDistance">
+              <span
+                ><v-icon class="mr-2">mdi-map-marker-distance</v-icon
+                >{{ realDistance.rows[0].elements[0].distance.text }}</span
+              >
+              <v-spacer />
+              <span
+                ><v-icon class="mr-2">mdi-motorbike</v-icon
+                >{{ realDistance.rows[0].elements[0].duration.text }}</span
+              >
             </span>
             <div class="type-name mt-2" style="height: 40px">
               <p
@@ -165,6 +176,17 @@
               {{ group.address.streetName }}, {{ group.address.wardName }},
               {{ group.address.districtName }},
               {{ group.address.provinceName }}
+            </span>
+            <span class="d-flex font-nunito" v-if="realDistance">
+              <span
+                ><v-icon class="mr-2">mdi-map-marker-distance</v-icon
+                >{{ realDistance.rows[0].elements[0].distance.text }}</span
+              >
+              <v-spacer />
+              <span
+                ><v-icon class="mr-2">mdi-motorbike</v-icon
+                >{{ realDistance.rows[0].elements[0].duration.text }}</span
+              >
             </span>
             <div class="type-name mt-2" style="height: 40px">
               <p
@@ -446,9 +468,15 @@ export default {
     type: Object,
     page: Number,
   },
-  data: () => ({}),
+  data: () => ({
+    realDistance: '',
+  }),
   created() {
     this.getProvinces();
+    if (this.paramsSearchValue) {
+      console.log(this.fetchDistance());
+      console.log(this.realDistance);
+    }
   },
   methods: {
     ...mapActions({
@@ -457,8 +485,94 @@ export default {
     viewDetail() {
       this.$router.push(`/detail/${this.type.typeId}`);
     },
+    async fetchDistance() {
+      return new Promise((resolve, reject) => {
+        // let response;
+        // eslint-disable-next-line
+        const service = new google.maps.DistanceMatrixService();
+        service.getDistanceMatrix(
+          {
+            // eslint-disable-next-line
+            origins: [
+              // eslint-disable-next-line
+              new google.maps.LatLng(
+                this.paramsSearchValue.latitude,
+                this.paramsSearchValue.longitude,
+              ),
+            ],
+            // eslint-disable-next-line
+            destinations: [
+              // eslint-disable-next-line
+              new google.maps.LatLng(this.group.latitude, this.group.longitude),
+            ],
+            // eslint-disable-next-line
+            travelMode: google.maps.TravelMode.DRIVING,
+          },
+          // eslint-disable-next-line
+          function (resp, status) {
+            // eslint-disable-next-line
+            if (status !== google.maps.DistanceMatrixStatus.OK) {
+              reject(status);
+            } else {
+              resolve(resp);
+              // this.realDistance = response;
+            }
+          },
+        );
+        // return response;
+      })
+        .then((res) => {
+          this.realDistance = res;
+        })
+        .catch((err) => {
+          this.realDistance = err;
+        });
+    },
+    // async distance() {
+    //   if (this.paramsSearchValue) {
+    //     // eslint-disable-next-line
+    //     const matrix = new google.maps.DistanceMatrixService();
+
+    //     matrix.getDistanceMatrix(
+    //       {
+    //         // eslint-disable-next-line
+    //         origins: [
+    //           // eslint-disable-next-line
+    //           new google.maps.LatLng(
+    //             this.paramsSearchValue.latitude,
+    //             this.paramsSearchValue.longitude,
+    //           ),
+    //         ],
+    //         // eslint-disable-next-line
+    //         destinations: [
+    //           // eslint-disable-next-line
+    //           new google.maps.LatLng(this.group.latitude, this.group.longitude),
+    //         ],
+    //         // eslint-disable-next-line
+    //         travelMode: google.maps.TravelMode.DRIVING,
+    //       },
+    //       // eslint-disable-next-line
+    //       function (response) {
+    //         // eslint-disable-next-line
+    //         console.log(response);
+    //         this.realDistance = response;
+    //       },
+    //     );
+    //   }
+    // },
   },
   computed: {
+    paramsSearchValue() {
+      const param = this.$route.params.searchValue;
+      if (param && param.includes('latitude')) {
+        const items = param.split('&');
+        const latitude = items[0].split('latitude=')[1];
+        const longitude = items[1].split('longitude=')[1];
+        return { latitude, longitude };
+      }
+      return null;
+    },
+
     isSearchOptional() {
       return this.$store.state.renter.home.searchType.isOptional;
     },
@@ -546,6 +660,9 @@ export default {
     },
     searchValue() {
       return window.$cookies.get('searchValue');
+    },
+    filter() {
+      return this.$store.state.renter.filterResult.filter;
     },
   },
 };

@@ -381,6 +381,7 @@ export default {
       getAllRegulations: 'renter/filterResult/getAllRegulations',
       getAllSchools: 'renter/filterResult/getAllSchools',
       getAllProvinces: 'renter/filterResult/getAllProvinces',
+      getRealDistances: 'renter/filterResult/getRealDistances',
     }),
     ...mapActions({
       setFilterValue: 'renter/filterResult/setFilterValue',
