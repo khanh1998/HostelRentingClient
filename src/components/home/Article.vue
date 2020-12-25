@@ -57,7 +57,7 @@
               {{ group.address.districtName }},
               {{ group.address.provinceName }}
             </span>
-            <span class="d-flex font-nunito" v-if="realDistance">
+            <span class="d-flex font-nunito mt-1" v-if="realDistance">
               <span
                 ><v-icon class="mr-2">mdi-map-marker-distance</v-icon
                 >{{ realDistance.rows[0].elements[0].distance.text }}</span
@@ -68,7 +68,7 @@
                 >{{ realDistance.rows[0].elements[0].duration.text }}</span
               >
             </span>
-            <div class="type-name mt-2" style="height: 40px">
+            <div class="type-name mt-1" style="height: 40px">
               <p
                 style="
                   display: block;
@@ -177,7 +177,7 @@
               {{ group.address.districtName }},
               {{ group.address.provinceName }}
             </span>
-            <span class="d-flex font-nunito" v-if="realDistance">
+            <span class="d-flex font-nunito mt-1" v-if="realDistance">
               <span
                 ><v-icon class="mr-2">mdi-map-marker-distance</v-icon
                 >{{ realDistance.rows[0].elements[0].distance.text }}</span
@@ -188,7 +188,7 @@
                 >{{ realDistance.rows[0].elements[0].duration.text }}</span
               >
             </span>
-            <div class="type-name mt-2" style="height: 40px">
+            <div class="type-name mt-1" style="height: 40px">
               <p
                 style="
                   display: block;
