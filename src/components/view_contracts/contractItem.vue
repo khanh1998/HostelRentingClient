@@ -167,7 +167,7 @@
                               Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
                               trực tuyến.<br />
                               Hỗ trợ thanh toán bằng
-                              <v-btn :href="getParamForUrl" target="_blank" rounded text>
+                              <v-btn :href="getPayReservedUrl" target="_blank" rounded text>
                                 <v-img
                                   height="30px"
                                   width="30px"
@@ -180,7 +180,7 @@
                               trực tuyến.<br />
                               * Hỗ trợ thanh toán bằng
                               <!-- <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text> -->
-                              <v-btn :href="getParamForUrl" rounded text>
+                              <v-btn :href="getPayReservedUrl" rounded text>
                                 <v-img
                                   height="30px"
                                   width="30px"
@@ -264,7 +264,7 @@
                             Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán trực
                             tuyến.<br />
                             Hỗ trợ thanh toán bằng
-                            <v-btn :href="getParamForUrl" target="_blank" rounded text>
+                            <v-btn :href="getPayTheRestUrl" target="_blank" rounded text>
                               <v-img
                                 height="30px"
                                 width="30px"
@@ -277,7 +277,7 @@
                             trực tuyến.<br />
                             * Hỗ trợ thanh toán bằng
                             <!-- <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text> -->
-                            <v-btn :href="getParamForUrl" rounded text>
+                            <v-btn :href="getPayTheRestUrl" rounded text>
                               <v-img
                                 height="30px"
                                 width="30px"
@@ -415,7 +415,7 @@
                               Thanh toán bằng tiền mặt, chuyển khoản và các hình thức thanh toán
                               trực tuyến.<br />
                               Hỗ trợ thanh toán bằng
-                              <v-btn :href="getParamForUrl" target="_blank" rounded text>
+                              <v-btn :href="getPayTotalUrl" target="_blank" rounded text>
                                 <v-img
                                   height="30px"
                                   width="30px"
@@ -428,7 +428,7 @@
                               trực tuyến.<br />
                               * Hỗ trợ thanh toán bằng
                               <!-- <v-btn @click="$emit('momo-payment', getParamForUrl)" rounded text> -->
-                              <v-btn :href="getParamForUrl" rounded text>
+                              <v-btn :href="getPayTotalUrl" rounded text>
                                 <v-img
                                   height="30px"
                                   width="30px"
@@ -694,29 +694,27 @@ export default {
       const { districtId } = this.district;
       return this.$store.getters['renter/common/getProvinceByDistrictId'](districtId);
     },
-    getParamForUrl() {
+    getPayReservedUrl() {
       const { downPayment } = this.contract;
-      let result = null;
+      const money = downPayment * 1000000;
       let url = null;
       const { phone } = this.contract.vendor;
-      // const phone = '0987654320';
-      if (downPayment.toString().includes('.')) {
-        if (downPayment.toString().split('.')[0] === 0) {
-          result = `${downPayment.toString().split('.')[1]}00000`;
-          url = `https://nhantien.momo.vn/${phone}/${result}`;
-          // console.log(`a${url}`);
-          return url;
-        }
-        result = `${
-          downPayment.toString().split('.')[0] + downPayment.toString().split('.')[1]
-        }00000`;
-        url = `https://nhantien.momo.vn/${phone}/${result}`;
-        // console.log(`b${url}`);
-        return url;
-      }
-      result = `${downPayment.toString()}000000`;
-      url = `https://nhantien.momo.vn/${phone}/${result}`;
-      // console.log(`c${url}`);
+      url = `https://nhantien.momo.vn/${phone}/${money}`;
+      return url;
+    },
+    getPayTheRestUrl() {
+      const { downPayment } = this.contract;
+      const money = (this.totalPrice - downPayment) * 1000000;
+      let url = null;
+      const { phone } = this.contract.vendor;
+      url = `https://nhantien.momo.vn/${phone}/${money}`;
+      return url;
+    },
+    getPayTotalUrl() {
+      const money = this.totalPrice * 1000000;
+      let url = null;
+      const { phone } = this.contract.vendor;
+      url = `https://nhantien.momo.vn/${phone}/${money}`;
       return url;
     },
     imageType() {

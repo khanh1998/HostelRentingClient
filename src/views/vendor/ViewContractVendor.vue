@@ -349,6 +349,7 @@
               </v-row>
             </v-card-title>
             <v-data-table
+              show-expand
               :headers="headers"
               :items="allContracts"
               :search="search"
@@ -356,9 +357,14 @@
               :items-per-page="itemsPerPage"
               hide-default-footer
               @page-count="pageCount = $event"
+              :single-expand="singleExpand"
+              :expanded.sync="expanded"
               class="elevation-1 ma-3 mt-0 hidden-md-and-down"
               style="background-color: white"
             >
+              <template v-slot:expanded-item="{ item }">
+                <ImageEditor :oldImages="item.images" :mode="'view'" />
+              </template>
               <template v-slot:top>
                 <v-toolbar flat>
                   <v-toolbar-title>{{ toolbarGroupName }}</v-toolbar-title>
@@ -444,6 +450,7 @@ import UnCheckedRestFeeContracts from '../../components/view_contracts/UnChecked
 import UnCheckedAllFeeContracts from '../../components/view_contracts/UnCheckedAllFeeContracts.vue';
 import UnCheckedResignRequest from '../../components/view_contracts/UnCheckedResignRequest.vue';
 import actions from '../../config/pushNotificationActions';
+import ImageEditor from '../../components/vendor/hostel_management/ImageEditor.vue';
 
 export default {
   name: 'ViewContractVendor',
@@ -454,8 +461,11 @@ export default {
     UnCheckedRestFeeContracts,
     UnCheckedAllFeeContracts,
     UnCheckedResignRequest,
+    ImageEditor,
   },
   data: () => ({
+    expanded: [],
+    singleExpand: true,
     // search
     search: '',
     // paging
@@ -735,6 +745,7 @@ export default {
         paid: item.paid,
         downPayment: item.downPayment,
         reserve: item.reserve,
+        images: item.images,
       };
     },
     showCancelContract(item) {
