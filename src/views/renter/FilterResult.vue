@@ -145,10 +145,6 @@ export default {
     },
   }),
   methods: {
-    // onFilterSubmit() {
-    //   this.getFilterResult({ page: 1, size: 5 });
-    //   this.bottomSheet.show = false;
-    // },
     ...mapActions({
       getFilterResult: 'renter/filterResult/getFilterResult',
     }),

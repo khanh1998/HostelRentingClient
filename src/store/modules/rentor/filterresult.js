@@ -62,6 +62,7 @@ const myState = {
     data: {
       types: null,
       groups: null,
+      distances: null,
       totalType: Number,
     },
     page: 1,
@@ -101,6 +102,10 @@ const mutationTypes = {
   GET_REGULATIONS_SUCCESS: 'GET_REGULATIONS_SUCCESS',
   GET_REGULATIONS_FAILURE: 'GET_REGULATIONS_FAILURE',
   GET_REGULATIONS_REQUEST: 'GET_REGULATIONS_REQUEST',
+  // get real distance by gg API
+  GET_REAL_DISTANCE_REQUEST: 'GET_REAL_DISTANCE_REQUEST',
+  GET_REAL_DISTANCE_SUCCESS: 'GET_REAL_DISTANCE_SUCCESS',
+  GET_REAL_DISTANCE_FAILURE: 'GET_REAL_DISTANCE_FAILURE',
 };
 const mutations = {
   SET_FILTER_VALUES: (state, filterValues) => {
@@ -121,6 +126,20 @@ const mutations = {
     state.results.error = null;
   },
   GET_FILTER_RESULT_FAILURE: (state, error) => {
+    state.results.data = null;
+    state.results.isLoading = false;
+    state.results.error = error;
+  },
+  GET_REAL_DISTANCE_REQUEST: (state) => {
+    state.results.isLoading = true;
+  },
+  GET_REAL_DISTANCE_SUCCESS: (state, distances) => {
+    console.log(distances);
+    state.results.data.distances = distances;
+    state.results.isLoading = false;
+    state.results.error = null;
+  },
+  GET_REAL_DISTANCE_FAILURE: (state, error) => {
     state.results.data = null;
     state.results.isLoading = false;
     state.results.error = error;
@@ -268,9 +287,9 @@ const actions = {
       commit(mutationTypes.GET_FILTER_RESULT_FAILURE, error);
     }
   },
+  // main search
   async filterSearchByCoordinatorResult({ commit }, params) {
     // params = {lat, long, filterProperties}
-
     try {
       commit(mutationTypes.GET_FILTER_RESULT_REQUEST);
       let url = '';
@@ -411,6 +430,16 @@ const actions = {
     } catch (error) {
       commit(mutationTypes.GET_CATEGORIES_FAILURE);
     }
+  },
+  async getRealDistances({ commit }) {
+    commit(mutationTypes.GET_REGULATIONS_REQUEST);
+    const url =
+      'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=10.8418271%2C106.7872&destinations=10.828846%2C106.7673|10.844781%2C106.7673&key=AIzaSyClXWKUwMKhh8u8OkGyB0iMLR2eDNULvNE&fbclid=IwAR0P3RMSrpPm5Qj3zI-jXLQogRD4qjj3lb7thlwKTaUDGlh2LKe6ROt60_I'; // eslint-disable-line
+    fetch(url)
+      .then((res) => res.json())
+      .then((res) => {
+        commit(mutationTypes.GET_REAL_DISTANCE_SUCCESS, res);
+      });
   },
 };
 export default {
