@@ -157,7 +157,7 @@
                       <HostelGroupServiceEditor
                         :groupService="group.services"
                         :select="true"
-                        :mode="mode"
+                        :mode="'view'"
                         @newSelects="receiveSelectServiceIds"
                       />
                     </div>
@@ -390,7 +390,7 @@
                       <HostelGroupServiceEditor
                         :groupService="group.services"
                         :select="true"
-                        :mode="mode"
+                        :mode="'view'"
                         :check="check"
                         @newSelects="receiveSelectServiceIds"
                       />

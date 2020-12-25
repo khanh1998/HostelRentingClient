@@ -1,25 +1,6 @@
 <template>
   <div :class="isMobile ? 'pa-1' : 'pa-8'" height="100%" elevation="0" :loading="isServiceLoading">
     <v-dialog v-model="dialog" persistent max-width="600px">
-      <!-- <template v-slot:activator="{ on, attrs }">
-        <v-row>
-          <v-col cols="9">
-            <span class="text-h6"><v-icon left>room_service</v-icon> Dịch vụ</span>
-          </v-col>
-          <v-col cols="3">
-            <v-btn
-              color="#727CF5"
-              v-if="mode !== 'view'"
-              dark
-              v-bind="attrs"
-              v-on="on"
-              class="hidden-sm-and-down"
-            >
-              Thêm dịch vụ
-            </v-btn>
-          </v-col>
-        </v-row>
-      </template> -->
       <v-card>
         <v-card-title>
           <span class="headline">Thêm dịch vụ</span>
@@ -93,7 +74,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <span class="text-muted pl-2 pt-10 font-weight-medium font-italic" v-if="check !== 1">Chọn dịch vụ mà bạn sẽ tính tiền</span>
+    <span class="text-muted pl-2 pt-10 font-weight-medium font-italic" v-if="check !== 1"
+      >Chọn dịch vụ mà bạn sẽ tính tiền</span
+    >
     <v-data-table
       :headers="servicesBox.headers"
       v-model="selects"
@@ -107,11 +90,27 @@
     >
       <template v-slot:header.data-table-select> </template>
       <template v-slot:item.data-table-select="{ item }">
-        <v-simple-checkbox v-model="item.select" v-if="!item.required" color="#727CF5"></v-simple-checkbox>
-        <v-simple-checkbox v-model="item.select" v-if="item.required" disabled color="#727CF5"></v-simple-checkbox>
+        <v-simple-checkbox
+          v-model="item.select"
+          v-if="!item.required"
+          color="#727CF5"
+        ></v-simple-checkbox>
+        <v-simple-checkbox
+          v-model="item.select"
+          v-if="item.required"
+          disabled
+          color="#727CF5"
+        ></v-simple-checkbox>
       </template>
       <template v-slot:item.price="{ item }">
-        <v-text-field v-model="item.price" hide-details dense solo suffix="nghìn đồng"></v-text-field>
+        <v-text-field
+          :disabled="mode === 'view'"
+          v-model="item.price"
+          hide-details
+          dense
+          solo
+          suffix="nghìn đồng"
+        ></v-text-field>
       </template>
       <template v-slot:item.unit="{ item }">
         <v-select
@@ -148,8 +147,10 @@
     <v-card v-if="select">
       <v-card-subtitle v-if="selects.length === 0"> Chưa có dịch vụ nào được chọn </v-card-subtitle>
       <v-card-subtitle v-if="selects.length != 0">
-        <span class="font-weight-bold" style="color: #727CF5; font-size:18px">Những dịch vụ được chọn : </span>
-        <span style="font-size:16px">{{ selects.map((s) => s.serviceName).join(', ') }}</span>
+        <span class="font-weight-bold" style="color: #727cf5; font-size: 18px"
+          >Những dịch vụ được chọn :
+        </span>
+        <span style="font-size: 16px">{{ selects.map((s) => s.serviceName).join(', ') }}</span>
       </v-card-subtitle>
     </v-card>
     <v-divider />

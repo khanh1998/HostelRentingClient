@@ -273,7 +273,8 @@ export default {
       this.evidences.show = true;
       this.evidences.contract = contract;
       this.evidences.price = contract.deal ? contract.deal.offeredPrice : contract.type.price;
-      this.evidences.totalPrice = this.evidences.price * (contract.type.deposit + 1);
+      const total = this.evidences.price * (contract.type.deposit + 1);
+      this.evidences.totalPrice = total.toFixed(2);
     },
   },
 };

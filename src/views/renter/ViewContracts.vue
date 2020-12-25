@@ -177,7 +177,7 @@
     >
       <v-card v-if="contractOverlay.contract">
         <v-toolbar dark color="primary">
-          <v-btn icon dark @click="contractOverlay.show = false">
+          <v-btn icon dark @click="closePdf">
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title>Hợp đồng</v-toolbar-title>
@@ -431,6 +431,10 @@ export default {
       updateContract: 'user/updateContract',
       sendNotification: 'user/sendNotification',
     }),
+    closePdf() {
+      this.contractOverlay.show = false;
+      this.contractOverlay.contract = null;
+    },
     showFirstPay(contractId) {
       const contract = this.contracts.data.find((c) => c.contractId === contractId);
       this.payReserveFee.contractId = contractId;
