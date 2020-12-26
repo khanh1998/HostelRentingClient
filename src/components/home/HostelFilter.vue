@@ -101,7 +101,7 @@
         <v-expansion-panel-header>
           <template v-slot:default="{ open }">
             <v-row no-gutters class="d-flex flex colum">
-              <span class="text-body-2 header-label">Phạm vi tối đa</span>
+              <span class="text-body-2 header-label">Bán kính tìm kiếm tối đa</span>
               <v-fade-transition leave-absolute>
                 <span v-if="open" key="0" class="text-caption text-muted">
                   Khoảng cách từ điểm tìm kiếm đến điểm thuê
