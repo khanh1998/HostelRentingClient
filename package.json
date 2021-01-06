@@ -12,7 +12,7 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@mdi/font": "^5.8.55",
     "apexcharts": "^3.22.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "blueimp-load-image": "^5.14.0",
     "core-js": "^3.6.5",
     "debug": "^3.1.0",
