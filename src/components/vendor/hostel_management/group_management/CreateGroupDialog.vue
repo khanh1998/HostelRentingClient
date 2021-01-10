@@ -508,7 +508,6 @@
               <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="e1 = 1"
                 >Quay lại</v-btn
               >
-              {{ newTypeValue.error }}
               <v-spacer></v-spacer>
               <v-btn
                 class="btn btn-primary font-nunito mx-2"
@@ -518,7 +517,12 @@
               >
                 Tiếp tục
               </v-btn>
-              <v-btn class="btn btn-primary font-nunito mx-2" @click="nextStep3()">
+              <v-btn
+                class="btn btn-primary font-nunito mx-2"
+                @click="nextStep3()"
+                v-if="getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn'"
+                _disabled="!validWholeHouseData()"
+              >
                 Tiếp tục
               </v-btn>
               <v-btn
@@ -840,6 +844,9 @@ export default {
       }
     },
     nextStep3() {
+      console.log(this.newTypeValue);
+      console.log(this.newGroupValue);
+      console.log(this.validWholeHouseData());
       if (
         this.getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn' &&
         this.validWholeHouseData()
@@ -855,21 +862,26 @@ export default {
     validWholeHouseData() {
       let flat = 0;
       this.newGroupValue.types.forEach((newType) => {
-        if (newType.title.trim() === '' || newType.roomsNumber < 1) {
-          console.log('vao');
+        if (newType.title.trim() === '' || Number(newType.roomsNumber) < 1) {
           flat += 1;
         }
       });
       if (this.newGroupValue.types.length === 0) {
         flat += 1;
       }
-      if (this.newTypeValue.superficiality.trim() === '' || this.newTypeValue.superficiality < 1) {
+      if (
+        this.newTypeValue.superficiality.trim() === '' ||
+        Number(this.newTypeValue.superficiality) < 1
+      ) {
         flat += 1;
       }
-      if (this.newTypeValue.price.trim() === '' || this.newTypeValue.price < 0) {
+      if (this.newTypeValue.price.trim() === '' || Number(this.newTypeValue.price) < 0) {
         flat += 1;
       }
-      if (this.newTypeValue.capacity.trim() === '' || this.newTypeValue.capacity < 1) {
+      if (
+        String(this.newTypeValue.deposit).trim() === '' ||
+        Number(this.newTypeValue.deposit) < 0
+      ) {
         flat += 1;
       }
       return flat === 0;
@@ -1053,11 +1065,54 @@ export default {
           if (this.getCategoryById().categoryName.toLowerCase() === 'nhà cho thuê phòng') {
             this.createTypeWithHostelRoomCategory();
           }
+          if (this.getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn') {
+            this.createTypeWithWholeHouseCategory();
+          }
         } else {
           console.log('not success');
         }
       });
       console.log(reqObj);
+    },
+    createTypeWithWholeHouseCategory() {
+      const { groupId } = this.allGroups[0];
+      let totalRoom = '';
+      this.newGroupValue.types.forEach((item) => {
+        totalRoom += `${item.roomsNumber} ${item.title} | `;
+      });
+      const type = [
+        {
+          capacity: this.newTypeValue.capacity,
+          deposit: this.newTypeValue.deposit,
+          facilities: this.newTypeValue.facilityIds.map((item) => ({
+            facilityId: item,
+          })),
+          newFacilities: this.newTypeValue.newFacilities.map((item) => ({
+            facilityName: item,
+            quantity: 1,
+          })),
+          imageUrls: this.newTypeValue.image,
+          price: this.newTypeValue.price,
+          priceUnit: this.newTypeValue.priceUnit,
+          superficiality: this.newTypeValue.superficiality,
+          title: 'Nhà nguyên căn',
+          description: totalRoom,
+          rooms: [
+            {
+              roomName: '01',
+              available: true,
+            },
+          ],
+        },
+      ];
+      const types = { groupID: groupId, list: type };
+      this.createListHostelType(types).then(() => {
+        if (this.isCreatedTypesStatus) {
+          this.closeDialog();
+        } else {
+          console.log('not type succes');
+        }
+      });
     },
     createTypeWithHostelRoomCategory() {
       const { groupId } = this.allGroups[0];
@@ -1506,23 +1561,9 @@ export default {
       return newType;
     },
   },
-  watch: {
-    // marker: {
-    //   handler() {
-    //     this.updateSelectableAddress();
-    //   },
-    //   deep: true,
-    // },
-    // buildingNo: {
-    //   handler() {
-    //     this.emitNewAddress();
-    //     this.addressString1 = `${this.buildingNo} `;
-    //   },
-    // },
-  },
+  watch: {},
   mounted() {
     this.geolocate();
-    // this.updateSelectableAddress();
   },
   created() {
     this.initUnselectedRules();

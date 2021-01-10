@@ -193,6 +193,7 @@
                   width="200"
                 >
                   <v-checkbox
+                    class="filter font-nunito text-primary"
                     v-model="contractOverlay.agree"
                     label="Tôi đồng ý với các điều khoản trong hợp đồng"
                   ></v-checkbox>

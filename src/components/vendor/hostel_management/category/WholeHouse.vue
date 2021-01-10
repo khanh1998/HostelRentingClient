@@ -271,6 +271,7 @@
         </v-col>
       </v-card>
     </v-col>
+    <v-col cols="12" class="pa-0"> </v-col>
     <v-col cols="12" class="pa-0">
       <v-row class="d-flex flex-wrap ma-0">
         <v-col cols="4" :key="index" v-for="(item, index) in newGroupValue.types">
@@ -283,7 +284,7 @@
                 <v-col cols="8" class="d-flex flex-column pa-0 ml-auto">
                   <v-select
                     v-model="newGroupValue.types[index].title"
-                    _change="setNewGroupValue(newGroupValue)"
+                    @change="setNewGroupValue(newGroupValue)"
                     :items="typeNames"
                     label="Chọn loại phòng"
                     dense
@@ -311,7 +312,7 @@
                     step="1"
                     min="0"
                     :rules="[rules.min(newGroupValue.types[index].roomsNumber)]"
-                    _input="setCreateTypeValue(newTypeValue)"
+                    @input="setNewGroupValue(newGroupValue)"
                   />
                   <v-btn
                     class="btn btn-outline-primary elevation-0 font-nunito ml-2"
@@ -469,12 +470,16 @@ export default {
       setCreateTypeValue: 'vendor/group/setCreateTypeValue',
       insertListRooms: 'vendor/group/createRooms',
       createHostelType: 'vendor/group/createHostelType',
+      setNewGroupValue: 'vendor/group/setNewGroupValue',
     }),
     addNewFacility() {
       if (this.newFacilities && !this.isDuplicate) {
+        console.log(this.newFacilitiesSelectes);
         this.newFacilities.unshift(this.newFacility);
         this.newFacilitiesSelectes.push(this.newFacility);
         this.newFacility = '';
+        this.newTypeValue = [];
+        this.newTypeValue = this.newFacilitiesSelectes;
         this.setCreateTypeValue(this.newTypeValue);
       }
     },
