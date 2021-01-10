@@ -1080,27 +1080,31 @@ export default {
       this.newGroupValue.types.forEach((item) => {
         totalRoom += `${item.roomsNumber} ${item.title} | `;
       });
-      const type = {
-        capacity: this.newTypeValue.capacity,
-        deposit: this.newTypeValue.deposit,
-        facilities: this.newTypeValue.facilityIds.map((item) => ({
-          facilityId: item,
-        })),
-        newFacilities: this.newTypeValue.newFacilities.map((item) => ({
-          facilityName: item,
-          quantity: 1,
-        })),
-        imageUrls: this.newTypeValue.image,
-        price: this.newTypeValue.price,
-        priceUnit: this.newTypeValue.priceUnit,
-        superficiality: this.newTypeValue.superficiality,
-        title: 'Nhà nguyên căn',
-        description: totalRoom,
-        rooms: {
-          roomName: '01',
-          available: true,
+      const type = [
+        {
+          capacity: this.newTypeValue.capacity,
+          deposit: this.newTypeValue.deposit,
+          facilities: this.newTypeValue.facilityIds.map((item) => ({
+            facilityId: item,
+          })),
+          newFacilities: this.newTypeValue.newFacilities.map((item) => ({
+            facilityName: item,
+            quantity: 1,
+          })),
+          imageUrls: this.newTypeValue.image,
+          price: this.newTypeValue.price,
+          priceUnit: this.newTypeValue.priceUnit,
+          superficiality: this.newTypeValue.superficiality,
+          title: 'Nhà nguyên căn',
+          description: totalRoom,
+          rooms: [
+            {
+              roomName: '01',
+              available: true,
+            },
+          ],
         },
-      };
+      ];
       const types = { groupID: groupId, list: type };
       this.createListHostelType(types).then(() => {
         if (this.isCreatedTypesStatus) {
