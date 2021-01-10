@@ -74,7 +74,7 @@ const myState = () => ({
   createType: {
     data: {
       title: '',
-      price: 0,
+      price: '',
       priceUnit: 'triệu',
       superficiality: '',
       deposit: 1,

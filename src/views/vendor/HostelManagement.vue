@@ -339,7 +339,7 @@ export default {
     },
     groups() {
       const allGroups = this.$store.state.vendor.group.groups.data;
-      allGroups.sort((a, b) => this.getRoomsStatus(a).empty - this.getRoomsStatus(b).empty);
+      // allGroups.sort((a, b) => this.getRoomsStatus(a).empty - this.getRoomsStatus(b).empty);
       return allGroups;
     },
     isLoading() {
