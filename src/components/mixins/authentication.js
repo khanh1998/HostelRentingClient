@@ -66,6 +66,12 @@ const authenticationMixins = {
           case 'RENTER':
             role = 'renters';
             break;
+          case 'ADMIN':
+            role = 'admin';
+            break;
+          case 'MANAGER':
+            role = 'manager';
+            break;
           default:
             break;
         }
@@ -86,6 +92,9 @@ const authenticationMixins = {
                 break;
               case 'admin':
                 this.$router.push('/admin');
+                break;
+              case 'manager':
+                this.$route.push('/manager');
                 break;
               default:
                 this.$router.push('/');

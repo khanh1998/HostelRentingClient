@@ -93,7 +93,7 @@
                         color="#727cf5"
                         class="filter font-nunito size-sub-2 checkbox ma-0"
                         hide-details
-                        v-if="getCategoryById().categoryName.toLowerCase() !== 'nhà nguyên căn'"
+                        v-if="newGroupValue.categoryId === 1"
                       ></v-checkbox>
                     </v-col>
                     <v-col cols="12" v-show="check && error.name" class="py-0">
@@ -518,9 +518,9 @@
               >
                 Tiếp tục
               </v-btn>
-              <v-btn class="btn btn-primary font-nunito mx-2" @click="nextStep3()">
+              <!-- <v-btn class="btn btn-primary font-nunito mx-2" @click="nextStep3()">
                 Tiếp tục
-              </v-btn>
+              </v-btn> -->
               <v-btn
                 class="btn btn-outline-primary elevation-0 font-nunito mx-2"
                 @click="closeDialog()"
@@ -1248,6 +1248,9 @@ export default {
     ...mapState({
       groups: (state) => state.vendor.group.groups,
     }),
+    getCategory() {
+      return this.getCategoryById().categoryName;
+    },
     allGroups() {
       return this.$store.state.vendor.group.groups.data;
     },
