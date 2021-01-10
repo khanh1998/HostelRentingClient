@@ -349,7 +349,6 @@
               </v-row>
             </v-card-title>
             <v-data-table
-              show-expand
               :headers="headers"
               :items="allContracts"
               :search="search"
@@ -359,11 +358,14 @@
               @page-count="pageCount = $event"
               :single-expand="singleExpand"
               :expanded.sync="expanded"
+              show-expand
               class="elevation-1 ma-3 mt-0 hidden-md-and-down"
               style="background-color: white"
             >
               <template v-slot:expanded-item="{ item }">
-                <ImageEditor :oldImages="item.images" :mode="'view'" />
+                <v-container>
+                  <ImageEditor :oldImages="item.images" :mode="'view'" />
+                </v-container>
               </template>
               <template v-slot:top>
                 <v-toolbar flat>
@@ -407,10 +409,18 @@
               :page.sync="page"
               :items-per-page="itemsPerPage"
               hide-default-footer
+              :single-expand="singleExpand"
+              :expanded.sync="expanded"
+              show-expand
               @page-count="pageCount = $event"
               class="elevation-1 ma-3 mt-0 hidden-md-and-up"
               style="background-color: white"
             >
+              <template v-slot:expanded-item="{ item }">
+                <v-container>
+                  <ImageEditor :oldImages="item.images" :mode="'view'" />
+                </v-container>
+              </template>
               <template v-slot:item.status="{ item }">
                 <v-chip :color="item.color">{{ item.status.toUpperCase() }}</v-chip>
               </template>
@@ -745,7 +755,7 @@ export default {
         paid: item.paid,
         downPayment: item.downPayment,
         reserve: item.reserve,
-        images: item.images,
+        images: item.images.filter((img) => !img.deleted),
       };
     },
     showCancelContract(item) {

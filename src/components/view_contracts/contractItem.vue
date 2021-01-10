@@ -84,7 +84,7 @@
           <v-dialog v-model="evidences.show" width="400">
             <v-card class="pa-2">
               <v-container>
-                <ImageEditor :oldImages="contract.images" :mode="'view'" />
+                <ImageEditor :oldImages="notDeletedImgs" :mode="'view'" />
               </v-container>
             </v-card>
           </v-dialog>
@@ -732,6 +732,9 @@ export default {
         return true;
       }
       return false;
+    },
+    notDeletedImgs() {
+      return this.contract.images.filter((img) => !img.deleted);
     },
   },
   methods: {

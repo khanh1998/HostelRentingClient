@@ -427,7 +427,8 @@
                         class="pt-10 d-flex justify-center"
                         v-if="
                           selectedEvent.data.status === 'CANCELLED' ||
-                          selectedEvent.data.status === 'DONE'
+                          selectedEvent.data.status === 'DONE' ||
+                          selectedEvent.data.status === 'MISSING'
                         "
                       >
                         <v-col cols="6" md="5" class="pt-5">
@@ -626,7 +627,8 @@
                         class="pt-4 d-flex justify-center"
                         v-if="
                           selectedEvent.data.status === 'CANCELLED' ||
-                          selectedEvent.data.status === 'DONE'
+                          selectedEvent.data.status === 'DONE' ||
+                          selectedEvent.data.status === 'MISSING'
                         "
                       >
                         <v-col cols="6" md="5">
@@ -754,8 +756,8 @@ export default {
     selectedElement: null,
     selectedOpen: false,
     events: [],
-    colors: ['rgb(37, 146, 61)', '#ffbc00', '#fa5c7c', '#9C27B0', '#FF5722'],
-    names: ['Sắp tới', 'Hoàn tất', 'Đã hủy', 'Đã tạo hợp đồng', 'Chưa tạo hợp đồng'],
+    colors: ['#2196F', '#ffbc00', '#fa5c7c', '#9C27B0', '#FF5722', '#795548'],
+    names: ['Sắp tới', 'Hoàn tất', 'Đã hủy', 'Đã tạo hợp đồng', 'Chưa tạo hợp đồng', 'Trễ hẹn'],
     cancelDialog: {
       show: false,
       bookingId: undefined,
@@ -837,38 +839,42 @@ export default {
         const meetTime = new Date(booking.meetTime);
         if (meetTime >= min && meetTime <= max) {
           if (this.status === 'ALL') {
+            const name = this.getEventName(booking);
             events.push({
-              name: this.getEventName(booking),
+              name,
               start: meetTime.getTime(),
               end: meetTime.setMinutes(meetTime.getMinutes() + 30),
-              color: this.getEventColor(booking),
+              color: this.getEventColor({ name }),
               timed: true,
               data: booking,
             });
           } else if (this.status.toUpperCase() === booking.status) {
+            const name = this.getEventName(booking);
             events.push({
-              name: this.getEventName(booking),
+              name,
               start: meetTime.getTime(),
               end: meetTime.setMinutes(meetTime.getMinutes() + 30),
-              color: this.getEventColor(booking),
+              color: this.getEventColor({ name }),
               timed: true,
               data: booking,
             });
           } else if (this.status.toUpperCase() === 'CONTRACT' && booking.contractId) {
+            const name = this.getEventName(booking);
             events.push({
-              name: this.getEventName(booking),
+              name,
               start: meetTime.getTime(),
               end: meetTime.setMinutes(meetTime.getMinutes() + 30),
-              color: this.getEventColor(booking),
+              color: this.getEventColor({ name }),
               timed: true,
               data: booking,
             });
           } else if (this.status.toUpperCase() === 'NONCONTRACT') {
+            const name = this.getEventName(booking);
             events.push({
-              name: this.getEventName(booking),
+              name,
               start: meetTime.getTime(),
               end: meetTime.setMinutes(meetTime.getMinutes() + 30),
-              color: this.getEventColor(booking),
+              color: this.getEventColor({ name }),
               timed: true,
               data: booking,
             });
@@ -891,11 +897,14 @@ export default {
           return this.names[3];
         case 'NONCONTRACT':
           return this.names[4];
+        case 'MISSING':
+          return this.names[5];
         default:
           return null;
       }
     },
     getEventColor(event) {
+      console.log(event);
       switch (event.name) {
         case 'Sắp tới':
           return this.colors[0];
@@ -907,6 +916,8 @@ export default {
           return this.colors[3];
         case 'Chưa tạo hợp đồng':
           return this.colors[4];
+        case 'Trễ hẹn':
+          return this.colors[5];
         default:
           return null;
       }
@@ -973,11 +984,12 @@ export default {
       const events = [];
       for (let i = 0; i < filterData.length; i += 1) {
         const booking = filterData[i];
+        const name = this.getEventName(booking);
         events.push({
-          name: this.getEventName(booking),
+          name,
           start: new Date(booking.meetTime).getTime(),
           end: new Date(booking.meetTime).setMinutes(new Date(booking.meetTime).getMinutes() + 30),
-          color: this.getEventColor(booking),
+          color: this.getEventColor({ name }),
           timed: true,
           data: booking,
         });

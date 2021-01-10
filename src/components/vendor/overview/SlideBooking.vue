@@ -186,7 +186,7 @@
     </span>
     <v-slide-group v-if="allBooking.length > 0" show-arrows class="hidden-sm-and-up">
       <v-slide-item
-        v-for="booking in allBooking"
+        v-for="booking in bookings"
         :key="booking.bookingId"
         v-slot:default="{ active, toggle }"
         class="my-3"
