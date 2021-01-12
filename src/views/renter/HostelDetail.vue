@@ -28,12 +28,10 @@
               {{ group.address.districtName }},
               {{ group.address.provinceName }}
             </h2>
-            <!-- <span class="text-muted font-nunito" style="font-size: 0.9rem">
-              {{ group.address.streetName }}, {{ group.address.wardName }},
-              {{ group.address.districtName }},
-              {{ group.address.provinceName }}
-            </span> -->
-            <div style="width: 100%" class="d-flex flex-wrap mt-3 justify-space-between">
+            <span class="font-nunito text-primary font-weight-bold font-italic">
+              {{ info.title }}
+            </span>
+            <div style="width: 100%" class="d-flex flex-wrap mt-1 justify-space-between">
               <div class="d-flex flex-column">
                 <span
                   class="font-nunito text-body-1 d-flex align-end justify-space-between"

@@ -431,16 +431,6 @@ const actions = {
       commit(mutationTypes.GET_CATEGORIES_FAILURE);
     }
   },
-  async getRealDistances({ commit }) {
-    commit(mutationTypes.GET_REGULATIONS_REQUEST);
-    const url =
-      'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=10.8418271%2C106.7872&destinations=10.828846%2C106.7673|10.844781%2C106.7673&key=AIzaSyClXWKUwMKhh8u8OkGyB0iMLR2eDNULvNE&fbclid=IwAR0P3RMSrpPm5Qj3zI-jXLQogRD4qjj3lb7thlwKTaUDGlh2LKe6ROt60_I'; // eslint-disable-line
-    fetch(url)
-      .then((res) => res.json())
-      .then((res) => {
-        commit(mutationTypes.GET_REAL_DISTANCE_SUCCESS, res);
-      });
-  },
 };
 export default {
   namespaced: true,
