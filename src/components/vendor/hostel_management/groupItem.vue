@@ -26,12 +26,20 @@
       <v-col
         cols="4"
         class="d-flex flex-column justify-center pt-2 pb-1 table-item cursor"
-        @click="managementRooms()"
+        v-if="group.category.categoryName.toLowerCase() !== 'nhà nguyên căn'"
       >
-        <HostelGroupStatistic :group="localGroup" />
+        <HostelGroupStatistic :group="localGroup" @click="managementRooms()"/>
         <span class="font-nunito text-info size-sub-2 ml-auto">
           {{ group.types.length }} <span>loại</span></span
         >
+      </v-col>
+      <v-col
+        cols="4"
+        class="d-flex flex-column justify-center pt-2 pb-1 table-item cursor"
+        v-else
+      >
+        <span class="font-nunito text-info size-sub-2 ml-auto">
+          {{ group.types[0].description }} </span>
       </v-col>
       <v-col cols="3" class="d-flex align-center pt-2 pb-1">
         <span class="font-nunito text-gray size-sub-2"
@@ -43,7 +51,7 @@
         <span class="font-nunito text-gray size-sub-2">{{ group.managerName }}</span>
       </v-col>
       <v-col cols="1" class="d-flex align-center justify-center pt-2 pb-1">
-        <v-btn icon><v-icon small color="#98a6ad">mdi mdi-pencil</v-icon></v-btn>
+        <v-btn icon @click="showUpdateGroupDiaglog = true"><v-icon small color="#98a6ad">mdi mdi-pencil</v-icon></v-btn>
         <v-btn icon><v-icon small color="#98a6ad">mdi mdi-delete</v-icon></v-btn>
       </v-col>
     </div>
@@ -103,6 +111,7 @@
       </v-col>
       <v-col cols="1" class="d-flex align-center justify-center pt-2 pb-1">
         <v-btn icon><v-icon small color="#98a6ad">mdi mdi-pencil</v-icon></v-btn>
+        <!-- <v-btn @click="showWholeHouseDialog = true" icon>a</v-btn> -->
         <v-btn icon><v-icon small color="#98a6ad">mdi mdi-delete</v-icon></v-btn>
       </v-col>
     </div>
@@ -111,19 +120,23 @@
       @close="showTypeManagementdialog = false"
       :group="group"
     />
+    <UpdateGroupDialog :show="showUpdateGroupDiaglog" @close="showUpdateGroupDiaglog = false" :group="group"/>
   </div>
 </template>
 
 <script>
 import HostelGroupStatistic from '../overview/HostelGroupStatistic.vue';
 import TypeManagementDialog from './type_management/TypesManagement.vue';
+import UpdateGroupDialog from './group_management/UpdateGroupDialog.vue';
 
 export default {
   name: 'groupItem',
   props: { group: Object, index: Number },
-  components: { HostelGroupStatistic, TypeManagementDialog },
+  components: { HostelGroupStatistic, TypeManagementDialog, UpdateGroupDialog },
   data: () => ({
     showTypeManagementdialog: false,
+    showWholeHouseDialog: false,
+    showUpdateGroupDiaglog: false,
   }),
   methods: {
     managementRooms() {
@@ -133,6 +146,14 @@ export default {
         query: { hostel: `${this.group.groupId}` },
       });
       window.open(route.href, '_blank');
+    },
+    checkCategoryName(categoryName) {
+      if (categoryName.toLowerCase() === 'nhà cho thuê phòng') {
+        this.showTypeManagementdialog = true;
+      }
+      if (categoryName.toLowerCase() === 'nhà nguyên căn') {
+        this.showWholeHouseDialog = true;
+      }
     },
   },
   computed: {
@@ -145,6 +166,12 @@ export default {
       }
       return false;
     },
+    // checkCategoryNameToShow(categoryName) {
+    //   if (categoryName.toLowerCase() === 'nhà cho thuê phòng') {
+    //     return true;
+    //   }
+    //   return false;
+    // },
     rooms() {
       let rooms = [];
       const { types } = this.$store.state.vendor.group.groups.data.find(

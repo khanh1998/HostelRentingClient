@@ -29,7 +29,7 @@
           <span
             class="font-nunito white--text font-weight-bold"
             style="font-size: 1.125rem !important"
-            >Thêm khu trọ mới
+            >Cập nhật khu trọ: {{group.groupName}}
           </span>
           <v-btn icon @click="closeDialog()" class="mr-4"
             ><v-icon color="rgb(255, 255, 255, 0.75)">close</v-icon></v-btn
@@ -64,8 +64,7 @@
                         dense
                         light
                         hide-details
-                        v-model="newGroupValue.groupName"
-                        @input="setNewGroupValue(newGroupValue)"
+                        v-model="group.groupName"
                       />
                     </v-col>
                     <v-col cols="4" class="d-flex flex-column pb-0">
@@ -73,8 +72,7 @@
                         >Hình thức cho thuê<span class="red--text ml-1">(*)</span></span
                       >
                       <v-select
-                        v-model="newGroupValue.categoryId"
-                        @change="(newGroupValue.types = []), setNewGroupValue(newGroupValue)"
+                        v-model="group.category.categoryId"
                         :items="categories"
                         item-text="categoryName"
                         item-value="categoryId"
@@ -84,29 +82,18 @@
                         solo
                         class="size-sub-2 font-nunito form"
                       ></v-select>
-                      <!-- {{getCategoryById().categoryName.toLowerCase()}} -->
                     </v-col>
                     <v-col cols="3" class="d-flex align-end pb-0">
-                      <!-- <v-checkbox
-                        v-model="newGroupValue.ownerJoin"
-                        @click="setNewGroupValue(newGroupValue)"
+                      <v-checkbox
+                        v-model="group.ownerJoin"
                         label="Chung chủ"
                         color="#727cf5"
                         class="filter font-nunito size-sub-2 checkbox ma-0"
                         hide-details
-                        v-if="getCategoryById().categoryName.toLowerCase() !== 'nhà nguyên căn'"
-                      ></v-checkbox> -->
-                      <!-- <v-checkbox
-                        v-model="newGroupValue.ownerJoin"
-                        @click="setNewGroupValue(newGroupValue)"
-                        label="Chung chủ"
-                        color="#727cf5"
-                        class="filter font-nunito size-sub-2 checkbox ma-0"
-                        hide-details
-                        v-if="newGroupValue.categoryId !== 2"
-                      ></v-checkbox> -->
+                        v-if="group.category.categoryName.toLowerCase() !== 'nhà nguyên căn'"
+                      ></v-checkbox>
                     </v-col>
-                    <v-col cols="12" v-show="check && error.name" class="py-0">
+                    <v-col cols="12" v-show="checkError.errorName" class="py-0">
                       <span class="font-nunito red--text size-caption"
                         >Vui lòng điền tên khu trọ</span
                       >
@@ -120,6 +107,7 @@
                       >
                       <gmap-autocomplete
                         placeholder="Bao gồm số nhà, tên đường, phường, quận, thành phố"
+                        v-model="getAddressFull"
                         @place_changed="setPlace"
                         :options="gmap"
                         :selectFirstOnEnter="true"
@@ -141,9 +129,10 @@
                         class="py-0 form size-sub-2 font-nunito my-0"
                         solo
                         hide-details
-                        v-model="newGroupValue.downPayment"
+                        v-model="group.downPayment"
                         suffix="VNĐ"
-                        @input="inputDownPayment(newGroupValue.downPayment)"
+                        type="number"
+                        @input="inputDownPayment(group.downPayment)"
                       />
                     </v-col>
                     <v-col cols="12" class="d-flex flex-column py-0">
@@ -157,11 +146,11 @@
                       >
                       <div class="d-flex ml-5 justify-center">
                         <v-radio-group
-                          v-model="groupInfo.curfewTime.radiogroup"
+                          v-model="getCurfew.radiogroup"
                           hide-details
                           class="filter my-0"
                           @change="setCurfewtime()"
-                          v-if="showCurfewTime"
+                          v-if="getCurfew.show"
                         >
                           <v-radio
                             label="Giới nghiêm"
@@ -177,11 +166,11 @@
                           ></v-radio>
                         </v-radio-group>
                         <v-radio-group
-                          v-model="groupInfo.curfewTime.radiogroup"
+                          v-model="getCurfew.radiogroup"
                           hide-details
                           class="filter my-0"
                           @change="setCurfewtime()"
-                          v-if="!showCurfewTime"
+                          v-if="!getCurfew.show"
                           row
                         >
                           <v-radio
@@ -198,10 +187,11 @@
                           ></v-radio>
                         </v-radio-group>
                       </div>
-                      <div class="d-flex ml-auto mb-6" v-if="showCurfewTime">
+                      <div class="d-flex ml-auto mb-6" v-if="getCurfew.show">
                         <div class="pt-0 d-flex flex-column mr-2">
                           <v-autocomplete
-                            v-model="newGroupValue.curfewTime.startTime"
+                            :value="getCurfewStartTime"
+                            @change="(event) => updateStartTime(event)"
                             :items="getTimes('00:00', '23:30', 'asc')"
                             label="Mở cổng"
                             class="size9rem font-nunito light-autocomplete my-0 py-0 pr-0"
@@ -215,13 +205,14 @@
                           ></v-autocomplete>
                           <span
                             class="font-nunito red--text size-caption"
-                            v-show="check && error.startTime"
+                            v-show="checkError.errorStartTime"
                             >Vui lòng chọn giờ mở cổng</span
                           >
                         </div>
                         <div cols="4" class="pt-0 d-flex flex-column ml-2">
                           <v-autocomplete
-                            v-model="newGroupValue.curfewTime.endTime"
+                            :value="getCurfewEndTime"
+                            @change="(event) => updateEndTime(event)"
                             :items="getTimes('00:30', '24:00', 'desc')"
                             label="Đóng cổng"
                             class="size9rem font-nunito light-autocomplete my-0 py-0"
@@ -235,15 +226,15 @@
                           ></v-autocomplete>
                           <span
                             class="font-nunito red--text size-caption"
-                            v-show="check && error.endTime"
+                            v-show="checkError.errorEndTime"
                             >Vui lòng chọn giờ đóng cổng</span
                           >
                         </div>
                       </div>
                     </v-col>
-                    <v-col cols="3" class="d-flex flex-column" v-if="gender.length > 0">
+                    <!-- <v-col cols="3" class="d-flex flex-column">
                       <v-select
-                        v-model="ruleGender"
+                        v-model="rulesInfo.ruleGender"
                         :items="gender"
                         item-text="regulationName"
                         item-value="regulationId"
@@ -253,7 +244,7 @@
                         outlined
                         class="size-sub-2 font-nunito dropdownSmall light-autocomplete"
                       ></v-select>
-                    </v-col>
+                    </v-col> -->
                     <v-col cols="12" class="d-flex py-0">
                       <span class="font-nunito size9rem text-primary font-weight-bold mt-5"
                         >Nội quy :</span
@@ -261,7 +252,7 @@
                       <v-col cols="6" class="d-flex flex-column justify-center">
                         <v-autocomplete
                           v-model="ruleSelect"
-                          :items="unselectedRules"
+                          :items="rulesInfo.unselectedRules"
                           label="Tìm kiếm theo tên nội quy có sẵn"
                           item-text="regulationName"
                           item-value="regulationId"
@@ -284,7 +275,7 @@
                         <div class="d-flex">
                           <v-text-field
                             label="Nội quy khác"
-                            v-model="newRule"
+                            v-model="rulesInfo.newRule"
                             solo
                             hide-details
                             class="text-muted size-sub-2 light-text-field font-nunito"
@@ -309,13 +300,13 @@
                       cols="12"
                       class="py-0"
                       v-if="
-                        newGroupValue.regulations.length > 0 ||
-                        newGroupValue.newRegulations.length > 0
+                        rulesInfo.selectedRules.length > 0 ||
+                        rulesInfo.newRegulations.length > 0
                       "
                     >
                       <v-card class="d-flex flex-wrap py-3" outlined>
                         <div
-                          v-for="(item, index) in newGroupValue.newRegulations"
+                          v-for="(item, index) in rulesInfo.newRegulations"
                           v-bind:key="index"
                           class="font-nunito size-sub-3 mx-1 mb-2 py-1 d-flex align-center"
                           style="
@@ -351,7 +342,7 @@
                           </v-hover>
                         </div>
                         <div
-                          v-for="item in newGroupValue.regulations"
+                          v-for="item in rulesInfo.selectedRules"
                           v-bind:key="item.regulationId"
                           class="font-nunito size-sub-3 mx-1 mb-2 py-1 d-flex align-center"
                           style="
@@ -415,6 +406,20 @@
                             </v-tooltip></span
                           >
                           <v-row class="ma-0 mt-5">
+                            <!-- <v-col cols="12" class="d-flex flex-column">
+                              <v-text-field
+                                class="size-sub-2 form light-autocomplete"
+                                color="#727cf5"
+                                label="Tên quản lý"
+                                solo
+                                dense
+                                hide-details
+                                light
+                                v-model="group.managerName"
+                                @input="setNewGroupValue(newGroupValue)"
+                                background-color="#f1f3fa"
+                              />
+                            </v-col> -->
                             <v-col cols="12" class="d-flex flex-column">
                               <v-text-field
                                 class="size-sub-2 form light-autocomplete"
@@ -424,15 +429,14 @@
                                 dense
                                 hide-details
                                 light
-                                v-model="newGroupValue.managerName"
-                                @input="setNewGroupValue(newGroupValue)"
+                                v-model="group.managerName"
                                 background-color="#f1f3fa"
                               />
                             </v-col>
                             <v-col cols="12" class="d-flex flex-column py-0">
                               <span
                                 class="font-nunito red--text size-caption"
-                                v-show="check && error.manageName"
+                                v-show="checkError.errorManagerName"
                                 >Vui lòng điền tên người liên lạc</span
                               >
                             </v-col>
@@ -445,20 +449,33 @@
                                 dense
                                 light
                                 hide-details
-                                v-model="newGroupValue.managerPhone"
-                                @input="setNewGroupValue(newGroupValue)"
+                                v-model="group.managerPhone"
                                 background-color="#f1f3fa"
                               />
                             </v-col>
+                            <!-- <v-col cols="12" class="d-flex flex-column">
+                              <v-text-field
+                                class="size-sub-2 form light-autocomplete"
+                                color="#727cf5"
+                                label="Số điện thoại"
+                                solo
+                                dense
+                                light
+                                hide-details
+                                v-model="group.managerPhone"
+                                @input="setNewGroupValue(newGroupValue)"
+                                background-color="#f1f3fa"
+                              />
+                            </v-col> -->
                             <v-col cols="12" class="d-flex flex-column py-0">
                               <span
                                 class="font-nunito red--text size-caption"
-                                v-show="check && error.managePhone"
+                                v-show="checkError.errorManagerPhone"
                                 >Vui lòng điền số điện thoại người liên lạc</span
                               >
                               <span
                                 class="font-nunito red--text size-caption"
-                                v-show="check && error.validPhone"
+                                v-show="checkError.errorValidPhone"
                                 >Số điện thoại không hợp lệ</span
                               >
                             </v-col>
@@ -470,7 +487,7 @@
                       <v-card outlined min-height="150" max-height="150">
                         <v-col cols="12" class="d-flex flex-column px-5">
                           <span class="field-name font-weight-medium">Ảnh đại diện khu trọ</span>
-                          <AvatarManagement />
+                          <AvatarManagement :imageUrl = "group.imgUrl"/>
                         </v-col>
                       </v-card>
                     </v-col>
@@ -498,12 +515,24 @@
               min-height="430"
               style="box-shadow: none !important"
               v-bind:style="
-                getCategoryById().categoryName.toLowerCase() !== 'nhà nguyên căn'
+                group.category.categoryName.toLowerCase() !== 'nhà nguyên căn'
                   ? 'background-color: #f1f3fa;'
                   : 'background-color: #fff;'
               "
             >
-              <WholeHouseCategory
+              <WholeHouseUpdateCategory
+                :group="group"
+                v-if="group.category.categoryName.toLowerCase() === 'nhà nguyên căn'"
+              />
+              <HostelRoomUpdateCategory
+              :group="group"
+                v-if="group.category.categoryName.toLowerCase() === 'nhà cho thuê phòng'"
+              />
+              <HostelBedUpdateCategory
+              :group="group"
+                v-if="group.category.categoryName.toLowerCase() === 'ký túc xá'"
+              />
+              <!-- <WholeHouseCategory
                 v-if="getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn'"
               />
               <HostelRoomCategory
@@ -511,7 +540,7 @@
               />
               <HostelBedCategory
                 v-if="getCategoryById().categoryName.toLowerCase() === 'ký túc xá'"
-              />
+              /> -->
             </v-card>
             <v-divider></v-divider>
             <div class="d-flex px-4 py-3">
@@ -567,29 +596,6 @@
               >
             </div>
           </v-stepper-content>
-          <!-- <v-stepper-content step="3" class="pa-0 mt-2">
-            <v-card
-              class="overflow-y-auto d-flex flex-column pt-1 pb-3 px-10 my-0"
-              max-height="370"
-              min-height="370"
-              style="box-shadow: none !important"
-            >
-              <RegulationManagement />
-            </v-card>
-            <v-divider></v-divider>
-            <div class="d-flex px-4 py-3">
-              <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="e1 = 2"
-                >Quay lại</v-btn
-              >
-              <v-spacer></v-spacer>
-              <v-btn class="btn btn-primary font-nunito mx-2" @click="e1 = 4"> Tiếp tục </v-btn>
-              <v-btn
-                class="btn btn-outline-primary elevation-0 font-nunito mx-2"
-                @click="closeDialog()"
-                >Đóng</v-btn
-              >
-            </div>
-          </v-stepper-content> -->
           <v-stepper-content step="4" class="pa-0 mt-2">
             <v-card
               class="overflow-y-auto d-flex flex-column pt-1 pb-3 px-10 my-0"
@@ -615,34 +621,6 @@
               >
             </div>
           </v-stepper-content>
-          <!-- <v-stepper-content step="4" class="pa-0 mt-2">
-            <v-card
-              class="overflow-y-auto d-flex flex-column pt-1 pb-3 px-10 my-0"
-              max-height="370"
-              min-height="370"
-              style="box-shadow: none !important"
-            >
-              <AppendixContract />
-              <span>Phụ lục hợp đồng</span>
-          <TextEditor
-                @appendixContent="receiveAppendixContent"
-                :editorContent="downloadedAppendixContract"
-              />
-          </v-card>
-            <v-divider></v-divider>
-            <div class="d-flex px-4 py-3">
-              <v-btn class="btn btn-light elevation-0 font-nunito mx-2" @click="e1 = 4"
-                >Quay lại</v-btn
-              >
-              <v-spacer></v-spacer>
-              <v-btn class="btn btn-primary font-nunito mx-2" @click="insertGroup()"> Lưu </v-btn>
-              <v-btn
-                class="btn btn-outline-primary elevation-0 font-nunito mx-2"
-                @click="closeDialog()"
-                >Đóng</v-btn
-              >
-            </div>
-          </v-stepper-content> -->
         </v-stepper>
       </v-card>
     </v-dialog>
@@ -682,22 +660,22 @@ import { mapActions, mapState } from 'vuex';
 import ServiceManagement from './ServiceManagement.vue';
 import InitSchedule from './InitSchedule.vue';
 import AvatarManagement from './AvatarManagement.vue';
-import WholeHouseCategory from '../category/WholeHouse.vue';
-import HostelRoomCategory from '../category/Hostel_Room.vue';
-import HostelBedCategory from '../category/Hostel_Bed.vue';
+import WholeHouseUpdateCategory from '../category/WholeHouseUpdate.vue';
+import HostelRoomUpdateCategory from '../category/Hostel_RoomUpdate.vue';
+import HostelBedUpdateCategory from '../category/Hostel_BedUpdate.vue';
 // import AppendixContract from './AppendixContract.vue';
 // import TextEditor from '../../contract/TextEditor.vue';
 
 export default {
-  name: 'CreateGroupDialog',
-  props: ['show'],
+  name: 'UpdateGroupDialog',
+  props: ['show', 'group'],
   components: {
     ServiceManagement,
     InitSchedule,
     AvatarManagement,
-    WholeHouseCategory,
-    HostelRoomCategory,
-    HostelBedCategory,
+    WholeHouseUpdateCategory,
+    HostelRoomUpdateCategory,
+    HostelBedUpdateCategory,
     // TextEditor,
     // AppendixContract,
   },
@@ -792,6 +770,35 @@ export default {
     ruleSelect: '',
     unselectedRules: [],
     newRule: '',
+    updateGroupItem: {},
+    // curfew
+    curfewInfo: {
+      radiogroup: 'limit',
+      startTime: '',
+      endTime: '',
+      show: true,
+    },
+    // rules
+    rulesInfo: {
+      unselectedRules: [],
+      selectedRules: [],
+      gender: {},
+      unselectedGender: [],
+      ruleGender: -1,
+      newRegulations: [],
+      newRule: '',
+    },
+    checkError: {
+      errorName: false,
+      errorStartTime: false,
+      errorEndTime: false,
+      errorManagerName: false,
+      errorManagerPhone: false,
+      errorValidPhone: false,
+    },
+    updateData: {
+
+    },
   }),
   methods: {
     ...mapActions({
@@ -806,28 +813,59 @@ export default {
       getAllFacilities: 'renter/common/getAllFacilities1',
       createListHostelType: 'vendor/group/createListHostelType',
     }),
-    setGender() {
-      if (this.ruleGender !== -1) {
-        this.newGroupValue.regulations.push({ regulationId: this.ruleGender });
-        this.setNewGroupValue(this.newGroupValue);
-      }
-    },
     addRule() {
-      this.newGroupValue.regulations.push({ regulationId: this.ruleSelect });
+    //   this.newGroupValue.regulations.push({ regulationId: this.ruleSelect });
+      this.rulesInfo.selectedRules.push({ regulationId: this.ruleSelect });
       this.initUnselectedRules();
     },
     initUnselectedRules() {
       let rules = this.allRules;
-      rules = rules.filter((item) => !item.regulationName.toLowerCase().includes('giới tính'));
-      this.newGroupValue.regulations.forEach((item) => {
+      rules = rules.filter((item) => !item.regulationName.toLowerCase().includes('giới tính') && !item.regulationName.toLowerCase().includes('nam') &&
+      !item.regulationName.toLowerCase().includes('nữ'));
+      // update
+      // set selected
+      this.rulesInfo.selectedRules = this.group.regulations.filter((item) => !item.regulationName.toLowerCase().includes('nam') ||
+      !item.regulationName.toLowerCase().includes('nữ'));
+
+      // set unselected
+      this.rulesInfo.selectedRules.forEach((item) => {
         rules = rules.filter((rule) => rule.regulationId !== item.regulationId);
       });
-      this.unselectedRules = rules;
+      this.rulesInfo.unselectedRules = rules;
+
+      // set selected gender
+      // eslint-disable-next-line prefer-destructuring
+      //   this.rulesInfo.gender = this.group.regulations.filter((item) => item.regulationName.toLowerCase().includes('nam') ||
+      //     item.regulationName.toLowerCase().includes('nữ'))[0];
+      //   this.rulesInfo.ruleGender = this.rulesInfo.gender.regulationId;
+      //   if (this.rulesInfo.gender.regulationName.toLowerCase().trim() === 'giới tính: nam') {
+      //     this.rulesInfo.gender.regulationName = 'Chỉ Nam';
+      //   } else if (this.rulesInfo.gender.regulationName.toLowerCase().trim() === 'giới tính: nữ') {
+      //     this.rulesInfo.gender.regulationName = 'Chỉ Nữ';
+      //   } else {
+      //     this.rulesInfo.gender.regulationName = 'Nam và Nữ';
+      //   }
+      //   console.log(this.rulesInfo.gender.regulationName);
+
+      // set unselected gender
+    //   this.rulesInfo.unselectedGender = this.gender;
+    //   console.log(this.rulesInfo.unselectedGender);
+    //   this.rulesInfo.unselectedGender = this.gender.filter((item) => item.regulationName.toLowerCase().includes('giới tính'));
+    //   this.rulesInfo.unselectedGender = this.rulesInfo.unselectedGender.filter((item) => this.rulesInfo.gender.regulationId !== item.regulationId);
+    //   this.rulesInfo.unselectedGender.forEach((item, index) => {
+    //     if (item.regulationName.toLowerCase().trim() === 'giới tính: nam') {
+    //       this.rulesInfo.unselectedGender[index].regulationName = 'Chỉ Nam';
+    //     } else if (item.regulationName.toLowerCase().trim() === 'giới tính: nữ') {
+    //       this.rulesInfo.unselectedGender[index].regulationName = 'Chỉ Nữ';
+    //     } else {
+    //       this.rulesInfo.unselectedGender[index].regulationName = 'Nam và Nữ';
+    //     }
+    //   });
     },
     addNewRules() {
-      if (this.newRule.trim() !== '' && !this.isDuplicate) {
-        this.newGroupValue.newRegulations.unshift({ regulationName: this.newRule });
-        this.newRule = '';
+      if (this.rulesInfo.newRule.trim() !== '' && !this.isDuplicate) {
+        this.rulesInfo.newRegulations.unshift({ regulationName: this.rulesInfo.newRule });
+        this.rulesInfo.newRule = '';
       }
     },
     getRuleById(id) {
@@ -839,18 +877,42 @@ export default {
     },
     nextStep2() {
       this.check = true;
-      if (
-        // this.getAddress() !== false &&
-        !this.error.name &&
-        !this.error.startTime &&
-        !this.error.endTime &&
-        !this.error.managerName &&
-        !this.error.managerPhone &&
-        !this.error.validPhone
-      ) {
+      const pattern = /^[0]{1}[0-9]{8,10}$/;
+
+      if (this.group.groupName.trim() === '') {
+        this.checkError.errorName = true;
+      } else {
+        this.checkError.errorName = false;
+      }
+      if (this.getCurfew.radiogroup === 'limit' && this.curfewInfo.startTime === null) {
+        this.checkError.errorStartTime = true;
+      } else {
+        this.checkError.errorStartTime = false;
+      }
+      if (this.getCurfew.radiogroup === 'limit' && this.curfewInfo.endTime === null) {
+        this.checkError.errorEndTime = true;
+      } else {
+        this.checkError.errorEndTime = false;
+      }
+      if (this.group.managerPhone === null && this.group.managerName !== null) {
+        this.checkError.errorManagerPhone = true;
+      } else {
+        this.checkError.errorManagerPhone = false;
+      }
+      if (this.group.managerPhone !== null && this.group.managerName === null) {
+        this.checkError.errorManagerName = true;
+      } else {
+        this.checkError.errorManagerName = false;
+      }
+      if (this.group.managerPhone !== null && !pattern.test(this.group.managerPhone)) {
+        this.checkError.errorValidPhone = true;
+      } else {
+        this.checkError.errorValidPhone = false;
+      }
+      if (this.checkError.errorName === false && this.checkError.errorStartTime === false && this.checkError.errorEndTime === false &&
+      this.checkError.errorManagerName === false && this.checkError.errorManagerPhone === false && this.checkError.errorValidPhone === false) {
         this.e1 = 2;
-        console.log(this.newGroupValue);
-        console.log(this.addressObjForApi);
+        console.log('đạt step 1');
       }
     },
     nextStep3() {
@@ -944,12 +1006,16 @@ export default {
       this.$emit('close');
     },
     setCurfewtime() {
-      if (this.groupInfo.curfewTime.radiogroup === 'free') {
-        this.newGroupValue.curfewTime.limit = false;
-        this.showCurfewTime = false;
+    //   console.log(this.curfewInfo);
+    //   console.log(`Radiogroup${this.curfewInfo.radiogroup}`);
+      if (this.curfewInfo.radiogroup === 'free') {
+        this.curfewInfo.show = false;
+        this.curfewInfo.startTime = '';
+        this.curfewInfo.endTime = '';
       } else {
-        this.newGroupValue.curfewTime.limit = true;
-        this.showCurfewTime = true;
+        this.curfewInfo.show = true;
+        this.curfewInfo.startTime = this.getCurfewStartTime;
+        this.curfewInfo.endTime = this.getCurfewEndTime;
       }
     },
     setPlace(place) {
@@ -1273,12 +1339,19 @@ export default {
         });
     },
     removeRegulation(regulationId) {
-      this.newGroupValue.regulations = this.newGroupValue.regulations.filter(
+      this.rulesInfo.selectedRules = this.rulesInfo.selectedRules.filter(
         (item) => item.regulationId !== regulationId,
       );
+      let rules = this.allRules;
+      rules = rules.filter((item) => !item.regulationName.toLowerCase().includes('giới tính') && !item.regulationName.toLowerCase().includes('nam') &&
+      !item.regulationName.toLowerCase().includes('nữ'));
+      this.rulesInfo.selectedRules.forEach((item) => {
+        rules = rules.filter((rule) => rule.regulationId !== item.regulationId);
+      });
+      this.rulesInfo.unselectedRules = rules;
     },
     removeNewRegulation(index) {
-      this.newGroupValue.newRegulations = this.newGroupValue.newRegulations.filter(
+      this.rulesInfo.newRegulations = this.rulesInfo.newRegulations.filter(
         (_, i) => i !== index,
       );
     },
@@ -1308,6 +1381,32 @@ export default {
       const format = price.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
       return format;
     },
+    getCurfewMethod() {
+      if (this.group.curfewTime !== null) {
+        this.curfewInfo.radiogroup = 'limit';
+        this.curfewInfo.startTime = this.getCurfewStartTime;
+        this.curfewInfo.endTime = this.getCurfewEndTime;
+        this.curfewInfo.show = true;
+        return this.curfewInfo;
+      }
+      this.curfewInfo.radiogroup = 'free';
+      this.curfewInfo.startTime = '';
+      this.curfewInfo.endTime = '';
+      this.curfewInfo.show = false;
+      return this.curfewInfo;
+    },
+    // getRules() {
+    //   this.group.regulations.filter;
+    // },
+    updateStartTime(event) {
+      this.curfewInfo.startTime = event;
+    },
+    updateEndTime(event) {
+      this.curfewInfo.endTime = event;
+    },
+    aaa() {
+      console.log(this.group);
+    },
   },
   computed: {
     ...mapState({
@@ -1329,6 +1428,7 @@ export default {
       return this.$store.state.renter.common.rules.data;
     },
     gender() {
+      console.log(this.allRules);
       const genderRule = this.allRules.filter(
         (item) => item.regulationName.toLowerCase().includes('giới tính'), // eslint-disable-line
       ); // eslint-disable-line
@@ -1506,14 +1606,14 @@ export default {
         dupplicateExistRules =
           this.allRules.filter(
             (rule) =>
-              rule.regulationName.trim().toLowerCase() === this.newRule.trim().toLowerCase(), // eslint-disable-line
+              rule.regulationName.trim().toLowerCase() === this.rulesInfo.newRule.trim().toLowerCase(), // eslint-disable-line
           ).length > 0;
       }
-      if (this.newGroupValue.newRegulations.length > 0) {
+      if (this.rulesInfo.newRegulations.length > 0) {
         dupplicateNewRules =
-          this.newGroupValue.newRegulations.filter(
+          this.rulesInfo.newRegulations.filter(
             (rule) =>
-              rule.regulationName.trim().toLowerCase() === this.newRule.trim().toLowerCase(), // eslint-disable-line
+              rule.regulationName.trim().toLowerCase() === this.rulesInfo.newRule.trim().toLowerCase(), // eslint-disable-line
           ).length > 0;
       }
       return dupplicateExistRules || dupplicateNewRules;
@@ -1546,29 +1646,32 @@ export default {
           typeError.price = true;
           flat += 1;
         }
-        // if (type.rooms.length === 0) {
-        //   typeError.rooms = true;
-        //   flat += 1;
-        // } else {
-        //   type.rooms.forEach((room, index) => {
-        //     if (room.roomName.trim() === '') {
-        //       flat += 1;
-        //       typeError.roomNullError.push(index);
-        //     } else if (
-        //       type.rooms.filter(
-        //         (r) => r.roomName.toLowerCase().trim() === room.roomName.toLowerCase(),
-        //       ).length >= 2
-        //     ) {
-        //       flat += 1;
-        //       typeError.roomDupplicateError.push(index);
-        //     }
-        //   });
-        // }
         if (flat > 0) {
           newType.error.push(typeError);
         }
       }
       return newType;
+    },
+    getAddressFull() {
+      return `${this.group.buildingNo} ${this.group.address.streetName}, ${this.group.address.districtName}, ${this.group.address.provinceName}`;
+    },
+    getCurfew() {
+      return this.getCurfewMethod();
+    },
+    getCurfewStartTime() {
+      if (this.group.curfewTime !== null) {
+        return this.group.curfewTime.split('-')[0];
+      }
+      return null;
+    },
+    getCurfewEndTime() {
+      if (this.group.curfewTime !== null) {
+        return this.group.curfewTime.split('-')[1];
+      }
+      return null;
+    },
+    getShowCurfewTime() {
+      return this.getShowCurfewTimeMethod();
     },
   },
   watch: {},
@@ -1577,6 +1680,9 @@ export default {
   },
   created() {
     this.initUnselectedRules();
+    // this.getCurfewMethod();
+    // this.getShowCurfewTimeMethod();
+    // this.getCurfewStartEndTimeMethod();
     const url = 'https://youthhostelstorage.blob.core.windows.net/template/contract_appendix.html';
     this.downloadTemplate(url);
     if (!this.user) {

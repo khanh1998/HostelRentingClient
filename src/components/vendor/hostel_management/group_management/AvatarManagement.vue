@@ -1,5 +1,6 @@
 <template>
   <v-row class="mx-0">
+    <div v-if="imageUrl === null">
     <v-col
       cols="12"
       class="cursor ma-0 mt-2 px-5 d-flex justify-center align-center py-7"
@@ -19,6 +20,28 @@
     >
       <v-icon color="#98a6ad" size="25">mdi-file-image-outline</v-icon>
     </v-col>
+    </div>
+    <div v-if="imageUrl !== null">
+    <v-col
+      cols="12"
+      class="cursor ma-0 mt-2 px-5 d-flex justify-center align-center py-7"
+      style="border: 2px dashed #dee2e6; border-radius: 6px; background-size: cover"
+      @click="openImageUploadDialog"
+      v-bind:style="{ 'background-image': 'url(' + imageUrl + ')' }"
+      v-if="imageUrl !== null"
+    >
+      <v-icon color="#98a6ad" size="25">mdi-file-image-outline</v-icon>
+    </v-col>
+    <v-col
+      cols="12"
+      class="cursor ma-0 mt-2 px-5 d-flex justify-center align-center"
+      style="border: 2px dashed #dee2e6; border-radius: 6px"
+      @click="openImageUploadDialog"
+      v-else
+    >
+      <v-icon color="#98a6ad" size="25">mdi-file-image-outline</v-icon>
+    </v-col>
+    </div>
     <!-- <v-col cols="12" class="ma-0 pa-0 d-flex justify-center">
       <v-img
         :src="images[0].resourceUrl"
@@ -71,6 +94,7 @@ import fileMixins from '@/components//mixins/file';
 
 export default {
   name: 'RegulationManagement',
+  props: { imageUrl: String },
   mixins: [fileMixins, snackBarMixin],
   data: () => ({
     dialog: {
@@ -112,12 +136,19 @@ export default {
       });
       this.uploadFile(fd)
         .then(() => {
-          this.upload.imageUrls = this.listUploadedFiles;
-          this.dialog.show = false;
-          this.showSnackBar('Tải ảnh lên thành công', { color: 'green' });
-          this.images = this.upload.imageUrls.map((image) => ({ resourceUrl: image }));
-          this.newGroup.avatar = this.images[0].resourceUrl;
-          this.setNewGroupValue(this.newGroup);
+          if (this.imageUrl === null) {
+            this.upload.imageUrls = this.listUploadedFiles;
+            this.dialog.show = false;
+            this.showSnackBar('Tải ảnh lên thành công', { color: 'green' });
+            this.images = this.upload.imageUrls.map((image) => ({ resourceUrl: image }));
+            this.newGroup.avatar = this.images[0].resourceUrl;
+            this.setNewGroupValue(this.newGroup);
+          } else {
+            this.dialog.show = false;
+            this.showSnackBar('Tải ảnh lên thành công', { color: 'green' });
+            this.images = this.upload.imageUrls.map((image) => ({ resourceUrl: image }));
+            this.imageUrl = this.images[0].resourceUrl;
+          }
         })
         .catch((error) => {
           console.log(error);

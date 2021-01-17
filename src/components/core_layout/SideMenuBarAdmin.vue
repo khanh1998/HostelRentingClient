@@ -53,7 +53,7 @@
     </div>
     <div tyle="height: 100%" class="hidden-sm-and-up">
       <v-card height="100%" class="d-flex flex-column" rounded="0" v-if="!user.isLoading">
-        <div
+        <!-- <div
           class="d-flex flex-column justify-center align-center"
           style="height: 150px; background: linear-gradient(135deg, #8f75da 0, #727cf5 60%)"
         >
@@ -69,7 +69,7 @@
           <span class="font-nunito size9rem mt-1" style="color: #cedce4">{{
             userData.role.roleName
           }}</span>
-        </div>
+        </div> -->
         <v-expansion-panels accordion>
           <v-expansion-panel v-for="(item, i) in itemsMobile" :key="i">
             <v-expansion-panel-header @click="toTheNextPage(item.link)"
@@ -114,14 +114,14 @@ export default {
     return {
       drawer: true,
       itemsplus: [
-        { title: 'Phòng trọ', icon: 'mdi-home-group', link: '/admin/hostel' },
         { title: 'Thông tin người dùng', icon: 'mdi-calendar-account', link: '/admin/user-information' },
-        { title: 'Phản hồi', icon: 'report', link: '/vendor/report' },
+        { title: 'Phòng trọ', icon: 'mdi-home-group', link: '/admin/hostel' },
+        // { title: 'Phản hồi', icon: 'report', link: '/vendor/report' },
       ],
       itemsMobile: [
-        { title: 'Phòng trọ', icon: 'mdi-home-group', link: '/admin/hostel' },
         { title: 'Thông tin người dùng', icon: 'mdi-calendar-account', link: '/admin/user-information' },
-        { title: 'Phản hồi', icon: 'report', link: '/vendor/report' },
+        { title: 'Phòng trọ', icon: 'mdi-home-group', link: '/admin/hostel' },
+        // { title: 'Phản hồi', icon: 'report', link: '/vendor/report' },
       ],
 
       itemadds: [

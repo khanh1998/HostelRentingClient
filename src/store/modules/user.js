@@ -54,6 +54,18 @@ const myState = () => ({
     error: null,
     success: null,
   },
+  renters: {
+    data: [],
+    isLoading: false,
+    error: null,
+    success: null,
+  },
+  vendors: {
+    data: [],
+    isLoading: false,
+    error: null,
+    success: null,
+  },
 });
 
 const myGetters = {
@@ -204,6 +216,14 @@ const mutationTypes = {
   GET_ROOM_REQUESTS_REQUEST: 'GET_ROOM_REQUESTS_REQUEST',
   GET_ROOM_REQUESTS_SUCCESS: 'GET_ROOM_REQUESTS_SUCCESS',
   GET_ROOM_REQUESTS_FAILURE: 'GET_ROOM_REQUESTS_FAILURE',
+
+  GET_ALLRENTERS_REQUEST: 'GET_ALLRENTERS_REQUEST',
+  GET_ALLRENTERS_SUCCESS: 'GET_ALLRENTERS_SUCCESS',
+  GET_ALLRENTERS_FAILURE: 'GET_ALLRENTERS_FAILURE',
+
+  GET_ALLVENDORS_REQUEST: 'GET_ALLVENDORS_REQUEST',
+  GET_ALLVENDORS_SUCCESS: 'GET_ALLVENDORS_SUCCESS',
+  GET_ALLVENDORS_FAILURE: 'GET_ALLVENDORS_FAILURE',
 };
 const mutations = {
   CREATE_ROOM_REQUEST_REQUEST(state) {
@@ -578,6 +598,36 @@ const mutations = {
     state.requests.error = error;
     state.requests.success = false;
   },
+  GET_ALLRENTERS_REQUEST(state) {
+    state.renters.isLoading = true;
+    state.renters.success = null;
+    state.renters.error = null;
+  },
+  GET_ALLRENTERS_SUCCESS(state, renters) {
+    state.renters.isLoading = false;
+    state.renters.success = true;
+    state.renters.data = renters;
+  },
+  GET_ALLRENTERS_FAILURE(state, error) {
+    state.renters.isLoading = false;
+    state.renters.success = false;
+    state.renters.error = error;
+  },
+  GET_ALLVENDORS_REQUEST(state) {
+    state.vendors.isLoading = true;
+    state.vendors.success = null;
+    state.vendors.error = null;
+  },
+  GET_ALLVENDORS_SUCCESS(state, vendors) {
+    state.vendors.isLoading = false;
+    state.vendors.success = true;
+    state.vendors.data = vendors;
+  },
+  GET_ALLVENDORS_FAILURE(state, error) {
+    state.vendors.isLoading = false;
+    state.vendors.success = false;
+    state.vendors.error = error;
+  },
 };
 
 const actions = {
@@ -687,6 +737,39 @@ const actions = {
       throw new Error('userId, role or user.data null');
     }
   },
+
+  async updateVendorV2({ commit }, newUser) {
+    const { userId } = newUser;
+    const dataUpdate = newUser.data;
+    try {
+      commit(mutationTypes.UPDATE_USER_REQUEST);
+      const res = await window.axios.put(`/api/v1/vendors/${userId}`, dataUpdate);
+      if (res.status === 200) {
+        commit(mutationTypes.UPDATE_USER_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.UPDATE_USER_FAILURE);
+      }
+    } catch (error) {
+      commit(mutationTypes.UPDATE_USER_FAILURE, error);
+    }
+  },
+
+  async updateRenterV2({ commit }, newUser) {
+    const { userId } = newUser;
+    const dataUpdate = newUser.data;
+    try {
+      commit(mutationTypes.UPDATE_USER_REQUEST);
+      const res = await window.axios.put(`/api/v1/renters/${userId}`, dataUpdate);
+      if (res.status === 200) {
+        commit(mutationTypes.UPDATE_USER_SUCCESS, res.data.data);
+      } else {
+        commit(mutationTypes.UPDATE_USER_FAILURE);
+      }
+    } catch (error) {
+      commit(mutationTypes.UPDATE_USER_FAILURE, error);
+    }
+  },
+
   async updateUserFirebaseToken({ commit, state }, firebaseToken) {
     const userId = window.$cookies.get('userId');
     const role = window.$cookies.get('role');
@@ -1232,6 +1315,30 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.UPDATE_FEEDBACK_FAILURE, error);
+    }
+  },
+
+  async getAllRenters({ commit }) {
+    try {
+      commit(mutationTypes.GET_ALLRENTERS_REQUEST);
+      const res = await window.axios.get('/api/v1/renters/renters?sortBy=createdAt&asc=false');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_ALLRENTERS_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_ALLRENTERS_FAILURE, error);
+    }
+  },
+
+  async getAllVendors({ commit }) {
+    try {
+      commit(mutationTypes.GET_ALLVENDORS_REQUEST);
+      const res = await window.axios.get('/api/v1/vendors/vendors?sortBy=createdAt&asc=false');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_ALLVENDORS_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_ALLVENDORS_FAILURE, error);
     }
   },
 };
