@@ -1,839 +1,349 @@
 <template>
-  <div style="overflow-y: auto">
+  <v-row no-gutters class="d-flex justify-center ma-0 pa-0">
     <v-overlay :value="isLoading" absolute>
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <v-dialog width="500" persistent :value="uncheckedReserveFee.length > 0">
-      <UnCheckedReservedFeeContracts :contracts="uncheckedReserveFee"/>
-    </v-dialog>
-    <div v-if="!isLoading">
-      <v-row class="d-flex justify-space-between ma-0 pl-md-13 mt-5 font-nunito">
-        <v-col cols="12" md="1" />
-        <v-col cols="12" md="3" class="py-0 mb-3">
-          <v-card class="pa-3">
-            <div class="d-flex">
-              <span
-                style="letter-spacing: 0.02em; font-weight: 700"
-                class="text-gray font-nunito size9rem mt-2"
-                >KHU TRỌ</span
-              >
-              <!-- <v-spacer/>
-            <div>
-              <v-btn icon>
-                <v-icon color="#727cf5">search</v-icon>
-              </v-btn>
-            </div> -->
-            </div>
-            <v-text-field
-              label="Tìm kiếm khu trọ"
-              v-model="searchQuery"
-              append-icon="search"
-              solo
-              hide-details
-              class="mt-3 text-muted pa-0 size-sub-2 chat mb-7 hidden-sm-and-down"
-              height="35"
-              rounded
-            ></v-text-field>
-            <v-virtual-scroll
-              :items="groupSearch"
-              :item-height="90"
-              height="500px"
-              class="pa-3 hidden-sm-and-down scrollbar"
-              style="background-color: white"
-              id="style-1"
-            >
-              <template v-slot="{ item, index }">
-                <v-list-item :key="item.groupId" class="px-0 d-flex justify-start align-start">
-                  <span class="d-flex flex-column" v-if="groupSearch.length !== 0">
-                    <span
-                      class="font-weight-bold size9rem font-nunito cursor"
-                      @click="clickGroup(item)"
-                      v-bind:style="index % 2 === 0 ? 'color: #727cf5;' : 'color: #39afd1;'"
-                      >{{ item.groupName }}</span
-                    >
-                    <small class="text-gray font-nunito mt-2"
-                      >{{ item.buildingNo }} {{ item.address.streetName }},
-                      {{ item.address.districtName }}, {{ item.address.provinceName }}</small
-                    >
-                  </span>
-                  <!-- <span class="d-flex flex-column" v-if="groupSearch.length === 0">
-                  <span
-                    class="font-weight-bold size9rem font-nunito cursor"
-                    v-bind:style="index % 2 === 0 ? 'color: #727cf5;' : 'color: #39afd1;'"
-                    >Không có khu trọ</span
+    <v-container v-if="!isLoading" class="pa-0 hidden-xs-only">
+      <v-row justify="center" class="ma-0 pa-0">
+        <v-col cols="12" sm="12" md="12" lg="12" xl="11">
+          <v-row class="d-flex align-center ma-0">
+            <v-spacer></v-spacer>
+            <v-col cols="3" class="d-flex align-center">
+              <v-text-field
+                label="Tìm theo tên"
+                v-model="searchQuery"
+                solo
+                hide-details
+                class="text-muted py-1 size-sub-2 light-text-field font-nunito"
+                clearable
+                style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
+              ></v-text-field>
+            </v-col>
+            <!-- <v-menu offset-y left>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="btn-hover px-0"
+                  v-bind="attrs"
+                  v-on="on"
+                  max-width="50"
+                  min-width="50"
+                  style="
+                    background-color: #727cf5 !important;
+                    border-radius: 0.15rem !important;
+                    box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
+                  "
+                  ><v-icon size="15" color="#fff">mdi-sort-ascending</v-icon></v-btn
+                >
+              </template>
+              <v-list>
+                <v-list-item
+                  style="min-height: 20px !important"
+                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                >
+                  <v-list-item-title
+                    class="item-hover font-nunito text-gray size9rem"
+                    @click="sortEmpty = true"
+                    >Phòng trống</v-list-item-title
                   >
-                </span> -->
                 </v-list-item>
-                <!-- <v-list-item class="px-0 d-flex justify-start align-start" v-if="groupSearch.length === 0">
-                <span class="d-flex flex-column">
-                  <span
-                    class="font-weight-bold size9rem font-nunito cursor"
-                    v-bind:style="index % 2 === 0 ? 'color: #727cf5;' : 'color: #39afd1;'"
-                    >Không có khu trọ</span
+                <v-list-item
+                  style="min-height: 20px !important"
+                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                >
+                  <v-list-item-title
+                    class="item-hover font-nunito size9rem text-gray"
+                    @click="sortEmpty = false"
+                    >Phòng đang thuê</v-list-item-title
                   >
-                </span>
-              </v-list-item> -->
-              </template>
-            </v-virtual-scroll>
-            <v-autocomplete
-              :items="groups.data"
-              :filter="customFilter"
-              item-text="groupName"
-              label="Nhà trọ"
-              persistent-hint
-              :style="{
-                borderTopLeftRadius: '0px',
-                borderTopRightRadius: '0px',
-              }"
-              solo
-              filled
-              dense
-              outlined
-              hide-no-data
-              class="text-body-2 hidden-md-and-up mt-3"
-            >
-              <template slot="selection" slot-scope="{ item }">
-                <span class="font-nunito font-weight-medium text-body-2">{{ item.groupName }}</span>
-              </template>
-              <template slot="item" slot-scope="{ item }">
-                <span class="d-flex flex-column" @click="clickGroup(item)">
-                  <span class="font-weight-bold size9rem font-nunito cursor text-primary mt-3">{{
-                    item.groupName
-                  }}</span>
-                  <small class="text-gray font-nunito"
-                    >{{ item.buildingNo }} {{ item.address.streetName }},
-                    {{ item.address.districtName }}, {{ item.address.provinceName }}</small
+                </v-list-item>
+              </v-list>
+            </v-menu> -->
+          </v-row>
+          <v-card class="mt-5 px-5 py-4">
+            <v-row>
+              <div class="d-flex mx-4 py-2" style="width: 100%; border-bottom: 2px solid #eef2f7">
+                <v-col cols="3" class="d-flex align-center">
+                  <span class="font-nunito text-primary size9rem font-weight-bold"
+                    >Tên loại phòng</span
                   >
-                </span>
-              </template>
-            </v-autocomplete>
+                </v-col>
+                <v-col cols="2" class="d-flex align-center">
+                  <span class="font-nunito text-primary font-weight-bold size9rem"
+                    >Chủ trọ</span
+                  >
+                </v-col>
+                <v-col cols="2" class="d-flex align-center">
+                  <span class="font-nunito text-primary font-weight-bold size9rem"
+                    >Số điện thoại</span
+                  >
+                </v-col>
+                <v-col cols="3" class="d-flex r align-center">
+                  <span class="font-nunito text-primary font-weight-bold size9rem"
+                    >Địa chỉ</span
+                  >
+                </v-col>
+                <v-col cols="1" class="d-flex align-center justify-center">
+                  <span class="font-nunito text-primary font-weight-bold size9rem">Trạng thái</span>
+                </v-col>
+                <v-col cols="1" class="d-flex align-center justify-center font-weight-bold">
+                  <span class="font-nunito text-primary size9rem">Thao tác</span>
+                </v-col>
+              </div>
+            </v-row>
+            <v-row class="d-flex flex-column">
+              <itemHostel
+                v-for="(type, index) in displayTypes"
+                v-bind:key="type.typeId"
+                :type="type"
+                :index="index"
+              />
+            </v-row>
           </v-card>
+          <v-row class="d-flex justify-center">
+            <v-pagination
+              class="mt-5"
+              v-model="page"
+              :length="getTotalPage"
+              :total-visible="7"
+              prev-icon="mdi-menu-left"
+              next-icon="mdi-menu-right"
+              color="#727cf5"
+            ></v-pagination>
+          </v-row>
         </v-col>
-        <v-col cols="12" md="7" class="py-0 mb-3">
-          <v-card class="pa-4" v-if="selectedGroup !== null">
-            <v-card-title>
-              <v-spacer></v-spacer>
-              <v-spacer></v-spacer>
-              <v-row no-gutters class="hidden-md-and-down">
-                <v-col cols="9" class="pr-2">
-                  <v-text-field
-                    v-model="search"
-                    append-icon="search"
-                    label="Tìm kiếm"
-                    single-line
-                    height="35"
-                    rounded
-                    hide-details
-                    solo
-                    class="text-muted size-sub-2 chat"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="3">
-                  <!-- <v-menu offset-y left>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn icon class="btn-hover pa-0" v-bind="attrs" v-on="on"
-                        ><v-icon size="20">mdi-sort-ascending</v-icon></v-btn
-                      >
-                    </template>
-                    <v-list>
-                      <v-list-item
-                        style="min-height: 20px !important"
-                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                      >
-                        <v-list-item-title
-                          class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = ''"
-                          >Tất cả</v-list-item-title
-                        >
-                      </v-list-item>
-                      <v-divider />
-                      <v-list-item
-                        style="min-height: 20px !important"
-                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                      >
-                        <v-list-item-title
-                          class="item-hover font-nunito text-gray size9rem"
-                          @click="statusName = 'sắp hết hạn'"
-                          >Sắp hết hạn</v-list-item-title
-                        >
-                      </v-list-item>
-                      <v-divider />
-                      <v-list-item
-                        style="min-height: 20px !important"
-                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                      >
-                        <v-list-item-title
-                          class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = 'đang thuê'"
-                          >Đang thuê</v-list-item-title
-                        >
-                      </v-list-item>
-                      <v-divider />
-                      <v-list-item
-                        style="min-height: 20px !important"
-                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                      >
-                        <v-list-item-title
-                          class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = 'chờ xác nhận'"
-                          >Chờ xác nhận</v-list-item-title
-                        >
-                      </v-list-item>
-                      <v-divider />
-                      <v-list-item
-                        style="min-height: 20px !important"
-                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                      >
-                        <v-list-item-title
-                          class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = 'hết hiệu lực'"
-                          >Hết hiệu lực</v-list-item-title
-                        >
-                      </v-list-item>
-                    </v-list>
-                  </v-menu> -->
-                  <v-menu bottom right>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        outlined
-                        v-bind="attrs"
-                        v-on="on"
-                        class="font-nunito text-subtitle-2 pl-3 pr-1"
-                        color="#727CF5"
-                        dark
-                      >
-                        {{ statusName.toUpperCase() }}
-                        <v-icon right>mdi-menu-down</v-icon>
-                      </v-btn>
-                    </template>
-                    <v-list>
-                      <v-list-item @click="statusName = 'tất cả'">
-                        <v-list-item-title>Tất cả</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item @click="statusName = 'sắp hết hạn'">
-                        <v-list-item-title>Sắp hết hạn</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item @click="statusName = 'đang thuê'">
-                        <v-list-item-title>Đang thuê</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item @click="statusName = 'chờ xác nhận'">
-                        <v-list-item-title>Chờ xác nhận</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item @click="statusName = 'hết hiệu lực'">
-                        <v-list-item-title>Hết hiệu lực</v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </v-col>
-              </v-row>
-              <v-row no-gutters class="hidden-md-and-up">
-                <v-col cols="10">
-                  <v-text-field
-                    v-model="search"
-                    append-icon="search"
-                    label="Tìm kiếm"
-                    single-line
-                    height="35"
-                    rounded
-                    hide-details
-                    solo
-                    class="text-muted size-sub-2 chat"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="2">
-                  <v-menu offset-y left>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn icon class="btn-hover pa-0" v-bind="attrs" v-on="on"
-                        ><v-icon size="20">mdi-sort-ascending</v-icon></v-btn
-                      >
-                    </template>
-                    <v-list>
-                      <v-list-item
-                        style="min-height: 20px !important"
-                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                      >
-                        <v-list-item-title
-                          class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = 'tất cả'"
-                          >Tất cả</v-list-item-title
-                        >
-                      </v-list-item>
-                      <v-divider />
-                      <v-list-item
-                        style="min-height: 20px !important"
-                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                      >
-                        <v-list-item-title
-                          class="item-hover font-nunito text-gray size9rem"
-                          @click="statusName = 'sắp hết hạn'"
-                          >Sắp hết hạn</v-list-item-title
-                        >
-                      </v-list-item>
-                      <v-divider />
-                      <v-list-item
-                        style="min-height: 20px !important"
-                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                      >
-                        <v-list-item-title
-                          class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = 'đang thuê'"
-                          >Đang thuê</v-list-item-title
-                        >
-                      </v-list-item>
-                      <v-divider />
-                      <v-list-item
-                        style="min-height: 20px !important"
-                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                      >
-                        <v-list-item-title
-                          class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = 'chờ xác nhận'"
-                          >Chờ xác nhận</v-list-item-title
-                        >
-                      </v-list-item>
-                      <v-divider />
-                      <v-list-item
-                        style="min-height: 20px !important"
-                        class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                      >
-                        <v-list-item-title
-                          class="item-hover font-nunito size9rem text-gray"
-                          @click="statusName = 'hết hiệu lực'"
-                          >Hết hiệu lực</v-list-item-title
-                        >
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </v-col>
-              </v-row>
-            </v-card-title>
-            <v-data-table
-              :headers="headers"
-              :items="allContracts"
-              :search="search"
-              :page.sync="page"
-              :items-per-page="itemsPerPage"
-              hide-default-footer
-              @page-count="pageCount = $event"
-              class="elevation-1 ma-3 mt-0 hidden-md-and-down"
-              style="background-color: white"
-            >
-              <template v-slot:top>
-                <v-toolbar flat>
-                  <v-toolbar-title>{{ toolbarGroupName }}</v-toolbar-title>
-                  <v-dialog
-                    v-model="dialog"
-                    fullscreen
-                    hide-overlay
-                    transition="dialog-bottom-transition"
-                  >
-                    <v-card v-if="currentContract">
-                      <v-toolbar dark color="#727cf5">
-                        <v-btn icon dark @click="dialog = false">
-                          <v-icon>mdi-close</v-icon>
-                        </v-btn>
-                        <v-toolbar-title>Thông tin hợp đồng</v-toolbar-title>
-                      </v-toolbar>
-                      <div style="height: calc(100vh - 64px); overflow: hidden">
-                        <v-progress-linear
-                          v-model="progressBar.value"
-                          :active="true"
-                          :indeterminate="false"
-                          :query="true"
-                        ></v-progress-linear>
-                        <pdfDocument :url="currentContract.contractUrl" :scale="scale" />
-                      </div>
-                    </v-card>
-                  </v-dialog>
-                </v-toolbar>
-              </template>
-              <template v-slot:item.status="{ item }">
-                <v-icon small :color="item.color" left>fiber_manual_record</v-icon>
-                <span class="size9rem">{{ item.status.toUpperCase() }}</span>
-              </template>
-              <template v-slot:item.actions="{ item }">
-                <v-btn color="#727cf5" @click="findContract(item.contractId)" text>
-                  Chi tiết
-                </v-btn>
-                <v-btn
-                  depressed
-                  icon
-                  v-if="item.statusCode === 'INACTIVE'"
-                  :to="`/vendor/contract?contractId=${item.contractId}&mode=update`"
-                >
-                  <v-icon>create</v-icon>
-                </v-btn>
-              </template>
-              <template v-slot:no-data>
-                <p style="font-size: 18px">Không có hợp đồng</p>
-                <v-btn color="#727cf5" @click="allContracts" class="ma-2" dark> Tải lại </v-btn>
-              </template>
-            </v-data-table>
-            <v-data-table
-              :headers="headersInMobile"
-              :items="allContracts"
-              :search="search"
-              :page.sync="page"
-              :items-per-page="itemsPerPage"
-              hide-default-footer
-              @page-count="pageCount = $event"
-              class="elevation-1 ma-3 mt-0 hidden-md-and-up"
-              style="background-color: white"
-            >
-              <v-dialog
-                v-model="dialog"
-                fullscreen
-                hide-overlay
-                transition="dialog-bottom-transition"
+      </v-row>
+    </v-container>
+    <!-- <v-container v-if="!isLoading" class="pa-0 hidden-sm-and-up">
+      <v-row justify="center" class="ma-0 pa-0">
+        <v-col cols="12" class="d-flex align-center">
+          <span class="page-title">Có {{ groups.length }} khu trọ cần xét duyệt</span>
+          <v-btn
+            class="ml-auto btn-success btn-sm font-nunito white--text"
+            @click="openCreateGroupMobileDialog = true"
+            ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm khu trọ mới</v-btn
+          >
+        </v-col>
+        <v-col cols="12" class="d-flex align-center">
+          <v-text-field
+            v-show="showSearchGroup"
+            label="Tìm theo tên khu trọ"
+            v-model="searchGroupQuery"
+            solo
+            hide-details
+            class="text-muted py-1 size-sub-2 light-text-field font-nunito"
+            clearable
+            @input="changeSearchQuery"
+            style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
+          ></v-text-field>
+          <v-text-field
+            v-show="!showSearchGroup"
+            label="Tìm theo tên quản lý"
+            v-model="searchManagerQuery"
+            solo
+            hide-details
+            class="text-muted py-1 size-sub-2 light-text-field text-field-medium font-nunito"
+            clearable
+            @input="changeSearchQuery"
+            style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
+          ></v-text-field>
+          <v-menu open-on-hover offset-y left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-bind="attrs"
+                v-on="on"
+                elevation="0"
+                height="38"
+                class="font-nunito size9rem btn-dropdown d-flex align-center justify-center px-0"
+                style="
+                  background-color: #727cf5 !important;
+                  border-top-left-radius: 0;
+                  border-bottom-left-radius: 0;
+                  border-top-right-radius: 0.15rem !important;
+                  border-bottom-right-radius: 0.15rem !important;
+                "
+                ><v-icon small color="#fff">search</v-icon>
+                <v-icon small color="#fff">arrow_drop_down</v-icon></v-btn
               >
-                <v-card v-if="currentContract">
-                  <v-toolbar dark color="#727cf5">
-                    <v-btn icon dark @click="dialog = false">
-                      <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                    <v-toolbar-title>Thông tin hợp đồng</v-toolbar-title>
-                  </v-toolbar>
-                  <div style="height: calc(100vh - 64px); overflow: hidden">
-                    <v-progress-linear
-                      v-model="progressBar.value"
-                      :active="true"
-                      :indeterminate="false"
-                      :query="true"
-                    ></v-progress-linear>
-                    <pdfDocument :url="currentContract.contractUrl" :scale="scale" />
-                  </div>
-                </v-card>
-              </v-dialog>
-              <template v-slot:item.status="{ item }">
-                <v-chip :color="item.color">{{ item.status.toUpperCase() }}</v-chip>
-              </template>
-              <template v-slot:item.actions="{ item }">
-                <v-btn color="#727cf5" @click="findContract(item.contractId)" text>
-                  Chi tiết
-                </v-btn>
-                <v-btn
-                  depressed
-                  icon
-                  v-if="item.statusCode === 'INACTIVE'"
-                  :to="`/vendor/contract?contractId=${item.contractId}&mode=update`"
+            </template>
+            <v-list>
+              <v-list-item
+                style="min-height: 20px !important"
+                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                @click="showSearchGroup = true"
+              >
+                <v-list-item-title class="item-hover font-nunito text-gray size9rem"
+                  >Khu trọ</v-list-item-title
                 >
-                  <v-icon>create</v-icon>
-                </v-btn>
-              </template>
-              <template v-slot:no-data>
-                <p style="font-size: 18px">Không có hợp đồng</p>
-                <v-btn color="#727cf5" @click="allContracts" class="ma-2" dark> Tải lại </v-btn>
-              </template>
-            </v-data-table>
-            <div class="text-center pt-2 pb-4">
-              <v-pagination v-model="page" :length="pageCount" color="#727cf5"></v-pagination>
+              </v-list-item>
+              <v-list-item
+                style="min-height: 20px !important"
+                class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
+                @click="showSearchGroup = false"
+              >
+                <v-list-item-title class="item-hover font-nunito size9rem text-gray"
+                  >Quản lý</v-list-item-title
+                >
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-col>
+        <v-col cols="12" v-for="group in display" :key="group.groupId">
+          <v-card class="white d-flex flex-column pa-4">
+            <div class="d-flex align-center">
+              <v-img
+                :src="group.imgUrl"
+                v-if="group.imgUrl"
+                min-height="4rem"
+                min-width="4rem"
+                max-height="4rem"
+                max-width="4rem"
+                :lazy-src="group.imgUrl"
+                style="border-radius: 0.25rem"
+              ></v-img>
+              <v-img
+                src="@/assets/error-no-image.png"
+                v-else
+                min-height="4rem"
+                min-width="4rem"
+                max-height="4rem"
+                max-width="4rem"
+                style="
+                  border-radius: 0.25rem;
+                  box-shadow: 0 0 35px 0 rgba(255, 22, 22, 0.15) !important;
+                "
+              ></v-img>
+              <span class="d-flex flex-column ml-3">
+                <span class="font-nunito text-primary-dark size9rem">{{ group.groupName }}</span>
+                <span class="font-nunito text-gray size-sub-3"
+                  >{{ group.address.streetName }}, {{ group.address.wardName }},
+                  {{ group.address.districtName }}, {{ group.address.provinceName }}</span
+                >
+              </span>
+              <v-icon color="#727cf5" class="ml-3">mdi-chevron-right</v-icon>
             </div>
           </v-card>
-          <v-card class="pa-4 d-flex justify-center" v-if="selectedGroup === null">
-            Chọn khu phòng trọ
-          </v-card>
         </v-col>
-        <v-col cols="12" md="1" />
+        <v-col cols="12" class="d-flex align-center">
+          <v-pagination
+            class="mt-5"
+            v-model="page"
+            :length="getTotalPage"
+            :total-visible="7"
+            prev-icon="mdi-menu-left"
+            next-icon="mdi-menu-right"
+            color="#727cf5"
+          ></v-pagination>
+        </v-col>
       </v-row>
-    </div>
-  </div>
+      <CreateGroupMobileDialog
+        :show="openCreateGroupMobileDialog"
+        @close="openCreateGroupMobileDialog = false"
+      />
+    </v-container> -->
+  </v-row>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import pdfDocument from '../../components/vendor/pdfviewer/PDFDocument.vue';
-import mobileMixin from '../../components/mixins/mobile';
-import UnCheckedReservedFeeContracts from '../../components/view_contracts/UnCheckedReservedFeeContracts.vue';
+import { mapActions, mapState } from 'vuex';
+import snackBarMixin from '@/components/mixins/snackBar';
+import itemHostel from '@/views/admin/HostelItem.vue';
 
 export default {
   name: 'ModerateHostel',
-  mixins: [mobileMixin],
-  components: { pdfDocument, UnCheckedReservedFeeContracts },
+  components: {
+    itemHostel,
+  },
+  mixins: [snackBarMixin],
   data: () => ({
-    // search
-    search: '',
-    // paging
     page: 1,
-    pageCount: 0,
-    itemsPerPage: 7,
-    // dialog show detail
-    dialog: false,
-    showIndex: -1,
-    showItemDetail: {
-      renterName: '',
-      groupName: '',
-      roomName: '',
-      startTime: '',
-      endTime: '',
-      status: '',
-    },
-    // tab in detail
-    tabs: {
-      index: 0,
-    },
-    headers: [
-      {
-        text: 'Người thuê',
-        align: 'start',
-        value: 'renterName',
-      },
-      { text: 'Phòng', value: 'roomName', sortable: false },
-      { text: 'Ngày bắt đầu', value: 'startTime' },
-      { text: 'Ngày hết hạn', value: 'endTime' },
-      { text: 'Trạng thái', value: 'status', sortable: false },
-      { value: 'actions', sortable: false },
-    ],
-    headersInMobile: [
-      {
-        text: 'Người thuê',
-        align: 'start',
-        value: 'renterName',
-        sortable: false,
-      },
-      { text: 'Phòng', value: 'roomName', sortable: false },
-      { text: 'Trạng thái', value: 'status', sortable: false },
-      { value: 'actions', sortable: false },
-    ],
-    currentContract: null,
-    color: undefined,
-    vendor: {},
-    renter: {},
-    school: {},
-    address: {},
-    rules: [],
-    groupName: {},
-    roomName: {},
-    startTime: {},
-    duration: 0,
-    price: 0,
-    deposit: 0,
-    services: [],
-    facilities: [],
-    progressBar: {
-      value: 0,
-    },
-    pdfViewer: {
-      pdf: null,
-      currentPage: 1,
-      zoom: 1,
-      isLoading: false,
-    },
-    selectedGroup: null,
-    toolbarGroupName: null,
+    pageRange: 5,
     searchQuery: '',
-    statusName: 'tất cả',
-    // selectedGroupInMobile: null,
+    showDetailDiaglog: false,
+    itemDetail: null,
   }),
-  // watch: {
-  //   searchInAC(val) {
-  //     return val && val !== this.selectInAC && this.groupSearch();
-  //   },
-  // },
-  methods: {
-    ...mapActions({
-      getContracts: 'user/getContracts',
-      getUser: 'user/getUser',
-      getGroups: 'vendor/group/getGroups',
-    }),
-    ...mapGetters({
-      findContractById: 'user/findContractById',
-    }),
-    updateProgressBar(p) {
-      // console.log(p);
-      this.progressBar.value = Math.ceil(p * 100);
-    },
-    getAvatarTitle(name) {
-      return name.substring(name.lastIndexOf(' ') + 1).substring(0, 1);
-    },
-    getDateByTimestamp(time) {
-      const date = new Date(time);
-      return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
-    },
-    getEndDate(startDate, duration) {
-      const endDate = new Date(startDate);
-      endDate.setMonth(endDate.getMonth() + duration);
-      return endDate.getTime();
-    },
-    getStatus(status, startTime, duration) {
-      let contractStatus = '';
-      let color = 'blue';
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
-      const date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const dateP = Date.parse(date);
-      const endTime = new Date(startTime);
-      endTime.setMonth(endTime.getMonth() + duration + 1);
-      const temp = endTime.getTime();
-      // console.log(`aa${dateP}`);
-      // console.log(`bb${endTime}`);
-      // console.log(`cc${temp}`);
-
-      // switch (status) {
-      //   case 'ACTIVATED':
-      //     contractStatus = 'sắp hết hạn';
-      //     color = 'rgb(244, 128, 36)';
-      //     break;
-      //   default:
-      //     contractStatus = 'hết hiệu lực';
-      //     color = 'rgb(235, 96, 96)';
-      //     break;
-      // }
-      // if (status === 'REVERSED') {
-      //   contractStatus = 'cọc';
-      //   color = 'rgb(235, 84, 36)';
-      // }
-      // if (status === 'ACTIVATED') {
-      //   contractStatus = 'đang thuê';
-      //   color = 'rgb(124, 217, 146)';
-      // }
-      // if (status === 'INACTIVE') {
-      //   contractStatus = 'chờ xác nhận';
-      //   color = 'rgb(247, 228, 99)';
-      // }
-      // contractStatus = 'hết hiệu lực';
-      // color = 'rgb(235, 96, 96)';
-      switch (status) {
-        case 'REVERSED':
-          contractStatus = 'cọc';
-          color = 'rgb(235, 84, 36)';
-          break;
-        case 'ACTIVATED':
-          if (temp >= dateP) {
-            contractStatus = 'sắp hết hạn';
-            color = 'rgb(255,179,2)';
-            break;
-          } else {
-            contractStatus = 'đang thuê';
-            color = 'rgb(86,240,0)';
-            break;
-          }
-        case 'INACTIVE':
-          contractStatus = 'chờ xác nhận';
-          color = 'rgb(45,204,255)';
-          break;
-        default:
-          contractStatus = 'hết hiệu lực';
-          color = 'rgb(158,167,173)';
-          break;
-      }
-      return { contractStatus, color };
-    },
-    getStatusForCompare(status, startTime, duration) {
-      let contractStatus = '';
-      let color = 'blue';
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
-      const date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const dateP = Date.parse(date);
-      const endTime = new Date(startTime);
-      endTime.setMonth(endTime.getMonth() + duration + 1);
-      const temp = endTime.getTime();
-      switch (status) {
-        case 'REVERSED':
-          contractStatus = 'cọc';
-          color = 'rgb(235, 84, 36)';
-          break;
-        case 'ACTIVATED':
-          if (temp >= dateP) {
-            contractStatus = 'sắp hết hạn';
-            color = 'rgb(255,179,2)';
-            break;
-          } else {
-            contractStatus = 'đang thuê';
-            color = 'rgb(86,240,0)';
-            break;
-          }
-        case 'INACTIVE':
-          contractStatus = 'chờ xác nhận';
-          color = 'rgb(45,204,255)';
-          break;
-        default:
-          contractStatus = 'hết hiệu lực';
-          color = 'rgb(158,167,173)';
-          break;
-      }
-      return { contractStatus, color };
-    },
-    findContract(contractId) {
-      // console.log(contractId);
-      const createdContract = this.findContractById()(contractId);
-      this.currentContract = createdContract;
-      this.vendor = createdContract.vendor;
-      this.renter = createdContract.renter;
-      // this.school = createdContract.renter.school;
-      // this.address = createdContract.renter.school.address;
-      // this.rules = createdContract.group.regulations;
-      this.groupName = createdContract.group.groupName;
-      this.roomName = createdContract.room.roomName;
-      // this.startTime = this.getDateByTimestamp(createdContract.startTime);
-      // this.duration = createdContract.duration;
-      this.price = createdContract.type.price;
-      this.deposit = createdContract.type.deposit;
-      // this.services = createdContract.group.services;
-      // this.facilities = createdContract.type.facilities;
-      // console.log(this.contractDetail);
-      // console.log(this.rules);
-      this.dialog = true;
-    },
-    goToNextTab() {
-      this.tabs.index += 1;
-      document.getElementById('contractView').scrollTop = 0;
-    },
-    getIdNumber(time) {
-      return new Date(time).toLocaleDateString('vi-vn');
-    },
-    clickGroup(group) {
-      this.selectedGroup = group.groupName;
-      this.toolbarGroupName = group.groupName;
-    },
-    customFilter(item, queryText) {
-      const textOne = item.groupName.toLowerCase();
-      const searchText = queryText.toLowerCase();
-
-      return textOne.indexOf(searchText) > -1;
-    },
-    groupFilter(status) {
-      console.log(`a${this.allContracts.status}`);
-      console.log(`b${status}`);
-      if (!status) {
-        return this.allContracts;
-      }
-      return this.allContracts.filter((item) => item.status === status);
-    },
-  },
-  created() {
-    this.getUser().then(() => {
-      this.getGroups().then(() => {
-        this.getContracts();
-        // this.searchQuery = this.groups.data[0].groupName;
-        // this.selectedGroupInMobile = this.groups.data[0].groupId;
-      });
-    });
-  },
   computed: {
     isLoading() {
-      const loadingUser = this.$store.state.user.user.isLoading;
-      const loadingContracts = this.$store.state.user.contracts.isLoading;
-      const loadingGroups = this.$store.state.vendor.group.groups.isLoading;
-      // const loadingDeals = this.$store.state.user.deals.isLoading;
-      // const loadingProvinces = this.$store.state.renter.common.provinces.isLoading;
-      return loadingUser || loadingGroups || loadingContracts;
+      const types = this.$store.state.user.types.isLoading;
+      return types;
     },
-    uncheckedReserveFee() {
-      return this.contracts.data.filter(
-        (c) => c.reserved && c.paid === true && c.status === 'INACTIVE',
-      );
+    ...mapState({
+      types: (state) => state.user.types,
+    }),
+    getTotalPage() {
+      return Math.ceil(this.types.data.types.length / this.pageRange);
     },
-    contracts() {
-      return this.$store.state.user.contracts;
-    },
-    groupSearch() {
-      if (!this.searchQuery) {
-        return this.groups.data;
+    displayTypes() {
+      if (this.searchQuery !== null) {
+        return this.getTypes
+          .filter(
+            (item) => item.title.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+          )
+          .sort((value) => (value.active ? 1 : -1))
+          .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
       }
-      return this.groups.data.filter(
-        (item) => item.groupName.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
-      );
+      return this.getTypes.slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
     },
-    allContracts() {
-      if (this.statusName === 'tất cả') {
-        return this.contracts.data
-          .filter((itemFilter) => itemFilter.group.groupName === this.selectedGroup)
-          .map((item) => ({
-            contractId: item.contractId,
-            renterName: item.renter.username,
-            groupName: item.group.groupName,
-            roomName: item.room.roomName,
-            startTime: this.getDateByTimestamp(item.startTime),
-            endTime: this.getDateByTimestamp(this.getEndDate(item.startTime, item.duration)),
-            status: this.getStatus(item.status, item.startTime, item.duration).contractStatus,
-            statusCode: item.status,
-            color: this.getStatus(item.status, item.startTime, item.duration).color,
-            buildingNo: item.group.buildingNo,
-            streetName: item.group.address.streetName,
-            wardName: item.group.address.wardName,
-            districtName: item.group.address.districtName,
-            provinceName: item.group.address.provinceName,
-            contractUrl: item.contractUrl,
-            paid: item.paid,
-            downPayment: item.downPayment,
-            reserve: item.reserve,
-          }));
-      }
-      return this.contracts.data.filter((itemFilter) => itemFilter.group.groupName === this.selectedGroup)
-        .filter((itemFilter2) => this.statusName === this.getStatusForCompare(itemFilter2.status, itemFilter2.startTime, itemFilter2.duration).contractStatus).map((item) => ({
-          contractId: item.contractId,
-          renterName: item.renter.username,
-          groupName: item.group.groupName,
-          roomName: item.room.roomName,
-          startTime: this.getDateByTimestamp(item.startTime),
-          endTime: this.getDateByTimestamp(this.getEndDate(item.startTime, item.duration)),
-          status: this.getStatus(item.status, item.startTime, item.duration).contractStatus,
-          statusCode: item.status,
-          color: this.getStatus(item.status, item.startTime, item.duration).color,
-          buildingNo: item.group.buildingNo,
-          streetName: item.group.address.streetName,
-          wardName: item.group.address.wardName,
-          districtName: item.group.address.districtName,
-          provinceName: item.group.address.provinceName,
-          contractUrl: item.contractUrl,
-          paid: item.paid,
-          downPayment: item.downPayment,
-          reserve: item.reserve,
-        }));
+    getTypes() {
+      return this.types.data.types;
     },
-    items() {
-      return this.rules.map((item) => ({
-        name: item.regulationName,
-        no: item.regulationId,
-        allowed: item.allowed,
-      }));
+  },
+  methods: {
+    ...mapActions({
+      getAllTypes: 'user/getAllTypes',
+    }),
+    closeDetailDialog() {
+      this.showDetailDiaglog = false;
     },
-    groups() {
-      return this.$store.state.vendor.group.groups;
-    },
+  },
+
+  async created() {
+    this.getAllTypes();
   },
 };
 </script>
-<style scoped>
-.font-nunito {
+<style>
+.container {
+  height: 100%;
+}
+.btn-hover:hover {
+  color: #727cf5 !important;
+}
+.light-text-field .v-input__slot {
+  border: 0px solid #dee2e6 !important;
+  background-color: #f1f3fa !important;
+}
+.light-text-field .theme--light.v-icon {
+  color: #6c757d !important;
+}
+.light-text-field.v-text-field.v-text-field--solo .v-input__control {
+  min-height: 38px;
+}
+.light-text-field .v-icon.v-icon {
+  font-size: 20px !important;
+}
+.light-text-field .theme--light.v-label {
+  color: #98a6ad !important;
   font-family: 'Nunito', sans-serif !important;
 }
-.btn-primary {
-  color: #6c757d !important;
-  background-color: #eef2f7 !important;
-  border-color: #727cf5 !important;
-  /* box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important; */
-  border-radius: 0.15rem !important;
-  height: 2.5rem !important;
-  opacity: 1 !important;
-}
-.v-btn-toggle > .v-btn.v-btn {
-  opacity: 1 !important;
-  border-style: none !important;
-}
-.v-btn-toggle > .v-btn.v-btn--active {
-  color: #fff !important;
+.bnt-dropdown .theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
   background-color: #727cf5 !important;
-  box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
-  opacity: 1 !important;
 }
-.scrollbar {
-  overflow-y: scroll;
+.item-menu:hover {
+  background-color: #f8f9fa;
 }
-.force-overflow {
-  min-height: 450px;
+.item-hover:hover {
+  color: #272e37 !important;
 }
-#style-1::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgb(179, 184, 240);
-  border-radius: 10px;
+.v-menu__content {
+  box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
+  background-color: #fff !important;
+  background-clip: padding-box !important;
+  border: 1px solid #e4eaf2 !important;
+  border-radius: 0.25rem !important;
+  color: #6c757d !important;
 }
-
-#style-1::-webkit-scrollbar {
-  width: 10px;
-}
-
-#style-1::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #727cf5;
+</style>
+<style scoped>
+.v-application a:hover {
+  color: #fff !important;
 }
 </style>

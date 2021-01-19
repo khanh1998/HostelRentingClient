@@ -66,6 +66,12 @@ const myState = () => ({
     error: null,
     success: null,
   },
+  types: {
+    data: [],
+    isLoading: false,
+    error: null,
+    success: null,
+  },
 });
 
 const myGetters = {
@@ -224,6 +230,10 @@ const mutationTypes = {
   GET_ALLVENDORS_REQUEST: 'GET_ALLVENDORS_REQUEST',
   GET_ALLVENDORS_SUCCESS: 'GET_ALLVENDORS_SUCCESS',
   GET_ALLVENDORS_FAILURE: 'GET_ALLVENDORS_FAILURE',
+
+  GET_ALLTYPES_REQUEST: 'GET_ALLTYPES_REQUEST',
+  GET_ALLTYPES_SUCCESS: 'GET_ALLTYPES_SUCCESS',
+  GET_ALLTYPES_FAILURE: 'GET_ALLTYPES_FAILURE',
 };
 const mutations = {
   CREATE_ROOM_REQUEST_REQUEST(state) {
@@ -627,6 +637,21 @@ const mutations = {
     state.vendors.isLoading = false;
     state.vendors.success = false;
     state.vendors.error = error;
+  },
+  GET_ALLTYPES_REQUEST(state) {
+    state.types.isLoading = true;
+    state.types.success = null;
+    state.types.error = null;
+  },
+  GET_ALLTYPES_SUCCESS(state, types) {
+    state.types.isLoading = false;
+    state.types.success = true;
+    state.types.data = types;
+  },
+  GET_ALLTYPES_FAILURE(state, error) {
+    state.types.isLoading = false;
+    state.types.success = false;
+    state.types.error = error;
   },
 };
 
@@ -1339,6 +1364,18 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_ALLVENDORS_FAILURE, error);
+    }
+  },
+
+  async getAllTypes({ commit }) {
+    try {
+      commit(mutationTypes.GET_ALLTYPES_REQUEST);
+      const res = await window.axios.get('/api/v1/types/all?&page=1&size=50&asc=false');
+      if (res.status >= 200 && res.status <= 299) {
+        commit(mutationTypes.GET_ALLTYPES_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      commit(mutationTypes.GET_ALLTYPES_FAILURE, error);
     }
   },
 };
