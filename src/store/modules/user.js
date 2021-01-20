@@ -1370,7 +1370,7 @@ const actions = {
   async getAllTypes({ commit }) {
     try {
       commit(mutationTypes.GET_ALLTYPES_REQUEST);
-      const res = await window.axios.get('/api/v1/types/all?&page=1&size=50&asc=false');
+      const res = await window.axios.get('/api/v1/types/all?asc=false&page=1&size=100&sortBy=createdAt');
       if (res.status >= 200 && res.status <= 299) {
         commit(mutationTypes.GET_ALLTYPES_SUCCESS, res.data.data);
       }

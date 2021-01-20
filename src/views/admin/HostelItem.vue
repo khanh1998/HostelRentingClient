@@ -150,18 +150,18 @@
       </v-col>
       <v-col cols="2" class="d-flex align-center pt-2 pb-1">
         <span class="font-nunito text-gray size-sub-2">
-             {{ type.group.vendor.username }}
-             </span>
+          {{ type.group.vendor.username }}
+        </span>
       </v-col>
       <v-col cols="2" class="d-flex align-center pt-2 pb-1">
         <span class="font-nunito text-gray size-sub-2">
-             {{ type.group.vendor.phone }}
-             </span>
+          {{ type.group.vendor.phone }}
+        </span>
       </v-col>
       <v-col cols="3" class="d-flex align-center pt-2 pb-1">
         <span class="font-nunito text-gray size-sub-2">
-          {{ type.group.buildingNo }} {{ type.group.address.streetName}}
-          , {{ type.group.address.wardName}}, {{ type.group.address.districtName}}, {{ type.group.address.provinceName}}
+          {{ type.group.buildingNo }} {{ type.group.address.streetName }} ,
+          {{ type.group.address.wardName }}, {{ type.group.address.districtName }}
         </span>
       </v-col>
       <v-col cols="1" class="d-flex align-center justify-center pt-2 pb-1">
@@ -180,7 +180,7 @@
         >
       </v-col>
     </div>
-    <!-- <v-dialog
+    <v-dialog
       v-model="showDetailDiaglog"
       max-width="880px"
       scrollable
@@ -205,7 +205,7 @@
             border-radius: 0px !important;
           "
         >
-          <v-icon class="ml-4" color="rgb(255, 255, 255, 0.8)">person</v-icon>
+          <v-icon class="ml-4" color="rgb(255, 255, 255, 0.8)">house</v-icon>
 
           <span
             class="font-nunito white--text font-weight-bold"
@@ -217,10 +217,340 @@
           >
         </v-card>
         <v-card class="font-nunito">
-          aaa
+          <!-- detail -->
+          <v-tabs color="#727CF5" left>
+            <v-tab>Khu trọ</v-tab>
+            <v-tab>Loại phòng</v-tab>
+            <v-tab>Dịch vụ</v-tab>
+            <!-- khu trọ -->
+            <v-tab-item>
+              <v-card
+                class="overflow-y-auto d-flex flex-column pb-3 px-10 my-0"
+                max-height="430"
+                min-height="430"
+                style="box-shadow: none !important"
+              >
+                <v-row class="ma-0 d-flex justify-space-between">
+                  <v-col cols="12" class="py-0 pr-md-10">
+                    <v-row class="ma-0">
+                      <v-col cols="5" class="d-flex flex-column pb-0">
+                        <span class="field-name">Tên khu trọ</span>
+                        <v-text-field
+                          class="size-sub-2 font-nunito form"
+                          solo
+                          dense
+                          light
+                          hide-details
+                          readonly
+                          v-model="type.group.groupName"
+                        />
+                      </v-col>
+                      <v-col cols="4" class="d-flex flex-column pb-0">
+                        <span class="field-name font-weight-medium">Hình thức cho thuê</span>
+                        <v-text-field
+                          class="size-sub-2 font-nunito form"
+                          solo
+                          dense
+                          light
+                          hide-details
+                          readonly
+                          v-model="type.group.category.categoryName"
+                        />
+                      </v-col>
+                      <v-col cols="3" class="d-flex align-end pb-0">
+                        <v-checkbox
+                          v-model="type.group.ownerJoin"
+                          label="Chung chủ"
+                          color="#727cf5"
+                          class="filter font-nunito size-sub-2 checkbox ma-0"
+                          hide-details
+                          readonly
+                          v-if="type.group.category.categoryName.toLowerCase() !== 'nhà nguyên căn'"
+                        ></v-checkbox>
+                      </v-col>
+                      <v-col cols="9" class="d-flex flex-column mt-3">
+                        <span class="field-name font-weight-medium">Địa chỉ cho thuê </span>
+                        <v-textarea
+                          class="size-sub-2 font-nunito"
+                          solo
+                          dense
+                          light
+                          readonly
+                          rows="2"
+                          row-height="20"
+                          auto-grow
+                          v-model="getAddress"
+                        />
+                      </v-col>
+                      <v-col cols="3" class="d-flex flex-column mt-3">
+                        <span class="field-name font-weight-medium d-flex align-center font-nunito"
+                          >Số tiền cọc giữ phòng
+                        </span>
+                        <v-text-field
+                          dense
+                          label="Giá tiền"
+                          class="py-0 form size-sub-2 font-nunito my-0"
+                          solo
+                          readonly
+                          v-model="getDownpayment"
+                          suffix="VNĐ"
+                        />
+                      </v-col>
+                      <v-col cols="11" class="d-flex pt-0 pb-0">
+                        <span class="field-name mt-1">Khung giờ đóng cửa</span>
+                        <div class="d-flex ml-5 justify-center">
+                          <v-text-field
+                            dense
+                            class="py-0 form size-sub-2 font-nunito my-0"
+                            style="width: 130px !important"
+                            solo
+                            readonly
+                            value="Tự do"
+                            v-if="type.group.curfewTime === null"
+                          />
+                        </div>
+                        <div class="d-flex ml-auto" v-if="type.group.curfewTime !== null">
+                          <div class="pt-0 d-flex flex-row mr-2">
+                            <span class="field-name mt-2 mr-3">Mở cửa</span>
+                            <v-text-field
+                              dense
+                              label="Mở cửa"
+                              class="py-0 form size-sub-2 font-nunito my-0"
+                              style="width: 130px !important"
+                              solo
+                              readonly
+                              v-model="getStartTime"
+                            />
+                          </div>
+                          <div cols="4" class="pt-0 d-flex flex-row ml-2">
+                            <span class="field-name mt-2 mr-3">Đóng cửa</span>
+                            <v-text-field
+                              dense
+                              label="Đóng cửa"
+                              class="py-0 form size-sub-2 font-nunito my-0"
+                              style="width: 130px !important"
+                              solo
+                              readonly
+                              v-model="getEndTime"
+                            />
+                          </div>
+                        </div>
+                      </v-col>
+                      <v-col cols="12" class="py-0" v-if="type.group.regulations.length > 0">
+                        <span class="field-name font-weight-medium">Nội quy </span>
+                        <v-card class="d-flex flex-wrap py-3 mt-3">
+                          <div
+                            v-for="(item, index) in type.group.regulations"
+                            v-bind:key="index"
+                            class="font-nunito size-sub-3 mx-1 mb-2 py-1 d-flex align-center"
+                            style="
+                              border-radius: 1rem;
+                              border: 1px solid #cccccc;
+                              text-align: center;
+                              position: relative;
+                            "
+                          >
+                            <div>
+                              <span class="mx-2">{{ item.regulationName }}</span>
+                            </div>
+                          </div>
+                        </v-card>
+                      </v-col>
+                      <v-col cols="12" class="py-0" v-if="type.group.regulations.length === 0">
+                        <span class="field-name font-weight-medium">Nội quy </span>
+                        <v-card class="d-flex justify-center py-3 mt-3">
+                          Không có nội quy
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-tab-item>
+            <!-- Loại phòng -->
+            <v-tab-item>
+              <v-card
+                class="overflow-y-auto d-flex flex-column pt-1 pb-3 px-16 my-0"
+                max-height="430"
+                min-height="430"
+                style="box-shadow: none !important"
+                v-bind:style="
+                  type.group.category.categoryName.toLowerCase() !== 'nhà nguyên căn'
+                    ? 'background-color: #f1f3fa;'
+                    : 'background-color: #fff;'
+                "
+              >
+                <WholeHouseViewCategory
+                  :type="type"
+                  v-if="type.group.category.categoryName.toLowerCase() === 'nhà nguyên căn'"
+                />
+                <HostelRoomViewCategory
+                  :type="type"
+                  v-if="type.group.category.categoryName.toLowerCase() === 'nhà cho thuê phòng'"
+                />
+                <HostelBedViewCategory
+                  :type="type"
+                  v-if="type.group.category.categoryName.toLowerCase() === 'ký túc xá'"
+                />
+              </v-card>
+            </v-tab-item>
+            <!-- dịch vụ -->
+            <v-tab-item>
+              <v-card flat>
+                <div class="d-flex flex-column">
+                  <v-row
+                    class="mx-0 mt-4 pr-4"
+                    style="
+                      border-bottom: 2px solid #eef2f7;
+                      border-top: 2px solid #eef2f7;
+                      border-left: 2px solid #eef2f7;
+                      border-right: 2px solid #eef2f7;
+                      max-height: 50px !important;
+                      min-height: 50px !important;
+                    "
+                  >
+                    <v-col
+                      cols="1"
+                      class="d-flex pa-0 align-center justify-center"
+                      style="border-right: 1px solid #eef2f7"
+                    >
+                      <span
+                        class="font-nunito text-black size-sub-3 d-flex flex-column justify-center align-center"
+                        >Bắt buộc
+                      </span>
+                    </v-col>
+                    <v-col
+                      cols="1"
+                      class="d-flex pa-0 align-center justify-center"
+                      style="border-right: 1px solid #eef2f7"
+                    >
+                      <span
+                        class="font-nunito text-black size-sub-3 d-flex flex-column justify-center align-center"
+                        style="width: 50%"
+                        >STT
+                      </span>
+                    </v-col>
+                    <v-col
+                      cols="3"
+                      class="d-flex py-0 align-center justify-center"
+                      style="border-right: 1px solid #eef2f7"
+                    >
+                      <span class="font-nunito text-black size-sub-3">Tên</span>
+                    </v-col>
+                    <v-col
+                      cols="5"
+                      class="d-flex py-0 align-center justify-center"
+                      style="border-right: 1px solid #eef2f7"
+                    >
+                      <span class="font-nunito text-black size-sub-3">Giá</span>
+                    </v-col>
+                    <v-col
+                      cols="2"
+                      class="d-flex py-0 align-center justify-center"
+                    >
+                      <span class="font-nunito text-black size-sub-3">Tần suất</span>
+                    </v-col>
+                  </v-row>
+                  <v-card
+                    max-height="260"
+                    v-if="type.group.services.length > 0"
+                    class="overflow-y-auto d-flex flex-column"
+                  >
+                    <div
+                      :key="index"
+                      v-for="(item, index) in type.group.services"
+                      class="px-0 d-flex justify-start align-start"
+                    >
+                      <v-row
+                        class="mx-0 pa-0 service-item cursor"
+                        style="border-bottom: 1px solid #eef2f7"
+                      >
+                        <v-col
+                          cols="1"
+                          class="d-flex justify-center align-center pa-0"
+                          style="border-right: 1px solid #eef2f7; border-left: 1px solid #eef2f7"
+                        >
+                          <v-checkbox
+                            v-model="item.required"
+                            color="#727cf5"
+                            hide-details
+                            readonly
+                            class="filter my-0 pl-7 d-flex align-center"
+                          ></v-checkbox>
+                        </v-col>
+                        <v-col
+                          cols="1"
+                          class="d-flex justify-center align-center pa-0"
+                          style="border-right: 1px solid #eef2f7; border-left: 1px solid #eef2f7"
+                        >
+                          <span
+                            class="font-nunito text-gray size-sub-3 d-flex flex-column justify-center align-center"
+                            style="width: 40%"
+                            >{{ index + 1 }}
+                          </span>
+                        </v-col>
+                        <v-col
+                          cols="3"
+                          class="d-flex align-start py-2"
+                          style="border-right: 1px solid #eef2f7"
+                        >
+                          <span
+                            class="font-nunito text-gray size-sub-3 my-auto">{{ item.serviceName }}</span
+                          >
+                        </v-col>
+                        <v-col
+                          cols="5"
+                          class="d-flex flex-column py-2 align-start justify-start"
+                          style="border-right: 1px solid #eef2f7"
+                        >
+                            <span
+                                class="font-nunito text-gray size-sub-3 d-flex flex-column justify-center align-center"
+                                v-if="item.price !== -1"
+                                >{{ item.price }} {{item.priceUnit}} {{item.userUnit}}
+                            </span>
+                            <span
+                                class="font-nunito text-gray size-sub-3 d-flex flex-column justify-center align-center"
+                                v-else
+                                >Nhà nước
+                            </span>
+                        </v-col>
+                        <v-col
+                          cols="2"
+                          class="d-flex py-2 align-start justify-center"
+                          style="border-right: 1px solid #eef2f7"
+                        >
+                          <span
+                                class="font-nunito text-gray size-sub-3 d-flex flex-column justify-center align-center"
+                                >{{ item.timeUnit }}
+                            </span>
+                        </v-col>
+                    </v-row>
+                  </div>
+                  </v-card>
+                  <span
+                    v-else
+                    style="
+                      border: 2px dashed #dee2e6;
+                      border-bottom-right-radius: 6px;
+                      border-top: 0px;
+                      border-bottom-left-radius: 6px;
+                      text-align: center;
+                    "
+                    class="pa-5 font-nunito text-primary size9rem"
+                    >Không có dịch vụ nào</span
+                  >
+                </div>
+              </v-card>
+            </v-tab-item>
+          </v-tabs>
+          <v-divider></v-divider>
+          <div class="d-flex px-4 py-3">
+            <v-spacer></v-spacer>
+            <v-btn class="btn btn-primary font-nunito mx-2"> Kích hoạt </v-btn>
+          </div>
         </v-card>
       </v-card>
-    </v-dialog> -->
+    </v-dialog>
     <!-- <v-dialog v-model="showConfirmCensored" persistent max-width="290">
       <v-card>
         <v-card
@@ -320,10 +650,18 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import snackBarMixin from '@/components/mixins/snackBar';
+import WholeHouseViewCategory from '@/views/admin/WholeHouseViewCategory.vue';
+import HostelRoomViewCategory from '@/views/admin/HostelRoomViewCategory.vue';
+import HostelBedViewCategory from '@/views/admin/HostelBedViewCategory.vue';
 
 export default {
   name: 'HostelItem',
   props: { type: Object, index: Number },
+  components: {
+    WholeHouseViewCategory,
+    HostelRoomViewCategory,
+    HostelBedViewCategory,
+  },
   mixins: [snackBarMixin],
   data: () => ({
     page: 1,
@@ -351,6 +689,58 @@ export default {
     ...mapState({
       types: (state) => state.user.types,
     }),
+    getAddress() {
+      // eslint-disable-next-line
+      return `${this.type.group.buildingNo} ${this.type.group.address.streetName}, ${this.type.group.address.wardName}, ${this.type.group.address.districtName}, ${this.type.group.address.provinceName}`;
+    },
+    getDownpayment() {
+      if (`${this.type.group.downPayment}`.includes('.')) {
+        const string = `${this.type.group.downPayment}`.split('.');
+        const a = Math.floor(string[0]);
+        const b = Math.floor(string[1]);
+        if (a === 0) {
+          if (b / 10 > 0) {
+            const b2 = b % 10;
+            const b1 = (b - b2) / 10;
+            if (b1 === 0) {
+              return `${b2}00.000`;
+            }
+            return `${b2}${b1}0.000`;
+          }
+          return `${b}00.000`;
+        }
+        return `${a}.${b}00.000`;
+      }
+      if (!`${this.type.group.downPayment}`.includes('.') && this.type.group.downPayment !== 0) {
+        return `${this.type.group.downPayment}.000.000`;
+      }
+      return this.type.group.downPayment;
+
+      //   if ((`${this.type.group.downPayment}`).include('.') && string[0] === 0) {
+      //     return `${string[1]} trăm`;
+      //   }
+      //   if ((`${this.type.group.downPayment}`).include('.') && string[0] !== 0) {
+      //     return `${string[0]} triệu ${string[1]}`;
+      //   }
+      //   if (!(`${this.type.group.downPayment}`).include('.')) {
+      //     return `${this.type.group.downPayment} triệu`;
+      //   }
+      //   return null;
+    },
+
+    getStartTime() {
+      if (this.type.group.curfewTime !== null) {
+        return this.type.group.curfewTime.split('-')[0];
+      }
+      return null;
+    },
+
+    getEndTime() {
+      if (this.type.group.curfewTime !== null) {
+        return this.type.group.curfewTime.split('-')[1];
+      }
+      return null;
+    },
   },
   methods: {
     ...mapActions({
@@ -414,9 +804,9 @@ export default {
     // },
   },
 
-//   async created() {
-//     this.getAllTypes();
-//   },
+  //   async created() {
+  //     this.getAllTypes();
+  //   },
 };
 </script>
 <style>
@@ -460,6 +850,9 @@ export default {
   border-radius: 0.25rem !important;
   color: #6c757d !important;
 }
+/* .light.v-input textarea {
+    color: #6c757d !important;
+} */
 </style>
 <style scoped>
 .v-application a:hover {

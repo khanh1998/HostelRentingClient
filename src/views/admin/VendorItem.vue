@@ -159,10 +159,10 @@
       <v-col cols="2" class="d-flex align-center justify-center pt-2 pb-1">
         <span class="font-nunito text-gray size-sub-2">
           <v-chip class="ma-2" color="yellow darken-1" text-color="white" v-if="!vendor.censored">
-            Chưa kiểm duyệt
+            Chưa kích hoạt
           </v-chip>
           <v-chip class="ma-2" color="green" text-color="white" v-if="vendor.censored">
-            Đã kiểm duyệt
+            Kích hoạt
           </v-chip>
         </span>
       </v-col>
@@ -520,10 +520,10 @@
                 </v-col>
                 <v-col cols="12" class="d-flex justify-end pr-9 pb-5 pt-5">
                   <v-btn @click="confirmedCensoredVendor()" color="#727CF5" dark v-if="!vendor.censored">
-                    <v-icon left>verified_user</v-icon> Kiểm duyệt
+                    <v-icon left>verified_user</v-icon> Kích hoạt
                   </v-btn>
                   <v-btn @click="unConfirmedCensoredVendor()" color="#727CF5" dark v-if="vendor.censored">
-                    <v-icon left>verified_user</v-icon> Hủy kiểm duyệt
+                    <v-icon left>verified_user</v-icon> Hủy kích hoạt
                   </v-btn>
                 </v-col>
               </v-row>
@@ -1087,7 +1087,7 @@
           <span
             class="font-nunito white--text font-weight-bold"
             style="font-size: 1.125rem !important"
-            >Xác nhận kiểm duyệt
+            >Xác nhận kích hoạt
           </span>
         </v-card>
         <v-card-actions class="d-flex justify-center">
@@ -1110,7 +1110,7 @@
           <span
             class="font-nunito white--text font-weight-bold"
             style="font-size: 1.125rem !important"
-            >Xác nhận hủy kiểm duyệt
+            >Xác nhận hủy kích hoạt
           </span>
         </v-card>
         <v-card-actions class="d-flex justify-center">
