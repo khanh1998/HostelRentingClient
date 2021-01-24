@@ -74,7 +74,7 @@
                       >
                       <v-select
                         v-model="newGroupValue.categoryId"
-                        @change="(newGroupValue.types = []), setNewGroupValue(newGroupValue)"
+                        @change="newGroupValue.types = []; setNewGroupValue(newGroupValue)"
                         :items="categories"
                         item-text="categoryName"
                         item-value="categoryId"
@@ -87,24 +87,16 @@
                       <!-- {{getCategoryById().categoryName.toLowerCase()}} -->
                     </v-col>
                     <v-col cols="3" class="d-flex align-end pb-0">
-                      <!-- <v-checkbox
+                      <v-checkbox
                         v-model="newGroupValue.ownerJoin"
                         @click="setNewGroupValue(newGroupValue)"
                         label="Chung chủ"
                         color="#727cf5"
                         class="filter font-nunito size-sub-2 checkbox ma-0"
                         hide-details
+                        :messages="getCategoryById().categoryName.toLowerCase()"
                         v-if="getCategoryById().categoryName.toLowerCase() !== 'nhà nguyên căn'"
-                      ></v-checkbox> -->
-                      <!-- <v-checkbox
-                        v-model="newGroupValue.ownerJoin"
-                        @click="setNewGroupValue(newGroupValue)"
-                        label="Chung chủ"
-                        color="#727cf5"
-                        class="filter font-nunito size-sub-2 checkbox ma-0"
-                        hide-details
-                        v-if="newGroupValue.categoryId !== 2"
-                      ></v-checkbox> -->
+                      ></v-checkbox>
                     </v-col>
                     <v-col cols="12" v-show="check && error.name" class="py-0">
                       <span class="font-nunito red--text size-caption"
