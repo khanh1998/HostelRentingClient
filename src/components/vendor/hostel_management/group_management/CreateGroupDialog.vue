@@ -932,34 +932,34 @@ export default {
     },
     closeDialog() {
       this.e1 = 1;
-      // const newGroupValueReset = {
-      //   services: [],
-      //   statePrice: [],
-      //   newServices: [],
-      //   avatar: null,
-      //   regulations: [],
-      //   newRegulations: [],
-      //   groupName: '',
-      //   categoryId: null,
-      //   ownerJoin: false,
-      //   curfewTime: {
-      //     limit: false,
-      //     startTime: '',
-      //     endTime: '',
-      //   },
-      //   managerName: null,
-      //   managerPhone: null,
-      //   downPayment: 0,
-      //   buildingNo: '',
-      //   latitude: 0,
-      //   longitude: 0,
-      //   address: null,
-      //   schedules: [],
-      //   appendixContract: null,
-      //   types: [],
-      //   errorHostelRoom: [],
-      // };
-      // this.setNewGroupValue(newGroupValueReset);
+      const reset = {
+        services: [],
+        statePrice: [],
+        newServices: [],
+        avatar: null,
+        regulations: [],
+        newRegulations: [],
+        groupName: '',
+        categoryId: 1,
+        ownerJoin: false,
+        curfewTime: {
+          limit: false,
+          startTime: '',
+          endTime: '',
+        },
+        managerName: null,
+        managerPhone: null,
+        downPayment: 0,
+        buildingNo: '',
+        latitude: 0,
+        longitude: 0,
+        address: null,
+        schedules: [],
+        appendixContract: null,
+        types: [],
+        errorHostelRoom: [],
+      };
+      this.setNewGroupValue(reset);
       this.$emit('close');
     },
     setCurfewtime() {
@@ -1356,6 +1356,40 @@ export default {
       const format = price.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
       return format;
     },
+    prepareData() {
+      this.initUnselectedRules();
+      const url =
+        'https://youthhostelstorage.blob.core.windows.net/template/contract_appendix.html';
+      this.downloadTemplate(url);
+      if (!this.user) {
+        this.getUser().then(() => {
+          this.newGroup.vendorId = this.user.userId;
+        });
+      } else {
+        this.newGroup.vendorId = this.user.userId;
+      }
+      this.getAllCategories().then(() => {
+        this.newGroupValue.categoryId = this.$store.state.renter.filterResult.filter.categories.select;
+      });
+      if (this.allServices.length === 0) {
+        this.getAllServices();
+      }
+      if (this.allRules.length === 0) {
+        this.getAllRules().then(() => {
+          this.initUnselectedRules();
+        });
+      }
+      if (this.allFacilities.length === 0) {
+        console.log('object');
+        this.getAllFacilities();
+      }
+      if (this.provinces.data.length === 0) {
+        this.getProvinces();
+      }
+      if (this.allSchedule.length === 0) {
+        this.getAllSchedule();
+      }
+    },
   },
   computed: {
     ...mapState({
@@ -1569,7 +1603,8 @@ export default {
     },
     newTypeValue() {
       const newType = this.$store.state.vendor.group.createType.data;
-      if (this.getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn') {
+      const category = this.categories.find((item) => item.categoryId === this.newGroupValue.categoryId);
+      if (category && category.categoryName.toLowerCase() === 'nhà nguyên căn') {
         const typeError = {
           deposit: false,
           price: false,
@@ -1620,42 +1655,18 @@ export default {
       return newType;
     },
   },
-  watch: {},
+  watch: {
+    show: (val) => {
+      if (val === true) {
+        // this.prepareData();
+      }
+    },
+  },
   mounted() {
     this.geolocate();
   },
   created() {
-    this.initUnselectedRules();
-    const url = 'https://youthhostelstorage.blob.core.windows.net/template/contract_appendix.html';
-    this.downloadTemplate(url);
-    if (!this.user) {
-      this.getUser().then(() => {
-        this.newGroup.vendorId = this.user.userId;
-      });
-    } else {
-      this.newGroup.vendorId = this.user.userId;
-    }
-    this.getAllCategories().then(() => {
-      this.newGroupValue.categoryId = this.$store.state.renter.filterResult.filter.categories.select;
-    });
-    if (this.allServices.length === 0) {
-      this.getAllServices();
-    }
-    if (this.allRules.length === 0) {
-      this.getAllRules().then(() => {
-        this.initUnselectedRules();
-      });
-    }
-    if (this.allFacilities.length === 0) {
-      console.log('object');
-      this.getAllFacilities();
-    }
-    if (this.provinces.data.length === 0) {
-      this.getProvinces();
-    }
-    if (this.allSchedule.length === 0) {
-      this.getAllSchedule();
-    }
+    this.prepareData();
   },
 };
 </script>
