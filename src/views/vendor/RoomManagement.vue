@@ -157,6 +157,7 @@
                         <v-list-item
                           style="min-height: 20px !important"
                           class="py-2 pl-3 pr-10 d-flex align-center cursor item-menu"
+                          @click="getTypeSelected(item)"
                         >
                           <v-icon color="#6c757d" class="mr-2 item-hover" size="15"
                             >mdi-door-open</v-icon
@@ -246,6 +247,12 @@
       @close="closeTypeManagementDialog()"
       :group="group"
     />
+    <TypeShowInfoDialog
+      :showCreateType="showTypeInfo"
+      @close="closeTypeShowInfoDialog()"
+      :group="group"
+      :type="typeSelected"
+    />
   </v-row>
 </template>
 
@@ -253,10 +260,11 @@
 import { mapActions } from 'vuex';
 import roomItem from '../../components/vendor/hostel_management/room_management/roomItem.vue';
 import TypeManagementDialog from '../../components/vendor/hostel_management/type_management/TypesManagement.vue';
+import TypeShowInfoDialog from '../../components/vendor/hostel_management/type_management/TypeShowInfo.vue';
 
 export default {
   name: 'RoomManagement',
-  components: { roomItem, TypeManagementDialog },
+  components: { roomItem, TypeManagementDialog, TypeShowInfoDialog },
   data: () => ({
     groupSelected: '',
     search: {
@@ -273,6 +281,8 @@ export default {
     },
     showTypeManagementdialog: false,
     showCreateRoomDialog: false,
+    showTypeInfo: false,
+    typeSelected: null,
   }),
   computed: {
     groups() {
@@ -351,6 +361,13 @@ export default {
     closeTypeManagementDialog() {
       this.showTypeManagementdialog = false;
       this.showCreateRoomDialog = false;
+    },
+    closeTypeShowInfoDialog() {
+      this.showTypeInfo = false;
+    },
+    getTypeSelected(type) {
+      this.typeSelected = type;
+      this.showTypeInfo = true;
     },
     getTypeById(typeId) {
       return this.types.find((type) => type.typeId === typeId);
