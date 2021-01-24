@@ -320,6 +320,25 @@ const mutations = {
     state.types.error = error;
   },
 
+  UPDATE_HOSTEL_TYPE_REQUEST(state) {
+    state.types.isLoading = true;
+    state.types.isUpdating = true;
+    state.types.error = null;
+    state.types.success = null;
+  },
+  UPDATE_HOSTEL_TYPE_SUCCESS(state, types) {
+    state.types.data = types;
+    state.types.success = true;
+    state.types.isLoading = false;
+    state.types.isUpdating = false;
+  },
+  UPDATE_HOSTEL_TYPE_FAILURE(state, error) {
+    state.types.error = error;
+    state.types.success = false;
+    state.types.isLoading = false;
+    state.types.isUpdating = false;
+  },
+
   CREATE_ROOMS_REQUEST: (state) => {
     state.creatRooms.isCreating = true;
     state.creatRooms.success = false;
@@ -555,6 +574,23 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.CREATE_ROOMS_FAILURE, error);
+    }
+  },
+  async updateHostelType({ commit }, types) {
+    try {
+      commit(mutationTypes.UPDATE_HOSTEL_TYPE_REQUEST);
+      const { typeId } = types;
+      if (types) {
+        const res = await window.axios.put(`/api/v1/types/${typeId}/active`, types.data);
+        if (res.status === 200) {
+          commit(mutationTypes.UPDATE_HOSTEL_TYPE_SUCCESS, res.data.data);
+        } else {
+          const error = new Error('Update fail');
+          commit(mutationTypes.UPDATE_HOSTEL_TYPE_FAILURE, error);
+        }
+      }
+    } catch (error) {
+      commit(mutationTypes.UPDATE_HOSTEL_TYPE_FAILURE, error);
     }
   },
 };

@@ -7,6 +7,7 @@ import VendorBooking from '../../views/vendor/Booking.vue';
 import VendorSchedule from '../../views/vendor/Schedule.vue';
 import VendorMobileMessage from '../../views/vendor/MessageMobile.vue';
 import CreateContract from '../../views/vendor/CreateContract.vue';
+import UserVendor from '../../views/vendor/UserVendor.vue';
 import ViewContractVendor from '../../views/vendor/ViewContractVendor.vue';
 
 const routes = [
@@ -14,6 +15,12 @@ const routes = [
     path: '/vendor',
     component: VendorView,
     children: [
+      {
+        path: 'uservendor',
+        name: 'UserVendor',
+        component: UserVendor,
+        meta: { requiresAuth: true, is_vendor: true },
+      },
       {
         path: 'overview',
         name: 'Overview',

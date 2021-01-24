@@ -546,12 +546,13 @@
           <v-divider></v-divider>
           <div class="d-flex px-4 py-3">
             <v-spacer></v-spacer>
-            <v-btn class="btn btn-primary font-nunito mx-2"> Kích hoạt </v-btn>
+            <v-btn class="btn btn-primary font-nunito mx-2" @click="confirmedActiveType()" v-if="!type.active"> Kích hoạt </v-btn>
+            <v-btn class="btn btn-primary font-nunito mx-2" @click="confirmedInActiveType()" v-else> Hủy kích hoạt </v-btn>
           </div>
         </v-card>
       </v-card>
     </v-dialog>
-    <!-- <v-dialog v-model="showConfirmCensored" persistent max-width="290">
+    <v-dialog v-model="showConfirmCensored" persistent max-width="290">
       <v-card>
         <v-card
           class="d-flex px-4 py-3 align-center ma-0 justify-center main-bg"
@@ -565,12 +566,12 @@
           <span
             class="font-nunito white--text font-weight-bold"
             style="font-size: 1.125rem !important"
-            >Xác nhận kiểm duyệt
+            >Xác nhận kích hoạt
           </span>
         </v-card>
         <v-card-actions class="d-flex justify-center">
-          <v-btn color="grey darken-1" text @click="closeConfirmCensoredDialog()"> Hủy </v-btn>
-          <v-btn color="#727CF5" text @click="censoredVendor()"> Đồng ý </v-btn>
+          <v-btn color="grey darken-1" text @click="closeConfirmActiveType()"> Hủy </v-btn>
+          <v-btn color="#727CF5" text @click="activeThisType()"> Đồng ý </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -588,64 +589,16 @@
           <span
             class="font-nunito white--text font-weight-bold"
             style="font-size: 1.125rem !important"
-            >Xác nhận hủy kiểm duyệt
+            >Xác nhận hủy kích hoạt
           </span>
         </v-card>
         <v-card-actions class="d-flex justify-center">
-          <v-btn color="grey darken-1" text @click="closeUnconfirmCensoredDialog()"> Hủy </v-btn>
-          <v-btn color="#727CF5" text @click="unCensoredVendor()"> Đồng ý </v-btn>
+          <v-btn color="grey darken-1" text @click="closeConfirmInActiveType()"> Hủy </v-btn>
+          <v-btn color="#727CF5" text @click="inActiveThisType()"> Đồng ý </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="showBlockDiaglog" persistent max-width="290">
-      <v-card>
-        <v-card
-          class="d-flex px-4 py-3 align-center ma-0 justify-center main-bg"
-          style="
-            border-color: rgb(255, 255, 255);
-            box-shadow: rgba(154, 161, 171, 0.15) 0px 0px 35px 0px !important;
-            border-radius: 0px !important;
-          "
-        >
-          <v-icon left color="rgb(255, 255, 255, 0.8)">block</v-icon>
-          <span
-            class="font-nunito white--text font-weight-bold"
-            style="font-size: 1.125rem !important"
-            >Xác nhận khóa tài khoản
-          </span>
-        </v-card>
-        <v-card-text class="font-nunito d-flex justify-center font-weight-bold mt-4" style="font-size: 1.125rem !important">{{vendor.username}}</v-card-text>
-        <v-card-actions class="d-flex justify-center">
-          <v-btn color="grey lighten-1" dark @click="closeConfirmBlockedDialog()"> Hủy </v-btn>
-          <v-btn color="#727CF5" dark @click="blockedVendor()"> Đồng ý </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="showCancelBlockDiaglog" persistent max-width="300">
-      <v-card>
-        <v-card
-          class="d-flex px-4 py-3 align-center ma-0 justify-center main-bg"
-          style="
-            border-color: rgb(255, 255, 255);
-            box-shadow: rgba(154, 161, 171, 0.15) 0px 0px 35px 0px !important;
-            border-radius: 0px !important;
-          "
-        >
-          <v-icon left color="rgb(255, 255, 255, 0.8)">block</v-icon>
-          <span
-            class="font-nunito white--text font-weight-bold"
-            style="font-size: 1.125rem !important"
-            >Xác nhận mở khóa tài khoản
-          </span>
-        </v-card>
-        <v-card-text class="font-nunito d-flex justify-center font-weight-bold mt-4" style="font-size: 1.125rem !important">{{vendor.username}}</v-card-text>
-        <v-card-actions class="d-flex justify-center">
-          <v-btn color="grey lighten-1" dark @click="closeConfirmUnblockedDialog()"> Hủy </v-btn>
-          <v-btn color="#727CF5" dark @click="unBlockedVendor()"> Đồng ý </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
-  </div>
+</div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';
@@ -671,14 +624,12 @@ export default {
     showDetailDiaglog: false,
     showConfirmCensored: false,
     showUnconfirmCensored: false,
-    showBlockDiaglog: false,
-    showCancelBlockDiaglog: false,
-    newUser: {
-      userId: null,
+    newType: {
+      typeId: null,
       data: {
-        blocked: false,
-        censored: false,
+        activate: false,
       },
+
     },
   }),
   computed: {
@@ -745,26 +696,40 @@ export default {
   methods: {
     ...mapActions({
       getAllTypes: 'user/getAllTypes',
-      updateUser: 'user/updateVendorV2',
+      activeType: 'vendor/group/updateHostelType',
     }),
     closeDetailDialog() {
       this.showDetailDiaglog = false;
     },
-    // censoredVendor() {
-    //   this.newUser.data.blocked = this.vendor.blocked;
-    //   this.newUser.data.censored = true;
-    //   this.newUser.userId = this.vendor.userId;
-    //   this.updateUser(this.newUser).then(() => {
-    //     this.showConfirmCensored = false;
-    //     this.showDetailDiaglog = false;
-    //   });
-    // },
-    // confirmedCensoredVendor() {
-    //   this.showConfirmCensored = true;
-    // },
-    // closeConfirmCensoredDialog() {
-    //   this.showConfirmCensored = false;
-    // },
+    activeThisType() {
+      this.newType.data.activate = true;
+      this.newType.typeId = this.type.typeId;
+      this.activeType(this.newType).then(() => {
+        this.showConfirmCensored = false;
+        this.showDetailDiaglog = false;
+      });
+    },
+    confirmedActiveType() {
+      this.showConfirmCensored = true;
+    },
+    closeConfirmActiveType() {
+      this.showConfirmCensored = false;
+    },
+    inActiveThisType() {
+      this.newType.data.activate = false;
+      this.newType.typeId = this.type.typeId;
+      this.activeType(this.newType).then(() => {
+        this.showUnconfirmCensored = false;
+        this.showDetailDiaglog = false;
+      });
+    },
+    confirmedInActiveType() {
+      this.showUnconfirmCensored = true;
+    },
+    closeConfirmInActiveType() {
+      this.showUnconfirmCensored = false;
+    },
+
     // unCensoredVendor() {
     //   this.newUser.data.blocked = this.vendor.blocked;
     //   this.newUser.data.censored = false;
@@ -779,28 +744,6 @@ export default {
     // },
     // closeUnconfirmCensoredDialog() {
     //   this.showUnconfirmCensored = false;
-    // },
-    // blockedVendor() {
-    //   this.newUser.data.blocked = true;
-    //   this.newUser.data.censored = this.vendor.censored;
-    //   this.newUser.userId = this.vendor.userId;
-    //   this.updateUser(this.newUser).then(() => {
-    //     this.showBlockDiaglog = false;
-    //   });
-    // },
-    // closeConfirmBlockedDialog() {
-    //   this.showBlockDiaglog = false;
-    // },
-    // unBlockedVendor() {
-    //   this.newUser.data.blocked = false;
-    //   this.newUser.data.censored = this.vendor.censored;
-    //   this.newUser.userId = this.vendor.userId;
-    //   this.updateUser(this.newUser).then(() => {
-    //     this.showCancelBlockDiaglog = false;
-    //   });
-    // },
-    // closeConfirmUnblockedDialog() {
-    //   this.showCancelBlockDiaglog = false;
     // },
   },
 

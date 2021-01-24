@@ -60,6 +60,7 @@
                 <v-btn
                   class="btn-warning btn-sm font-nunito white--text"
                   @click="(showTypeManagementdialog = true), (showCreateRoomDialog = null)"
+                  v-if="group.category.categoryName.toLowerCase() !== 'nhà nguyên căn'"
                   ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm loại</v-btn
                 >
               </v-col>
@@ -221,6 +222,7 @@
               <v-col cols="5" class="d-flex justify-end">
                 <v-btn
                   class="btn-danger btn-sm font-nunito white--text"
+                  v-if="group.category.categoryName.toLowerCase() !== 'nhà nguyên căn'"
                   @click="(showTypeManagementdialog = false), (showCreateRoomDialog = true)"
                   ><v-icon small class="mr-1">mdi mdi-plus</v-icon>Thêm phòng</v-btn
                 >

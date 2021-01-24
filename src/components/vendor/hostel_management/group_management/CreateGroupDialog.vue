@@ -523,7 +523,7 @@
                 class="btn btn-primary font-nunito mx-2"
                 :disabled="newGroupValue.errorHostelRoom.length > 0"
                 @click="nextStep3()"
-                v-if="getCategoryById().categoryName.toLowerCase() === 'nhà cho thuê phòng'"
+                v-if="getCategoryById().categoryName.toLowerCase() !== 'nhà nguyên căn'"
               >
                 Tiếp tục
               </v-btn>
@@ -535,6 +535,14 @@
               >
                 Tiếp tục
               </v-btn>
+              <!-- <v-btn
+                class="btn btn-primary font-nunito mx-2"
+                :disabled="newGroupValue.errorHostelRoom.length > 0"
+                @click="nextStep3()"
+                v-if="getCategoryById().categoryName.toLowerCase() === 'ký túc xá'"
+              >
+                Tiếp tục
+              </v-btn> -->
               <v-btn
                 class="btn btn-outline-primary elevation-0 font-nunito mx-2"
                 @click="closeDialog()"
@@ -867,6 +875,11 @@ export default {
         this.newGroupValue.errorHostelRoom.length === 0
       ) {
         this.e1 = 3;
+      } else if (
+        this.getCategoryById().categoryName.toLowerCase() === 'ký túc xá' &&
+        this.newGroupValue.errorHostelRoom.length === 0
+      ) {
+        this.e1 = 3;
       }
     },
     validWholeHouseData() {
@@ -919,28 +932,34 @@ export default {
     },
     closeDialog() {
       this.e1 = 1;
-      this.newGroupValue = {
-        services: [],
-        avatar: null,
-        regulation: [],
-        newRegulations: [],
-        groupName: '',
-        categoryId: null,
-        ownerJoin: false,
-        curfewTime: {
-          limit: false,
-          startTime: '',
-          endTime: '',
-        },
-        managerName: null,
-        managerPhone: null,
-        downPayment: 0,
-        buildingNo: '',
-        latitude: 0,
-        longitude: 0,
-        address: null,
-        schedules: [],
-      };
+      // const newGroupValueReset = {
+      //   services: [],
+      //   statePrice: [],
+      //   newServices: [],
+      //   avatar: null,
+      //   regulations: [],
+      //   newRegulations: [],
+      //   groupName: '',
+      //   categoryId: null,
+      //   ownerJoin: false,
+      //   curfewTime: {
+      //     limit: false,
+      //     startTime: '',
+      //     endTime: '',
+      //   },
+      //   managerName: null,
+      //   managerPhone: null,
+      //   downPayment: 0,
+      //   buildingNo: '',
+      //   latitude: 0,
+      //   longitude: 0,
+      //   address: null,
+      //   schedules: [],
+      //   appendixContract: null,
+      //   types: [],
+      //   errorHostelRoom: [],
+      // };
+      // this.setNewGroupValue(newGroupValueReset);
       this.$emit('close');
     },
     setCurfewtime() {
@@ -1078,6 +1097,9 @@ export default {
           if (this.getCategoryById().categoryName.toLowerCase() === 'nhà nguyên căn') {
             this.createTypeWithWholeHouseCategory();
           }
+          if (this.getCategoryById().categoryName.toLowerCase() === 'ký túc xá') {
+            this.createTypeWithHostelBedCategory();
+          }
         } else {
           console.log('not success');
         }
@@ -1125,6 +1147,32 @@ export default {
       });
     },
     createTypeWithHostelRoomCategory() {
+      const { groupId } = this.allGroups[0];
+      const listTypes = this.newGroupValue.types.map((item) => ({
+        capacity: item.capacity,
+        deposit: item.deposit,
+        facilities: this.getTypeFacilities(item.facilities).systemFacilities,
+        newFacilities: this.getTypeFacilities(item.facilities).newFacilities,
+        imageUrls: item.image,
+        price: item.price,
+        priceUnit: item.priceUnit,
+        superficiality: item.superficiality,
+        title: item.title,
+        rooms: item.rooms.map((room) => ({
+          roomName: room.roomName,
+          available: room.available === 0,
+        })),
+      }));
+      const types = { groupID: groupId, list: listTypes };
+      this.createListHostelType(types).then(() => {
+        if (this.isCreatedTypesStatus) {
+          this.closeDialog();
+        } else {
+          console.log('not type succes');
+        }
+      });
+    },
+    createTypeWithHostelBedCategory() {
       const { groupId } = this.allGroups[0];
       const listTypes = this.newGroupValue.types.map((item) => ({
         capacity: item.capacity,
@@ -1375,6 +1423,7 @@ export default {
     },
     newGroupValue() {
       const newGroupData = this.$store.state.vendor.group.newGroup;
+      console.log(newGroupData);
       if (this.groupInfo.curfewTime.radiogroup === 'free') {
         newGroupData.curfewTime.limit = false;
       } else {

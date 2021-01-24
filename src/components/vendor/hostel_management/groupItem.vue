@@ -120,19 +120,20 @@
       @close="showTypeManagementdialog = false"
       :group="group"
     />
-    <UpdateGroupDialog :show="showUpdateGroupDiaglog" @close="showUpdateGroupDiaglog = false" :group="group"/>
+    <!-- <UpdateGroupDialog :show="showUpdateGroupDiaglog" @close="showUpdateGroupDiaglog = false" :group="group"/> -->
   </div>
 </template>
 
 <script>
 import HostelGroupStatistic from '../overview/HostelGroupStatistic.vue';
 import TypeManagementDialog from './type_management/TypesManagement.vue';
-import UpdateGroupDialog from './group_management/UpdateGroupDialog.vue';
+// import UpdateGroupDialog from './group_management/UpdateGroupDialog.vue';
 
 export default {
   name: 'groupItem',
   props: { group: Object, index: Number },
-  components: { HostelGroupStatistic, TypeManagementDialog, UpdateGroupDialog },
+  components: { HostelGroupStatistic, TypeManagementDialog },
+  // components: { HostelGroupStatistic, TypeManagementDialog, UpdateGroupDialog },
   data: () => ({
     showTypeManagementdialog: false,
     showWholeHouseDialog: false,

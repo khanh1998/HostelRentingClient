@@ -180,7 +180,6 @@ export default {
           this.rooms.push({ roomQuantity, roomName });
         }
       });
-      console.log(this.rooms);
       return this.rooms;
     },
   },
