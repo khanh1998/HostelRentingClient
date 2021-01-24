@@ -74,7 +74,11 @@
                       >
                       <v-select
                         v-model="newGroupValue.categoryId"
-                        @change="newGroupValue.types = []; setNewGroupValue(newGroupValue)"
+                        @change="() => {
+                          const reset = { ...newGroupValue };
+                          reset.types = [];
+                          setNewGroupValue(reset);
+                        }"
                         :items="categories"
                         item-text="categoryName"
                         item-value="categoryId"
