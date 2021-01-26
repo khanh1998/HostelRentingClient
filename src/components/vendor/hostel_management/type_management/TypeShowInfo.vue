@@ -119,6 +119,7 @@
                     dense
                     light
                     v-model="newTypeValue.price"
+                    suffix="VNĐ"
                     step="0.1"
                     min="0"
                     :rules="[rules.minPrice(newTypeValue.price)]"
@@ -358,8 +359,8 @@
                         />
                         <div class="d-flex flex-wrap" style="height: 250px; overflow-y: auto">
                           <v-img
-                            v-for="url in upload.imageUrls"
-                            :key="url"
+                            v-for="(url, i) in upload.imageUrls"
+                            :key="i"
                             :src="url"
                             height="100"
                             width="100"
@@ -954,6 +955,7 @@ export default {
         this.type.price,
         this.type.priceUnit,
       );
+      const urlImage = this.getValueImageUrl(this.type.imageUrls);
       const newTypeData = {
         groupId: this.group.groupId,
         title: this.type.title,
@@ -963,7 +965,7 @@ export default {
         capacity: this.type.capacity,
         deposit: this.type.deposit,
         rooms: [],
-        // imageUrls: this.newTypeValue.image,
+        image: urlImage,
         // facilities: this.newTypeValue.facilityIds.map((facility) => ({
         //   facilityId: facility,
         // })),
@@ -1264,22 +1266,32 @@ export default {
       }
       return { typePrice, typePriceUnit };
     },
-    getPriceUnitForBed(price) {
+    getPriceUnitForBed(price, unit) {
       let typePriceUnit = null;
       let typePrice = 0;
-
-      if (String(price).length <= 6) {
-        typePrice = Number(price) / 1000;
+      if (unit === 'nghìn') {
+        typePrice = price * 1000;
         typePriceUnit = 'nghìn';
-      } else if (String(price).length < 10) {
-        typePrice = Number(price) / 1000000;
+      } else if (unit === 'triệu') {
+        typePrice = price * 1000000;
         typePriceUnit = 'triệu';
       } else {
         typePriceUnit = 'tỉ';
-        typePrice = Number(price) / 1000000000;
+        typePrice = price * 1000000000;
       }
-
       return { typePrice, typePriceUnit };
+    },
+    getValueImageUrl(imageUrls) {
+      const allUrl = [];
+      imageUrls.forEach((entry) => {
+        // const all = {};
+        // all.resourceUrl = entry.resourceUrl;
+        // allUrl.push(all);
+        allUrl.push(entry.resourceUrl);
+      });
+      console.log(allUrl);
+      this.upload.imageUrls = allUrl;
+      return this.upload.imageUrls;
     },
     openCreateTypeDialog() {
       this.openCreateType = true;
@@ -1309,6 +1321,7 @@ export default {
       this.uploadFile(fd)
         .then(() => {
           this.upload.imageUrls = this.listUploadedFiles;
+          console.log(this.upload.imageUrls);
           this.dialog.show = false;
           this.showSnackBar('Tải ảnh lên thành công', { color: 'green' });
           this.images = this.upload.imageUrls.map((image) => ({ resourceUrl: image }));

@@ -696,7 +696,7 @@ export default {
   methods: {
     ...mapActions({
       getAllTypes: 'user/getAllTypes',
-      activeType: 'vendor/group/updateHostelType',
+      activeType: 'user/updateHostelTypeV2',
     }),
     closeDetailDialog() {
       this.showDetailDiaglog = false;

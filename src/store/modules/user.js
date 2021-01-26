@@ -69,6 +69,7 @@ const myState = () => ({
   types: {
     data: [],
     isLoading: false,
+    isUpdating: false,
     error: null,
     success: null,
   },
@@ -234,6 +235,18 @@ const mutationTypes = {
   GET_ALLTYPES_REQUEST: 'GET_ALLTYPES_REQUEST',
   GET_ALLTYPES_SUCCESS: 'GET_ALLTYPES_SUCCESS',
   GET_ALLTYPES_FAILURE: 'GET_ALLTYPES_FAILURE',
+
+  UPDATE_HOSTEL_TYPE_REQUEST: 'UPDATE_HOSTEL_TYPE_REQUEST',
+  UPDATE_HOSTEL_TYPE_SUCCESS: 'UPDATE_HOSTEL_TYPE_SUCCESS',
+  UPDATE_HOSTEL_TYPE_FAILURE: 'UPDATE_HOSTEL_TYPE_FAILURE',
+
+  UPDATE_VENDOR_REQUEST: 'UPDATE_VENDOR_REQUEST',
+  UPDATE_VENDOR_SUCCESS: 'UPDATE_VENDOR_SUCCESS',
+  UPDATE_VENDOR_FAILURE: 'UPDATE_VENDOR_FAILURE',
+
+  UPDATE_RENTER_REQUEST: 'UPDATE_RENTER_REQUEST',
+  UPDATE_RENTER_SUCCESS: 'UPDATE_RENTER_SUCCESS',
+  UPDATE_RENTER_FAILURE: 'UPDATE_RENTER_FAILURE',
 };
 const mutations = {
   CREATE_ROOM_REQUEST_REQUEST(state) {
@@ -452,24 +465,6 @@ const mutations = {
     state.bookings.isUpdating = false;
     state.bookings.error = error;
   },
-  UPDATE_USER_REQUEST(state) {
-    state.user.isLoading = true;
-    state.user.isUpdating = true;
-    state.user.error = null;
-    state.user.success = null;
-  },
-  UPDATE_USER_SUCCESS(state, user) {
-    state.user.data = user;
-    state.user.success = true;
-    state.user.isLoading = false;
-    state.user.isUpdating = false;
-  },
-  UPDATE_USER_FAILURE(state, error) {
-    state.user.error = error;
-    state.user.success = false;
-    state.user.isLoading = false;
-    state.user.isUpdating = false;
-  },
   CLEAR_NEWLY_CREATED_BOOKING(state) {
     state.bookings.newlyCreated = null;
   },
@@ -653,6 +648,112 @@ const mutations = {
     state.types.success = false;
     state.types.error = error;
   },
+  UPDATE_HOSTEL_TYPE_REQUEST(state) {
+    state.types.isLoading = true;
+    state.types.isUpdating = true;
+    state.types.error = null;
+    state.types.success = null;
+  },
+  UPDATE_HOSTEL_TYPE_SUCCESS(state, type) {
+    const index = state.types.data.types.findIndex((item) => item.typeId === type.typeId);
+    const { group } = state.types.data.types[index];
+    console.log(index);
+    const newType = { ...type };
+    newType.group = group;
+    state.types.data.types.splice(index, 1);
+    state.types.data.types.push(newType);
+    state.types.success = true;
+    state.types.isLoading = false;
+    state.types.isUpdating = false;
+  },
+  UPDATE_HOSTEL_TYPE_FAILURE(state, error) {
+    state.types.error = error;
+    state.types.success = false;
+    state.types.isLoading = false;
+    state.types.isUpdating = false;
+  },
+  UPDATE_USER_REQUEST(state) {
+    state.user.isLoading = true;
+    state.user.isUpdating = true;
+    state.user.error = null;
+    state.user.success = null;
+  },
+  UPDATE_USER_SUCCESS(state, user) {
+    state.user.data = user;
+    state.user.success = true;
+    state.user.isLoading = false;
+    state.user.isUpdating = false;
+  },
+  UPDATE_USER_FAILURE(state, error) {
+    state.user.error = error;
+    state.user.success = false;
+    state.user.isLoading = false;
+    state.user.isUpdating = false;
+  },
+  UPDATE_VENDOR_REQUEST(state) {
+    state.vendors.isLoading = true;
+    state.vendors.isUpdating = true;
+    state.vendors.error = null;
+    state.vendors.success = null;
+    //
+    state.user.isLoading = true;
+    state.user.isUpdating = true;
+  },
+  UPDATE_VENDOR_SUCCESS(state, user) {
+    const index = state.vendors.data.findIndex((item) => item.userId === user.userId);
+    state.vendors.data.splice(index, 1);
+    state.vendors.data.push(user);
+    state.vendors.success = true;
+    state.vendors.isLoading = false;
+    state.vendors.isUpdating = false;
+    //
+    if (user.userId === state.user.data.userId) {
+      const temp = user[0];
+      state.user.data = temp;
+      state.user.success = true;
+      state.user.isLoading = false;
+      state.user.isUpdating = false;
+    }
+  },
+  UPDATE_VENDOR_FAILURE(state, error) {
+    state.vendors.error = error;
+    state.vendors.success = false;
+    state.vendors.isLoading = false;
+    state.vendors.isUpdating = false;
+    //
+    state.user.isLoading = true;
+    state.user.isUpdating = true;
+  },
+
+  UPDATE_RENTER_REQUEST(state) {
+    state.renters.isLoading = true;
+    state.renters.isUpdating = true;
+    state.renters.error = null;
+    state.renters.success = null;
+  },
+  UPDATE_RENTER_SUCCESS(state, user) {
+    const index = state.renters.data.findIndex((item) => item.userId === user.userId);
+    state.renters.data.splice(index, 1);
+    state.renters.data.push(user);
+    state.renters.success = true;
+    state.renters.isLoading = false;
+    state.renters.isUpdating = false;
+
+    //
+    if (user.userId === state.user.data.userId) {
+      const temp = user[0];
+      state.user.data = temp;
+      state.user.success = true;
+      state.user.isLoading = false;
+      state.user.isUpdating = false;
+    }
+  },
+  UPDATE_RENTER_FAILURE(state, error) {
+    state.renters.error = error;
+    state.renters.success = false;
+    state.renters.isLoading = false;
+    state.renters.isUpdating = false;
+  },
 };
 
 const actions = {
@@ -767,12 +868,12 @@ const actions = {
     const { userId } = newUser;
     const dataUpdate = newUser.data;
     try {
-      commit(mutationTypes.UPDATE_USER_REQUEST);
+      commit(mutationTypes.UPDATE_VENDOR_REQUEST);
       const res = await window.axios.put(`/api/v1/vendors/${userId}`, dataUpdate);
       if (res.status === 200) {
-        commit(mutationTypes.UPDATE_USER_SUCCESS, res.data.data);
+        commit(mutationTypes.UPDATE_VENDOR_SUCCESS, res.data.data);
       } else {
-        commit(mutationTypes.UPDATE_USER_FAILURE);
+        commit(mutationTypes.UPDATE_VENDOR_FAILURE);
       }
     } catch (error) {
       commit(mutationTypes.UPDATE_USER_FAILURE, error);
@@ -783,15 +884,15 @@ const actions = {
     const { userId } = newUser;
     const dataUpdate = newUser.data;
     try {
-      commit(mutationTypes.UPDATE_USER_REQUEST);
+      commit(mutationTypes.UPDATE_RENTER_REQUEST);
       const res = await window.axios.put(`/api/v1/renters/${userId}`, dataUpdate);
       if (res.status === 200) {
-        commit(mutationTypes.UPDATE_USER_SUCCESS, res.data.data);
+        commit(mutationTypes.UPDATE_RENTER_SUCCESS, res.data.data);
       } else {
-        commit(mutationTypes.UPDATE_USER_FAILURE);
+        commit(mutationTypes.UPDATE_RENTER_FAILURE);
       }
     } catch (error) {
-      commit(mutationTypes.UPDATE_USER_FAILURE, error);
+      commit(mutationTypes.UPDATE_RENTER_FAILURE, error);
     }
   },
 
@@ -1376,6 +1477,21 @@ const actions = {
       }
     } catch (error) {
       commit(mutationTypes.GET_ALLTYPES_FAILURE, error);
+    }
+  },
+
+  async updateHostelTypeV2({ commit }, types) {
+    try {
+      commit(mutationTypes.UPDATE_HOSTEL_TYPE_REQUEST);
+      const { typeId } = types;
+      if (types) {
+        const res = await window.axios.put(`/api/v1/types/${typeId}/active`, types.data);
+        console.log(res);
+        commit(mutationTypes.UPDATE_HOSTEL_TYPE_SUCCESS, res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+      commit(mutationTypes.UPDATE_HOSTEL_TYPE_FAILURE, error);
     }
   },
 };

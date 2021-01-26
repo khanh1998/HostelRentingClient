@@ -190,7 +190,7 @@
               v-model="newGroupValue.types[index].facilities"
               :items="facilities"
               item-text="facilityName"
-              item-value="facilityName"
+              :item-value="newGroupValue.types[index].facilities"
               dense
               chips
               small-chips
@@ -199,7 +199,7 @@
               outlined
               hide-details
               class="size9rem font-nunito light-autocomplete"
-              @change="setNewGroupValue(newGroupValue)"
+              @change="changeValueForFacility(index)"
             ></v-autocomplete>
           </v-col>
           <v-col cols="4" class="pt-0 d-flex">
@@ -678,17 +678,17 @@ export default {
       }
       return dupplicateExistRules || dupplicateNewFacilities;
     },
-    newFacilitiesDisplay() {
-      let facilities = this.newFacilities;
-      if (this.searchFacilitiesQuery && this.searchFacilitiesQuery.trim() !== '') {
-        facilities = facilities.filter((item2) => {
-          const res =
-            item2.toLowerCase().indexOf(this.searchFacilitiesQuery.trim().toLowerCase()) !== -1;
-          return res;
-        });
-      }
-      return [...facilities];
-    },
+    // newFacilitiesDisplay() {
+    //   let facilities = this.newFacilities;
+    //   if (this.searchFacilitiesQuery && this.searchFacilitiesQuery.trim() !== '') {
+    //     facilities = facilities.filter((item2) => {
+    //       const res =
+    //         item2.toLowerCase().indexOf(this.searchFacilitiesQuery.trim().toLowerCase()) !== -1;
+    //       return res;
+    //     });
+    //   }
+    //   return [...facilities];
+    // },
     allFacilities() {
       return this.$store.state.renter.common.facilities.data;
     },
@@ -697,7 +697,7 @@ export default {
     },
     groups() {
       const groupsData = this.$store.state.vendor.group.groups.data;
-      return groupsData.filter((item) => item.types.length > 0);
+      return groupsData.filter((item) => item.types.length > 0).filter((item2) => item2.category.categoryName.toLowerCase() === 'nhà cho thuê phòng');
     },
   },
   methods: {
@@ -718,12 +718,35 @@ export default {
     isError(typeIndex) {
       return this.newGroupValue.errorHostelRoom.find((item) => item.index === typeIndex);
     },
+    changeValueForFacility(index) {
+      console.log(this.newGroupValue.types[index].facilities);
+      console.log(this.facilities);
+      let systemFacilities = this.newGroupValue.types[index].facilities.filter((item) => item.facilityName);
+      const endFacilities = [];
+      if (systemFacilities.length === 0) {
+        console.log('aaa');
+        systemFacilities = this.newGroupValue.types[index].facilities;
+        systemFacilities.forEach((item2) => {
+          this.facilities.forEach((item) => {
+            if (item2 === item.facilityName) {
+              endFacilities.push(item);
+            }
+          });
+        });
+        systemFacilities = endFacilities;
+      }
+      this.newGroupValue.types[index].facilities = systemFacilities;
+      console.log(systemFacilities);
+      this.setNewGroupValue(this.newGroupValue);
+    },
     addNewFacility(index) {
-      if (!this.isDuplicate) {
+      if (!this.isDuplicate && this.newFacility.trim() !== '') {
         this.facilities.push({ facilityName: this.newFacility });
+        // console.log(this.newGroupValue.types[index].facilities);
         this.newGroupValue.types[index].facilities.push(this.newFacility);
         this.newFacility = '';
         this.setNewGroupValue(this.newGroupValue);
+        // console.log(this.newGroupValue.types[index].facilities);
       }
     },
     // upload

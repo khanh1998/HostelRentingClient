@@ -276,7 +276,7 @@ export default {
         return this.getTypes
           .filter(
             (item) => item.title.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
-          )
+          ).sort((a, b) => a.createdAt - b.createdAt)
           .sort((value) => (value.active ? 1 : -1))
           .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
       }

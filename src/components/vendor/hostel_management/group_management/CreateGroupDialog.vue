@@ -299,6 +299,9 @@
                         <span class="size-caption red--text font-nunito" v-show="isDuplicate"
                           >Nội quy đã tồn tại</span
                         >
+                        <span class="size-caption red--text font-nunito" v-show="isDuplicate"
+                          >Nội quy đang trống</span
+                        >
                       </v-col>
                     </v-col>
                     <v-col
@@ -796,6 +799,8 @@ export default {
     ruleSelect: '',
     unselectedRules: [],
     newRule: '',
+    endFacilities: [],
+    endNewFacilities: [],
   }),
   methods: {
     ...mapActions({
@@ -822,7 +827,8 @@ export default {
     },
     initUnselectedRules() {
       let rules = this.allRules;
-      rules = rules.filter((item) => !item.regulationName.toLowerCase().includes('giới tính'));
+      rules = rules.filter((item) => !item.regulationName.toLowerCase().includes('giới tính') && !item.regulationName.toLowerCase().includes('nam') &&
+       !item.regulationName.toLowerCase().includes('nữ'));
       this.newGroupValue.regulations.forEach((item) => {
         rules = rules.filter((rule) => rule.regulationId !== item.regulationId);
       });
@@ -1073,7 +1079,7 @@ export default {
         ownerJoin: this.newGroupValue.ownerJoin,
         regulations: this.newGroupValue.regulations,
         newRegulations: this.newGroupValue.newRegulations.map((item) => ({
-          regulationName: item,
+          regulationName: item.regulationName,
         })),
         schedules: this.newGroupValue.schedules
           .filter((item) => item.timeRange.length > 0)
@@ -1085,6 +1091,7 @@ export default {
       if (this.ruleGender !== -1) {
         reqObj.regulations.push(this.ruleGender);
       }
+      // this.createTypeWithHostelRoomCategory();
       this.createHostelGroup(reqObj).then(() => {
         if (this.isCreatedGroupStatus) {
           if (this.getCategoryById().categoryName.toLowerCase() === 'nhà cho thuê phòng') {
@@ -1160,6 +1167,7 @@ export default {
         })),
       }));
       const types = { groupID: groupId, list: listTypes };
+      // console.log(types);
       this.createListHostelType(types).then(() => {
         if (this.isCreatedTypesStatus) {
           this.closeDialog();
@@ -1195,16 +1203,60 @@ export default {
       });
     },
     getTypeFacilities(allFacilities) {
-      let systemFacilities = allFacilities.filter((item) => item.facilityName);
+      console.log('a');
+      console.log(allFacilities);
+      let systemFacilities = allFacilities.filter((item) => item.facilityId);
+      let newFacilities = allFacilities.filter((item) => !item.facilityId);
+      console.log('b');
+      console.log(systemFacilities);
+      console.log(newFacilities);
       systemFacilities = systemFacilities.map((item) => ({
-        facilityId: this.getFacilityByName(item.facilityName).facilityId,
+        facilityId: item.facilityId,
       }));
-      let newFacilities = allFacilities.filter((item) => !item.facilityName);
       newFacilities = newFacilities.map((item) => ({
         facilityName: item,
       }));
+      console.log('c');
+      console.log(systemFacilities);
+      console.log(newFacilities);
       return { systemFacilities, newFacilities };
     },
+    // getTypeFacilitiesV3(allFacilities) {
+    //   let systemFacilities = allFacilities.filter((item) => item.facilityName);
+    //   let newFacilities = allFacilities.filter((item) => !item.facilityName);
+    //   // if (systemFacilities.length === 0) {
+    //   //   console.log('aaa');
+    //   //   systemFacilities = allFacilities.filter((item) => !item.facilityName);
+    //   //   systemFacilities.forEach((item2) => {
+    //   //     this.allFacilities.forEach((item) => {
+    //   //       if (item2 === item.facilityName) {
+    //   //         this.endFacilities.push(item);
+    //   //       }
+    //   //     });
+    //   //   });
+    //   //   this.endNewFacilities = allFacilities.filter((obj) => this.endFacilities.indexOf(obj) === -1);
+    //   //   systemFacilities = this.endFacilities;
+    //   //   newFacilities = this.endNewFacilities;
+    //   // }
+    //   systemFacilities = systemFacilities.map((item) => ({
+    //     facilityId: this.getFacilityByName(item.facilityName).facilityId,
+    //   }));
+    //   newFacilities = newFacilities.map((item) => ({
+    //     facilityName: item,
+    //   }));
+    //   return { systemFacilities, newFacilities };
+    // },
+    // getTypeFacilitiesV2(allFacilities) {
+    //   let systemFacilities = allFacilities.filter((item) => item.facilityName);
+    //   systemFacilities = systemFacilities.map((item) => ({
+    //     facilityId: this.getFacilityByName(item.facilityName).facilityId,
+    //   }));
+    //   let newFacilities = allFacilities.filter((item) => !item.facilityName);
+    //   newFacilities = newFacilities.map((item) => ({
+    //     facilityName: item,
+    //   }));
+    //   return { systemFacilities, newFacilities };
+    // },
     getFacilityByName(facilityName) {
       return this.allFacilities.find((item) => item.facilityName === facilityName);
     },
@@ -1320,6 +1372,8 @@ export default {
       this.newGroupValue.regulations = this.newGroupValue.regulations.filter(
         (item) => item.regulationId !== regulationId,
       );
+      this.allRules.filter((item) => item.regulationId === regulationId);
+      this.unselectedRules.push(this.allRules[0]);
     },
     removeNewRegulation(index) {
       this.newGroupValue.newRegulations = this.newGroupValue.newRegulations.filter(

@@ -212,6 +212,15 @@
                 >
                 </v-carousel-item>
               </v-carousel>
+              <v-card
+                class="overflow-y-auto px-2 d-flex justify-center"
+                min-height="100"
+                max-height="270"
+                v-if="type.imageUrls.length === 0"
+                style="box-shadow: none !important; border: thin solid rgba(0, 0, 0, 0.12)"
+              >
+                <span class="mt-8">Không có ảnh</span>
+              </v-card>
             </v-row>
           </v-col>
         </v-card>
