@@ -247,12 +247,54 @@
       @close="closeTypeManagementDialog()"
       :group="group"
     />
-    <TypeShowInfoDialog
+    <!-- <TypeShowInfoDialog
       :showCreateType="showTypeInfo"
       @close="closeTypeShowInfoDialog()"
       :group="group"
       :type="typeSelected"
-    />
+    /> -->
+    <v-dialog
+      v-model="showTypeInfo"
+      scrollable
+      max-width="1000"
+      transition="dialog-bottom-transition"
+      persistent
+      hide-overlay
+    >
+      <v-card
+        class="d-flex flex-column white font-nunito"
+        style="border-radius: 0px !important"
+      >
+        <v-card
+          class="d-flex px-4 py-3 align-center ma-0 justify-space-between main-bg"
+          style="
+            border-color: rgb(255, 255, 255);
+            box-shadow: rgba(154, 161, 171, 0.15) 0px 0px 35px 0px !important;
+            border-radius: 0px !important;
+          "
+        >
+          <v-icon class="ml-4" color="rgb(255, 255, 255, 0.8)">house</v-icon>
+
+          <span
+            class="font-nunito white--text font-weight-bold"
+            style="font-size: 1.125rem !important"
+            >Thông tin nhà trọ
+          </span>
+          <v-btn icon @click="showTypeInfo=false" class="mr-4"
+            ><v-icon color="rgb(255, 255, 255, 0.75)">close</v-icon></v-btn
+          >
+        </v-card>
+        <v-card class="font-nunito pa-2" v-if="group.category.categoryName.toLowerCase() === 'nhà cho thuê phòng'">
+          <HostelRoomViewCategory :type="typeSelected" />
+        </v-card>
+        <v-card class="font-nunito pa-2" v-if="group.category.categoryName.toLowerCase() === 'ký túc xá'">
+          <HostelBedViewCategory :type="typeSelected" />
+        </v-card>
+        <v-card class="font-nunito pa-2" v-if="group.category.categoryName.toLowerCase() === 'nhà nguyên căn'">
+          <WholeHouseViewCategory :type="typeSelected" />
+        </v-card>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 
@@ -260,11 +302,20 @@
 import { mapActions } from 'vuex';
 import roomItem from '../../components/vendor/hostel_management/room_management/roomItem.vue';
 import TypeManagementDialog from '../../components/vendor/hostel_management/type_management/TypesManagement.vue';
-import TypeShowInfoDialog from '../../components/vendor/hostel_management/type_management/TypeShowInfo.vue';
+// import TypeShowInfoDialog from '../../components/vendor/hostel_management/type_management/TypeShowInfo.vue';
+import HostelRoomViewCategory from '../admin/HostelRoomViewCategory.vue';
+import HostelBedViewCategory from '../admin/HostelBedViewCategory.vue';
+import WholeHouseViewCategory from '../admin/WholeHouseViewCategory.vue';
 
 export default {
   name: 'RoomManagement',
-  components: { roomItem, TypeManagementDialog, TypeShowInfoDialog },
+  components: {
+    roomItem,
+    TypeManagementDialog,
+    HostelRoomViewCategory,
+    HostelBedViewCategory,
+    WholeHouseViewCategory,
+  },
   data: () => ({
     groupSelected: '',
     search: {

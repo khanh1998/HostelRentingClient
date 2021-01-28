@@ -299,9 +299,6 @@
                         <span class="size-caption red--text font-nunito" v-show="isDuplicate"
                           >Nội quy đã tồn tại</span
                         >
-                        <span class="size-caption red--text font-nunito" v-show="isDuplicate"
-                          >Nội quy đang trống</span
-                        >
                       </v-col>
                     </v-col>
                     <v-col

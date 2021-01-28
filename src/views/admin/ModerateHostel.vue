@@ -19,6 +19,17 @@
                 style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
               ></v-text-field>
             </v-col>
+            <v-col cols="2" class="d-flex align-center">
+            <v-select
+                  v-model="roomStatus.selected"
+                  :items="roomStatus.items"
+                  dense
+                  color="#727cf5"
+                  hide-details
+                  solo
+                  class="size-sub-2 font-nunito slide-booking"
+                ></v-select>
+            </v-col>
             <!-- <v-menu offset-y left>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -259,6 +270,10 @@ export default {
     searchQuery: '',
     showDetailDiaglog: false,
     itemDetail: null,
+    roomStatus: {
+      items: ['Chưa kích hoạt', 'Kích hoạt', 'Tất cả'],
+      selected: 'Tất cả',
+    },
   }),
   computed: {
     isLoading() {
@@ -269,13 +284,69 @@ export default {
       types: (state) => state.user.types,
     }),
     getTotalPage() {
+      if (this.searchQuery !== null) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return Math.ceil(this.types.data.types.filter(
+            (item) => item.title.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+          ).filter((item2) => item2.active).length / this.pageRange);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return Math.ceil(this.types.data.types.filter(
+            (item) => item.title.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+          ).filter((item2) => !item2.active).length / this.pageRange);
+        }
+        return Math.ceil(this.types.data.types.filter(
+          (item) => item.title.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+        ).length / this.pageRange);
+      }
+      if (this.searchQuery === null) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return Math.ceil(this.types.data.types.filter((item2) => item2.active).length / this.pageRange);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return Math.ceil(this.types.data.types.filter((item2) => !item2.active).length / this.pageRange);
+        }
+        return Math.ceil(this.types.data.types.length / this.pageRange);
+      }
       return Math.ceil(this.types.data.types.length / this.pageRange);
     },
     displayTypes() {
       if (this.searchQuery !== null) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return this.getTypes
+            .filter(
+              (item) => item.title.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+            ).filter((item2) => item2.active).sort((a, b) => a.createdAt - b.createdAt)
+            .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return this.getTypes
+            .filter(
+              (item) => item.title.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+            ).filter((item2) => !item2.active).sort((a, b) => a.createdAt - b.createdAt)
+            .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+        }
         return this.getTypes
           .filter(
             (item) => item.title.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+          ).sort((a, b) => a.createdAt - b.createdAt)
+          .sort((value) => (value.active ? 1 : -1))
+          .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+      }
+      if (this.searchQuery === null) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return this.getTypes
+            .filter((item2) => item2.active).sort((a, b) => a.createdAt - b.createdAt)
+            .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return this.getTypes
+            .filter((item2) => !item2.active).sort((a, b) => a.createdAt - b.createdAt)
+            .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+        }
+        return this.getTypes
+          .filter(
+            (item) => item,
           ).sort((a, b) => a.createdAt - b.createdAt)
           .sort((value) => (value.active ? 1 : -1))
           .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);

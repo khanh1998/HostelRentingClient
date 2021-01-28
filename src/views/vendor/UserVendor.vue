@@ -84,6 +84,8 @@
             <v-btn color="#727CF5" v-if="editProfile" @click="editProfile = false" dark>
               <v-icon left>cancel</v-icon> Hủy
             </v-btn>
+            <span style="color: green" v-if="censorUser">Đã kiểm duyệt</span>
+            <span style="color: red" v-if="!censorUser">Chưa kiểm duyệt</span>
           </div>
         </v-col>
         <v-col cols="12" md="9" style="border-left: 1px solid lightgray" class="mt-3 pa-0 py-0">
@@ -1144,6 +1146,7 @@ export default {
     },
     updateUserInfo() {
       if (this.emptyFields.length === 0) {
+        this.newUser.censored = false;
         this.updateUser(this.newUser).then(() => {
           this.updatable = false;
           this.editProfile = false;
@@ -1261,6 +1264,13 @@ export default {
         emptyFields.push('ảnh mặt sau CMNN');
       }
       return emptyFields;
+    },
+    censorUser() {
+      return this.user.data.censored;
+    },
+    isLoading() {
+      const vendors = this.$store.state.user.vendors.isLoading;
+      return vendors;
     },
   },
   data: () => ({

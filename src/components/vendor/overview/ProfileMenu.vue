@@ -36,7 +36,7 @@
         <v-list-item
           style="min-height: 20px !important"
           class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-          to="vendor/uservendor"
+          to="uservendor"
         >
           <v-icon color="#6c757d" class="mr-2 item-hover" size="15">mdi-account-circle</v-icon>
           <v-list-item-title class="item-hover font-nunito text-gray size9rem"

@@ -20,45 +20,17 @@
                 style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
               ></v-text-field>
             </v-col>
-            <!-- <v-menu offset-y left>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  class="btn-hover px-0"
-                  v-bind="attrs"
-                  v-on="on"
-                  max-width="50"
-                  min-width="50"
-                  style="
-                    background-color: #727cf5 !important;
-                    border-radius: 0.15rem !important;
-                    box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5) !important;
-                  "
-                  ><v-icon size="15" color="#fff">mdi-sort-ascending</v-icon></v-btn
-                >
-              </template>
-              <v-list>
-                <v-list-item
-                  style="min-height: 20px !important"
-                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                >
-                  <v-list-item-title
-                    class="item-hover font-nunito text-gray size9rem"
-                    @click="sortEmpty = true"
-                    >Phòng trống</v-list-item-title
-                  >
-                </v-list-item>
-                <v-list-item
-                  style="min-height: 20px !important"
-                  class="py-2 pl-3 pr-10 item-hover d-flex align-center cursor item-menu"
-                >
-                  <v-list-item-title
-                    class="item-hover font-nunito size9rem text-gray"
-                    @click="sortEmpty = false"
-                    >Phòng đang thuê</v-list-item-title
-                  >
-                </v-list-item>
-              </v-list>
-            </v-menu> -->
+            <v-col cols="2" class="d-flex align-center">
+            <v-select
+                  v-model="roomStatus.selected"
+                  :items="roomStatus.items"
+                  dense
+                  color="#727cf5"
+                  hide-details
+                  solo
+                  class="size-sub-2 font-nunito slide-booking"
+                ></v-select>
+            </v-col>
           </v-row>
           <v-tabs color="#727CF5" left>
             <v-tab @click="getValue1()">
@@ -117,7 +89,7 @@
                 <v-row class="d-flex flex-column">
                   <itemVendor
                     v-for="(vendor, index) in displayVendors"
-                    v-bind:key="vendor.username"
+                    v-bind:key="vendor.vendorId"
                     :vendor="vendor"
                     :index="index"
                   />
@@ -171,7 +143,7 @@
                 <v-row class="d-flex flex-column">
                   <itemRenter
                     v-for="(renter, index) in displayRenters"
-                    v-bind:key="renter.username"
+                    v-bind:key="renter.renterId"
                     :renter="renter"
                     :index="index"
                   />
@@ -344,6 +316,10 @@ export default {
     searchQuery: '',
     showDetailDiaglog: false,
     itemDetail: null,
+    roomStatus: {
+      items: ['Chưa kích hoạt', 'Kích hoạt', 'Tất cả'],
+      selected: 'Tất cả',
+    },
   }),
   computed: {
     isLoading() {
@@ -356,37 +332,96 @@ export default {
       vendors: (state) => state.user.vendors,
     }),
     getTotalPage() {
+      if (this.searchQuery !== null && this.value === 1) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return Math.ceil(this.vendors.data.filter(
+            (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+          ).filter((item2) => item2.censored).length / this.pageRange);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return Math.ceil(this.vendors.data.filter(
+            (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+          ).filter((item2) => !item2.censored).length / this.pageRange);
+        }
+        return Math.ceil(this.vendors.data.filter(
+          (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+        ).length / this.pageRange);
+      }
+      if (this.searchQuery === null && this.value === 1) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return Math.ceil(this.vendors.data.filter((item2) => item2.censored).length / this.pageRange);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return Math.ceil(this.vendors.data.filter((item2) => !item2.censored).length / this.pageRange);
+        }
+        return Math.ceil(this.vendors.data.length / this.pageRange);
+      }
       return Math.ceil(this.vendors.data.length / this.pageRange);
     },
     getTotalPage2() {
+      if (this.searchQuery !== null && this.value === 2) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return Math.ceil(this.renters.data.filter(
+            (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+          ).filter((item2) => item2.censored).length / this.pageRange2);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return Math.ceil(this.renters.data.filter(
+            (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+          ).filter((item2) => !item2.censored).length / this.pageRange2);
+        }
+        return Math.ceil(this.renters.data.filter(
+          (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+        ).length / this.pageRange2);
+      }
+      if (this.searchQuery === null && this.value === 2) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return Math.ceil(this.renters.data.filter((item2) => item2.censored).length / this.pageRange2);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return Math.ceil(this.renters.data.filter((item2) => !item2.censored).length / this.pageRange2);
+        }
+        return Math.ceil(this.renters.data.length / this.pageRange2);
+      }
       return Math.ceil(this.renters.data.length / this.pageRange2);
-    },
-    searchResult() {
-      if (this.searchGroupQuery && this.searchGroupQuery.trim() !== '') {
-        return this.groups.filter((item2) => {
-          const res =
-            item2.groupName.toLowerCase().indexOf(this.searchGroupQuery.trim().toLowerCase()) !==
-            -1;
-          return res;
-        });
-      }
-      if (this.searchManagerQuery && this.searchManagerQuery.trim() !== '') {
-        return this.groups.filter((item2) => {
-          const res =
-            item2.managerName
-              .toLowerCase()
-              .indexOf(this.searchManagerQuery.trim().toLowerCase()) !== -1;
-          return res;
-        });
-      }
-      // this.groups.sort((a, b) => this.getRoomsStatus(a) - this.getRoomsStatus(b));
-      return this.groups;
     },
     displayVendors() {
       if (this.searchQuery !== null && this.value === 1) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return this.getVendors
+            .filter(
+              (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+            ).filter((item2) => item2.censored)
+            .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return this.getVendors
+            .filter(
+              (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+            ).filter((item2) => !item2.censored)
+            .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+        }
         return this.getVendors
           .filter(
             (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+          )
+          .sort((value) => (value.censored ? 1 : -1))
+          .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+      }
+      if (this.searchQuery === null && this.value === 1) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return this.getVendors
+            .filter((item2) => item2.censored)
+            .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return this.getVendors
+            .filter((item2) => !item2.censored)
+            .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
+        }
+        return this.getVendors
+          .filter(
+            (item) => item,
           )
           .sort((value) => (value.censored ? 1 : -1))
           .slice(this.pageRange * (this.page - 1), this.pageRange * this.page);
@@ -397,9 +432,41 @@ export default {
     },
     displayRenters() {
       if (this.searchQuery !== null && this.value === 2) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return this.getRenters
+            .filter(
+              (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+            ).filter((item2) => item2.censored)
+            .slice(this.pageRange2 * (this.page2 - 1), this.pageRange2 * this.page2);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return this.getRenters
+            .filter(
+              (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+            ).filter((item2) => !item2.censored)
+            .slice(this.pageRange2 * (this.page2 - 1), this.pageRange2 * this.page2);
+        }
         return this.getRenters
           .filter(
             (item) => item.username.toLowerCase().indexOf(this.searchQuery.toLowerCase()) !== -1,
+          )
+          .sort((value) => (value.censored ? 1 : -1))
+          .slice(this.pageRange2 * (this.page2 - 1), this.pageRange2 * this.page2);
+      }
+      if (this.searchQuery === null && this.value === 2) {
+        if (this.roomStatus.selected === 'Kích hoạt') {
+          return this.getRenters
+            .filter((item2) => item2.censored)
+            .slice(this.pageRange2 * (this.page2 - 1), this.pageRange2 * this.page2);
+        }
+        if (this.roomStatus.selected === 'Chưa kích hoạt') {
+          return this.getRenters
+            .filter((item2) => !item2.censored)
+            .slice(this.pageRange2 * (this.page2 - 1), this.pageRange2 * this.page2);
+        }
+        return this.getRenters
+          .filter(
+            (item) => item,
           )
           .sort((value) => (value.censored ? 1 : -1))
           .slice(this.pageRange2 * (this.page2 - 1), this.pageRange2 * this.page2);
@@ -433,9 +500,11 @@ export default {
       }
     },
     getValue1() {
+      this.searchQuery = '';
       this.value = 1;
     },
     getValue2() {
+      this.searchQuery = '';
       this.value = 2;
     },
     closeDetailDialog() {
