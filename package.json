@@ -20,7 +20,7 @@
     "filestack-js": "^0.11.4",
     "firebase": "^7.24.0",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "module": "^1.2.5",
     "node-ensure": "0.0.0",
     "pdfjs-dist": "2.0.489",
